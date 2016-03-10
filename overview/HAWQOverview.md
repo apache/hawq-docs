@@ -1,8 +1,6 @@
-#  System Overview {#hawqoverview}
-
-This chapter describes all of the components and features that are part of a  system, and how they work together.
-
-## What is HAWQ? {#topic_tks_wwk_g5}
+---
+title: What is HAWQ?
+---
 
 HAWQ is a Hadoop native SQL query engine that combines the key technological advantages of MPP database with the scalability and convenience of Hadoop. HAWQ reads data from and writes data to HDFS natively.
 
@@ -33,4 +31,3 @@ HAWQ breaks complex queries into small tasks and distributes them to MPP query p
 HAWQ's basic unit of parallelism is the segment instance. Multiple segment instances on commodity servers work together to form a single parallel query processing system. A query submitted to HAWQ is optimized, broken into smaller components, and dispatched to segments that work together to deliver a single result set. All relational operations - such as table scans, joins, aggregations, and sorts - simultaneously execute in parallel across the segments. Data from upstream components in the dynamic pipeline are transmitted to downstream components through the scalable User Datagram Protocol \(UDP\) interconnect.
 
 Based on Hadoop's distributed storage, HAWQ has no single point of failure and supports fully-automatic online recovery. System states are continuously monitored, therefore if a segment fails, it is automatically removed from the cluster. During this process, the system continues serving customer queries, and the segments can be added back to the system when necessary.
-
