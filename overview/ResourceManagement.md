@@ -11,4 +11,4 @@ HAWQ has the ability to manage resources by using the following mechanisms:
 -   Dynamic resource allocation at query runtime. HAWQ dynamically allocates resources based on resource queue definitions. HAWQ automatically distributes resources based on running \(or queued\) queries and resource queue capacities.
 -   Resource limitations on virtual segments and queries. You can configure HAWQ to enforce limits on CPU andmemory usage both for virtual segments and the resource queues used by queries.
 
-For more details on resource management in HAWQ and how it works, see [Managing Resources](../resourcemgmt/HAWQResourceManagement.html).
+For more details on resource management in HAWQ and how it works, see [Managing Resources](../200/hawq/resourcemgmt/HAWQResourceManagement.html).
