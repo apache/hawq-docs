@@ -8,13 +8,13 @@ In a typical HAWQ deployment, each slave node has one physical HAWQ segment, an 
 
 The following diagram provides a high-level architectural view of a typical HAWQ deployment.
 
-![](../images/hawq_high_level_architecture.png)
+![](../mdimages/hawq_high_level_architecture.png)
 
 HAWQ is tightly integrated with YARN, the Hadoop resource management framework, for query resource management. HAWQ caches containers from YARN in a resource pool and then manages those resources locally by leveraging HAWQ's own finer-grained resource management for users and groups. To execute a query, HAWQ allocates a set of virtual segments according to the cost of a query, resource queue definitions, data locality and the current resource usage in the system. Then the query is dispatched to corresponding physical hosts, which can be a subset of nodes or the whole cluster. The HAWQ resource enforcer on each node monitors and controls the real time resources used by the query to avoid resource usage violations.
 
 The following diagram provides another view of the software components that constitute HAWQ.
 
-![](../images/hawq_architecture_components.png)
+![](../mdimages/hawq_architecture_components.png)
 
 ## HAWQ Master <a name="hawqmaster"></a>
 
