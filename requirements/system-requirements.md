@@ -7,9 +7,9 @@ Follow these guidelines to configure each host machine that will run an Apache H
 <a name="topic_d3f_vlz_g5"></a>
 ### Host Memory Configuration
 
-In order to prevent data loss or corruption in a Pivotal HDB cluster, you must configure the memory on each host machine so that the Linux Out-of-Memory \(OOM\) killer process never kills a HAWQ process due to OOM conditions. \(HAWQ applies its own rules to enforce memory restrictions.\)
+In order to prevent data loss or corruption in an Apach HAWQ cluster, you must configure the memory on each host machine so that the Linux Out-of-Memory \(OOM\) killer process never kills a HAWQ process due to OOM conditions. \(HAWQ applies its own rules to enforce memory restrictions.\)
 
-**For production deployments of Pivotal HDB, perform these steps on each host machine to configure memory:**
+**For mission critical deployments of HAWQ, perform these steps on each host machine to configure memory:**
 
 1.  Set the operating system `vm.overcommit_memory` parameter to 2. With this setting, the OOM killer process reports an error instead of killing running processes. To set this parameter:
     1.  Open the /etc/sysctl.conf file with a text editor.
@@ -66,7 +66,7 @@ In order to prevent data loss or corruption in a Pivotal HDB cluster, you must c
          $ cat /proc/meminfo | grep Swap
          ```
 3.  Ensure that all Java services that run on the machine use the `-Xmx` switch to allocate only their required heap.
-4.  Ensure that no other services \(such as Puppet\) or automated processes attempt to reset the overcommit settings on Pivotal HD or Pivotal HDB hosts.
+4.  Ensure that no other services \(such as Puppet\) or automated processes attempt to reset the overcommit settings on cluster hosts.
 5.  During the installation process, configure HAWQ memory by setting YARN or HAWQ configuration parameters, as described in [HAWQ Memory Configuration](#topic_uzf_flz_g5).
 
 <a name="topic_uzf_flz_g5"></a>
