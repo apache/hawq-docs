@@ -16,7 +16,7 @@ Randomly distributed tables have some benefits over hash distributed tables. For
 
 On the other hand, for some queries, hash distributed tables are faster than randomly distributed tables. For example, hash distributed tables have some performance benefits for some TPC-H queries. You should choose the distribution policy that is best suited for your application's scenario.
 
-See [Choosing the Table Distribution Policy](../200/hawq/ddl/ddl-table.html) for more details.
+See [Choosing the Table Distribution Policy](/200/hawq/ddl/ddl-table.html) for more details.
 
 ## Data Locality
 
