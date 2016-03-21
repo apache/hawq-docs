@@ -22,55 +22,49 @@ In order to prevent data loss or corruption in a Pivotal HDB cluster, you must c
     3.  Save and close the file, then execute this command to apply your change:
 
         ```
-        $ **sysctl -p**
+        $ sysctl -p
         ```
 
     4.  To view the current `vm.overcommit_memory` setting, execute the command:
 
         ```
-        $ **sysctl -a | grep overcommit\_memory**
+        $ sysctl -a | grep overcommit_memory
         ```
 
     5.  To view the runtime overcommit settings, execute the command:
 
         ```
-        $ **cat /proc/meminfo | grep Commit**
+        $ cat /proc/meminfo | grep Commit
         ```
 
-2.  Set the Linux swap space size and `vm.overcommit_ratio` parameter according to the available memory on each host:
-    *   For hosts having 2GB-8GB of memory, set swap space = physical RAM and set `vm.overcommit_ratio=50`.
-    *   For hosts having more than 8GB up to 64GB of memory, set swap space = 0.5 \* physical RAM and set `vm.overcommit_ratio=50`.
-    *   For hosts having more than 64GB memory, set swap space = 4GB and set `vm.overcommit_ratio=100`
+2.  Set the Linux swap space size and `vm.overcommit_ratio` parameter according to the available memory on each host. For hosts having 2GB-8GB of memory, set swap space = physical RAM and set `vm.overcommit_ratio=50`. For hosts having more than 8GB up to 64GB of memory, set swap space = 0.5 \* physical RAM and set `vm.overcommit_ratio=50`. For hosts having more than 64GB memory, set swap space = 4GB and set `vm.overcommit_ratio=100`
 
     To set the `vm.overcommit_ratio` parameter:
 
     1.  Open the /etc/sysctl.conf file with a text editor.
     2.  Add or change the parameter definition so that the file includes the line:
 
-        ```
-        vm.overcommit_ratio=50
-        ```
+           ```
+       vm.overcommit_ratio=50
+       ```
 
-        \(Use `vm.overcommit_ratio=100` for hosts with more than 64GB RAM.\)
-
+           \(Use `vm.overcommit_ratio=100` for hosts with more than 64GB RAM.\)
     3.  Save and close the file, then execute this command to apply your change:
 
-        ```
-        $ **sysctl -p**
-        ```
+           ```
+       $ sysctl -p
+       ```
 
     4.  To view the current `vm.overcommit_ratio` setting, execute the command:
 
         ```
-        $ **sysctl -a | grep overcommit\_ratio**
+        $ sysctl -a | grep overcommit_ratio
         ```
+        You can choose to use a dedicated swap partition, a swap file, or a combination of both. View the current swap settings using the command:
 
-    You can choose to use a dedicated swap partition, a swap file, or a combination of both. View the current swap settings using the command:
-
-    ```
-    $ **cat /proc/meminfo | grep Swap**
-    ```
-
+         ```
+         $ cat /proc/meminfo | grep Swap
+         ```
 3.  Ensure that all Java services that run on the machine use the `-Xmx` switch to allocate only their required heap.
 4.  Ensure that no other services \(such as Puppet\) or automated processes attempt to reset the overcommit settings on Pivotal HD or Pivotal HDB hosts.
 5.  During the installation process, configure HAWQ memory by setting YARN or HAWQ configuration parameters, as described in [HAWQ Memory Configuration](#topic_uzf_flz_g5).
@@ -105,13 +99,21 @@ You can set either parameter using Ambari when configuring YARN or when installi
 
 An example large host machine uses the memory configuration:
 
-|RAM:|256GB|
-|SWAP:|4GB|
-|NON\_HAWQ\_MEMORY:|2GB for Operating System|
-| |2GB for DataNode|
-| |2GB for NodeManager|
-| |1GB for PXF|
-|overcommit\_ratio\_percentage:|1 \(`vm.overcommit_ratio` = 100\)|
+>RAM: 256GB
+>
+>SWAP: 4GB
+
+>NON\_HAWQ\_MEMORY:
+
+>> 2GB for Operating System
+
+>> 2GB for DataNode
+
+>> 2GB for NodeManager
+
+>> 1GB for PXF
+
+>overcommit\_ratio\_percentage:1 \(`vm.overcommit_ratio` = 100\)
 
 For this machine, `TOTAL_MEMORY = 256GB * 1 + 4GB = 260GB`.
 
@@ -123,13 +125,21 @@ If this system uses YARN for resource management, you would set `yarn.nodemanage
 
 An example medium host machine uses the memory configuration:
 
-|RAM:|64GB|
-|SWAP:|32GB|
-|NON\_HAWQ\_MEMORY:|2GB for Operating System|
-| |2GB for DataNode|
-| |2GB for NodeManager|
-| |1GB for PXF|
-|overcommit\_ratio\_percentage:|.5 \(`vm.overcommit_ratio` = 50\)|
+>RAM: 64GB
+
+>SWAP: 32GB
+
+>NON\_HAWQ\_MEMORY:
+
+>>2GB for Operating System
+
+>>2GB for DataNode
+
+>>2GB for NodeManager
+
+>>1GB for PXF
+
+>overcommit\_ratio\_percentage: .5 \(`vm.overcommit_ratio` = 50\)
 
 For this machine, `TOTAL_MEMORY = 64GB * .5 + 32GB = 64GB`.
 
@@ -141,13 +151,21 @@ If this system uses YARN for resource management, you would set `yarn.nodemanage
 
 An example small machine uses the memory configuration:
 
-|RAM:|8GB|
-|SWAP:|8GB|
-|NON\_HAWQ\_MEMORY:|2GB for Operating System|
-| |2GB for DataNode|
-| |2GB for NodeManager|
-| |1GB for PXF|
-|overcommit\_ratio\_percentage:|.5 \(`vm.overcommit_ratio` = 50\)|
+>RAM: 8GB
+
+>SWAP: 8GB
+
+>NON\_HAWQ\_MEMORY:
+
+>>2GB for Operating System
+
+>>2GB for DataNode
+
+>>2GB for NodeManager
+
+>>1GB for PXF
+
+>overcommit\_ratio\_percentage:  .5 \(`vm.overcommit_ratio` = 50\)
 
 For this machine, `TOTAL_MEMORY = 8GB * .5 + 8GB = 12GB`.
 
