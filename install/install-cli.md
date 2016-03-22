@@ -1,14 +1,14 @@
 ---
-title: (Optional) Install Pivotal HDB 2.0 Beta from the Command Line
+title: (Optional) Install HAWQ from the Command Line
 ---
 
-This section provides instructions for installing a Pivotal HDB 2.0 Beta system.
+This section provides instructions for installing a HAWQ system.
 
-**Note:** This section provides instructions for installing Pivotal HDB 2.0 Beta using from the command line. You can optionally install Pivotal HDB using the HAWQ plug-in for Ambari. See [Install Pivotal HDB 2.0 Beta using Ambari](install-ambari.html) for more information.
+**Note:** This section provides instructions for installing HAWQ from the command line. You can optionally install HAWQ using the HAWQ plug-in for Ambari. See [Install HAWQ using Ambari](install-ambari.html) for more information.
 
 ## Prepare Host Machines <a name="topic_eqn_fc4_15"></a>
 
-Configure operating system parameters on each host machine before you begin to install Pivotal HDB.
+Configure operating system parameters on each host machine before you begin to install HAWQ.
 
 1.  Use a text editor to edit the /etc/sysctl.conf file. Add or edit each of the following parameter definitions to set the required value:
 
@@ -65,11 +65,11 @@ Configure operating system parameters on each host machine before you begin to i
 
 5.  Ensure that the /etc/hosts file on each  cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master /etc/hosts file and either copying it or referencing it on every host that will take part in the  cluster.
 
-## Install the Pivotal HDB Cluster on Multiple Machines <a name="topic_ld1_bh4_15"></a>
+## Install the HAWQ Cluster on Multiple Machines <a name="topic_ld1_bh4_15"></a>
 
-Follow this procedure to install the Pivotal HDB Beta cluster on multiple host machines or VMs.
+Follow this procedure to install the HAWQ cluster on multiple host machines or VMs.
 
-**Note:** If you want to install a cluster on a single host machine or VM, follow the instructions in [Install the Pivotal HDB Beta Cluster on a Single Machine](#topic_ld1_bh4_15) instead.
+**Note:** If you want to install a cluster on a single host machine or VM, follow the instructions in [Install the HAWQ Cluster on a Single Machine](#topic_ld1_bh4_15) instead.
 
 1.  Login to the target  master host machine as the root user. If you are logged in as a different user, switch to the root account:
 
@@ -77,7 +77,7 @@ Follow this procedure to install the Pivotal HDB Beta cluster on multiple host m
     $ su - root
     ```
 
-2.  Download the Apache Pivotal HDB 2.0 Beta tarball distribution \(pivotal-hdb-2.0.0.0-18407.tar.gz\) to the local machine.
+2.  Download the Apache HAWQ tarball distribution \(pivotal-hdb-2.0.0.0-18407.tar.gz\) to the local machine.
 3.  Unzip the tarball file:
 
     ```
@@ -250,7 +250,7 @@ Follow this procedure to install the Pivotal HDB Beta cluster on multiple host m
     $ hawq scp -f hostfile hawq-site.xml slaves =:$GPHOME/etc/
     ```
 
-20. Finally, initialize and start the new Pivotal HDB cluster using the command:
+20. Finally, initialize and start the new HAWQ cluster using the command:
 
     ```
     $ hawq init cluster
@@ -259,9 +259,9 @@ Follow this procedure to install the Pivotal HDB Beta cluster on multiple host m
     After the cluster starts, you can follow the instructions in [Validate the Installation](#topic_opr_3gp_15).
 
 
-## Install the Pivotal HDB Beta Cluster on a Single Machine <a name="topic_uqh_wg4_15"></a>
+## Install the HAWQ Cluster on a Single Machine <a name="topic_uqh_wg4_15"></a>
 
-Follow this procedure to install Pivotal HDB Beta on a single host machine.
+Follow this procedure to install HAWQ software on a single host machine.
 
 1.  Login to the target machine as the root user. If you are logged in as a different user, switch to the root account:
 
@@ -269,7 +269,7 @@ Follow this procedure to install Pivotal HDB Beta on a single host machine.
     $ su - root
     ```
 
-2.  Download the Pivotal HDB 2.0 Beta tarball distribution \(tar xzf pivotal-hdb-2.0.0.0-18407.tar.gz\) to the local machine.
+2.  Download the HAWQ tarball distribution \(tar xzf pivotal-hdb-2.0.0.0-18407.tar.gz\) to the local machine.
 3.  Unzip the tarball file:
 
     ```
@@ -322,7 +322,7 @@ Follow this procedure to install Pivotal HDB Beta on a single host machine.
     $ hdfs dfs -chown gpadmin hdfs://localhost:8020/
     ```
 
-9.  Finally, initialize and start the new Pivotal HDB cluster using the command:
+9.  Finally, initialize and start the new HAWQ cluster using the command:
 
     ```
     $ hawq init cluster
@@ -348,7 +348,7 @@ For manual installations, perform these additional steps after you complete the 
 4.  Use `kadmin.local` to generate a Kerberos service principal for all other hosts that will run a HAWQ segment with the PXF service. The service principal should be of the form `name/role@REALM` where:
     -   name is the PXF service user name \(`pxf`\). Use the same name for each HAWQ host.
     -   role is the DNS resolvable, fully-qualified hostname of the HAWQ host machine \(output of `hostname -f` command\).
-    -   REALM is the Kerberos Distribution Center \(KDC\) realm used in the Pivotal HD cluster \(for example, `LOCAL.DOMAIN`\).
+    -   REALM is the Kerberos Distribution Center \(KDC\) realm used in the Hadoop cluster \(for example, `LOCAL.DOMAIN`\).
 
     You can generate all principals on the KDC server. For example, these commands add service principals for three HAWQ nodes on the hosts host1.example.com, host2.example.com, and host3.example.com:
 

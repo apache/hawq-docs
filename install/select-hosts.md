@@ -1,13 +1,13 @@
 ---
-title: Select Pivotal HDB Host Machines
+title: Select HAWQ Host Machines
 ---
 
-Before you begin to install Pivotal HDB, follow these steps to select and prepare the host machines.
+Before you begin to install HAWQ, follow these steps to select and prepare the host machines.
 
-Complete this procedure for all Pivotal HDB deployments:
+Complete this procedure for all HAWQ deployments:
 
 1.  Choose the host machines that will host a HAWQ segment. Keep in mind these restrictions and requirements:
-    -   Each host must meet the system requirements for the version of Pivotal HDB you are installing.
+    -   Each host must meet the system requirements for the version of HAWQ you are installing.
     -   Hosts that run other PostgreSQL instances cannot be used to run a default HAWQ master or standby service configuration. The default PostgreSQL port \(5432\) conflicts with the default port assignment of those services. You must either change the default port configuration of the running PostgreSQL instance or change the HAWQ master port setting during the HAWQ service installation to avoid port conflicts.
 
         **Note:** The Ambari server node uses PostgreSQL as the default metadata database. The Hive Metastore uses MySQL as the default metadata database.
