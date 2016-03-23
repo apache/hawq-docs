@@ -76,7 +76,7 @@ Follow this procedure to install HAWQ using Ambari 2.2.1.
 12. Customize the HDFS configuration by following these steps:
     1.  On the **Settings** tab, change the DataNode setting **DataNode max data transfer threads** \(dfs.datanode.max.transfer.threads parameter \) to *40960*.
     1.  Select the **Advanced** tab and expand **DataNode**. Ensure that the **DataNode directories permission** \(dfs.datanode.data.dir.perm parameter\) is set to *750*.
-    1.  Expand the **General** tab and change the **Access time precision** \(dfs.namenode.accesstime.precision parameter\) to *-1*.
+    1.  Expand the **General** tab and change the **Access time precision** \(dfs.namenode.accesstime.precision parameter\) to *0*.
     1.  Expand **Advanced hdfs-site**. Set the following properties to their indicated values.
 
         **Note:** If a property described below does not appear in the Ambari UI, select **Custom hdfs-site** and click **Add property...** to add the property definition and set it to the indicated value.
