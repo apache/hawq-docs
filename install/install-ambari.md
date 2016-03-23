@@ -124,7 +124,7 @@ Follow this procedure to install HAWQ using Ambari 2.2.1.
 
 17.  On the Customize Services page, the **Settings** tab configures basic properties of the HAWQ cluster. In most cases you can accept the default values provided on this page. Several configuration options may require attention depending on your deployment:
     *  **HAWQ Master Directory**, **HAWQ Segment Directory**: This specifies the base path for the HAWQ master or segment data directory.
-    *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ or a HAWQ segment should store temporary files during its execution. Separate multiple directories with a space. Any directories that you specify must already be available on all host machines. As a best practice, use multiple temporary directories on separate disks to load balance writes to temporary files \(for example, /disk1/tmp /disk2/tmp\). If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.
+    *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ Master or a HAWQ segment stores temporary files. Separate multiple directories with a space. Any directories that you specify must already be available on all host machines. As a best practice, use multiple temporary directories on separate disks to load balance writes to temporary files \(for example, ``/disk1/tmp /disk2/tmp`\). If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.
     *  **Resource Manager**: Select the resource manager to use for allocating resources in your HAWQ cluster. If you choose **Standalone**, HAWQ exclusively uses resources from the whole cluster. If you choose **YARN**, HAWQ contacts the YARN resource manager to negotiate resources. You can change the resource manager type after the initial installation. See [Managing Resources](/200/hawq/resourcemgmt/HAWQResourceManagement.html).
     *  **VM Overcommit**: Set this value according to the instructions in the [System Requirements](/20/requirements/system-requirements.html) document.
 
@@ -132,14 +132,14 @@ Follow this procedure to install HAWQ using Ambari 2.2.1.
 
 17. \(Optional.\) On the **Advanced** tab, you can change numerous configuration properties for the HAWQ cluster. Hover your mouse cursor over the entry field to display help for the associated property.  Default values are generally acceptable for a new installation. The following properties are sometimes customized during installation:
 
-        |Property|Action|
-        |--------|------|
-        |**General > HAWQ DFS URL**|The URL that HAWQ uses to access HDFS.|
-        |**General > HAWQ Master Port**|Enter the port to use for the HAWQ master host or accept the default, 5432. **CAUTION:** If you are installing HAWQ in a single-node environment \(or when the Ambari server and HAWQ are installed the same node\) then *you cannot accept the default port*. Enter a unique port for the HAWQ master.|
-        |**General > HAWQ Segment Port**|The base port to use for HAWQ segment hosts.|
-        |**Advanced hawq-site > hawq\_rm\_yarn\_address**|If you are using YARN for resource management, specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: localhost:8032.|
-        |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|If you are using YARN for resource management, specify the YARN queue name to use for registering the HAWQ resource manager. For example: default.|
-        |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|If you are using YARN for resource management, specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030.|
+    |Property|Action|
+    |--------|------|
+    |**General > HAWQ DFS URL**|The URL that HAWQ uses to access HDFS.|
+    |**General > HAWQ Master Port**|Enter the port to use for the HAWQ master host or accept the default, 5432. **CAUTION:** If you are installing HAWQ in a single-node environment \(or when the Ambari server and HAWQ are installed the same node\) then *you cannot accept the default port*. Enter a unique port for the HAWQ master.|
+    |**General > HAWQ Segment Port**|The base port to use for HAWQ segment hosts.|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_address**|If you are using YARN for resource management, specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: localhost:8032.|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|If you are using YARN for resource management, specify the YARN queue name to use for registering the HAWQ resource manager. For example: default.|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|If you are using YARN for resource management, specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030.|
 
 18.  Click **Next** to continue the installation. (Depending on your cluster configuration, Ambari may recommend that you change other properties before proceeding.)
 18. Review your configuration choices, then click **Deploy** to begin the installation. Ambari now begins to install, start, and test the HAWQ and PXF configuration. During this procedure, you can click on the **Message** links to view the console output of individual tasks.
