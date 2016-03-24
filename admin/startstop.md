@@ -12,7 +12,7 @@ Use the `hawq start *object*` and `hawq stop` commands to start and stop HAWQ, r
 
 Do not issue a `KILL` command to end any Postgres process. Instead, use the database command `pg_cancel_backend()`.
 
-For information about `[hawq start](../reference/cli/admin_utilities/hawqstart.html)` and `[hawq stop](../reference/cli/admin_utilities/hawqstop.html)`, see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
+For information about [hawq start](/200/reference/cli/admin_utilities/hawqstart.html) and [hawq stop](/200/reference/cli/admin_utilities/hawqstop.html), see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
 
 ## Initialize HAWQ <a name="task_g1y_xtm_s5"></a>
 
@@ -22,7 +22,7 @@ The `hawq init` command with the appropriate cluster or node command initializes
 
 The `hawq init <object>` utility will create a HAWQ instance using configuration parameters defined in `$GPHOME/etc/hawq-site.xml` A single node cluster can be started without any user-defined changes to the default `hawq-site.xml` file. Use the template-hawq-site.xml file to specify the configuration for larger clusters.
 
-When using the template for initializing a new cluster configuration, replace the items contained within the % markers, for example in: `*value*%master.host%*value*`, `%master.host%` would be replaced with the master host name. After modification, rename the file to the name of the default configuration file: `hawq-site.xml`.
+When using the template for initializing a new cluster configuration, replace the items contained within the % markers, for example in: *`value`*`%master.host%`*`value`*, `%master.host%` would be replaced with the master host name. After modification, rename the file to the name of the default configuration file: `hawq-site.xml`.
 
 -   Before initializing HAWQ, set the `$GPHOME` environment variable to point to the location of your HAWQ installation on the master host and exchange SSH keys between all host addresses in the array, using `hawq ssh-exkeys`.
 -   To initialize and start a HAWQ cluster, enter the following command on the master host:
@@ -68,7 +68,7 @@ The `hawq restart` command with the appropriate cluster or node command can stop
 
 Reload changes to the HAWQ configuration files without interrupting the system.
 
-The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](../reference/guc/guc_config.html).
+The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](/200/reference/guc/guc_config.html).
 
 -   Reload configuration file changes without shutting down the system using the `hawq stop` command:
 
@@ -91,10 +91,9 @@ Maintenance mode should only be used when required for a particular maintenance 
 
 2.  Connect to the master in maintenance mode to do catalog maintenance. For example:
 
-    ``` <a name="kg155401"></a>
+    ```
     $ PGOPTIONS='-c gp_session_role=utility' psql template1
     ```
-
 3.  After completing your administrative tasks, restart the master in maintenance mode. Maintenance mode is a special utility mode.
 
     ```
