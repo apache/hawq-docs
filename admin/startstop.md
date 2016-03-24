@@ -1,4 +1,6 @@
-# Starting and Stopping HAWQ {#topic1}
+---
+title: Starting and Stopping HAWQ
+---
 
 In a HAWQ DBMS, the database server instances \(the master and all segments\) are started or stopped across all of the hosts in the system in such a way that they can work together as a unified DBMS.
 
@@ -10,9 +12,9 @@ Use the `hawq start *object*` and `hawq stop` commands to start and stop HAWQ, r
 
 Do not issue a `KILL` command to end any Postgres process. Instead, use the database command `pg_cancel_backend()`.
 
-For information about `[hawq start](../reference/cli/admin_utilities/hawqstart.md#)` and `[hawq stop](../reference/cli/admin_utilities/hawqstop.md#)`, see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
+For information about `[hawq start](../reference/cli/admin_utilities/hawqstart.html)` and `[hawq stop](../reference/cli/admin_utilities/hawqstop.html)`, see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
 
-## Initialize HAWQ {#task_g1y_xtm_s5}
+## Initialize HAWQ <a name="task_g1y_xtm_s5"></a>
 
 Initialize and start the HAWQ system using configuration parameters defined in `$GPHOME/etc/hawq-site.xml`.
 
@@ -30,7 +32,7 @@ When using the template for initializing a new cluster configuration, replace th
     ```
 
 
-## Starting HAWQ {#task_hkd_gzv_fp}
+## Starting HAWQ <a name="task_hkd_gzv_fp"></a>
 
 Start an initialized HAWQ system by running the `hawq start` command on the master instance.
 
@@ -49,7 +51,7 @@ You can also use the `hawq start master` command to start only the HAWQ master, 
     When the HAWQ system is first initialized with the `hawq init` command, it is automatically started.
 
 
-## Restarting HAWQ {#task_gpdb_restart}
+## Restarting HAWQ <a name="task_gpdb_restart"></a>
 
 Stop the HAWQ system and then restart it.
 
@@ -62,11 +64,11 @@ The `hawq restart` command with the appropriate cluster or node command can stop
     ```
 
 
-## Reloading Configuration File Changes Only {#task_upload_config}
+## Reloading Configuration File Changes Only <a name="task_upload_config"></a>
 
 Reload changes to the HAWQ configuration files without interrupting the system.
 
-The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](../reference/guc/guc_config.md#).
+The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](../reference/guc/guc_config.html).
 
 -   Reload configuration file changes without shutting down the system using the `hawq stop` command:
 
@@ -75,7 +77,7 @@ The `hawq stop` command can reload changes to the pg\_hba.conf configuration fil
     ```
 
 
-## Starting the Master in Maintenance Mode {#task_maint_mode}
+## Starting the Master in Maintenance Mode <a name="task_maint_mode"></a>
 
 Start only the master to perform maintenance or administrative tasks without affecting data on the segments.
 
@@ -89,7 +91,7 @@ Maintenance mode should only be used when required for a particular maintenance 
 
 2.  Connect to the master in maintenance mode to do catalog maintenance. For example:
 
-    ``` {#kg155401}
+    ``` <a name="kg155401"></a>
     $ PGOPTIONS='-c gp_session_role=utility' psql template1
     ```
 
@@ -104,7 +106,7 @@ Maintenance mode should only be used when required for a particular maintenance 
     Incorrect use of maintenance mode connections can result in an inconsistent system state. Only expert users should perform this operation.
 
 
-## Stopping HAWQ {#task_gpdb_stop}
+## Stopping HAWQ <a name="task_gpdb_stop"></a>
 
 The `hawq stop cluster` command stops or restarts your HAWQ system and always runs on the master host. When activated, `hawq stop cluster` stops all `postgres` processes in the system, including the master and all segment instances. The `hawq stop cluster` command uses a default of up to 64 parallel worker threads to bring down the Postgres instances that make up the HAWQ cluster. The system waits for any active transactions to finish before shutting down. To stop HAWQ immediately, use fast mode. The commands `hawq stop master`, `hawq stop segment`, `hawq stop standby`, or `hawq stop allsegments` can be used to stop the master, the local segment node, standby, or all segments in the cluster. Stopping the master will stop only the master segment, and will not shut down a cluster.
 
@@ -121,7 +123,7 @@ The `hawq stop cluster` command stops or restarts your HAWQ system and always ru
     ```
 
 
-## Best Practices to Start/Stop HAWQ Cluster Members {#task_tx4_bl3_h5}
+## Best Practices to Start/Stop HAWQ Cluster Members <a name="task_tx4_bl3_h5"></a>
 
 For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
 
@@ -143,5 +145,3 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
     ```
     $ hawq stop allsegments
     ```
-
-

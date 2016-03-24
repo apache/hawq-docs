@@ -1,8 +1,10 @@
-# Expanding a Cluster {#topic1}
+---
+title: Expanding a Cluster
+---
 
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
-## Guidelines for Cluster Expansion {#topic_kkc_tgb_h5}
+## Guidelines for Cluster Expansion <a name="topic_kkc_tgb_h5"></a>
 
 This topic provides some guidelines around expanding your HAWQ cluster.
 
@@ -11,10 +13,10 @@ There are several recommendations to keep in mind when modifying the size of you
 -   When you add a new node, install both a DataNode and a physical segment on the new node.
 -   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, execute **`select gp_metadata_cache_clear();`**.
--   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](../reference/sql/ALTER-TABLE.md#) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.md#) command.
+-   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](../reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.html) command.
 -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
-## Adding a New Node to an Existing HAWQ Cluster {#task_hawq_expand}
+## Adding a New Node to an Existing HAWQ Cluster <a name="task_hawq_expand"></a>
 
 The following procedure describes the steps required to add a node to an existing HAWQ cluster.
 
@@ -64,13 +66,13 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     7.  Execute the following hawq command a second time to set up passwordless ssh for the gpadmin user:
 
         ```
-        $ **hawq ssh-exkeys -e hawq\_hosts -x new\_hosts** 
+        $ **hawq ssh-exkeys -e hawq\_hosts -x new\_hosts**
         ```
 
     8.  After setting up passwordless ssh, you can execute the following hawq command to check the target machine's configuration.
 
         ```
-        $ **hawq check -f new\_hosts** 
+        $ **hawq check -f new\_hosts**
         ```
 
         Configure operating system parameters as needed on the host machine. See the HAWQ installation documentation for a list of specific operating system parameters to configure.
@@ -102,7 +104,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 6.  Execute the following command to confirm that HAWQ was installed on the new host:
 
     ```
-    $ **hawq ssh -f new\_hosts -e "ls -l $GPHOME"** 
+    $ **hawq ssh -f new\_hosts -e "ls -l $GPHOME"**
     ```
 
 7.  On the master node, use a text editor to add hostname `sdw4` into the `hawq_hosts` file you created during HAWQ installation. \(If you do not already have this file, then you create it first and list all the nodes in your cluster.\)
@@ -187,5 +189,4 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
 16. If you are using hash tables, adjust the `default_hash_table_bucket_number` server configuration property to reflect the cluster's new size. Update this configuration's value by multiplying the new number of nodes in the cluster by 6.
     -   `default_hash_table_bucket_number` = \(new number of nodes\) \* 6
-17. Redistribute the data in all of hash-distributed tables by using either the [ALTER TABLE](../reference/sql/ALTER-TABLE.md#) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.md#) command.
-
+17. Redistribute the data in all of hash-distributed tables by using either the [ALTER TABLE](../reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.html) command.

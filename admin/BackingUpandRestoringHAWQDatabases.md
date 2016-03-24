@@ -1,4 +1,6 @@
-# Backing Up and Restoring HAWQ {#backingupandrestoringhawqdatabases}
+---
+title: Backing Up and Restoring HAWQ
+---
 
 This chapter provides information on backing up and restoring databases in HAWQ system.
 
@@ -27,11 +29,11 @@ This section describes these three utilities, as well as raw data backup, to hel
     -   [Using PXF to Back Up the tpch Database](#)
     -   [Recovering a PXF Backup](#)
 
-## About gpfdist and PXF {#usinggpfdistorpxf}
+## About gpfdist and PXF <a name="usinggpfdistorpxf"></a>
 
 You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all data to external tables. Backup files can reside on a local file system or HDFS. To recover tables, you can load data back from external tables to the database. 
 
-### Performing a Parallel Backup {#performingaparallelbackup}
+### Performing a Parallel Backup <a name="performingaparallelbackup"></a>
 
 1.  Check the database size to ensure that the file system has enough space to save the backed up files.
 2.  Use the `pg_dump` utility to dump the schema of the target database.
@@ -41,7 +43,7 @@ You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all 
     **Note:** Put the insert statements in a single transaction to prevent problems if you perform any update operations during the backup.
 
 
-### Restoring from a Backup {#restoringfromabackup}
+### Restoring from a Backup <a name="restoringfromabackup"></a>
 
 1.  Create a database to recover to.
 2.  Recreate the schema from the schema file \(created during the `pg_dump` process\).
@@ -49,7 +51,7 @@ You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all 
 4.  Load data from the external table to the actual table.
 5.  Run the `ANALYZE` command once loading is complete. This ensures that the query planner generates optimal plan based on up-to-date table statistics.
 
-### Differences between gpfdist and PXF {#differencesbetweengpfdistandpxf}
+### Differences between gpfdist and PXF <a name="differencesbetweengpfdistandpxf"></a>
 
 `gpfdist` and PXF differ in the following ways:
 
@@ -58,7 +60,7 @@ You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all 
 -   `gpfdist` doesn’t support generating compressed files, while PXF supports compression \(you can specify a compression codec used in Hadoop such as `org.apache.hadoop.io.compress.GzipCodec`\).
 -   Both `gpfdist` and PXF both have fast loading performance, but `gpfdist` is much faster than PXF.
 
-## About pg\_dump and pg\_restore {#usingpg_dumpandpg_restore}
+## About pg\_dump and pg\_restore <a name="usingpg_dumpandpg_restore"></a>
 
 HAWQ supports the PostgreSQL backup and restore utilities, `pg_dump` and `pg_restore`. The `pg_dump` utility creates a single, large dump file in the master host containing the data from all active segments. The `pg_restore` utility restores a HAWQ database from the archive created by `pg_dump`. In most cases, this is probably not practical, as there is most likely not enough disk space in the master host for creating a single backup file of an entire distributed database. HAWQ supports these utilities in case you are migrating data from PostgreSQL to HAWQ.
 
@@ -80,7 +82,7 @@ To restore from an archive using `pg_restore`:
 $ pg_restore -d new_db mydb.dump
 ```
 
-## About Backing Up Raw Data {#aboutbackinguprawdata}
+## About Backing Up Raw Data <a name="aboutbackinguprawdata"></a>
 
 Parallel backup using `gpfdist` or PXF works fine in most cases. There are a couple of situations where you cannot perform parallel backup and restore operations:
 
@@ -89,7 +91,7 @@ Parallel backup using `gpfdist` or PXF works fine in most cases. There are a 
 
 In such situations, you can back up raw data generated during ETL processes and reload it into HAWQ. This provides the flexibility to choose where you store backup files.
 
-## Selecting a Backup Strategy/Utility {#estimatingthebestpractice}
+## Selecting a Backup Strategy/Utility <a name="estimatingthebestpractice"></a>
 
 The table below summaries the differences between the four approaches we discussed above. 
 
@@ -103,7 +105,7 @@ The table below summaries the differences between the four approaches we discuss
 |**Scalability**|Good|Good|---|Good|
 |**Performance**|Fast loading, Fast unloading|Fast loading, Normal unloading|---|Fast \(Just file copy\)|
 
-## Estimating Space Requirements {#estimatingspacerequirements}
+## Estimating Space Requirements <a name="estimatingspacerequirements"></a>
 
 Before you back up your database, ensure that you have enough space to store backup files. This section describes how to get the database size and estimate space requirements.
 
@@ -125,7 +127,7 @@ Before you back up your database, ensure that you have enough space to store bac
     -   If you use gpfdist, the space requirement for each gpfdist instance is `size_of_backup_files / num_gpfdist_instances` since table data will be evenly distributed to all `gpfdist` instances.
 
 
-## Using gpfdist {#usinggpfdist}
+## Using gpfdist <a name="usinggpfdist"></a>
 
 This section discusses `gpfdist` and shows an example of how to backup and restore HAWQ database.
 
@@ -139,11 +141,11 @@ You can also run `gpfdist` instances on each segment host. During backup, table 
 
 ![](../images/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
 
-### Example {#example}
+### Example <a name="example"></a>
 
 This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To do so, start two `gpfdist` instances on the backup host `sdw1` with two 1TB disks \(One disk mounts at `/data1`, another disk mounts at `/data2`\).
 
-#### Using gpfdist to Back Up the tpch Database {#usinggpfdisttobackupthetpchdatabase}
+#### Using gpfdist to Back Up the tpch Database <a name="usinggpfdisttobackupthetpchdatabase"></a>
 
 1.  Create backup locations and start the `gpfdist` instances.
 
@@ -168,9 +170,9 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
     ```
     master_host$ psql tpch
-    tpch=# create writable external table wext_orders (like orders) 
+    tpch=# create writable external table wext_orders (like orders)
     tpch-# location ('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
-    tpch=# create writable external table wext_lineitem (like lineitem) 
+    tpch=# create writable external table wext_lineitem (like lineitem)
     tpch-# location ('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
     ```
 
@@ -195,7 +197,7 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
     ```
 
 
-#### Recovering Using gpfdist {#torecoverusinggpfdist}
+#### Recovering Using gpfdist <a name="torecoverusinggpfdist"></a>
 
 1.  Restart `gpfdist` instances if they aren’t running:
 
@@ -216,9 +218,9 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
     ```
     master_host$ psql tpch2
-    
+
     tpch2=# create external table rext_orders (like orders) location ('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
-    tpch2=# create external table rext_lineitem (like lineitem) location ('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV'; 
+    tpch2=# create external table rext_lineitem (like lineitem) location ('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
     ```
 
     **Note:** The location clause is the same as the writable external table above.
@@ -237,7 +239,7 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
     ```
 
 
-### Troubleshooting gpfdist {#troubleshootinggpfdist}
+### Troubleshooting gpfdist <a name="troubleshootinggpfdist"></a>
 
 Keep in mind that `gpfdist` is accessed at runtime by the segment instances. Therefore, you must ensure that the HAWQ segment hosts have network access to gpfdist. Since the `gpfdist` program is a  web server, to test connectivity you can run the following command from each host in your HAWQ array \(segments and master\):
 
@@ -247,16 +249,16 @@ $ wget http://gpfdist_hostname:port/filename
 
 Also, make sure that your `CREATE EXTERNAL TABLE` definition has the correct host name, port, and file names for `gpfdist`. The file names and paths specified should be relative to the directory where gpfdist is serving files \(the directory path used when you started the `gpfdist` program\). See “Defining External Tables - Examples”.
 
-## Using PXF {#usingpxf}
+## Using PXF <a name="usingpxf"></a>
 
 Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ to query external system data. The details of how to install and use PXF can be found in *PXF Installation and Administration*.
 
-### Using PXF to Back Up the tpch Database {#usingpxftobackupthetpchdatabase}
+### Using PXF to Back Up the tpch Database <a name="usingpxftobackupthetpchdatabase"></a>
 
 1.  Create a folder on HDFS for this backup:
 
     ```
-    master_host$ hdfs dfs -mkdir -p /backup/tpch-2014-06-27 
+    master_host$ hdfs dfs -mkdir -p /backup/tpch-2014-06-27
     ```
 
 2.  Dump the database schema using `pg_dump` and store the schema file in a backup folder:
@@ -270,18 +272,18 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
     ```
     master_host$ psql tpch
-    
-    tpch=# CREATE WRITABLE EXTERNAL TABLE wext_orders (LIKE orders) 
+
+    tpch=# CREATE WRITABLE EXTERNAL TABLE wext_orders (LIKE orders)
     tpch-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders'
     tpch-#           '?Profile=HdfsTextSimple'
     tpch-#           '&COMPRESSION_CODEC=org.apache.hadoop.io.compress.SnappyCodec'
-    tpch-#          ) 
+    tpch-#          )
     tpch-# FORMAT 'TEXT';
-    
-    tpch=# CREATE WRITABLE EXTERNAL TABLE wext_lineitem (LIKE lineitem) 
+
+    tpch=# CREATE WRITABLE EXTERNAL TABLE wext_lineitem (LIKE lineitem)
     tpch-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem'
     tpch-#           '?Profile=HdfsTextSimple'
-    tpch-#           '&COMPRESSION_CODEC=org.apache.hadoop.io.compress.SnappyCodec') 
+    tpch-#           '&COMPRESSION_CODEC=org.apache.hadoop.io.compress.SnappyCodec')
     tpch-# FORMAT 'TEXT';
     ```
 
@@ -299,13 +301,13 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 5.  **\(Optional\)** Change the HDFS file replication factor for the backup folder. HDFS replicates each block into three blocks by default for reliability. You can decrease this number for your backup files if you need to:
 
     ```
-    master_host$ hdfs dfs -setrep 2 /backup/tpch-2014-06-27 
+    master_host$ hdfs dfs -setrep 2 /backup/tpch-2014-06-27
     ```
 
     **Note:** This only changes the replication factor for existing files; new files will still use the default replication factor.
 
 
-### Recovering a PXF Backup {#torecoverfromapxfbackup}
+### Recovering a PXF Backup <a name="torecoverfromapxfbackup"></a>
 
 1.  Create a new database and restore the schema:
 
@@ -319,11 +321,11 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
     ```
     master_host$ psql tpch2
-    tpch2=# CREATE EXTERNAL TABLE rext_orders (LIKE orders) 
-    tpch2-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders?Profile=HdfsTextSimple') 
+    tpch2=# CREATE EXTERNAL TABLE rext_orders (LIKE orders)
+    tpch2-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders?Profile=HdfsTextSimple')
     tpch2-# FORMAT 'TEXT';
-    tpch2=# CREATE EXTERNAL TABLE rext_lineitem (LIKE lineitem) 
-    tpch2-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem?Profile=HdfsTextSimple') 
+    tpch2=# CREATE EXTERNAL TABLE rext_lineitem (LIKE lineitem)
+    tpch2-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem?Profile=HdfsTextSimple')
     tpch2-# FORMAT 'TEXT';
     ```
 
@@ -341,5 +343,3 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
     ```
     tpch2=# ANALYZE;
     ```
-
-

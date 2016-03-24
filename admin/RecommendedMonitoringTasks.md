@@ -1,4 +1,6 @@
-# Recommended Monitoring and Maintenance Tasks {#topic_kmz_lbg_rp}
+---
+title: Recommended Monitoring and Maintenance Tasks
+---
 
 This section lists monitoring and maintenance activities recommended to ensure high availability and consistent performance of your HAWQ cluster.
 
@@ -6,7 +8,7 @@ The tables in the following sections suggest activities that a HAWQ System Admin
 
 It is not necessary to implement all of these suggestions in every cluster; use the frequency and severity recommendations as a guide to implement measures according to your service requirements.
 
-## Database State Monitoring Activities {#drr_5bg_rp}
+## Database State Monitoring Activities <a name="drr_5bg_rp"></a>
 
 |Activity|Procedure|Corrective Actions|
 |--------|---------|------------------|
@@ -53,7 +55,7 @@ SELECT count(*) FROM gp_segment_configuration;
 
 |
 
-## Hardware and Operating System Monitoring {#topic_y4c_4gg_rp}
+## Hardware and Operating System Monitoring <a name="topic_y4c_4gg_rp"></a>
 
 |Activity|Procedure|Corrective Actions|
 |--------|---------|------------------|
@@ -101,7 +103,7 @@ If the machines on the cluster display an uneven performance profile, work with 
 
 |
 
-## Data Maintenance {#maintentenance_check_scripts}
+## Data Maintenance <a name="maintentenance_check_scripts"></a>
 
 |Activity|Procedure|Corrective Actions|
 |--------|---------|------------------|
@@ -111,7 +113,7 @@ SELECT * FROM hawq_toolkit.hawq_stats_missing;
 
 |Run `ANALYZE` on tables that are missing statistics.|
 
-## Database Maintenance {#topic_dld_23h_rp}
+## Database Maintenance <a name="topic_dld_23h_rp"></a>
 
 |Activity|Procedure|Corrective Actions|
 |--------|---------|------------------|
@@ -124,7 +126,7 @@ VACUUM *<table\>*;
 ```
 
 |Vacuum system catalogzs regularly to prevent bloating.|
-|Vacuum all system catalogs \(tables in the `pg_catalog` schema\) that are approaching [vacuum\_freeze\_min\_age](../reference/guc/parameter_definitions.md#).Recommended frequency: daily
+|Vacuum all system catalogs \(tables in the `pg_catalog` schema\) that are approaching [vacuum\_freeze\_min\_age](../reference/guc/parameter_definitions.html).Recommended frequency: daily
 
 Severity: CRITICAL
 
@@ -132,7 +134,7 @@ Severity: CRITICAL
 VACUUM *<table\>*;
 ```
 
-|After the [vacuum\_freeze\_min\_age](../reference/guc/parameter_definitions.md#) value is reached, VACUUM will no longer replace transaction IDs with `FrozenXID` while scanning a table. Perform vacuum on these tables before the limit is reached.|
+|After the [vacuum\_freeze\_min\_age](../reference/guc/parameter_definitions.html) value is reached, VACUUM will no longer replace transaction IDs with `FrozenXID` while scanning a table. Perform vacuum on these tables before the limit is reached.|
 |Update table statistics. Recommended frequency: after loading data and before executing queries
 
 Severity: CRITICAL
@@ -159,7 +161,7 @@ REINDEXDB -s
 
 |The optimizer retrieves information from the system tables to create query plans. If system tables and indexes are allowed to become bloated over time, scanning the system tables increases query execution time.|
 
-## Patching and Upgrading {#topic_idx_smh_rp}
+## Patching and Upgrading <a name="topic_idx_smh_rp"></a>
 
 |Activity|Procedure|Corrective Actions|
 |--------|---------|------------------|
@@ -173,4 +175,3 @@ Severity: IMPORTANT
 Severity: IMPORTANT
 
 |Always upgrade to the latest in the series.|Keep the HAWQ software current to incorporate bug fixes, performance enhancements, and feature enhancements into your HAWQ cluster.|
-
