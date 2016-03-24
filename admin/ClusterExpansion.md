@@ -13,7 +13,7 @@ There are several recommendations to keep in mind when modifying the size of you
 -   When you add a new node, install both a DataNode and a physical segment on the new node.
 -   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, execute **`select gp_metadata_cache_clear();`**.
--   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/reference/sql/CREATE-TABLE-AS.html) command.
+-   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
 -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
 ## Adding a New Node to an Existing HAWQ Cluster <a name="task_hawq_expand"></a>
@@ -188,4 +188,4 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
 16. If you are using hash tables, adjust the `default_hash_table_bucket_number` server configuration property to reflect the cluster's new size. Update this configuration's value by multiplying the new number of nodes in the cluster by 6.
     -   `default_hash_table_bucket_number` = \(new number of nodes\) \* 6
-17. Redistribute the data in all of hash-distributed tables by using either the [ALTER TABLE](/200/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/reference/sql/CREATE-TABLE-AS.html) command.
+17. Redistribute the data in all of hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.

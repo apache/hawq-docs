@@ -16,18 +16,18 @@ In addition, in some situations you should back up your raw data from ETL proces
 
 This section describes these three utilities, as well as raw data backup, to help you decide what fits your needs.
 
--   [About gpfdist and PXF](#)
-    -   [Performing a Parallel Backup](#)
-    -   [Restoring from a Backup](#)
-    -   [Differences between gpfdist and PXF](#)
--   [About pg\_dump and pg\_restore](#)
--   [About Backing Up Raw Data](#)
--   [Selecting a Backup Strategy/Utility](#)
--   [Estimating Space Requirements](#)
--   [Using gpfdist](#)
--   [Using PXF](#)
-    -   [Using PXF to Back Up the tpch Database](#)
-    -   [Recovering a PXF Backup](#)
+-   [About gpfdist and PXF](#usinggpfdistorpxf)
+    -   [Performing a Parallel Backup](#performingaparallelbackup)
+    -   [Restoring from a Backup](#restoringfromabackup)
+    -   [Differences between gpfdist and PXF](#differencesbetweengpfdistandpxf)
+-   [About pg\_dump and pg\_restore](#usingpg_dumpandpg_restore)
+-   [About Backing Up Raw Data](#aboutbackinguprawdata)
+-   [Selecting a Backup Strategy/Utility](#estimatingthebestpractice)
+-   [Estimating Space Requirements](#estimatingspacerequirements)
+-   [Using gpfdist](#usinggpfdist)
+-   [Using PXF](#usingpxf)
+    -   [Using PXF to Back Up the tpch Database](#usingpxftobackupthetpchdatabase)
+    -   [Recovering a PXF Backup](#torecoverfromapxfbackup)
 
 ## About gpfdist and PXF <a name="usinggpfdistorpxf"></a>
 
@@ -95,7 +95,8 @@ In such situations, you can back up raw data generated during ETL processes and 
 
 The table below summaries the differences between the four approaches we discussed above. 
 
-||`gpfdist`|PXF|`pg_dump`|Raw Data Backup|
+
+|  |`gpfdist`|PXF|`pg_dump`|Raw Data Backup|
 |--|---------|---|---------|---------------|
 |**Parallel**|Yes|Yes|No|No|
 |**Incremental Backup**|No|No|No|Yes|
@@ -135,11 +136,11 @@ This section discusses `gpfdist` and shows an example of how to backup and resto
 
 To use `gpfdist`, start the `gpfdist` server program on the host where you want to store backup files. You can start multiple `gpfdist` instances on the same host or on different hosts. For each `gpfdist` instance, you specify a directory from which `gpfdist` will serve files for readable external tables or create output files for writable external tables. For example, if you have a dedicated machine for backup with two disks, you can start two `gpfdist` instances, each using one disk:
 
-![](../images/gpfdist_instances_backup.png "Deploying multiple gpfdist instances on a backup host")
+![](../mdimages/gpfdist_instances_backup.png "Deploying multiple gpfdist instances on a backup host")
 
 You can also run `gpfdist` instances on each segment host. During backup, table data will be evenly distributed to all `gpfdist` instances specified in the `LOCATION` clause in the `CREATE EXTERNAL TABLE` definition.
 
-![](../images/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
+![](../mdimages/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
 
 ### Example <a name="example"></a>
 

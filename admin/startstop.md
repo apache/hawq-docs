@@ -6,13 +6,13 @@ In a HAWQ DBMS, the database server instances \(the master and all segments\) ar
 
 Because a HAWQ system is distributed across many machines, the process for starting and stopping a HAWQ system is different than the process for starting and stopping a regular PostgreSQL DBMS.
 
-Use the `hawq start *object*` and `hawq stop` commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. Initializing a HAWQ system also starts it.
+Use the `hawq start `*`object`* and `hawq stop` commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. Initializing a HAWQ system also starts it.
 
 **Important:**
 
 Do not issue a `KILL` command to end any Postgres process. Instead, use the database command `pg_cancel_backend()`.
 
-For information about [hawq start](/200/reference/cli/admin_utilities/hawqstart.html) and [hawq stop](/200/reference/cli/admin_utilities/hawqstop.html), see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
+For information about [hawq start](/200/hawq//reference/cli/admin_utilities/hawqstart.html) and [hawq stop](/200/hawq/reference/cli/admin_utilities/hawqstop.html), see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
 
 ## Initialize HAWQ <a name="task_g1y_xtm_s5"></a>
 
@@ -68,7 +68,7 @@ The `hawq restart` command with the appropriate cluster or node command can stop
 
 Reload changes to the HAWQ configuration files without interrupting the system.
 
-The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](/200/reference/guc/guc_config.html).
+The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](/200/hawq/reference/guc/guc_config.html).
 
 -   Reload configuration file changes without shutting down the system using the `hawq stop` command:
 
