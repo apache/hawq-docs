@@ -6,12 +6,12 @@ In previous versions of HAWQ, you may have initialized HAWQ on HDFS without the 
 
 This topic contains the following sections:
 
--   [Enabling the HDFS NameNode HA feature](#)
-    -   [Collecting Information about the Target Filespace](#)
-    -   [Stopping HAWQ Cluster and Backup Catalog](#)
-    -   [Moving the Filespace Location ](#)
-    -   [Configure $\{GPHOME\}/etc/hdfs-client.xml ](#)
-    -   [Reinitialize the Standby Master](#)
+-   [Enabling the HDFS NameNode HA feature](#enablingthehdfsnamenodehafeature)
+    -   [Collecting Information about the Target Filespace](#collectinginformationaboutthetargetfilespace)
+    -   [Stopping HAWQ Cluster and Backup Catalog](#stoppinghawqclusterandbackupcatalog)
+    -   [Moving the Filespace Location ](#movingthefilespacelocation)
+    -   [Configure $\{GPHOME\}/etc/hdfs-client.xml ](#configuregphomeetchdfsclientxml)
+    -   [Reinitialize the Standby Master](#reinitializethestandbymaster)
 
 ## Enabling the HDFS NameNode HA feature <a name="enablingthehdfsnamenodehafeature"></a>
 
@@ -56,7 +56,6 @@ A default filespace named dfs\_system exists in the pg\_filespace catalog and th
     ```
 
     The output can contain the following:
-
     -   Master instance path information.
     -   Standby master instance path information, if the standby master is configured \(not in this example\).
     -   HDFS paths that share the same prefix for segment instances.
@@ -124,11 +123,10 @@ hawq filespace --movefilespace default --location=hdfs://phdcluster/hawq-securit
 1.  If the target filespace is not default filespace, replace default in command line with the actual filespace name.
 2.  Replace `hdfs://phdcluster/hawq-security` with new segment location.
 
-**Important:** Errors while moving the location of the filespace:
-
-Non-fatal error can occur if you provide invalid input or if you have not stopped HAWQ before attempting a filespace location change. Check that you have followed the instructions from the beginning, or correct the input error before you re-run `hawq filespace`.
-
-Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. When a fatal error occurs, you will see the message, "PLEASE RESTORE MASTER DATA DIRECTORY" in the output. If this occurs, shut down the database and restore the `$MASTER_DATA_DIRECTORY`.
+>**Important:** Errors while moving the location of the filespace:
+>Non-fatal error can occur if you provide invalid input or if you have not stopped HAWQ before attempting a filespace location change. Check that you have followed the instructions from the beginning, or correct the input error before you re-run `hawq filespace`.
+>
+>Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. When a fatal error occurs, you will see the message, "PLEASE RESTORE MASTER DATA DIRECTORY" in the output. If this occurs, shut down the database and restore the `$MASTER_DATA_DIRECTORY`.
 
 ### Configure $\{GPHOME\}/etc/hdfs-client.xml <a name="configuregphomeetchdfsclientxml"></a>
 
