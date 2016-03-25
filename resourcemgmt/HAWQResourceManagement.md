@@ -1,14 +1,10 @@
 ---
-title: Managing Resources <a name="topic_ugr_43c_5r"></a>
+title: How HAWQ Manages Resources <a name="topic_wwc_3fl_zt"></a>
 ---
 
-This chapter describes how HAWQ manages resources, which correspond to the CPU, memory, I/O and file handles that are required to execute queries on each node.
+HAWQ manages resources (CPU, memory, I/O and file handles) using a variety of mechanisms including global resource management, resource queues and the enforcement of limits on resource usage.
 
-## How HAWQ Manages Resources <a name="topic_wwc_3fl_zt"></a>
-
-HAWQ manages resources using a variety of mechanisms including global resource management, resource queues and the enforcement of limits on resource usage.
-
-### Globally Managed Environments
+## Globally Managed Environments
 
 In Hadoop clusters, resources are frequently managed globally by YARN. YARN provides resources to MapReduce jobs and any other applications that are configured to work with YARN. In this type of environment, resources are allocated in units called containers. Conversely, in a HAWQ environment, segments and node managers control the consumption of resources and enforce resource limits on each node.
 
@@ -20,7 +16,7 @@ When you run HAWQ natively in a Hadoop cluster, you can configure HAWQ to regist
 
 Resources obtained from YARN are then managed in a distributed fashion by HAWQ's resource manager, which is hosted on the HAWQ master.
 
-### HAWQ Resource Queues <a name="section_w4f_vx4_15"></a>
+## HAWQ Resource Queues <a name="section_w4f_vx4_15"></a>
 
 Resource queues are the main tool for managing the degree of concurrency in a HAWQ system. Resource queues are database objects that you create with the CREATE RESOURCE QUEUE SQL statement. You can use them to manage the number of active queries that may execute concurrently, and the maximum amount of memory and CPU usage each type of query is allocated. Resource queues can also guard against queries that would consume too many resources and degrade overall system performance.
 
@@ -47,15 +43,3 @@ The HAWQ resource manager follows several principles when allocating resources t
 **Enforcing Limits on Resources**
 
 You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html).
-
-## Best Practices for Configuring Resource Management <a name="topic_ikz_ndx_15"></a>
-
-When configuring resource management, you can apply certain best practices to ensure that resources are managed both efficiently and for best system performance.
-
-The following is a list of high-level best practices for optimal resource management:
-
--   Make sure segments do not have identical IP addresses. See [Segments Do Not Appear in gp\_segment\_configuration](/200/hawq/troubleshooting/Troubleshooting.html) for an explanation of this problem.
--   Configure all segments to have the same resource capacity. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html).
--   To prevent resource fragmentation, ensure that your deployment's segment resource capacity \(standalone mode\) or YARN node resource capacity \(YARN mode\) is a multiple of all virtual segment resource quotas. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) \(HAWQ standalone mode\) and [Setting HAWQ Segment Resource Capacity in YARN](YARNIntegration.html).
--   Ensure that enough registered segments are available and usable for query resource requests. If the number of unavailable or unregistered segments is higher than a set limit, then query resource requests are rejected. Also ensure that the variance of dispatched virtual segments across physical segments is not greater than the configured limit. See [Rejection of Query Resource Requests](/200/hawq/troubleshooting/Troubleshooting.html).
--   Configure minimum resource levels in YARN, and tune the timeout of when idle resources are returned to YARN. See [Tune HAWQ Resource Negotiations with YARN](YARNIntegration.html).
