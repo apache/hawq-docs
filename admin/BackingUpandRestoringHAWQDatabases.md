@@ -40,7 +40,7 @@ You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all 
 3.  Create a writable external table for each table to back up to that database.
 4.  Load table data into the newly created external tables.
 
-    **Note:** Put the insert statements in a single transaction to prevent problems if you perform any update operations during the backup.
+>    **Note:** Put the insert statements in a single transaction to prevent problems if you perform any update operations during the backup.
 
 
 ### Restoring from a Backup <a name="restoringfromabackup"></a>
@@ -95,16 +95,47 @@ In such situations, you can back up raw data generated during ETL processes and 
 
 The table below summaries the differences between the four approaches we discussed above. 
 
-
-|  |`gpfdist`|PXF|`pg_dump`|Raw Data Backup|
-|--|---------|---|---------|---------------|
-|**Parallel**|Yes|Yes|No|No|
-|**Incremental Backup**|No|No|No|Yes|
-|**Backup Location**|Local FS|HDFS|Local FS|Local FS, HDFS|
-|**Format**|Text, CSV|Text, CSV, Custom|Text, Tar, Custom|Depends on format of row data|
-|**Compression**|No|Yes|Only support custom format|Optional|
-|**Scalability**|Good|Good|---|Good|
-|**Performance**|Fast loading, Fast unloading|Fast loading, Normal unloading|---|Fast \(Just file copy\)|
+<table>
+  <tr>
+    <th></th>
+    <th><code>gpfdist</code></th>
+    <th>PXF</th>
+    <th><code>pg_dump</code></th>
+    <th>Raw Data Backup</th>
+  </tr>
+  <tr>
+    <td><b>Parallel</b></td>
+    <td>Yes</td>
+    <td>Yes</td>
+    <td>No</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td><b>Incremental Backup</b></td>
+    <td>No</td>
+    <td>No</td>
+    <td>No</td>
+    <td>Yes</td>
+  </tr>
+  <tr>
+    <td><b>Backup Location</b></td>
+    <td>Local FS</td>
+    <td>HDFS</td>
+    <td>Local FS</td>
+    <td>Local FS, HDFS</td>
+  </tr>
+  <tr>
+    <td><b>Format</b></td>
+    <td>Text, CSV</td>
+    <td>Text, CSV, Custom</td>
+    <td>Text, Tar, Custom</td>
+    <td>Depends on format of row data</td>
+  </tr>
+  <tr>
+<td><b>Compression</b></td><td>No</td><td>Yes</td><td>Only support custom format</td><td>Optional</td></tr>
+<tr><td><b>Scalability</b></td><td>Good</td><td>Good</td><td>---</td><td>Good</td></tr>
+<tr><td><b>Performance</b></td><td>Fast loading, Fast unloading</td><td>Fast loading, Normal unloading</td><td>---</td><td>Fast (Just file copy)</td><tr>
+</table>
 
 ## Estimating Space Requirements <a name="estimatingspacerequirements"></a>
 

@@ -100,10 +100,7 @@ You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_op
 
 To see the definition of an object, such as a table or view, you can use the `\d+` meta-command when working in `psql`. For example, to see the definition of a table:
 
-```
-=> \d+ *mytable*
-
-```
+<pre><code>=> \d+ <i>mytable</i></code></pre>
 
 ### Viewing Session Memory Usage Information <a name="topic_slt_ddv_1q"></a>
 
@@ -163,39 +160,39 @@ The server log files are written in comma-separated values \(CSV\) format. Some 
 
 The following fields are written to the log:
 
-|#|Field Name|Data Type|Description|
-|-|----------|---------|-----------|
-|1|event\_time|timestamp with time zone|Time that the log entry was written to the log|
-|2|user\_name|varchar\(100\)|The database user name|
-|3|database\_name|varchar\(100\)|The database name|
-|4|process\_id|varchar\(10\)|The system process ID \(prefixed with "p"\)|
-|5|thread\_id|varchar\(50\)|The thread count \(prefixed with "th"\)|
-|6|remote\_host|varchar\(100\)|On the master, the hostname/address of the client machine. On the segment, the hostname/address of the master.|
-|7|remote\_port|varchar\(10\)|The segment or master port number|
-|8|session\_start\_time|timestamp with time zone|Time session connection was opened|
-|9|transaction\_id|int|Top-level transaction ID on the master. This ID is the parent of any subtransactions.|
-|10|gp\_session\_id|text|Session identifier number \(prefixed with "con"\)|
-|11|gp\_command\_count|text|The command number within a session \(prefixed with "cmd"\)|
-|12|gp\_segment|text|The segment content identifier. The master always has a content ID of -1.|
-|13|slice\_id|text|The slice ID \(portion of the query plan being executed\)|
-|14|distr\_tranx\_id|text|Distributed transaction ID|
-|15|local\_tranx\_id|text|Local transaction ID|
-|16|sub\_tranx\_id|text|Subtransaction ID|
-|17|event\_severity|varchar\(10\)|Values include: LOG, ERROR, FATAL, PANIC, DEBUG1, DEBUG2|
-|18|sql\_state\_code|varchar\(10\)|SQL state code associated with the log message|
-|19|event\_message|text|Log or error message text|
-|20|event\_detail|text|Detail message text associated with an error or warning message|
-|21|event\_hint|text|Hint message text associated with an error or warning message|
-|22|internal\_query|text|The internally-generated query text|
-|23|internal\_query\_pos|int|The cursor index into the internally-generated query text|
-|24|event\_context|text|The context in which this message gets generated|
-|25|debug\_query\_string|text|User-supplied query string with full detail for debugging. This string can be modified for internal use.|
-|26|error\_cursor\_pos|int|The cursor index into the query string|
-|27|func\_name|text|The function in which this message is generated|
-|28|file\_name|text|The internal code file where the message originated|
-|29|file\_line|int|The line of the code file where the message originated|
-|30|stack\_trace|text|Stack trace text associated with this message|
-
+<table>
+  <tr><th>#</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr>
+  <tr><td>1</td><td>event_time</td><td>timestamp with time zone</td><td>Time that the log entry was written to the log</td></tr>
+  <tr><td>2</td><td>user_name</td><td>varchar(100)</td><td>The database user name</td></tr>
+  <tr><td>3</td><td>database_name</td><td>varchar(100)</td><td>The database name</td></tr>
+  <tr><td>4</td><td>process_id</td><td>varchar(10)</td><td>The system process ID (prefixed with "p")</td></tr>
+  <tr><td>5</td><td>thread_id</td><td>varchar(50)</td><td>The thread count (prefixed with "th")</td></tr>
+  <tr><td>6</td><td>remote_host</td><td>varchar(100)</td><td>On the master, the hostname/address of the client machine. On the segment, the hostname/address of the master.</td></tr>
+  <tr><td>7</td><td>remote_port</td><td>varchar(10)</td><td>The segment or master port number</td></tr>
+  <tr><td>8</td><td>session_start_time</td><td>timestamp with time zone</td><td>Time session connection was opened</td></tr>
+  <tr><td>9</td><td>transaction_id</td><td>int</td><td>Top-level transaction ID on the master. This ID is the parent of any subtransactions.</td></tr>
+  <tr><td>10</td><td>gp_session_id</td><td>text</td><td>Session identifier number (prefixed with "con")</td></tr>
+  <tr><td>11</td><td>gp_command_count</td><td>text</td><td>The command number within a session (prefixed with "cmd")</td></tr>
+  <tr><td>12</td><td>gp_segment</td><td>text</td><td>The segment content identifier. The master always has a content ID of -1.</td></tr>
+  <tr><td>13</td><td>slice_id</td><td>text</td><td>The slice ID (portion of the query plan being executed)</td></tr>
+  <tr><td>14</td><td>distr_tranx_id</td><td>text</td><td>Distributed transaction ID</td></tr>
+  <tr><td>15</td><td>local_tranx_id</td><td>text</td><td>Local transaction ID</td></tr>
+  <tr><td>16</td><td>sub_tranx_id</td><td>text</td><td>Subtransaction ID</td></tr>
+  <tr><td>17</td><td>event_severity</td><td>varchar(10)</td><td>Values include: LOG, ERROR, FATAL, PANIC, DEBUG1, DEBUG2</td></tr>
+  <tr><td>18</td><td>sql_state_code</td><td>varchar(10)</td><td>SQL state code associated with the log message</td></tr>
+  <tr><td>19</td><td>event_message</td><td>text</td><td>Log or error message text</td></tr>
+  <tr><td>20</td><td>event_detail</td><td>text</td><td>Detail message text associated with an error or warning message</td></tr>
+  <tr><td>21</td><td>event_hint</td><td>text</td><td>Hint message text associated with an error or warning message</td></tr>
+  <tr><td>22</td><td>internal_query</td><td>text</td><td>The internally-generated query text</td></tr>
+  <tr><td>23</td><td>internal_query_pos</td><td>int</td><td>The cursor index into the internally-generated query text</td></tr>
+  <tr><td>24</td><td>event_context</td><td>text</td><td>The context in which this message gets generated</td></tr>
+  <tr><td>25</td><td>debug_query_string</td><td>text</td><td>User-supplied query string with full detail for debugging. This string can be modified for internal use.</td></tr>
+  <tr><td>26</td><td>error_cursor_pos</td><td>int</td><td>The cursor index into the query string</td></tr>
+  <tr><td>27</td><td>func_name</td><td>text</td><td>The function in which this message is generated</td></tr>
+  <tr><td>28</td><td>file_name</td><td>text</td><td>The internal code file where the message originated</td></tr>
+  <tr><td>29</td><td>file_line</td><td>int</td><td>The line of the code file where the message originated</td></tr>
+  <tr><td>30</td><td>stack_trace</td><td>text</td><td>Stack trace text associated with this message</td></tr>
+</table>
 ### Searching the HAWQ Server Log Files <a name="topic30"></a>
 
 HAWQ provides a utility called `gplogfilter` can search through a HAWQ log file for entries matching the specified criteria. By default, this utility searches through the HAWQ master log file in the default logging location. For example, to display the entries to the master log file starting after 2 pm on a certain date:

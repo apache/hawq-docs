@@ -164,7 +164,7 @@ GROUP BY 1;
     <td>Check the `hawq_stats_missing` view in each database:
     <pre><code>SELECT * FROM hawq_toolkit.hawq_stats_missing;</code></pre>
     </td>
-    <td>Run `ANALYZE` on tables that are missing statistics.</td>
+    <td>Run <code>ANALYZE</code> on tables that are missing statistics.</td>
   </tr>
 </table>
 
@@ -178,27 +178,27 @@ GROUP BY 1;
   </tr>
   <tr>
     <td>
-      <p>Mark deleted rows in HAWQ system catalogs \(tables in the `pg_catalog` schema\) so that the space they occupy can be reused.</p>
+      <p>Mark deleted rows in HAWQ system catalogs (tables in the `pg_catalog` schema) so that the space they occupy can be reused.</p>
       <p>Recommended frequency: daily</p>
       <p>Severity: CRITICAL</p>
     </td>
     <td>
       <p>Vacuum each system catalog:</p>
-      <pre><code>VACUUM *<table\>*;</code></pre>
+      <pre><code>VACUUM &lt;<i>table</i>&gt;;</code></pre>
     </td>
-    <td>Vacuum system catalogzs regularly to prevent bloating.</td>
+    <td>Vacuum system catalogues regularly to prevent bloating.</td>
   </tr>
   <tr>
     <td>
-    <p>Vacuum all system catalogs \(tables in the `pg_catalog` schema\) that are approaching [vacuum\_freeze\_min\_age](/200/hawq/reference/guc/parameter_definitions.html).</p>
+    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="/200/hawq/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
     <p>Recommended frequency: daily</p>
     <p>Severity: CRITICAL</p>
     </td>
     <td>
       <p><p>Vacuum an individual table:</p>
-      <pre><code>VACUUM *<table\>*;</code></pre>
+      <pre><code>VACUUM &lt;<i>table</i>&gt;;</code></pre>
     </td>
-    <td>After the [vacuum\_freeze\_min\_age](/200/hawq/reference/guc/parameter_definitions.html) value is reached, VACUUM will no longer replace transaction IDs with `FrozenXID` while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
+    <td>After the <a href="/200/hawq/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
   </tr>
     <td>
       <p>Update table statistics.</p>
@@ -207,7 +207,7 @@ GROUP BY 1;
     </td>
     <td>
       <p>Analyze user tables:</p>
-      <pre><code>ANALYZEDB -d <database\> -a</code></pre>
+      <pre><code>ANALYZEDB -d &lt;<i>database</i>&gt; -a</code></pre>
     </td>
     <td>Analyze updated tables regularly so that the optimizer can produce efficient query execution plans.</td>
   </tr>
@@ -217,18 +217,18 @@ GROUP BY 1;
       <p>Recommended frequency: daily, or as required by your backup plan</p>
       <p>Severity: CRITICAL</p>
     </td>
-    <td>See [Backing Up and Restoring HAWQ](BackingUpandRestoringHAWQDatabases.html) for a discussion of backup procedures.</td>
+    <td>See <a href="BackingUpandRestoringHAWQDatabases.html">Backing Up and Restoring HAWQ</a> for a discussion of backup procedures.</td>
     <td>Best practice is to have a current backup ready in case the database must be restored.</td>
   </tr>
   <tr>
     <td>
-      <p>Vacuum and reindex system catalogs \(tables in the `pg_catalog` schema\) to maintain an efficient catalog.</p>
+      <p>Vacuum and reindex system catalogs (tables in the <code>pg_catalog</code> schema) to maintain an efficient catalog.</p>
       <p>Recommended frequency: weekly, or more often if database objects are created and dropped frequently</p>
     </td>
     <td>
       <ol>
-        <li>`VACUUM` the system tables in each database.</li>
-        <li>Run `REINDEX SYSTEM` in each database.
+        <li><code>VACUUM</code> the system tables in each database.</li>
+        <li>Run <code>REINDEX SYSTEM</code> in each database.
         <pre><code>REINDEXDB -s</code></pre></li>
       </ol>
     </td>

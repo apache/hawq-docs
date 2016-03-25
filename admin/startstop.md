@@ -12,7 +12,7 @@ Use the `hawq start `*`object`* and `hawq stop` commands to start and stop HAWQ,
 
 Do not issue a `KILL` command to end any Postgres process. Instead, use the database command `pg_cancel_backend()`.
 
-For information about [hawq start](/200/hawq//reference/cli/admin_utilities/hawqstart.html) and [hawq stop](/200/hawq/reference/cli/admin_utilities/hawqstop.html), see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
+For information about [hawq start](/200/hawq/reference/cli/admin_utilities/hawqstart.html) and [hawq stop](/200/hawq/reference/cli/admin_utilities/hawqstop.html), see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
 
 ## Initialize HAWQ <a name="task_g1y_xtm_s5"></a>
 

@@ -162,28 +162,22 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
 
 14. To maintain optimal cluster performance, rebalance HDFS data by running the following command:
-
-    <pre><code>
-    $ sudo -u hdfs hdfs balancer -threshold <i>threshhold_value</i>
+    <pre><code>$ sudo -u hdfs hdfs balancer -threshold <i>threshhold_value</i>
     </code></pre>
 
     where *threshhold\_value* represents how much a DataNode's disk usage, in percentage, can differ from overall disk usage in the cluster. Adjust the threshold value according to the needs of your production data and disk. The smaller the value, the longer the rebalance time.
-
+>
     **Note:** If you do not specify a threshold, then a default value of 20 is used. If the balancer detects that a DataNode is using less than a 20% difference of the cluster's overall disk usage, then data on that node will not be rebalanced. For example, if disk usage across all DataNodes in the cluster is 40% of the cluster's total disk-storage capacity, then the balancer script ensures that a DataNode's disk usage is between 20% and 60% of that DataNode's disk-storage capacity. DataNodes whose disk usage falls within that percentage range will not be rebalanced.
 
     Rebalance time is also affected by network bandwidth. You can adjust network bandwidth used by the balancer by using the following command:
-
-<pre><code>
-    $ sudo -u hdfs hdfs dfsadmin -setBalancerBandwidth <i>network_bandwith</i>
-</code></pre>
-
+    <pre><code>$ sudo -u hdfs hdfs dfsadmin -setBalancerBandwidth <i>network_bandwith</i></code></pre>
     The default value is 1MB/s. Adjust the value according to your network.
 
 15. Speed up the clearing of the metadata cache by using the following command:
 
     ```
     #psql -d postgres
-    postgres=#select gp_metadata_cache_clear\(\\);
+    postgres=#select gp_metadata_cache_clear();
     ```
 
 16. If you are using hash tables, adjust the `default_hash_table_bucket_number` server configuration property to reflect the cluster's new size. Update this configuration's value by multiplying the new number of nodes in the cluster by 6.
