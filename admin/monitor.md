@@ -12,11 +12,11 @@ Also, be sure to review [Recommended Monitoring and Maintenance Tasks](Recommend
 
 As a HAWQ administrator, you must monitor the system for problem events such as a segment going down or running out of disk space on a segment host. The following topics describe how to monitor the health of a HAWQ system and examine certain state information for a HAWQ system.
 
--   [Checking System State](#)
--   [Checking Disk Space Usage](#)
--   [Viewing Metadata Information about Database Objects](#)
--   [Viewing Session Memory Usage Information](#)
--   [Viewing Query Workfile Usage Information](#)
+-   [Checking System State](#topic12)
+-   [Checking Disk Space Usage](#topic15)
+-   [Viewing Metadata Information about Database Objects](#topic24)
+-   [Viewing Session Memory Usage Information](#topic_slt_ddv_1q)
+-   [Viewing Query Workfile Usage Information](#topic27)
 
 ### Checking System State <a name="topic12"></a>
 
@@ -28,7 +28,6 @@ The default `hawq state` action is to check segment instances and show a brief s
 
 ```
 $ hawq state -b
-
 ```
 
 You can also display information about the HAWQ master data directory by using `hawq state` with the `-d` option:
@@ -50,7 +49,6 @@ To see the total size of a database \(in bytes\), use the *hawq\_size\_of\_datab
 ```
 => SELECT * FROM hawq_toolkit.hawq_size_of_database
    ORDER BY soddatname;
-
 ```
 
 ##### Viewing Disk Space Usage for a Table <a name="topic18"></a>
@@ -62,7 +60,6 @@ The *hawq\_toolkit* administrative schema contains several views for checking th
    AS toast, sotdadditionalsize AS other
    FROM hawq_size_of_table_disk as sotd, pg_class
    WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
-
 ```
 
 ##### Viewing Disk Space Usage for Indexes <a name="topic19"></a>
@@ -74,7 +71,6 @@ The *hawq\_toolkit* administrative schema contains a number of views for checkin
    FROM pg_class, hawq_size_of_index
    WHERE pg_class.oid=hawq_size_of_index.soioid
    AND pg_class.relkind='i';
-
 ```
 
 ### Viewing Metadata Information about Database Objects <a name="topic24"></a>
@@ -113,8 +109,8 @@ To see the definition of an object, such as a table or view, you can use the `\d
 
 You can create and use the *session\_level\_memory\_consumption* view that provides information about the current memory utilization for sessions that are running queries on HAWQ. The view contains session information and information such as the database that the session is connected to, the query that the session is currently running, and memory consumed by the session processes.
 
--   [Creating the session\_level\_memory\_consumption View](#)
--   [The session\_level\_memory\_consumption View](#)
+-   [Creating the session\_level\_memory\_consumption View](#topic_nby_j1b_dq)
+-   [The session\_level\_memory\_consumption View](#topic7)
 
 #### Creating the session\_level\_memory\_consumption View <a name="topic_nby_j1b_dq"></a>
 
@@ -141,9 +137,7 @@ In the view, the column `is_runaway` indicates whether HAWQ considers the sessio
 |`is_runaway`|boolean| |Session is marked as runaway on the segment.|
 |`qe_count`|integer| |Number of query processes for the session.|
 |`active_qe_count`|integer| |Number of active query processes for the session.|
-|`dirty_qe_count`|integer| |Number of query processes that have not yet released their memory.The value is `-1` for sessions that are not running.
-
-|
+|`dirty_qe_count`|integer| |Number of query processes that have not yet released their memory.The value is `-1` for sessions that are not running.|
 |`runaway_vmem_mb`|integer| |Amount of vmem memory that the session was consuming when it was marked as a runaway session.|
 |`runaway_command_cnt`|integer| |Command count for the session when it was marked as a runaway session.|
 
@@ -157,7 +151,7 @@ These are the views in the schema *hawq\_toolkit*:
 -   The hawq\_workfile\_usage\_per\_query view contains one row for each query using disk space for workfiles on a segment at the current time.
 -   The hawq\_workfile\_usage\_per\_segment view contains one row for each segment. Each row displays the total amount of disk space used for workfiles on the segment at the current time.
 
-For information about using *hawq\_toolkit*, see [Using hawq\_toolkit](#).
+For information about using *hawq\_toolkit*, see [Using hawq\_toolkit](#topic31).
 
 ## Viewing the Database Server Log Files <a name="topic28"></a>
 
@@ -169,8 +163,8 @@ The server log files are written in comma-separated values \(CSV\) format. Some 
 
 The following fields are written to the log:
 
-|\#|Field Name|Data Type|Description|
-|--|----------|---------|-----------|
+|#|Field Name|Data Type|Description|
+|-|----------|---------|-----------|
 |1|event\_time|timestamp with time zone|Time that the log entry was written to the log|
 |2|user\_name|varchar\(100\)|The database user name|
 |3|database\_name|varchar\(100\)|The database name|

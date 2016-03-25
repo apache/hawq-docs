@@ -8,8 +8,8 @@ HAWQ requires that certain tasks be performed regularly to achieve optimal perfo
 
 ## Managing HAWQ Log Files <a name="topic9"></a>
 
--   [Database Server Log Files](#)
--   [Management Utility Log Files](#)
+-   [Database Server Log Files](#topic10)
+-   [Management Utility Log Files](#topic11)
 
 ### Database Server Log Files <a name="topic10"></a>
 
@@ -24,15 +24,13 @@ For information about viewing the database server log files, see [Viewing the Da
 Log files for the HAWQ management utilities are written to `~/hawqAdminLogs` by default. The naming convention for management log files is:
 
 ```
-script\_name_date.log
-
+script_name_date.log
 ```
 
 The log entry format is:
 
 ```
 timestamp:utility:host:user:[INFO|WARN|FATAL]:message
-
 ```
 
 The log file for a particular utility execution is appended to its daily log file each time that utility is run.
