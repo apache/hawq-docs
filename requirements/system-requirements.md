@@ -186,3 +186,6 @@ If this system uses YARN for resource management, you would set `yarn.nodemanage
 
 -   Gigabit Ethernet within the array. For a production cluster, 10 Gigabit Ethernet recommended.
 -   Dedicated, non-blocking switch.
+
+### Umask Requirement<a name="umask"></a>
+Set the OS file system umask to 022 on all cluster hosts. This ensure that users can read the HDFS block files.
