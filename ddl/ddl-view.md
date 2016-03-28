@@ -1,0 +1,25 @@
+---
+title: Creating and Managing Views <a name="topic_i3c_qwy_sp"></a>
+---
+
+Views enable you to save frequently used or complex queries, then access them in a `SELECT` statement as if they were a table. A view is not physically materialized on disk: the query runs as a subquery when you access the view.
+
+If a subquery is associated with a single query, consider using the `WITH` clause of the `SELECT` command instead of creating a seldom-used view.
+
+## Creating Views <a name="topic101"></a>
+
+The `CREATE VIEW`command defines a view of a query. For example:
+
+```
+CREATE VIEW comedies AS SELECT * FROM films WHERE kind = 'comedy';
+```
+
+Views ignore `ORDER BY` and `SORT` operations stored in the view.
+
+## Dropping Views <a name="topic102"></a>
+
+The `DROP VIEW` command removes a view. For example:
+
+```
+DROP VIEW topten;
+```
