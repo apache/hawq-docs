@@ -21,13 +21,13 @@ To enable STARTTLS with the TLS protocol, specify the `ldaptls` parameter with t
 ldap ldapserver=myldap.com ldaptls=1 ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
 ```
 
-Specify a non-default port, with the `ldapport` parameter. In this example, the authentication method includes the `ldaptls` parameter and the and `ldapport` parameter to specify the port 550.
+Specify a non-default port, with the `ldapport` parameter. In this example, the authentication method includes the `ldaptls` parameter and the `ldapport` parameter to specify the port 550.
 
 ```
 ldap ldapserver=myldap.com ldaptls=1 ldapport=500 ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
 ```
 
-## Enabing LDAP Authentication with a Secure Connection and TLS/SSL
+## Enabling LDAP Authentication with a Secure Connection and TLS/SSL
 
 To enable a secure connection with TLS/SSL, add `ldaps://` as the prefix to the LDAP server name specified in the `ldapserver` parameter. The default port is 636.
 
@@ -43,14 +43,54 @@ To specify a non-default port, add a colon \(:\) and the port number after the L
 ldapserver=ldaps://myldap.com:550
 ```
 
-## Notes
+### Notes
 
-HAWQ logs an error if the following are specified in an pg\_hba.conf file entry:
+HAWQ logs an error if the following are specified in a pg\_hba.conf file entry:
 
 -   If both the `ldaps://` prefix and the `ldaptls=1` parameter are specified.
 -   If both the `ldaps://` prefix and the `ldapport` parameter are specified.
 
 Enabling encrypted communication for LDAP authentication only encrypts the communication between HAWQ and the LDAP server.
+
+## Configuring Authentication with a System-wide OpenLDAP System
+
+If you have a system-wide OpenLDAP system and logins are configured to use LDAP with TLS or SSL in the pg_hba.conf file, logins may fail with the following message:
+
+```
+could not start LDAP TLS session: error code '-11'
+```
+
+To use an existing OpenLDAP system for authentication, HAWQ must be set up to use the LDAP server's CA certificate to validate user certificates. Follow these steps on both the master and standby hosts to configure HAWQ:
+
+1. Copy the base64-encoded root CA chain file from the Active Directory or LDAP server to
+the HAWQ master and standby master hosts. This example uses the directory `/etc/pki/tls/certs`.
+
+2. Change to the directory where you copied the CA certificate file and, as the root user, generate the hash for OpenLDAP:
+
+    ```
+    # cd /etc/pki/tls/certs
+    # openssl x509 -noout -hash -in <ca-certificate-file>
+    # ln -s <ca-certificate-file> <ca-certificate-file>.0
+    ```
+
+3. Configure an OpenLDAP configuration file for HAWQ with the CA certificate directory and certificate file specified.
+
+   As the root user, edit the OpenLDAP configuration file `/etc/openldap/ldap.conf`:
+
+    ```
+    SASL_NOCANON on
+    URI ldaps://ldapA.pivotal.priv ldaps://ldapB.pivotal.priv ldaps://ldapC.pivotal.priv
+    BASE dc=pivotal,dc=priv
+    TLS_CACERTDIR /etc/pki/tls/certs
+    TLS_CACERT /etc/pki/tls/certs/<ca-certificate-file>
+    ```
+   **Note**: For certificate validation to succeed, the hostname in the certificate must match a hostname in the URI property. Otherwise, you must also add `TLS_REQCERT allow` to the file.
+
+4. As the gpadmin user, edit `/usr/local/hawq/greenplum_path.sh` and add the following line.
+
+    ```
+    export LDAPCONF=/etc/openldap/ldap.conf
+    ```
 
 ## Examples
 
