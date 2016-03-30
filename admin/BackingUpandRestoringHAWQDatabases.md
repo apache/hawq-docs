@@ -1,4 +1,4 @@
----
+s---
 title: Backing Up and Restoring HAWQ
 ---
 
@@ -150,9 +150,9 @@ Before you back up your database, ensure that you have enough space to store bac
     If tables in your database are compressed, this query shows the compressed size of the database.
 
 -   Estimate the total size of the backup files.
-    -   If your database tables and backup files are both compressed, you can use the value `soddatsize` as an estimate value.
-    -   If your database tables are compressed  and backup files are not, you need to multiply `soddatsize` by the compression ratio. Although this depends on the compression algorithms, you can use an empirical value such as 300%.
-    -   If your back files are compressed and database tables are not, you need to divide `soddatsize` by the compression ratio.
+    -   If your database tables and backup files are both compressed, you can use the value `sodddatsize` as an estimate value.
+    -   If your database tables are compressed  and backup files are not, you need to multiply `sodddatsize` by the compression ratio. Although this depends on the compression algorithms, you can use an empirical value such as 300%.
+    -   If your back files are compressed and database tables are not, you need to divide `sodddatsize` by the compression ratio.
 -   Get space requirement.
     -   If you use HDFS with PXF, the space requirement is `size_of_backup_files * replication_factor`.
 

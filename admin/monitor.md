@@ -48,7 +48,7 @@ To see the total size of a database \(in bytes\), use the *hawq\_size\_of\_datab
 
 ```
 => SELECT * FROM hawq_toolkit.hawq_size_of_database
-   ORDER BY soddatname;
+   ORDER BY sodddatname;
 ```
 
 ##### Viewing Disk Space Usage for a Table <a name="topic18"></a>
