@@ -72,7 +72,9 @@ However, hash distributed tables can be faster than randomly distributed tables.
 
 HAWQ's elastic execution runtime is based on virtual segments, which are allocated on demand, based on the cost of the query. Each node uses one physical segment and a number of dynamically allocated virtual segments distributed to different hosts, thus simplifying performance tuning. Large queries use large numbers of segments, while smaller queries use fewer segments.Tables do not need to be redistributed when nodes are added or removed.
 
-In general, the more virtual segments are used, the faster the query will be executed. You can tune the parameters for `default_hash_table_bucket_number`, `hawq_rm_nvseg_perquery_perseg_limit`, and `hawq_rm_nvseg_perquery_limit` to adjust performance by controlling the number of virtual segments used for a query. However, be aware that if the value of `default_hash_table_bucket_number` is changed, data must be redistributed, which can be costly. Therefore, it is better to set the `default_hash_table_bucket_number` up front, if you expect to need a larger number of virtual segments. However, you might need to adjust the value in `default_hash_table_bucket_number` after cluster expansion, but should take care not to exceed the number of virtual segments per query set in `hawq_rm_nvseg_perquery_perseg_limit`. The following are recommended guidelines for setting the value of `default_hash_table_bucket_number`, based on query size.
+In general, the more virtual segments are used, the faster the query will be executed. You can tune the parameters for `default_hash_table_bucket_number` and `hawq_rm_nvseg_perquery_limit` to adjust performance by controlling the number of virtual segments used for a query. However, be aware that if the value of `default_hash_table_bucket_number` is changed, data must be redistributed, which can be costly. Therefore, it is better to set the `default_hash_table_bucket_number` up front, if you expect to need a larger number of virtual segments. However, you might need to adjust the value in `default_hash_table_bucket_number` after cluster expansion, but should take care not to exceed the number of virtual segments per query set in `hawq_rm_nvseg_perquery_limit`. Refer to the recommended guidelines for setting the value of `default_hash_table_bucket_number`, later in this section.
+
+For random or external tables, as well as user-defined functions, the value set in the `hawq_rm_nvseg_perquery_perseg_limit` parameter limits the number of virtual segments that are used for one segment for one query, to optimize query resources. This parameter should not be reset.
 
 Consider the following points when deciding on a table distribution policy.
 
@@ -86,15 +88,15 @@ HAWQ utilizes dynamic parallelism, which can affect the performance of a query e
 -   The `bucketnum` of a hash distributed table.
 -   The number of virtual segments specified in the definition of an external table.
 -   Data locality.
--   The values of `default_hash_table_bucket_number`, `hawq_rm_nvseg_perquery_perseg_limit`, and `hawq_rm_nvseg_perquery_limit` \(including defaults and user-defined values\).
+-   The values of `default_hash_table_bucket_number`, and `hawq_rm_nvseg_perquery_limit` \(including defaults and user-defined values\).
 
 For any specific query, the first four factors are fixed values, while the configuration parameters in the last item can be used to tune performance of the query execution. In querying a random table, the query resource load is related to the data size of the table, usually one virtual segment for one HDFS block. As a result, querying a large table could use a large number of resources.
 
-Use the parameter for bucket number \(`default_hash_table_bucket_number`\) to explicitly set the bucket number when creating a table.
+When initializing a cluster, you can use the `hawq init --bucket_number` parameter to explcitly set the default bucket number \(`default_hash_table_bucket_number`\).
 
-The `bucketnum` parameter specifies the number of hash buckets to be used in creating virtual segments. A HASH distributed table is created with `default_hash_table_bucket_number` buckets. The default bucket value is 6 times the segment count. It can be changed in session level or in the `CREATE TABLE` DDL by using the `bucketnum` storage parameter.
+The `bucketnum` for a hash table specifies the number of hash buckets to be used in creating virtual segments. A HASH distributed table is created with `default_hash_table_bucket_number` buckets. The default bucket value can be changed in session level or in the `CREATE TABLE` DDL by using the `bucketnum` storage parameter.
 
-**Note:** For best performance with large tables, the number of buckets should not exceed the value of the `default_hash_table_bucket_number` parameter \(default = 6 segments\). Small tables can use one segment node, `with bucketnum=1`. For larger tables, set the bucketnum to a multiple of the number of segment nodes, for the best load balancing on different segment nodes. A large table might use 4 or 6 buckets.
+**Note:** For best performance with large tables, the number of buckets should not exceed the value of the `default_hash_table_bucket_number` parameter. Small tables can use one segment node, `with bucketnum=1`. For larger tables, the bucketnum is set to a multiple of the number of segment nodes, for the best load balancing on different segment nodes. The elastic runtime will attempt to find the optimal number of buckets for the number of nodes being processed. Larger tables need more virtual segments , and hence use larger numbers of buckets.
 
 The following statement creates a table “sales” with 8 buckets, which would be similar to a hash-distributed table on 8 segments.
 
@@ -117,17 +119,17 @@ There are four ways of creating a table from an origin table. The ways in which 
 
 The optional `INHERITS` clause specifies a list of tables from which the new table automatically inherits all columns. If `WITH` specifies `bucketnum` in creating a hash-distributed table, it will be copied. If distribution is specified by column, the table will inherit it. Otherwise, the table will use default distribution.
 
-The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. If a `bucketnum` bucketnum is specified, it will be copied. Otherwise, the table will use default distribution.
+The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. If a `bucketnum` is specified, it will be copied. Otherwise, the table will use default distribution.
 
 #### Declaring Distribution Keys <a name="topic_kjg_tqm_gv"></a>
 
-`CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the default\_hash\_table\_bucket\_number parameter.
+`CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `hawq_rm_nvseg_perquery_limit` parameter.
 
 #### Performance Tuning <a name="topic_wff_mqm_gv"></a>
 
-Adjusting the values of the configuration parameters `default_hash_table_bucket_number`, `hawq_rm_nvseg_perquery_perseg_limit`, and `hawq_rm_nvseg_perquery_limit` can tune performance by controlling the number of virtual segments being used. In general, HAWQ's elastic runtime will dynamically allocate virtual segments to optimize performance, so using the system defaults is recommended.
+Adjusting the values of the configuration parameters `default_hash_table_bucket_number` and `hawq_rm_nvseg_perquery_limit` can tune performance by controlling the number of virtual segments being used. In most circumstances, HAWQ's elastic runtime will dynamically allocate virtual segments to optimize performance, so further tuning should not be needed..
 
-Hash tables are created using the value specified in `default_hash_table_bucket_number`. Explicitly setting this value can be useful in managing resources, as queries for hash tables use a fixed number of buckets, regardless of the amount of data present. If a larger or smaller number of hash buckets are desired, set this value before you CREATE TABLE. Setting the value to six times the number of slave segments is recommended, provided the value does not exceed the value of `hawq_rm_nvseg_perquery_limit`, which defines the maximum number of virtual segments for a query \(default = 512, with a maximum of 1000\).
+Hash tables are created using the value specified in `default_hash_table_bucket_number`. Explicitly setting this value can be useful in managing resources, as queries for hash tables use a fixed number of buckets, regardless of the amount of data present. If a larger or smaller number of hash buckets are desired, set this value before you CREATE TABLE. Resources are dynamically allocated to a multiple of the number of nodes. If setting the value of `default_hash_table_bucket_number` with hawq init --bucket\_number, the value should not exceed the value of `hawq_rm_nvseg_perquery_limit`, which defines the maximum number of virtual segments that can be used for a query \(default = 512, with a maximum of 1000\).
 
 The following per-node guidelines apply to values for `default_hash_table_bucket_number`.
 
@@ -141,4 +143,4 @@ The following per-node guidelines apply to values for `default_hash_table_bucket
 |\> 256 and <= 512|1 \* \#nodes|
 |\> 512|512|
 
-Attempting to improve concurrency for hash tables by reducing the value of `hawq_rm_nvseg_perquery_limit`, or by tuning `hawq_rm_nvseg_perquery_perseg_limit` to redefine the maximum number of virtual segments in one segment for one query, is generally not recommended. Also, changing the value of `default_hash_table_bucket_number` means the hash table data must be redistributed. If you are expanding a cluster, you might wish to change this value, but be aware that retuning could adversely affect performance.
+Attempting to improve concurrency for hash tables by reducing the value of `hawq_rm_nvseg_perquery_limit`, to redefine the maximum number of virtual segments in one segment for one query, is not recommended. Also, changing the value of `default_hash_table_bucket_number` after initializing a cluster means the hash table data must be redistributed. If you are expanding a cluster, you might wish to change this value, but be aware that retuning could adversely affect performance.
