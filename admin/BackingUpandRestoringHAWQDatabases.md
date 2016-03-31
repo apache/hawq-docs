@@ -1,4 +1,4 @@
-s---
+---
 title: Backing Up and Restoring HAWQ
 ---
 
