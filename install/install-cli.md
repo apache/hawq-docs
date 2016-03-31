@@ -6,7 +6,7 @@ This section provides instructions for installing a HAWQ system.
 
 **Note:** This section provides instructions for installing HAWQ from the command line. You can optionally install HAWQ using the HAWQ plug-in for Ambari. See [Install HAWQ using Ambari](install-ambari.html) for more information.
 
-## Prepare Host Machines <a name="topic_eqn_fc4_15"></a>
+## Prepare Host Machines <a id="topic_eqn_fc4_15"></a>
 
 Configure operating system parameters on each host machine before you begin to install HAWQ.
 
@@ -65,7 +65,7 @@ Configure operating system parameters on each host machine before you begin to i
 
 5.  Ensure that the /etc/hosts file on each  cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master /etc/hosts file and either copying it or referencing it on every host that will take part in the  cluster.
 
-## Install the HAWQ Cluster on Multiple Machines <a name="topic_ld1_bh4_15"></a>
+## Install the HAWQ Cluster on Multiple Machines <a id="topic_ld1_bh4_15"></a>
 
 Follow this procedure to install the HAWQ cluster on multiple host machines or VMs.
 
@@ -259,7 +259,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     After the cluster starts, you can follow the instructions in [Validate the Installation](#topic_opr_3gp_15).
 
 
-## Install the HAWQ Cluster on a Single Machine <a name="topic_uqh_wg4_15"></a>
+## Install the HAWQ Cluster on a Single Machine <a id="topic_uqh_wg4_15"></a>
 
 Follow this procedure to install HAWQ software on a single host machine.
 
@@ -331,7 +331,7 @@ Follow this procedure to install HAWQ software on a single host machine.
     After the cluster starts, you can follow the instructions in [Validate the Installation](#topic_opr_3gp_15).
 
 
-## \(Optional\) Enable Kerberos <a name="topic_iwy_5fb_1t"></a>
+## \(Optional\) Enable Kerberos <a id="topic_iwy_5fb_1t"></a>
 
 The following additional steps are necessary only if you manage your system manually \(without using Ambari\), and you enabled Kerberos security for HDFS.
 
@@ -516,7 +516,7 @@ For manual installations, perform these additional steps after you complete the 
         ```
 
 
-## Validate the Installation <a name="topic_opr_3gp_15"></a>
+## Validate the Installation <a id="topic_opr_3gp_15"></a>
 
 Perform these basic commands to ensure that the new  cluster is functional.
 
@@ -561,7 +561,7 @@ Perform these basic commands to ensure that the new  cluster is functional.
     ```
 
 
-## Install PXF Plugins <a name="topic_pnk_4cv_25"></a>
+## Install PXF Plugins <a id="topic_pnk_4cv_25"></a>
 
 If you plan on accessing data in external systems such as HDFS files, Hive or HBase, you must install the appropriate PXF plugin for the external system.
 

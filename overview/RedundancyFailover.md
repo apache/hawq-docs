@@ -4,13 +4,13 @@ title: Redundancy and Fault Tolerance
 
 HAWQ uses a fault tolerance service based on heartbeats and on-demand probe protocols. It can identify newly added node dynamically and remove node from the cluster when it becomes unusable.
 
-## About Segment Fault Tolerance <a name="aboutsegmentfailover"></a>
+## About Segment Fault Tolerance <a id="aboutsegmentfailover"></a>
 
 In HAWQ, the segments are stateless. This ensures faster recovery and better availability.
 
 When a segment fails, the segment is removed from the resource pool. Queries are no longer dispatched to the segment. When the segment is operational again, the Fault Tolerance Service verifies its state and adds the segment back to the resource pool.
 
-## About Interconnect Redundancy <a name="aboutinterconnectredundancy"></a>
+## About Interconnect Redundancy <a id="aboutinterconnectredundancy"></a>
 
 The *interconnect* refers to the inter-process communication between the segments and the network infrastructure on which this communication relies. You can achieve a highly available interconnect by deploying dual Gigabit Ethernet switches on your network and deploying redundant Gigabit connections to the HAWQ host \(master and segment\) servers.
 

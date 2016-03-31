@@ -4,8 +4,8 @@ title: Apache HAWQ System Requirements
 
 Follow these guidelines to configure each host machine that will run an Apache HAWQ or PXF service.
 
-<a name="topic_d3f_vlz_g5"></a>
-### Host Memory Configuration
+
+## Host Memory Configuration<a id="topic_d3f_vlz_g5"></a>
 
 In order to prevent data loss or corruption in an Apach HAWQ cluster, you must configure the memory on each host machine so that the Linux Out-of-Memory \(OOM\) killer process never kills a HAWQ process due to OOM conditions. \(HAWQ applies its own rules to enforce memory restrictions.\)
 
@@ -69,8 +69,7 @@ In order to prevent data loss or corruption in an Apach HAWQ cluster, you must c
 4.  Ensure that no other services \(such as Puppet\) or automated processes attempt to reset the overcommit settings on cluster hosts.
 5.  During the installation process, configure HAWQ memory by setting YARN or HAWQ configuration parameters, as described in [HAWQ Memory Configuration](#topic_uzf_flz_g5).
 
-<a name="topic_uzf_flz_g5"></a>
-### HAWQ Memory Configuration
+## HAWQ Memory Configuration<a id="topic_uzf_flz_g5"></a>
 
 You must configure the memory used by HAWQ according to whether you plan to use YARN or HAWQ to manage system resources.
 
@@ -95,7 +94,7 @@ To configure the HAWQ memory for a given host, first determine the amount of `NO
 
 You can set either parameter using Ambari when configuring YARN or when installing HAWQ with Ambari.
 
-#### Example 1 - Large Host Machine
+### Example 1 - Large Host Machine
 
 An example large host machine uses the memory configuration:
 
@@ -121,7 +120,7 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 
 If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` = `RAM - NON_HAWQ_MEMORY` = 256 GB - 7GB = 249.
 
-#### Example 2 - Medium Host Machine
+### Example 2 - Medium Host Machine
 
 An example medium host machine uses the memory configuration:
 
@@ -147,7 +146,7 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 
 If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` = `RAM - NON_HAWQ_MEMORY` = 64 GB - 11GB = 57.
 
-#### Example 3 - Small Host Machine \(Not recommended for production use\)
+### Example 3 - Small Host Machine \(Not recommended for production use\)
 
 An example small machine uses the memory configuration:
 
@@ -173,19 +172,17 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 
 If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` = `RAM - NON_HAWQ_MEMORY` = 8 GB - 7GB = 1.
 
-<a name="topic_bsm_hhv_2v"></a>
-### Disk Requirements
+## Disk Requirements<a id="topic_bsm_hhv_2v"></a>
 
 -   2GB per host for HAWQ installation. 
 -   Approximately 300MB per segment instance for metadata.
 -   Appropriate free space for data: disks should have at least 30% free space \(no more than 70% capacity\).
 -   High-speed, local storage
 
-<a name="topic_rdb_jhv_2v"></a>
-### Network Requirements
+## Network Requirements<a id="topic_rdb_jhv_2v"></a>
 
 -   Gigabit Ethernet within the array. For a production cluster, 10 Gigabit Ethernet recommended.
 -   Dedicated, non-blocking switch.
 
-### Umask Requirement<a name="umask"></a>
+## Umask Requirement<a id="umask"></a>
 Set the OS file system umask to 022 on all cluster hosts. This ensure that users can read the HDFS block files.

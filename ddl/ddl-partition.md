@@ -1,5 +1,5 @@
 ---
-title: Partitioning Large Tables <a name="topic_o3v_dwy_sp"></a>
+title: Partitioning Large Tables <a id="topic_o3v_dwy_sp"></a>
 ---
 
 Table partitioning enables supporting very large tables, such as fact tables, by logically dividing them into smaller, more manageable pieces. Partitioned tables can improve query performance by allowing the HAWQ query optimizer to scan only the data needed to satisfy a given query instead of scanning all the contents of a large table.
@@ -11,11 +11,11 @@ HAWQ supports:
 -   *range partitioning*: division of data based on a numerical range, such as date or price.
 -   *list partitioning*: division of data based on a list of values, such as sales territory or product line.
 -   A combination of both types.
-<a name="im207241"></a>
+<a id="im207241"></a>
 
 ![](../mdimages/partitions.jpg "Example Multi-level Partition Design")
 
-## Table Partitioning in HAWQ <a name="topic64"></a>
+## Table Partitioning in HAWQ <a id="topic64"></a>
 
 HAWQ divides tables into parts \(also known as partitions\) to enable massively parallel processing. Tables are partitioned during `CREATE TABLE` using the `PARTITION BY` \(and optionally the `SUBPARTITION BY`\) clause. Partitioning creates a top-level \(or parent\) table with one or more levels of sub-tables \(or child tables\). Internally, HAWQ creates an inheritance relationship between the top-level table and its underlying partitions, similar to the functionality of the `INHERITS` clause of PostgreSQL.
 
@@ -25,7 +25,7 @@ The HAWQ system catalog stores partition hierarchy information so that rows inse
 
 To insert data into a partitioned table, you specify the root partitioned table, the table created with the `CREATE TABLE` command. You also can specify a leaf child table of the partitioned table in an `INSERT` command. An error is returned if the data is not valid for the specified leaf child table. Specifying a child table that is not a leaf child table in the `INSERT` command is not supported. Execution of other DML commands such as `UPDATE` and `DELETE` on any child table of a partitioned table is not supported. These commands must be executed on the root partitioned table, the table created with the `CREATE TABLE` command.
 
-## Deciding on a Table Partitioning Strategy <a name="topic65"></a>
+## Deciding on a Table Partitioning Strategy <a id="topic65"></a>
 
 Not all tables are good candidates for partitioning. If the answer is *yes* to all or most of the following questions, table partitioning is a viable database design strategy for improving query performance. If the answer is *no* to most of the following questions, table partitioning is not the right solution for that table. Test your design strategy to ensure that query performance improves as expected.
 
@@ -43,7 +43,7 @@ Be very careful with multi-level partitioning because the number of partition fi
 
 Before settling on a multi-level partitioning strategy, consider a single level partition with bitmap indexes. Indexes slow down data loads, so consider performance testing with your data and schema to decide on the best strategy.
 
-## Creating Partitioned Tables <a name="topic66"></a>
+## Creating Partitioned Tables <a id="topic66"></a>
 
 You partition tables when you create them with `CREATE TABLE`. This topic provides examples of SQL syntax for creating a table with various partition designs.
 
@@ -59,7 +59,7 @@ To partition a table:
 -   [Defining Multi-level Partitions](#topic70)
 -   [Partitioning an Existing Table](#topic71)
 
-### Defining Date Range Table Partitions <a name="topic67"></a>
+### Defining Date Range Table Partitions <a id="topic67"></a>
 
 A date range partitioned table uses a single `date` or `timestamp` column as the partition key column. You can use the same partition key column to create subpartitions if necessary, for example, to partition by month and then subpartition by day. Consider partitioning by the most granular level. For example, for a table partitioned by date, you can partition by day and have 365 daily partitions, rather than partition by year then subpartition by month then subpartition by day. A multi-level design can reduce query planning time, but a flat partition design runs faster.
 
@@ -97,7 +97,7 @@ PARTITION BY RANGE (date)
 
 You do not have to declare an `END` value for each partition, only the last one. In this example, `Jan08` ends where `Feb08` starts.
 
-### Defining Numeric Range Table Partitions <a name="topic68"></a>
+### Defining Numeric Range Table Partitions <a id="topic68"></a>
 
 A numeric range partitioned table uses a single numeric data type column as the partition key column. For example:
 
@@ -112,7 +112,7 @@ PARTITION BY RANGE (year)
 
 For more information about default partitions, see [Adding a Default Partition](#topic80).
 
-### Defining List Table Partitions <a name="topic69"></a>
+### Defining List Table Partitions <a id="topic69"></a>
 
 A list partitioned table can use any data type column that allows equality comparisons as its partition key column. A list partition can also have a multi-column \(composite\) partition key, whereas a range partition only allows a single column as the partition key. For list partitions, you must declare a partition specification for every partition \(list value\) you want to create. For example:
 
@@ -130,7 +130,7 @@ PARTITION BY LIST (gender)
 
 For more information about default partitions, see [Adding a Default Partition](#topic80).
 
-### Defining Multi-level Partitions <a name="topic70"></a>
+### Defining Multi-level Partitions <a id="topic70"></a>
 
 You can create a multi-level partition design with subpartitions of partitions. Using a *subpartition template* ensures that every partition has the same subpartition design, including partitions that you add later. For example, the following SQL creates the two-level partition design shown in [Figure 1](#im207241):
 
@@ -176,7 +176,7 @@ PARTITION BY RANGE (year)
 
 When you create multi-level partitions on ranges, it is easy to create a large number of subpartitions, some containing little or no data. This can add many entries to the system tables, which increases the time and memory required to optimize and execute queries. Increase the range interval or choose a different partitioning strategy to reduce the number of subpartitions created.
 
-### Partitioning an Existing Table <a name="topic71"></a>
+### Partitioning an Existing Table <a id="topic71"></a>
 
 Tables can be partitioned only at creation. If you have a table that you want to partition, you must create a partitioned table, load the data from the original table into the new table, drop the original table, and rename the partitioned table with the original table's name. You must also re-grant any table permissions. For example:
 
@@ -193,7 +193,7 @@ GRANT ALL PRIVILEGES ON sales TO admin;
 GRANT SELECT ON sales TO guest;
 ```
 
-## Loading Partitioned Tables <a name="topic73"></a>
+## Loading Partitioned Tables <a id="topic73"></a>
 
 After you create the partitioned table structure, top-level parent tables are empty. Data is routed to the bottom-level child table partitions. In a multi-level partition design, only the subpartitions at the bottom of the hierarchy can contain data.
 
@@ -205,7 +205,7 @@ When you use `COPY` or `INSERT` to load data into a parent table, the data is au
 
 Best practice for loading data into partitioned tables is to create an intermediate staging table, load it, and then exchange it into your partition design. See [Exchanging a Partition](#topic83).
 
-## Verifying Your Partition Strategy <a name="topic74"></a>
+## Verifying Your Partition Strategy <a id="topic74"></a>
 
 When a table is partitioned based on the query predicate, you can use `EXPLAIN` to verify that the query optimizer scans only the relevant data to examine the query plan.
 
@@ -235,7 +235,7 @@ Filter: "date"=01-07-08::date AND region='USA'::text
 
 Ensure that the query optimizer does not scan unnecessary partitions or subpartitions \(for example, scans of months or regions not specified in the query predicate\), and that scans of the top-level tables return 0-1 rows.
 
-### Troubleshooting Selective Partition Scanning <a name="topic75"></a>
+### Troubleshooting Selective Partition Scanning <a id="topic75"></a>
 
 The following limitations can result in a query plan that shows a non-selective scan of your partition hierarchy.
 
@@ -245,7 +245,7 @@ The following limitations can result in a query plan that shows a non-selective 
 
 -   Selective scanning recognizes `STABLE` and `IMMUTABLE` functions, but does not recognize `VOLATILE` functions within a query. For example, `WHERE` clauses such as `date > CURRENT_DATE` cause the query optimizer to selectively scan partitioned tables, but `time > TIMEOFDAY` does not.
 
-## Viewing Your Partition Design <a name="topic76"></a>
+## Viewing Your Partition Design <a id="topic76"></a>
 
 You can look up information about your partition design using the *pg\_partitions* view. For example, to see the partition design of the *sales* table:
 
@@ -262,7 +262,7 @@ The following table and views show information about partitioned tables.
 -   *pg\_partition\_templates* - Shows the subpartitions created using a subpartition template.
 -   *pg\_partition\_columns* - Shows the partition key columns used in a partition design.
 
-## Maintaining Partitioned Tables <a name="topic77"></a>
+## Maintaining Partitioned Tables <a id="topic77"></a>
 
 To maintain a partitioned table, use the `ALTER TABLE` command against the top-level parent table. The most common scenario is to drop old partitions and add new ones to maintain a rolling window of data in a range partition design. If you have a default partition in your partition design, you add a partition by *splitting* the default partition.
 
@@ -288,7 +288,7 @@ To maintain a partitioned table, use the `ALTER TABLE` command against the top-l
 
 Partitions are not required to have names. If a partition does not have a name, use one of the following expressions to specify a part: `PARTITION FOR (value)` or \)`PARTITION FOR(RANK(number)`.
 
-### Adding a Partition <a name="topic78"></a>
+### Adding a Partition <a id="topic78"></a>
 
 You can add a partition to a partition design with the `ALTER TABLE` command. If the original partition design included subpartitions defined by a *subpartition template*, the newly added partition is subpartitioned according to that template. For example:
 
@@ -318,7 +318,7 @@ ALTER TABLE sales ALTER PARTITION FOR (RANK(12))
 
 **Note:** You cannot add a partition to a partition design that has a default partition. You must split the default partition to add a partition. See [Splitting a Partition](#topic84).
 
-### Renaming a Partition <a name="topic79"></a>
+### Renaming a Partition <a id="topic79"></a>
 
 Partitioned tables use the following naming convention. Partitioned subtable names are subject to uniqueness requirements and length limitations.
 
@@ -364,7 +364,7 @@ When altering partitioned tables with the `ALTER TABLE` command, always refer to
 
 **Note:** The table name cannot be a partition name in an `ALTER TABLE` statement. For example, `ALTER TABLE sales...` is correct, `ALTER TABLE sales_1_part_jan08...` is not allowed.
 
-### Adding a Default Partition <a name="topic80"></a>
+### Adding a Default Partition <a id="topic80"></a>
 
 You can add a default partition to a partition design with the `ALTER TABLE` command.
 
@@ -374,7 +374,7 @@ ALTER TABLE sales ADD DEFAULT PARTITION other;
 
 If incoming data does not match a partition's `CHECK` constraint and there is no default partition, the data is rejected. Default partitions ensure that incoming data that does not match a partition is inserted into the default partition.
 
-### Dropping a Partition <a name="topic81"></a>
+### Dropping a Partition <a id="topic81"></a>
 
 You can drop a partition from your partition design using the `ALTER TABLE` command. When you drop a partition that has subpartitions, the subpartitions \(and all data in them\) are automatically dropped as well. For range partitions, it is common to drop the older partitions from the range as old data is rolled out of the data warehouse. For example:
 
@@ -382,13 +382,13 @@ You can drop a partition from your partition design using the `ALTER TABLE` comm
 ALTER TABLE sales DROP PARTITION FOR (RANK(1));
 ```
 
-### Sorting AORO Partitioned Tables <a name="topic_enm_vrk_kv"></a>
+### Sorting AORO Partitioned Tables <a id="topic_enm_vrk_kv"></a>
 
 HDFS read access for large numbers of append-only, row-oriented \(AORO\) tables with large numbers of partitions can be tuned by using the `optimizer_parts_to_force_sort_on_insert` parameter to control how HDFS opens files. This parameter controls the way the optimizer sorts tuples during INSERT operations, to maximize HDFS performance.
 
 The user-tunable parameter `optimizer_parts_to_force_sort_on_insert` can force the GPORCA query optimizer to generate a plan for sorting tuples during insertion into an append-only, row-oriented \(AORO\) partitioned tables. Sorting the insert tuples reduces the number of partition switches, thus improving the overall INSERT performance. For a given AORO table, if its number of leaf-partitioned tables is greater than or equal to the number specified in `optimizer_parts_to_force_sort_on_insert`, the plan generated by the GPORCA will sort inserts by their partition IDs before performing the INSERT operation. Otherwise, the inserts are not sorted. The default value for `optimizer_parts_to_force_sort_on_insert` is 160.
 
-### Truncating a Partition <a name="topic82"></a>
+### Truncating a Partition <a id="topic82"></a>
 
 You can truncate a partition using the `ALTER TABLE` command. When you truncate a partition that has subpartitions, the subpartitions are automatically truncated as well.
 
@@ -396,7 +396,7 @@ You can truncate a partition using the `ALTER TABLE` command. When you truncate 
 ALTER TABLE sales TRUNCATE PARTITION FOR (RANK(1));
 ```
 
-### Exchanging a Partition <a name="topic83"></a>
+### Exchanging a Partition <a id="topic83"></a>
 
 You can exchange a partition using the `ALTER TABLE` command. Exchanging a partition swaps one table in place of an existing partition. You can exchange partitions only at the lowest level of your partition hierarchy \(only partitions that contain data can be exchanged\).
 
@@ -411,7 +411,7 @@ WITH TABLE jan12;
 
 **Note:** This example refers to the single-level definition of the table `sales`, before partitions were added and altered in the previous examples.
 
-### Splitting a Partition <a name="topic84"></a>
+### Splitting a Partition <a id="topic84"></a>
 
 Splitting a partition divides a partition into two partitions. You can split a partition using the `ALTER TABLE` command. You can split partitions only at the lowest level of your partition hierarchy: only partitions that contain data can be split. The split value you specify goes into the *latter* partition.
 
@@ -434,7 +434,7 @@ END ('2009-02-01') EXCLUSIVE
 INTO (PARTITION jan09, default partition);
 ```
 
-### Modifying a Subpartition Template <a name="topic85"></a>
+### Modifying a Subpartition Template <a id="topic85"></a>
 
 Use `ALTER TABLE` SET SUBPARTITION TEMPLATE to modify the subpartition template of a partitioned table. Partitions added after you set a new subpartition template have the new partition design. Existing partitions are not modified.
 

@@ -13,7 +13,7 @@ This topic contains the following sections:
     -   [Configure $\{GPHOME\}/etc/hdfs-client.xml ](#configuregphomeetchdfsclientxml)
     -   [Reinitialize the Standby Master](#reinitializethestandbymaster)
 
-## Enabling the HDFS NameNode HA feature <a name="enablingthehdfsnamenodehafeature"></a>
+## Enabling the HDFS NameNode HA feature <a id="enablingthehdfsnamenodehafeature"></a>
 
 To enable the HDFS NameNode HA feature, you need to perform the following tasks:
 
@@ -23,7 +23,7 @@ To enable the HDFS NameNode HA feature, you need to perform the following tasks:
 -   Configure $\{GPHOME\}/etc/hdfs-client.xml
 -   Reinitialize the standby master after moving the filespace
 
-### Collecting Information about the Target Filespace <a name="collectinginformationaboutthetargetfilespace"></a>
+### Collecting Information about the Target Filespace <a id="collectinginformationaboutthetargetfilespace"></a>
 
 A default filespace named dfs\_system exists in the pg\_filespace catalog and the parameter, pg\_filespace\_entry, contains detailed information for each filespace. 
 
@@ -71,7 +71,7 @@ A default filespace named dfs\_system exists in the pg\_filespace catalog and th
     For example, you can do this by moving the filespace from hdfs://phdcluster/hawq-security to hdfs://phdcluster/hawq/another/path.
 
 
-### Stopping the HAWQ Cluster and Backing Up the Catalog <a name="stoppinghawqclusterandbackupcatalog"></a>
+### Stopping the HAWQ Cluster and Backing Up the Catalog <a id="stoppinghawqclusterandbackupcatalog"></a>
 
 To enable HA HDFS,  you are changing the HAWQ catalog and persistent tables. You cannot preform transactions while persistent tables are being updated. Therefore, before you move the filespace location, back up the catalog. This is to ensure that you do not lose data due to a hardware failure or during an operation \(such as killing the HAWQ process\). 
 
@@ -100,7 +100,7 @@ To enable HA HDFS,  you are changing the HAWQ catalog and persistent tables. Y
     ```
 
 
-### Moving the Filespace Location <a name="movingthefilespacelocation"></a>
+### Moving the Filespace Location <a id="movingthefilespacelocation"></a>
 
 HAWQ provides the command line tool, `hawq filespace`, to move the location of the filespace.
 
@@ -128,11 +128,11 @@ hawq filespace --movefilespace default --location=hdfs://phdcluster/hawq-securit
 >
 >Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. When a fatal error occurs, you will see the message, "PLEASE RESTORE MASTER DATA DIRECTORY" in the output. If this occurs, shut down the database and restore the `$MASTER_DATA_DIRECTORY`.
 
-### Configure $\{GPHOME\}/etc/hdfs-client.xml <a name="configuregphomeetchdfsclientxml"></a>
+### Configure $\{GPHOME\}/etc/hdfs-client.xml <a id="configuregphomeetchdfsclientxml"></a>
 
 Configure the hdfs-client.xml file.
 
-### Reinitialize the Standby Master <a name="reinitializethestandbymaster"></a>
+### Reinitialize the Standby Master <a id="reinitializethestandbymaster"></a>
 
 The standby master catalog is rendered invalid during the move, and needs to be reinitialized. If you did not have a standby master configured, you can skip this task.
 

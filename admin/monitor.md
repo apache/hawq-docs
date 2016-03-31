@@ -8,7 +8,7 @@ Observing the HAWQ system day-to-day performance helps administrators understand
 
 Also, be sure to review [Recommended Monitoring and Maintenance Tasks](RecommendedMonitoringTasks.html) for monitoring activities you can script to quickly detect problems in the system.
 
-## Monitoring System State <a name="topic3"></a>
+## Monitoring System State <a id="topic3"></a>
 
 As a HAWQ administrator, you must monitor the system for problem events such as a segment going down or running out of disk space on a segment host. The following topics describe how to monitor the health of a HAWQ system and examine certain state information for a HAWQ system.
 
@@ -18,11 +18,11 @@ As a HAWQ administrator, you must monitor the system for problem events such as 
 -   [Viewing Session Memory Usage Information](#topic_slt_ddv_1q)
 -   [Viewing Query Workfile Usage Information](#topic27)
 
-### Checking System State <a name="topic12"></a>
+### Checking System State <a id="topic12"></a>
 
 A HAWQ system is comprised of multiple PostgreSQL instances \(the master and segments\) spanning multiple machines. To monitor a HAWQ system, you need to know information about the system as a whole, as well as status information of the individual instances. The `hawq state` utility provides status information about a HAWQ system.
 
-#### Viewing Master and Segment Status and Configuration <a name="topic13"></a>
+#### Viewing Master and Segment Status and Configuration <a id="topic13"></a>
 
 The default `hawq state` action is to check segment instances and show a brief status of the valid and failed segments. For example, to see a quick status of your HAWQ system, type:
 
@@ -36,13 +36,13 @@ You can also display information about the HAWQ master data directory by using `
 $ hawq state -d MASTER_DIR
 ```
 
-### Checking Disk Space Usage <a name="topic15"></a>
+### Checking Disk Space Usage <a id="topic15"></a>
 
-#### Checking Sizing of Distributed Databases and Tables <a name="topic16"></a>
+#### Checking Sizing of Distributed Databases and Tables <a id="topic16"></a>
 
 The `hawq_toolkit` administrative schema contains several views that you can use to determine the disk space usage for a distributed HAWQ database, schema, table, or index.
 
-##### Viewing Disk Space Usage for a Database <a name="topic17"></a>
+##### Viewing Disk Space Usage for a Database <a id="topic17"></a>
 
 To see the total size of a database \(in bytes\), use the *hawq\_size\_of\_database* view in the *hawq\_toolkit* administrative schema. For example:
 
@@ -51,7 +51,7 @@ To see the total size of a database \(in bytes\), use the *hawq\_size\_of\_datab
    ORDER BY sodddatname;
 ```
 
-##### Viewing Disk Space Usage for a Table <a name="topic18"></a>
+##### Viewing Disk Space Usage for a Table <a id="topic18"></a>
 
 The *hawq\_toolkit* administrative schema contains several views for checking the size of a table. The table sizing views list the table by object ID \(not by name\). To check the size of a table by name, you must look up the relation name \(`relname`\) in the *pg\_class* table. For example:
 
@@ -62,7 +62,7 @@ The *hawq\_toolkit* administrative schema contains several views for checking th
    WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
 ```
 
-##### Viewing Disk Space Usage for Indexes <a name="topic19"></a>
+##### Viewing Disk Space Usage for Indexes <a id="topic19"></a>
 
 The *hawq\_toolkit* administrative schema contains a number of views for checking index sizes. To see the total size of all index\(es\) on a table, use the *hawq\_size\_of\_all\_table\_indexes* view. To see the size of a particular index, use the *hawq\_size\_of\_index* view. The index sizing views list tables and indexes by object ID \(not by name\). To check the size of an index by name, you must look up the relation name \(`relname`\) in the *pg\_class* table. For example:
 
@@ -73,11 +73,11 @@ The *hawq\_toolkit* administrative schema contains a number of views for checkin
    AND pg_class.relkind='i';
 ```
 
-### Viewing Metadata Information about Database Objects <a name="topic24"></a>
+### Viewing Metadata Information about Database Objects <a id="topic24"></a>
 
 HAWQ tracks various metadata information in its system catalogs about the objects stored in a database, such as tables, views, indexes and so on, as well as global objects such as roles and tablespaces.
 
-#### Viewing the Last Operation Performed <a name="topic25"></a>
+#### Viewing the Last Operation Performed <a id="topic25"></a>
 
 You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last vacuumed and analyzed:
 
@@ -96,20 +96,20 @@ You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_op
 
 ```
 
-#### Viewing the Definition of an Object <a name="topic26"></a>
+#### Viewing the Definition of an Object <a id="topic26"></a>
 
 To see the definition of an object, such as a table or view, you can use the `\d+` meta-command when working in `psql`. For example, to see the definition of a table:
 
 <pre><code>=> \d+ <i>mytable</i></code></pre>
 
-### Viewing Session Memory Usage Information <a name="topic_slt_ddv_1q"></a>
+### Viewing Session Memory Usage Information <a id="topic_slt_ddv_1q"></a>
 
 You can create and use the *session\_level\_memory\_consumption* view that provides information about the current memory utilization for sessions that are running queries on HAWQ. The view contains session information and information such as the database that the session is connected to, the query that the session is currently running, and memory consumed by the session processes.
 
 -   [Creating the session\_level\_memory\_consumption View](#topic_nby_j1b_dq)
 -   [The session\_level\_memory\_consumption View](#topic7)
 
-#### Creating the session\_level\_memory\_consumption View <a name="topic_nby_j1b_dq"></a>
+#### Creating the session\_level\_memory\_consumption View <a id="topic_nby_j1b_dq"></a>
 
 To create the *session\_level\_memory\_consumption* view in a HAWQ, run the script `$GPHOME/share/postgresql/contrib/gp_session_state.sql` once for each database. For example, to install the view in the database `testdb`, use this command:
 
@@ -117,7 +117,7 @@ To create the *session\_level\_memory\_consumption* view in a HAWQ, run the scri
 $ psql -d testdb -f $GPHOME/share/postgresql/contrib/gp_session_state.sql
 ```
 
-#### The session\_level\_memory\_consumption View <a name="topic7"></a>
+#### The session\_level\_memory\_consumption View <a id="topic7"></a>
 
 The *session\_level\_memory\_consumption* view provides information about memory consumption for sessions that are running SQL queries.
 
@@ -138,7 +138,7 @@ In the view, the column `is_runaway` indicates whether HAWQ considers the sessio
 |`runaway_vmem_mb`|integer| |Amount of vmem memory that the session was consuming when it was marked as a runaway session.|
 |`runaway_command_cnt`|integer| |Command count for the session when it was marked as a runaway session.|
 
-### Viewing Query Workfile Usage Information <a name="topic27"></a>
+### Viewing Query Workfile Usage Information <a id="topic27"></a>
 
 The HAWQ administrative schema *hawq\_toolkit* contains views that display information about HAWQ workfiles. HAWQ creates workfiles on disk if it does not have sufficient memory to execute the query in memory. This information can be used for troubleshooting and tuning queries. The information in the views can also be used to specify the values for the HAWQ configuration parameters `hawq_workfile_limit_per_query` and `hawq_workfile_limit_per_segment`.
 
@@ -150,11 +150,11 @@ These are the views in the schema *hawq\_toolkit*:
 
 For information about using *hawq\_toolkit*, see [Using hawq\_toolkit](#topic31).
 
-## Viewing the Database Server Log Files <a name="topic28"></a>
+## Viewing the Database Server Log Files <a id="topic28"></a>
 
 Every database instance in HAWQ \(master and segments\) runs a PostgreSQL database server with its own server log file. Daily log files are created in the `pg_log` directory of the master and each segment data directory \(`$GPHOME/masterdd/pg_log` and `$GPHOME/segmentdd/pg_log`\).
 
-### Log File Format <a name="topic29"></a>
+### Log File Format <a id="topic29"></a>
 
 The server log files are written in comma-separated values \(CSV\) format. Some log entries will not have values for all log fields. For example, only log entries associated with a query worker process will have the `slice_id` populated. You can identify related log entries of a particular query by the query's session identifier \(`gp_session_id`\) and command identifier \(`gp_command_count`\).
 
@@ -193,7 +193,7 @@ The following fields are written to the log:
   <tr><td>29</td><td>file_line</td><td>int</td><td>The line of the code file where the message originated</td></tr>
   <tr><td>30</td><td>stack_trace</td><td>text</td><td>Stack trace text associated with this message</td></tr>
 </table>
-### Searching the HAWQ Server Log Files <a name="topic30"></a>
+### Searching the HAWQ Server Log Files <a id="topic30"></a>
 
 HAWQ provides a utility called `gplogfilter` can search through a HAWQ log file for entries matching the specified criteria. By default, this utility searches through the HAWQ master log file in the default logging location. For example, to display the entries to the master log file starting after 2 pm on a certain date:
 
@@ -209,7 +209,7 @@ $ hawq ssh -f seg_host_log_file
 => gplogfilter -n 3 /data/hawq-install-path/segmentdd/pg_log/hawq*.csv
 ```
 
-## Using hawq\_toolkit <a name="topic31"></a>
+## Using hawq\_toolkit <a id="topic31"></a>
 
 Use HAWQ's administrative schema *hawq\_toolkit* to query the system catalogs, log files, and operating environment for system status information. The `hawq_toolkit` schema contains several views you can access using SQL commands. The *hawq\_toolkit* schema is accessible to all database users. Some objects require superuser permissions. Use a command similar to the following to add the *hawq\_toolkit* schema to your schema search path:
 
@@ -217,11 +217,11 @@ Use HAWQ's administrative schema *hawq\_toolkit* to query the system catalogs, l
 => ALTER ROLE myrole SET search_path TO myschema,hawq_toolkit;
 ```
 
-## HAWQ Error Codes <a name="topic_jx2_rqg_kp"></a>
+## HAWQ Error Codes <a id="topic_jx2_rqg_kp"></a>
 
 The following section describes SQL error codes for certain database events.
 
-### SQL Standard Error Codes <a name="topic_pyh_sqg_kp"></a>
+### SQL Standard Error Codes <a id="topic_pyh_sqg_kp"></a>
 
 The following table lists all the defined error codes. Some are not used, but are defined by the SQL standard. The error classes are also shown. For each error class there is a standard error code having the last three characters 000. This code is used only for error conditions that fall within the class but do not have any more-specific code assigned.
 

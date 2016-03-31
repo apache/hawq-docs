@@ -1,10 +1,10 @@
 ---
-title: Creating and Managing Tables <a name="topic_jtv_5vy_sp"></a>
+title: Creating and Managing Tables <a id="topic_jtv_5vy_sp"></a>
 ---
 
 HAWQ Tables are similar to tables in any relational database, except that table rows are distributed across the different segments in the system. When you create a table, you specify the table's distribution policy.
 
-## Creating a Table <a name="topic26"></a>
+## Creating a Table <a id="topic26"></a>
 
 The `CREATE TABLE` command creates a table and defines its structure. When you create a table, you define:
 
@@ -14,7 +14,7 @@ The `CREATE TABLE` command creates a table and defines its structure. When you c
 -   The way the table is stored on disk.
 -   The table partitioning strategy for large tables, which specifies how the data should be divided. See [Creating and Managing Databases](ddl-database.html).
 
-### Choosing Column Data Types <a name="topic27"></a>
+### Choosing Column Data Types <a id="topic27"></a>
 
 The data type of a column determines the types of data values the column can contain. Choose the data type that uses the least possible space but can still accommodate your data and that best constrains the data. For example, use character data types for strings, date or timestamp data types for dates, and numeric data types for numbers.
 
@@ -26,7 +26,7 @@ Use the same data types for columns that you plan to use in cross-table joins. W
 
 Columnar storage can optimize searches and reads of large data sets. HAWQ supports the parquet columnar storage format, which can increase performance on large queries. Use parquet tables for HAWQ internal tables.
 
-### Setting Table Constraints <a name="topic28"></a>
+### Setting Table Constraints <a id="topic28"></a>
 
 You can define constraints to restrict the data in your tables. HAWQ support for constraints is the same as PostgreSQL with some limitations, including:
 
@@ -34,7 +34,7 @@ You can define constraints to restrict the data in your tables. HAWQ support for
 -   `FOREIGN KEY` constraints are allowed, but not enforced.
 -   Constraints that you define on partitioned tables apply to the partitioned table as a whole. You cannot define constraints on the individual parts of the table.
 
-#### Check Constraints <a name="topic29"></a>
+#### Check Constraints <a id="topic29"></a>
 
 Check constraints allow you to specify that the value in a certain column must satisfy a Boolean \(truth-value\) expression. For example, to require positive product prices:
 
@@ -45,7 +45,7 @@ Check constraints allow you to specify that the value in a certain column must s
               price numeric CHECK (price > 0) );
 ```
 
-#### Not-Null Constraints <a name="topic30"></a>
+#### Not-Null Constraints <a id="topic30"></a>
 
 Not-null constraints specify that a column must not assume the null value. A not-null constraint is always written as a column constraint. For example:
 
@@ -56,13 +56,13 @@ Not-null constraints specify that a column must not assume the null value. A not
          price numeric );
 ```
 
-#### Foreign Keys <a name="topic33"></a>
+#### Foreign Keys <a id="topic33"></a>
 
 Foreign keys are not supported. You can declare them, but referential integrity is not enforced.
 
 Foreign key constraints specify that the values in a column or a group of columns must match the values appearing in some row of another table to maintain referential integrity between two related tables. Referential integrity checks cannot be enforced between the distributed table segments of a HAWQ database.
 
-### Choosing the Table Distribution Policy <a name="topic34"></a>
+### Choosing the Table Distribution Policy <a id="topic34"></a>
 
 All HAWQ tables are distributed. The default is `DISTRIBUTED RANDOMLY` \(round-robin distribution\) to determine the table row distribution. However, when you create or alter a table, you can optionally specify `DISTRIBUTED BY` to distribute data according to a hash-based policy. In this case, the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. Columns of geometric or user-defined data types are not eligible as HAWQ distribution key columns. If a table does not have a column of an eligible data type, the rows are distributed based on random distribution.
 
@@ -121,11 +121,11 @@ The optional `INHERITS` clause specifies a list of tables from which the new tab
 
 The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. If a `bucketnum` is specified, it will be copied. Otherwise, the table will use default distribution.
 
-#### Declaring Distribution Keys <a name="topic_kjg_tqm_gv"></a>
+#### Declaring Distribution Keys <a id="topic_kjg_tqm_gv"></a>
 
 `CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `hawq_rm_nvseg_perquery_limit` parameter.
 
-#### Performance Tuning <a name="topic_wff_mqm_gv"></a>
+#### Performance Tuning <a id="topic_wff_mqm_gv"></a>
 
 Adjusting the values of the configuration parameters `default_hash_table_bucket_number` and `hawq_rm_nvseg_perquery_limit` can tune performance by controlling the number of virtual segments being used. In most circumstances, HAWQ's elastic runtime will dynamically allocate virtual segments to optimize performance, so further tuning should not be needed..
 

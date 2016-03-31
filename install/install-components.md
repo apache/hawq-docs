@@ -19,13 +19,13 @@ This chapter describes how to install additional HAWQ components.
     -   [Pre-requisites for Installing MADlib on HAWQ](#)
     -   [Install MADlib on HAWQ](#)
 
-## Installing Cryptographic Functions for PostgreSQL <a name="installingcryptographicfunctionsforpostgresql"></a>
+## Installing Cryptographic Functions for PostgreSQL <a id="installingcryptographicfunctionsforpostgresql"></a>
 
 pgcrypto is available as a package that you can download from the Pivotal Download Center and install using the Package Manager utility \(`gppkg`\). `gppkg` installs pgcrypto and other HAWQ extensions, along with any dependencies, on all hosts across a cluster. It will also automatically install extensions on new hosts in the case of system expansion and segment recovery.
 
 **Note:** Before you install the pgcrypto software package, make sure that your HAWQ database is running, you have sourced greenplum\_path.sh, and that the `$MASTER_DATA_DIRECTORY` and `$GPHOME` variables are set.
 
-### Install pgcrypto <a name="installpgcrypto"></a>
+### Install pgcrypto <a id="installpgcrypto"></a>
 
 Download the pgcrypto package from the Pivotal Download Center, then copy it to the master host. Install the software package by running the following command:
 
@@ -44,7 +44,7 @@ You will see output similar to the following.
 20120418:23:54:22:gppkg:gp-single-host:gpadmin-[INFO]:-pgcrypto-1.0-rhel5-x86_64.gppkg successfully installed.
 ```
 
-### Uninstalling pgcrypto <a name="uninstallingpgcrypto"></a>
+### Uninstalling pgcrypto <a id="uninstallingpgcrypto"></a>
 
 #### Uninstall pgcrypto support
 
@@ -66,13 +66,13 @@ You can uninstall the pgcrypto software using the Greenplum Package Manager \(gp
 gppkg -r pgcrypto-1.0
 ```
 
-## Installing PL/R <a name="installingplr"></a>
+## Installing PL/R <a id="installingplr"></a>
 
 PL/R is available as a package that you can download from the Pivotal Download Center and install using the Package Manager utility \(`gppkg`\). `gppkg` installs PL/R and other Greenplum Database extensions, along with any dependencies, on all hosts across a cluster. It will also automatically install extensions on new hosts in the case of system expansion and segment recovery.
 
 **Note:** Before you install the PL/R software package, make sure that your HAWQ database is running, you have sourced greenplum\_path.sh, and that the `$MASTER_DATA_DIRECTORY` and `$GPHOME` variables are set.
 
-### Install PL/R <a name="installplr"></a>
+### Install PL/R <a id="installplr"></a>
 
 1.  Download the PL/R package from the Pivotal Download Center, then copy it to the master host. Install the software package by running the following command:
 
@@ -88,7 +88,7 @@ PL/R is available as a package that you can download from the Pivotal Download C
     ```
 
 
-### Enable PL/R Language Support <a name="enablingplrlanguagesupport"></a>
+### Enable PL/R Language Support <a id="enablingplrlanguagesupport"></a>
 
 For each database that requires its use, register the PL/R language with the `CREATE LANGUAGE` SQL command or the `createlang` utility. For example, running the following command as the `gpadmin` user registers the language for a database named `testdb`:
 
@@ -104,11 +104,11 @@ You are now ready to create new PLR functions. A library of convenient PLR funct
 psql -d <dbname> -f $GPHOME/share/postgresql/contrib/plr.sql
 ```
 
-### Uninstalling PL/R <a name="uninstallingplr"></a>
+### Uninstalling PL/R <a id="uninstallingplr"></a>
 
 When you remove PL/R language support from a database, the PL/R routines that you created in the database will no longer work.
 
-#### Remove PL/R Support for a Database <a name="removeplrsupportforadatabase"></a>
+#### Remove PL/R Support for a Database <a id="removeplrsupportforadatabase"></a>
 
 For a database that no long requires the PL/R language, remove support for PL/R with the SQL command `DROP LANGUAGE`or the `droplang` utility. For example, running the following command as the `gpadmin` user removes support for PL/R from the database `testdb`:
 
@@ -116,7 +116,7 @@ For a database that no long requires the PL/R language, remove support for PL/R 
 $ droplang plr -d testdb
 ```
 
-#### Uninstall the Software Package <a name="uninstallthesoftwarepackage"></a>
+#### Uninstall the Software Package <a id="uninstallthesoftwarepackage"></a>
 
 If no databases have PL/R as a registered language, uninstall the Greenplum PL/R extension with the `gppkg` utility. This example uninstalls PL/R package version 1.0:
 
@@ -180,7 +180,7 @@ Use `R CMD INSTALL` to install the packages from the command line. You may requi
 $ R CMD INSTALL lattice_0.19-33.tar.gz Matrix_1.0-1.tar.gz abind_1.4-0.tar.gz coda_0.14-7.tar.gz R2WinBUGS_2.1-18.tar.gz lme4_0.999375-42.tar.gz MASS_7.3-17.tar.gz arm_1.5-03.tar.gz
 ```
 
-## Installing PL/Java <a name="installingpljava"></a>
+## Installing PL/Java <a id="installingpljava"></a>
 
 The PL/Java extension is available as a package that you can download from the Pivotal Download Center and then install with the Package Manager utility \(`gppkg`\).
 
@@ -208,7 +208,7 @@ To install and use PL/Java:
 
 **Note:** Before you install the PL/Java extension, make sure that your Greenplum database is running, you have sourced greenplum\_path.sh, and that the `$MASTER_DATA_DIRECTORY` and `$GPHOME` variables are set.
 
-### Install the HAWQ PL/Java Extension <a name="installingthehawqpljavaextension"></a>
+### Install the HAWQ PL/Java Extension <a id="installingthehawqpljavaextension"></a>
 
 1.  Download the PL/Java extension package from the Pivotal Download Center and copy it to the master host.
 2.  Install the software extension package by running the `gppkg` command. This example installs the PL/Java extension package on a Linux system:
@@ -225,7 +225,7 @@ To install and use PL/Java:
 
 4.  Source the $GPHOME/greenplum\_path.sh file.
 
-### Enable PL/Java and Install JAR Files <a name="enablingpljavaandinstallingjarfiles"></a>
+### Enable PL/Java and Install JAR Files <a id="enablingpljavaandinstallingjarfiles"></a>
 
 Perform the following steps as the HAWQ administrator `gpadmin`:
 
@@ -270,18 +270,18 @@ Perform the following steps as the HAWQ administrator `gpadmin`:
     ```
 
 
-#### Configuring PL/Java vmoptions <a name="configuringpljavavmoptions"></a>
+#### Configuring PL/Java vmoptions <a id="configuringpljavavmoptions"></a>
 
 PL/Java JVM options can be configured via the `pljava_vmoptions` parameter in the postgresql.conf file. For example, `pljava_vmoptions=-Xmx512M` sets the maximum heap size of the JVM. The default `Xmx` value is set to `-Xmx64M`.
 
-### Uninstalling PL/Java <a name="uninstallingpljava"></a>
+### Uninstalling PL/Java <a id="uninstallingpljava"></a>
 
 To uninstall PL/Java, you should:
 
 1.  Remove PL/Java Support for a Database
 2.  Uninstall the Java JAR files and Software Package
 
-#### Remove PL/Java Support for a Database <a name="removepljavasupportforadatabase"></a>
+#### Remove PL/Java Support for a Database <a id="removepljavasupportforadatabase"></a>
 
 For a database that no long requires the PL/Java language, remove support for PL/Java by running the uninstall.sql file as the `gpadmin` user. For example, the following command disables the PL/Java language in the specified database:
 
@@ -289,7 +289,7 @@ For a database that no long requires the PL/Java language, remove support for PL
 $ psql -d mydatabase -f $GPHOME/share/postgresql/pljava/uninstall.sql
 ```
 
-#### Uninstall the Java JAR files and Software Package <a name="uninstallthejavajarfilesandsoftwarepackage"></a>
+#### Uninstall the Java JAR files and Software Package <a id="uninstallthejavajarfilesandsoftwarepackage"></a>
 
 If no databases have PL/Java as a registered language, remove the Java JAR files and uninstall the Greenplum PL/Java extension with the `gppkg` utility:
 
@@ -310,7 +310,7 @@ If no databases have PL/Java as a registered language, remove the Java JAR files
     ```
 
 
-#### Installing Custom JARS <a name="installingcustomjars"></a>
+#### Installing Custom JARS <a id="installingcustomjars"></a>
 
 1.  Copy the jar file on the master host in $GPHOME/lib/postgresql/java.
 2.  Copy the jar file on all segments in the same location using `gpscp` from master:
@@ -334,15 +334,15 @@ If no databases have PL/Java as a registered language, remove the Java JAR files
         ```
 
 
-## Installing MADlib on HAWQ <a name="installingmadlibonhawq1"></a>
+## Installing MADlib on HAWQ <a id="installingmadlibonhawq1"></a>
 
 The MADlib library adds statistical and machine learning functionality to HAWQ. MADlib is provided as a package that you can download from the Pivotal Download Center and install using the Package Manager utility \(`gppkg`\). `gppkg` installs MADlib and other Greenplum Database extensions, along with any dependencies, on all hosts across a cluster. It also automatically installs extensions on new hosts in the case of system expansion and segment recovery.
 
-### Pre-requisites for Installing MADlib on HAWQ <a name="pre-requisitesforinstallingmadlibonhawq"></a>
+### Pre-requisites for Installing MADlib on HAWQ <a id="pre-requisitesforinstallingmadlibonhawq"></a>
 
 **Note:** Before you install the MADlib software package, make sure that your HAWQ database is running, that you have sourced greenplum\_path.sh, and that the `$MASTER_DATA_DIRECTORY` and `$GPHOME` variables are set.
 
-### Install MADlib on HAWQ <a name="installingmadlibonhawq2"></a>
+### Install MADlib on HAWQ <a id="installingmadlibonhawq2"></a>
 
 1.  Download the MADlib package from the Pivotal Download Center, then copy it to the master host. Install the software package by running the command:
 

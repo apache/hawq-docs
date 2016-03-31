@@ -1,5 +1,5 @@
 ---
-title: Integrating YARN with HAWQ <a name="hawqinputformatformapreduce"></a>
+title: Integrating YARN with HAWQ <a id="hawqinputformatformapreduce"></a>
 ---
 
 HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources \(containers\) dynamically from YARN, and return resources when HAWQ's workload is not heavy. This feature makes HAWQ a native citizen of the whole Hadoop eco-system.
@@ -18,7 +18,7 @@ To integrate YARN with HAWQ, use the following high-level steps.
     -   Change resource consumption within HAWQ on a finer grained level by altering HAWQ's resource queues. See [Working with Hierarchical Resource Queues](ResourceQueues.html).
     -   \(Optional\) Tune HAWQ and YARN resource negotiations. For example, you can set a minimum number of YARN containers per segment or modify the idle timeout for YARN resources in HAWQ. See [Tune HAWQ Resource Negotiations with YARN](#topic_wp3_4bx_15).
 
-## Configuring YARN for HAWQ <a name="hawqinputformatexample"></a>
+## Configuring YARN for HAWQ <a id="hawqinputformatexample"></a>
 
 This topic describes how to configure YARN to manage HAWQ's resources.
 
@@ -101,7 +101,7 @@ In the following configuration within `capacity-scheduler.xml,` we configure the
 |yarn.scheduler.capacity.*\<queue\_name\>*.maximum-capacity|Maximum queue capacity in percentage \(%\) as a float. This limits the elasticity for applications in the queue. Defaults to -1 which disables it.|
 |yarn.scheduler.capacity.*\<queue\_name\>*.user-limit-factor|Multiple of the queue capacity, which can be configured to allow a single user to acquire more resources. By default this is set to 1, which ensures that a single user can never take more than the queue's configured capacity irrespective of how idle the cluster is. Value is specified as a float.<br/><br/>Setting this to a value higher than 1 allows the overcommittment of resources at the application level. For example, in terms of HAWQ configuration, if we want twice the maximum capacity for the HAWQ's application, we can set this as 2.|
 
-## Setting HAWQ Segment Resource Capacity in YARN <a name="topic_pzf_kqn_c5"></a>
+## Setting HAWQ Segment Resource Capacity in YARN <a id="topic_pzf_kqn_c5"></a>
 
 Similar to how you can set segment resource capacity in HAWQ's standalone mode, you can do the same for HAWQ segments managed by YARN.
 
@@ -142,7 +142,7 @@ Then the CPU to memory ratio equals 3GB \(48 divided by 16\). Since `yarn.schedu
 
 See [Handling Segment Resource Fragmentation](/200/hawq/troubleshooting/Troubleshooting.html) for general information on resource fragmentation.
 
-## Enabling YARN Mode in HAWQ <a name="topic_rtd_cjh_15"></a>
+## Enabling YARN Mode in HAWQ <a id="topic_rtd_cjh_15"></a>
 
 After you have properly configured YARN, you can enable YARN as HAWQ's global resource manager.
 
@@ -178,7 +178,7 @@ If you set the global resource manager to YARN, you must also configure the foll
 
 ```
 
-### hawq\_rm\_yarn\_address <a name="id_uvp_3pm_q5"></a>
+### hawq\_rm\_yarn\_address <a id="id_uvp_3pm_q5"></a>
 
 Server address \(host and port\) of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). User must define this if `hawq_global_rm_type` is set to `yarn`. For example, `localhost:8032`.
 
@@ -186,7 +186,7 @@ Server address \(host and port\) of the YARN resource manager server \(the value
 |-----------|-------|-------------------|
 |valid hostname| |master<br/><br/>session<br/><br/>reload|
 
-## hawq\_rm\_yarn\_scheduler\_address <a name="id_ocq_jpm_q5"></a>
+## hawq\_rm\_yarn\_scheduler\_address <a id="id_ocq_jpm_q5"></a>
 
 Server address \(host and port\) of the YARN resource manager scheduler \(the value of `yarn.resourcemanager.scheduler.address`\). User must define this if `hawq_global_rm_type` is set to `yarn`. For example, `localhost:8030`.
 
@@ -194,7 +194,7 @@ Server address \(host and port\) of the YARN resource manager scheduler \(the va
 |-----------|-------|-------------------|
 |valid hostname and port| |master<br/><br/>session<br/><br/>reload|
 
-## hawq\_rm\_yarn\_queue\_name <a name="id_y23_kpm_q5"></a>
+## hawq\_rm\_yarn\_queue\_name <a id="id_y23_kpm_q5"></a>
 
 The name of the YARN resource queue to register with HAWQ's resource manager.
 
@@ -202,7 +202,7 @@ The name of the YARN resource queue to register with HAWQ's resource manager.
 |-----------|-------|-------------------|
 |string|default|master<br/><br/>session<br/><br/>reload|
 
-## hawq\_rm\_yarn\_app\_name <a name="id_h1c_lpm_q5"></a>
+## hawq\_rm\_yarn\_app\_name <a id="id_h1c_lpm_q5"></a>
 
 The name of the YARN application registered with HAWQ's resource manager. For example, `hawq`.
 
@@ -210,7 +210,7 @@ The name of the YARN application registered with HAWQ's resource manager. For ex
 |-----------|-------|-------------------|
 |string|hawq|master<br/><br/>session<br/><br/>reload|
 
-## Tune HAWQ Resource Negotiations with YARN <a name="topic_wp3_4bx_15"></a>
+## Tune HAWQ Resource Negotiations with YARN <a id="topic_wp3_4bx_15"></a>
 
 To ensure efficient management of resources and highest performance, you can configure some aspects of how HAWQ's resource manager negotiate resources from YARN.
 

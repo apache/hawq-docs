@@ -7,12 +7,12 @@ Follow this procedure to install HAWQ using Ambari 2.2.1.
 -   [Prerequisites](#section_mqs_f3j_5r)
 -   [Procedure](#section_kwy_f3j_5r)
 
-## Prerequisites <a name="section_mqs_f3j_5r"></a>
+## Prerequisites <a id="section_mqs_f3j_5r"></a>
 
 -   Install a compatible version of HDP and Ambari, and ensure that your HDP system is fully functional.
 -   Select and prepare all host machines that will run the HAWQ and PXF services. See [Select HAWQ Host Machines](select-hosts.html).
 
-## Procedure <a name="section_kwy_f3j_5r"></a>
+## Procedure <a id="section_kwy_f3j_5r"></a>
 
 1.  Login to the Ambari server host machine as the `root` user.
 2.  Create a staging directory where you will download and extract the tarballs for HAWQ and the HAWQ Ambari plug-in. The staging directory and all the directories above it must be readable and executable by the system user that runs the httpd process \(typically `apache`\). Make the directory readable and executable by all users. For example:

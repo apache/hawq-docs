@@ -6,7 +6,7 @@ This document contains the information and procedures required for installing Am
 
 **Note:** For manual installation instructions \(not using Ambari\), see [\(Optional\) Install Pivotal HDB 2.0 Beta from the Command Line](HAWQBetaInstallation.html).
 
-## Prerequisites <a name="topic_b5r_gmc_b5"></a>
+## Prerequisites <a id="topic_b5r_gmc_b5"></a>
 
 ### System Requirements
 
@@ -118,7 +118,7 @@ When installing Ambari, one or more host checks may fail if you have not disable
     ```
 
 
-## Installing Ambari Server <a name="topic_lpx_2nc_b5"></a>
+## Installing Ambari Server <a id="topic_lpx_2nc_b5"></a>
 
 You must configure a YUM repository server in order to install Ambari. The repository must reside on a host that is accessible from all the cluster hosts. You can use a dedicated host for that purpose or set up the YUM repository server on the admin host where the Ambari Server will be installed.
 
@@ -281,7 +281,7 @@ Follow this procedure to set up the YUM repository and install the Ambari server
     ```
 
 
-## Installing the Pivotal HD and Pivotal HDB with Ambari <a name="topic_mkv_lpc_b5"></a>
+## Installing the Pivotal HD and Pivotal HDB with Ambari <a id="topic_mkv_lpc_b5"></a>
 
 The Ambari server installation process creates the local YUM repository server that you can now use to install Pivotal HD 3.3.2, Pivotal HDB 2.0 Beta, and related software. Follow these steps to install the software using Ambari.
 

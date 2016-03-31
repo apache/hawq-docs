@@ -1,5 +1,5 @@
 ---
-title: Working with Hierarchical Resource Queues <a name="topic_ugr_43c_5r"></a>
+title: Working with Hierarchical Resource Queues <a id="topic_ugr_43c_5r"></a>
 ---
 
 This section describes how administrators can define and work with resource queues in order to allocate resource usage within HAWQ. By designing hierarchical resource queues, system administrators can balance system resources to queries as needed.
@@ -34,7 +34,7 @@ You can configure HAWQ to enforce limits on resource usage by setting memory and
 
 For a high-level overview of how resource management works in HAWQ, see [Managing Resources](HAWQResourceManagement.html).
 
-## Setting the Maximum Number of Resource Queues <a name="topic_dyy_pfp_15"></a>
+## Setting the Maximum Number of Resource Queues <a id="topic_dyy_pfp_15"></a>
 
 You can configure the maximum number of resource queues allowed in your HAWQ cluster.
 
@@ -62,7 +62,7 @@ postgres=# show hawq_rm_nresqueue_limit;
 (1 row)
 ```
 
-## Creating Resource Queues <a name="topic_p4l_dls_zt"></a>
+## Creating Resource Queues <a id="topic_p4l_dls_zt"></a>
 
 Use CREATE RESOURCE QUEUE to create a new resource queue. Only a superuser can run this DDL statement.
 
@@ -86,7 +86,7 @@ CREATE RESOURCE QUEUE test_queue_1 WITH (PARENT='pg_root',
 MEMORY_LIMIT_CLUSTER=50%, CORE_LIMIT_CLUSTER=50%, RESOURCE_OVERCOMMIT_FACTOR=2);
 ```
 
-## Altering Resource Queues <a name="topic_e1b_2ls_zt"></a>
+## Altering Resource Queues <a id="topic_e1b_2ls_zt"></a>
 
 Use ALTER RESOURCE QUEUE to modify an existing resource queue. Only a superuser can run this DDL statement.
 
@@ -117,7 +117,7 @@ Change the active statements maximum for the resource queue:
 ALTER RESOURCE QUEUE test_queue_1 WITH (ACTIVE_STATEMENTS=50);
 ```
 
-## Dropping Resource Queues <a name="topic_hbp_fls_zt"></a>
+## Dropping Resource Queues <a id="topic_hbp_fls_zt"></a>
 
 Use DROP RESOURCE QUEUE to remove an existing resource queue.
 
@@ -139,7 +139,7 @@ Remove the resource queue named `adhoc`:
 DROP RESOURCE QUEUE adhoc;
 ```
 
-## Checking Existing Resource Queues <a name="topic_lqy_gls_zt"></a>
+## Checking Existing Resource Queues <a id="topic_lqy_gls_zt"></a>
 
 The HAWQ catalog table `pg_resqueue` saves all existing resource queues.
 
@@ -183,7 +183,7 @@ The query returns the following pieces of data about the resource queue's runtim
 |rsqwaiters|Total number of queuing statements|
 |paused|Indicates whether the resource queue is temporarily paused due to no resource status changes. ‘F’ means false, ‘T’ means true, ‘R’ means maybe the resource queue has encountered a resource fragmentation problem|
 
-## Assigning Roles to Resource Queues <a name="topic_scr_3ls_zt"></a>
+## Assigning Roles to Resource Queues <a id="topic_scr_3ls_zt"></a>
 
 By default, a role is assigned to `pg_default` resource queue. Assigning a role to a branch queue is not allowed.
 
@@ -195,7 +195,7 @@ CREATE ROLE rmtest1 WITH LOGIN RESOURCE QUEUE pg_default;
 ALTER ROLE rmtest1 RESOURCE QUEUE test_queue_1;
 ```
 
-## Analyzing Resource Manager Status <a name="topic_zrh_pkc_f5"></a>
+## Analyzing Resource Manager Status <a id="topic_zrh_pkc_f5"></a>
 
 You can use several queries to force the resource manager to dump more details about active resource context status, current resource queue status, and HAWQ segment status.
 

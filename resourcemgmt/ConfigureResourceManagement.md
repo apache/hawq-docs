@@ -1,5 +1,5 @@
 ---
-title: Configuring Resource Management <a name="topic_ugr_43c_5r"></a>
+title: Configuring Resource Management <a id="topic_ugr_43c_5r"></a>
 ---
 
 This topic provides configuration information for system administrators and database superusers responsible for managing resources in a HAWQ system.
@@ -13,7 +13,7 @@ To configure resource management in HAWQ, follow these high-level steps:
 3.  If you are using YARN as your global resource manager, configure the resource queue in YARN where HAWQ will register itself as a YARN application. Then configure HAWQ with the location and configuration requirements for communicating with YARN's resource manager. See [Integrating YARN with HAWQ](YARNIntegration.html) for details.
 4.  In HAWQ, create and define resource queues. See [Working with Hierarchical Resource Queues](ResourceQueues.html).
 
-## Using Standalone Mode <a name="topic_url_pls_zt"></a>
+## Using Standalone Mode <a id="topic_url_pls_zt"></a>
 
 Standalone mode means that the HAWQ resource manager assumes it can use all resources from registered segments unless configured otherwise.
 
@@ -26,7 +26,7 @@ To configure HAWQ to run without a global resource manager, add the following pr
 </property>
 ```
 
-### hawq\_global\_rm\_type <a name="id_wgb_44m_q5"></a>
+### hawq\_global\_rm\_type <a id="id_wgb_44m_q5"></a>
 
 HAWQ global resource manager type. Valid values are `yarn` and `none`. Setting this parameter to `none` indicates that the HAWQ resource manager will manages its own resources. Setting the value to `yarn` means that HAWQ will negotiate with YARN for resources.
 
@@ -34,7 +34,7 @@ HAWQ global resource manager type. Valid values are `yarn` and `none`. Setting t
 |-----------|-------|-------------------|
 |yarn or none|none|master<br/><br/>session<br/><br/>reload|
 
-## Configuring Segment Resource Capacity <a name="topic_htk_fxh_15"></a>
+## Configuring Segment Resource Capacity <a id="topic_htk_fxh_15"></a>
 
 When you run the HAWQ resource manager in standalone mode \(`hawq_global_rm_type=none`\), then you can set limits on the resources used by each HAWQ cluster segment.
 
@@ -59,7 +59,7 @@ After you set limits on the segments, you can then use resource queues to config
 
 **Note:** To reduce the likelihood of resource fragmentation, you should make sure that the segment resource capacity configured for HAWQ \(`hawq_rm_memory_limit_perseg`\) is a multiple of the resource quotas for all virtual segments.
 
-### hawq\_rm\_memory\_limit\_perseg <a name="id_qqq_s4m_q5"></a>
+### hawq\_rm\_memory\_limit\_perseg <a id="id_qqq_s4m_q5"></a>
 
 Limit of memory usage by a HAWQ segment when `hawq_global_rm_type` is set to `none`. For example, `8GB`.
 
@@ -67,7 +67,7 @@ Limit of memory usage by a HAWQ segment when `hawq_global_rm_type` is set to `no
 |-----------|-------|-------------------|
 | | |session<br/><br/>reload|
 
-### hawq\_rm\_nvcore\_limit\_perseg <a name="id_xpv_t4m_q5"></a>
+### hawq\_rm\_nvcore\_limit\_perseg <a id="id_xpv_t4m_q5"></a>
 
 Maximum number of virtual cores that can be used for query execution in a HAWQ segment when `hawq_global_rm_type` is set to `none`. For example, `2.0`.
 
@@ -75,7 +75,7 @@ Maximum number of virtual cores that can be used for query execution in a HAWQ s
 |-----------|-------|-------------------|
 |1.0 to maximum integer|1.0|master<br/><br/>session<br/><br/>reload|
 
-## Configuring Resource Quotas for Query Statements <a name="topic_g2p_zdq_15"></a>
+## Configuring Resource Quotas for Query Statements <a id="topic_g2p_zdq_15"></a>
 
 In some cases, you may want to specify additional resource quotas on the query statement level.
 
@@ -101,7 +101,7 @@ INSERT 0 1
 
 Note that given the dynamic nature of resource allocation in HAWQ, you cannot expect that each segment has reserved resources for every query. The HAWQ resource manager will only attempt to allocate those resources. In addition, the number of virtual segments allocated for the query statement cannot amount to a value larger than the value set in global configuration parameter `hawq_rm_nvseg_perquery_limit` and `hawq_rm_nvseg_perquery_perseg_limit`.
 
-## Configuring the Maximum Number of Virtual Segments <a name="topic_tl5_wq1_f5"></a>
+## Configuring the Maximum Number of Virtual Segments <a id="topic_tl5_wq1_f5"></a>
 
 You can limit the number of virtual segments used during statement execution on a cluster-wise level.
 

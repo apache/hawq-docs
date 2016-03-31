@@ -8,7 +8,7 @@ The tables in the following sections suggest activities that a HAWQ System Admin
 
 It is not necessary to implement all of these suggestions in every cluster; use the frequency and severity recommendations as a guide to implement measures according to your service requirements.
 
-## Database State Monitoring Activities <a name="drr_5bg_rp"></a>
+## Database State Monitoring Activities <a id="drr_5bg_rp"></a>
 
 <table>
   <tr>
@@ -64,7 +64,7 @@ GROUP BY 1;
   </tr>
 </table>
 
-## Hardware and Operating System Monitoring <a name="topic_y4c_4gg_rp"></a>
+## Hardware and Operating System Monitoring <a id="topic_y4c_4gg_rp"></a>
 
 <table>
   <tr>
@@ -151,7 +151,7 @@ GROUP BY 1;
   </tr>
 </table>
 
-## Data Maintenance <a name="maintentenance_check_scripts"></a>
+## Data Maintenance <a id="maintentenance_check_scripts"></a>
 
 <table>
   <tr>
@@ -168,7 +168,7 @@ GROUP BY 1;
   </tr>
 </table>
 
-## Database Maintenance <a name="topic_dld_23h_rp"></a>
+## Database Maintenance <a id="topic_dld_23h_rp"></a>
 
 <table>
   <tr>
@@ -236,7 +236,7 @@ GROUP BY 1;
   </tr>
 </table>
 
-## Patching and Upgrading <a name="topic_idx_smh_rp"></a>
+## Patching and Upgrading <a id="topic_idx_smh_rp"></a>
 
 <table>
   <tr>

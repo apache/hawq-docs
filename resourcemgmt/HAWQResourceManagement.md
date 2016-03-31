@@ -1,5 +1,5 @@
 ---
-title: How HAWQ Manages Resources <a name="topic_wwc_3fl_zt"></a>
+title: How HAWQ Manages Resources <a id="topic_wwc_3fl_zt"></a>
 ---
 
 HAWQ manages resources (CPU, memory, I/O and file handles) using a variety of mechanisms including global resource management, resource queues and the enforcement of limits on resource usage.
@@ -16,7 +16,7 @@ When you run HAWQ natively in a Hadoop cluster, you can configure HAWQ to regist
 
 Resources obtained from YARN are then managed in a distributed fashion by HAWQ's resource manager, which is hosted on the HAWQ master.
 
-## HAWQ Resource Queues <a name="section_w4f_vx4_15"></a>
+## HAWQ Resource Queues <a id="section_w4f_vx4_15"></a>
 
 Resource queues are the main tool for managing the degree of concurrency in a HAWQ system. Resource queues are database objects that you create with the CREATE RESOURCE QUEUE SQL statement. You can use them to manage the number of active queries that may execute concurrently, and the maximum amount of memory and CPU usage each type of query is allocated. Resource queues can also guard against queries that would consume too many resources and degrade overall system performance.
 

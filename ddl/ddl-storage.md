@@ -1,5 +1,5 @@
 ---
-title: Choosing the Table Storage Model <a name="topic_r2v_zvy_sp"></a>
+title: Choosing the Table Storage Model <a id="topic_r2v_zvy_sp"></a>
 ---
 
 HAWQ supports several storage models and a mix of storage models. When you create a table, you choose how to store its data. This topic explains the options for table storage and how to choose the best storage model for your workload.
@@ -10,7 +10,7 @@ HAWQ supports several storage models and a mix of storage models. When you creat
 
 **Note:** To simplify the creation of database tables, you can specify the default values for some table storage options with the HAWQ server configuration parameter `gp_default_storage_options`.
 
-## Choosing Row or Column-Oriented Storage <a name="topic39"></a>
+## Choosing Row or Column-Oriented Storage <a id="topic39"></a>
 
 HAWQ provides a choice of storage orientation models: row, column, or a combination of both. This topic provides general guidelines for choosing the optimum storage orientation for a table. Evaluate performance using your own data and query workloads.
 
@@ -45,7 +45,7 @@ However, there are use cases where a column-oriented storage model could provide
 -   **Number of columns in the table.** Row-oriented storage is most efficient when many columns are required at the same time, or when the row-size of a table is relatively small. Keep in mind that hdfs is not good at handling large numbers of files and using `orientation=column`, generates one file per column in hdfs. However, column-oriented tables might offer better query performance on tables with many columns, provided you access only a small subset of columns in your queries.
 -   **Compression.** Column data has the same data type, so storage size optimizations are available in column-oriented data that are not available in row-oriented data. For example, many compression schemes use the similarity of adjacent data to compress. However, the greater adjacent compression achieved, the more difficult random access becomes, as data must be uncompressed to be read.
 
-### To create a column-oriented table <a name="im169305"></a>
+### To create a column-oriented table <a id="im169305"></a>
 
 The `WITH` clause of the `CREATE TABLE` command specifies the table's storage options. The default is a row-oriented.
 
@@ -59,7 +59,7 @@ For example, to create a column-oriented table:
     DISTRIBUTED BY (a);
 ```
 
-## Altering a Table <a name="topic55"></a>
+## Altering a Table <a id="topic55"></a>
 
 The `ALTER TABLE`command changes the definition of a table. Use `ALTER TABLE` to change table attributes such as column definitions, distribution policy, storage model, and partition structure \(see also [Maintaining Partitioned Tables](ddl-partition.html)\). For example, to add a not-null constraint to a table column:
 
@@ -67,11 +67,11 @@ The `ALTER TABLE`command changes the definition of a table. Use `ALTER TABLE` to
 => ALTER TABLE address ALTER COLUMN street SET NOT NULL;
 ```
 
-### Altering Table Distribution <a name="topic56"></a>
+### Altering Table Distribution <a id="topic56"></a>
 
 `ALTER TABLE` provides options to change a table's distribution policy . When the table distribution options change, the table data is redistributed on disk, which can be resource intensive. You can also redistribute table data using the existing distribution policy.
 
-### Changing the Distribution Policy <a name="topic57"></a>
+### Changing the Distribution Policy <a id="topic57"></a>
 
 For partitioned tables, changes to the distribution policy apply recursively to the child partitions. This operation preserves the ownership and all other attributes of the table. For example, the following command redistributes the table sales across all segments using the customer\_id column as the distribution key:
 
@@ -85,7 +85,7 @@ When you change the hash distribution of a table, table data is automatically re
 ALTER TABLE sales SET DISTRIBUTED RANDOMLY;
 ```
 
-### Redistributing Table Data <a name="topic58"></a>
+### Redistributing Table Data <a id="topic58"></a>
 
 To redistribute table data for tables with a random distribution policy \(or when the hash distribution policy has not changed\) use `REORGANIZE=TRUE`. Reorganizing data may be necessary to correct a data skew problem, or when segment resources are added to the system. For example, the following command redistributes table data across all segments using the current distribution policy, including random distribution.
 
@@ -93,7 +93,7 @@ To redistribute table data for tables with a random distribution policy \(or whe
 ALTER TABLE sales SET WITH (REORGANIZE=TRUE);
 ```
 
-## Dropping a Table <a name="topic62"></a>
+## Dropping a Table <a id="topic62"></a>
 
 The`DROP TABLE`command removes tables from the database. For example:
 

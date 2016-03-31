@@ -4,7 +4,7 @@ title: Expanding a Cluster
 
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
-## Guidelines for Cluster Expansion <a name="topic_kkc_tgb_h5"></a>
+## Guidelines for Cluster Expansion <a id="topic_kkc_tgb_h5"></a>
 
 This topic provides some guidelines around expanding your HAWQ cluster.
 
@@ -16,7 +16,7 @@ There are several recommendations to keep in mind when modifying the size of you
 -   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
 -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
-## Adding a New Node to an Existing HAWQ Cluster <a name="task_hawq_expand"></a>
+## Adding a New Node to an Existing HAWQ Cluster <a id="task_hawq_expand"></a>
 
 The following procedure describes the steps required to add a node to an existing HAWQ cluster.
 
