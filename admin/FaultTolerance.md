@@ -6,7 +6,7 @@ The fault tolerance service (FTS) enables HAWQ to continue operating in the even
 
 Each segment runs a resource manager process that periodically sends (by default, every 30 seconds) the segment’s status to the master's resource manager process. This interval is controlled by the `hawq_rm_segment_heartbeat_interval` server configuration parameter.
 
-When a segment encounters a critical error-- for example, a temporary directory on the segment fails due to a hardware error-- the segment reports that there is temporary directory failure to the HAWQ master through a heartbeat report. When the master receives the report, it marks the segment as DOWN in the gp_segment_configuration table. All changes to a segment's status are recorded in the `gp_configuration_history` catalog table, including the reason why the segment is marked as DOWN. When this segment is set to DOWN, master will not run query executors on the segment. The failed segment is fault-isolated from the rest of the cluster.
+When a segment encounters a critical error-- for example, a temporary directory on the segment fails due to a hardware error-- the segment reports that there is temporary directory failure to the HAWQ master through a heartbeat report. When the master receives the report, it marks the segment as DOWN in the `gp_segment_configuration` table. All changes to a segment's status are recorded in the `gp_configuration_history` catalog table, including the reason why the segment is marked as DOWN. When this segment is set to DOWN, master will not run query executors on the segment. The failed segment is fault-isolated from the rest of the cluster.
 
 Besides disk failure, there are other reasons why a segment can be marked as DOWN. For example, if HAWQ in running in YARN mode, every segment should have a NodeManager (Hadoop’s YARN service) running on it, so that the segment can be considered a resource to HAWQ. However, if the NodeManager on a segment is not operating properly, this segment will also be marked as DOWN in `gp_segment_configuration table`. The corresponding reason for the failure is recorded into `gp_configuration_history`.
 
@@ -26,11 +26,9 @@ If the segment reports a heartbeat at a later time, the segment is marked as UP.
 
 **Reason: failed probing segment**
 
-Master has probed the segment to verify that it is operating normally. 
+Master has probed the segment to verify that it is operating normally, and the segment response is NO.
 
-Segment response is NO.
-
-While a HAWQ instance is running, the Query Dispatcher finds that some Query Executors on the segment are not working normally. The resource manager process on master sends a message to this segment. When the segment resource manager receives the message from master, it checks whether its postmaster is working normally and sends a reply message to master. When master gets a reply message that indicates that this segment's postmaster process is not working normally, then the master marks the segment as DOWN with the reason "failed probing segment."
+While a HAWQ instance is running, the Query Dispatcher finds that some Query Executors on the segment are not working normally. The resource manager process on master sends a message to this segment. When the segment resource manager receives the message from master, it checks whether its PostgreSQL postmaster process is working normally and sends a reply message to master. When master gets a reply message that indicates that this segment's postmaster process is not working normally, then the master marks the segment as DOWN with the reason "failed probing segment."
 
 Check the logs of the failed segment and try to restart the HAWQ instance.
 
