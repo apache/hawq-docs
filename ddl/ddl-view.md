@@ -1,5 +1,5 @@
 ---
-title: Creating and Managing Views <a id="topic_i3c_qwy_sp"></a>
+title: Creating and Managing Views
 ---
 
 Views enable you to save frequently used or complex queries, then access them in a `SELECT` statement as if they were a table. A view is not physically materialized on disk: the query runs as a subquery when you access the view.

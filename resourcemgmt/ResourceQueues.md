@@ -1,5 +1,5 @@
 ---
-title: Working with Hierarchical Resource Queues <a id="topic_ugr_43c_5r"></a>
+title: Working with Hierarchical Resource Queues
 ---
 
 This section describes how administrators can define and work with resource queues in order to allocate resource usage within HAWQ. By designing hierarchical resource queues, system administrators can balance system resources to queries as needed.

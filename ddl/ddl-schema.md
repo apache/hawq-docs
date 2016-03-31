@@ -1,5 +1,5 @@
 ---
-title: Creating and Managing Schemas <a id="topic_ivc_qvy_sp"></a>
+title: Creating and Managing Schemas
 ---
 
 Schemas logically organize objects and data in a database. Schemas allow you to have more than one object \(such as tables\) with the same name in the database without conflict if the objects are in different schemas.

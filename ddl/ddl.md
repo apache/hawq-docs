@@ -1,5 +1,5 @@
 ---
-title: Defining Database Objects <a id="topic1"></a>
+title: Defining Database Objects
 ---
 
 This section covers data definition language \(DDL\) in HAWQ and how to create and manage database objects.

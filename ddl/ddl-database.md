@@ -1,5 +1,5 @@
 ---
-title: Creating and Managing Databases <a id="topic1"></a>
+title: Creating and Managing Databases
 ---
 
 A HAWQ system is a single instance of HAWQ. There can be several separate HAWQ systems installed, but usually just one is selected by environment variable settings. See your HAWQ administrator for details.

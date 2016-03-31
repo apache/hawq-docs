@@ -1,12 +1,8 @@
 ---
-title: Choosing the Table Storage Model <a id="topic_r2v_zvy_sp"></a>
+title: Choosing the Table Storage Model
 ---
 
 HAWQ supports several storage models and a mix of storage models. When you create a table, you choose how to store its data. This topic explains the options for table storage and how to choose the best storage model for your workload.
-
--   [Choosing Row or Column-Oriented Storage](#topic39)
--   [Altering a Table](#topic55)
--   [Dropping a Table](#topic62)
 
 **Note:** To simplify the creation of database tables, you can specify the default values for some table storage options with the HAWQ server configuration parameter `gp_default_storage_options`.
 

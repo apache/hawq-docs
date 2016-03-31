@@ -2,11 +2,6 @@
 title: Install Apache HAWQ using Ambari
 ---
 
-Follow this procedure to install HAWQ using Ambari 2.2.1.
-
--   [Prerequisites](#section_mqs_f3j_5r)
--   [Procedure](#section_kwy_f3j_5r)
-
 ## Prerequisites <a id="section_mqs_f3j_5r"></a>
 
 -   Install a compatible version of HDP and Ambari, and ensure that your HDP system is fully functional.

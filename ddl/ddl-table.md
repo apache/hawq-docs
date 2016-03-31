@@ -1,5 +1,5 @@
 ---
-title: Creating and Managing Tables <a id="topic_jtv_5vy_sp"></a>
+title: Creating and Managing Tables
 ---
 
 HAWQ Tables are similar to tables in any relational database, except that table rows are distributed across the different segments in the system. When you create a table, you specify the table's distribution policy.

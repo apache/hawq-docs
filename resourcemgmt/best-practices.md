@@ -1,5 +1,5 @@
 ---
-title: Best Practices for Configuring Resource Management <a id="topic_ikz_ndx_15"></a>
+title: Best Practices for Configuring Resource Management
 ---
 
 When configuring resource management, you can apply certain best practices to ensure that resources are managed both efficiently and for best system performance.

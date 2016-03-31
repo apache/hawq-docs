@@ -16,19 +16,6 @@ In addition, in some situations you should back up your raw data from ETL proces
 
 This section describes these three utilities, as well as raw data backup, to help you decide what fits your needs.
 
--   [About gpfdist and PXF](#usinggpfdistorpxf)
-    -   [Performing a Parallel Backup](#performingaparallelbackup)
-    -   [Restoring from a Backup](#restoringfromabackup)
-    -   [Differences between gpfdist and PXF](#differencesbetweengpfdistandpxf)
--   [About pg\_dump and pg\_restore](#usingpg_dumpandpg_restore)
--   [About Backing Up Raw Data](#aboutbackinguprawdata)
--   [Selecting a Backup Strategy/Utility](#estimatingthebestpractice)
--   [Estimating Space Requirements](#estimatingspacerequirements)
--   [Using gpfdist](#usinggpfdist)
--   [Using PXF](#usingpxf)
-    -   [Using PXF to Back Up the tpch Database](#usingpxftobackupthetpchdatabase)
-    -   [Recovering a PXF Backup](#torecoverfromapxfbackup)
-
 ## About gpfdist and PXF <a id="usinggpfdistorpxf"></a>
 
 You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all data to external tables. Backup files can reside on a local file system or HDFS. To recover tables, you can load data back from external tables to the database. 

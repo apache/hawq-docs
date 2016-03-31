@@ -4,15 +4,6 @@ title: HAWQ Filespaces and High Availability Enabled HDFS
 
 In previous versions of HAWQ, you may have initialized HAWQ on HDFS without the High Availability \(HA\) feature. Using the current version, you can now use the HDFS NameNode HA feature.
 
-This topic contains the following sections:
-
--   [Enabling the HDFS NameNode HA feature](#enablingthehdfsnamenodehafeature)
-    -   [Collecting Information about the Target Filespace](#collectinginformationaboutthetargetfilespace)
-    -   [Stopping HAWQ Cluster and Backup Catalog](#stoppinghawqclusterandbackupcatalog)
-    -   [Moving the Filespace Location ](#movingthefilespacelocation)
-    -   [Configure $\{GPHOME\}/etc/hdfs-client.xml ](#configuregphomeetchdfsclientxml)
-    -   [Reinitialize the Standby Master](#reinitializethestandbymaster)
-
 ## Enabling the HDFS NameNode HA feature <a id="enablingthehdfsnamenodehafeature"></a>
 
 To enable the HDFS NameNode HA feature, you need to perform the following tasks:

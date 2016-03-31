@@ -1,5 +1,5 @@
 ---
-title: Partitioning Large Tables <a id="topic_o3v_dwy_sp"></a>
+title: Partitioning Large Tables
 ---
 
 Table partitioning enables supporting very large tables, such as fact tables, by logically dividing them into smaller, more manageable pieces. Partitioned tables can improve query performance by allowing the HAWQ query optimizer to scan only the data needed to satisfy a given query instead of scanning all the contents of a large table.

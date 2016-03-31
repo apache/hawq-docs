@@ -1,5 +1,5 @@
 ---
-title: Creating and Managing Tablespaces <a id="topic9"></a>
+title: Creating and Managing Tablespaces
 ---
 
 Tablespaces allow database administrators to have multiple file systems per machine and decide how to best use physical storage to store database objects. They are named locations within a filespace in which you can create objects. Tablespaces allow you to assign different storage for frequently and infrequently used database objects or to control the I/O performance on certain database objects. For example, place frequently-used tables on file systems that use high performance solid-state drives \(SSD\), and place other tables on standard hard drives.

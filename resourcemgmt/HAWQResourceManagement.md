@@ -1,10 +1,10 @@
 ---
-title: How HAWQ Manages Resources <a id="topic_wwc_3fl_zt"></a>
+title: How HAWQ Manages Resources
 ---
 
 HAWQ manages resources (CPU, memory, I/O and file handles) using a variety of mechanisms including global resource management, resource queues and the enforcement of limits on resource usage.
 
-## Globally Managed Environments
+## Globally Managed Environments<a id="global-env"></a>
 
 In Hadoop clusters, resources are frequently managed globally by YARN. YARN provides resources to MapReduce jobs and any other applications that are configured to work with YARN. In this type of environment, resources are allocated in units called containers. Conversely, in a HAWQ environment, segments and node managers control the consumption of resources and enforce resource limits on each node.
 

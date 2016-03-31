@@ -1,5 +1,5 @@
 ---
-title: Integrating YARN with HAWQ <a id="hawqinputformatformapreduce"></a>
+title: Integrating YARN with HAWQ
 ---
 
 HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources \(containers\) dynamically from YARN, and return resources when HAWQ's workload is not heavy. This feature makes HAWQ a native citizen of the whole Hadoop eco-system.

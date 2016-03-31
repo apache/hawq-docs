@@ -1,5 +1,5 @@
 ---
-title: Configuring Resource Management <a id="topic_ugr_43c_5r"></a>
+title: Configuring Resource Management
 ---
 
 This topic provides configuration information for system administrators and database superusers responsible for managing resources in a HAWQ system.
