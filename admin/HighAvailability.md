@@ -12,15 +12,15 @@ With HAWQ, fault tolerance and data availability is achieved with:
 * [Master Mirroring](#ha_master_mirroring)
 * [Dual Clusters](#ha_dual_clusters)
 
-## Hardware Level RAID <a name="ha_raid"></a>
+## Hardware Level RAID <a id="ha_raid"></a>
 
 As a best practice, HAWQ deployments use hardware level RAID to provide high performance redundancy for single disk failure without having to go into the database level fault tolerance. This provides a lower level of redundancy at the disk level.
 
-## Master Mirroring <a name="ha_master_mirroring"></a>
+## Master Mirroring <a id="ha_master_mirroring"></a>
 
 There are two masters in a highly available cluster, a primary and a standby. As with segments, the master and standby should be deployed on different hosts so that the cluster can tolerate a single host failure. Clients connect to the primary master and queries can be executed only on the primary master. The secondary master is kept up-to-date by replicating the write-ahead log (WAL) from the primary to the secondary.
 
-## Dual Clusters <a name="ha_dual_clusters"></a>
+## Dual Clusters <a id="ha_dual_clusters"></a>
 
 You can add another level of redundancy to your deployment by maintaining two HAWQ clusters, both storing the same data.
 

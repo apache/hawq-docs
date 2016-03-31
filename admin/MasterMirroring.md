@@ -23,7 +23,7 @@ If the master fails, the administrator runs the hawq activate standby utility or
 
 **Tip:** You can configure a virtual IP address for the master and standby so that client programs do not have to switch to a different network address when the ‘active’ master changes. If the master host fails, the virtual IP address can be swapped to the actual acting master.
 
-##Configuring Master Mirroring
+##Configuring Master Mirroring <a id="standby_master_configure"></a>
 
 You can configure a new HAWQ system with a standby master during HAWQ’s installation process or you can add a standby master later using the hawq init standby command line utility. This topic assumes you are adding a standby master to an existing system.
 
@@ -47,7 +47,7 @@ You can configure a new HAWQ system with a standby master during HAWQ’s instal
 
 1. To activate or failover to the standby master, see [Failing Over to a Standby Master](#standby_failover).
 
-##Failing Over to a Standby Master<a name="standby_failover"></a>
+##Failing Over to a Standby Master<a id="standby_failover"></a>
 
 If the primary master fails, log replication stops. Use `hawq activate standby` to activate the standby master.
 
@@ -90,7 +90,7 @@ Upon activation of the standby master, HAWQ reconstructs the state of the master
 1. Then, check on the status of master mirroring by querying the `gp_master_mirroring` system view. See [Checking on the State of Master Mirroring](#standby_check) for instructions.
 
 
-##Checking on the State of Master Mirroring <a name="standby_check"></a>
+##Checking on the State of Master Mirroring <a id="standby_check"></a>
 
 To check on the status of master mirroring, query the `gp_master_mirroring` system view. The view provides information about the walsender process used for HAWQ master mirroring. 
 
@@ -116,7 +116,7 @@ If the standby is configured and in sync with the master, then you will see some
 (1 row)
 ```
 
-##Resynchronizing Standby with the Master
+##Resynchronizing Standby with the Master <a id="resync_master"></a>
 
 
 If the the log synchronization process between the master and standby has stopped or has fallen behind, then the standby can become out-of-date. If this occurs, you will see something similar to the following output after querying the `gp_master_mirroring` view.

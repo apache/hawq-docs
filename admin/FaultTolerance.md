@@ -12,7 +12,7 @@ Besides disk failure, there are other reasons why a segment can be marked as DOW
 
 **Note:** If a disk fails in a particular segment, the failure may cause either an HDFS error or a temporary directory error in HAWQ. HDFS errors are handled by the Hadoop HDFS service.
 
-##Viewing the Current Status of a Segment <a name="view_segment_status"></a>
+##Viewing the Current Status of a Segment <a id="view_segment_status"></a>
 
 To view the current status of the segment, query the `gp_segment_configuration` table.
 
