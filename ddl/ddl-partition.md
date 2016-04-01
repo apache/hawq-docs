@@ -275,7 +275,7 @@ To maintain a partitioned table, use the `ALTER TABLE` command against the top-l
 -   [Splitting a Partition](#topic84)
 -   [Modifying a Subpartition Template](#topic85)
 
-**Note:** When using multi-level partition designs, the following operations are not supported with ATLER TABLE:
+**Note:** When using multi-level partition designs, the following operations are not supported with ALTER TABLE:
 
 -   ADD DEFAULT PARTITION
 -   ADD PARTITION
