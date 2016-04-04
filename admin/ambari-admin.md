@@ -1,11 +1,13 @@
 ---
-title: Administering HAWQ and PXF Using Ambari
+title: Managing HAWQ Using Ambari
 ---
 
 Ambari provides an easy interface to perform some of the most common HAWQ and PXF Administration Tasks.
 
-## Restarting HAWQ segments<a id="amb-restart"></a>
-Ambari provides the ability to restart a HAWQ cluster by restarting one or more segments at a time until all segments (or all segments with stale configurations) restart. You can specify a delay between restarting segments, and Ambari can stop the process if a specified number of segments fail to restart.
+## Performing a Rolling Restart<a id="amb-restart"></a>
+Ambari provides the ability to restart a HAWQ cluster by restarting one or more segments at a time until all segments (or all segments with stale configurations) restart. You can specify a delay between restarting segments, and Ambari can stop the process if a specified number of segments fail to restart. Performing a rolling restart in this manner can help ensure that some HAWQ segments are available to service client requests.
+
+**Note** If you do not need to preserve client connections, you can instead perform an full restart of the entire HAWQ cluster using **Service Actions > Restart All**. 
 
 ### Procedure
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
