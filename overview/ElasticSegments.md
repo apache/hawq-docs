@@ -28,3 +28,4 @@ Different number of virtual segments are allocated based on virtual segment allo
 -   The cost of the query
 -   The distribution of the table; in other words, randomly distributed tables and hash distributed tables
 -   Whether the query involves UDFs and external tables
+-   Specific server configuration parameters, such as `default_hash_table_bucket_number` for hash table queries and `hawq_rm_nvseg_perquery_limit`
