@@ -9,7 +9,7 @@ To configure resource management in HAWQ, follow these high-level steps:
 1.  Decide which kind of resource management you need in your HAWQ deployment. HAWQ supports two modes of global resource management:
     -   Standalone mode, or no global resource management. When configured to run in standalone mode, HAWQ consumes cluster node resources without considering the resource requirements of co-existing applications, and the HAWQ resource manager assumes it can use all the resources from registered segments, unless configured otherwise. See [Using Standalone Mode](#topic_url_pls_zt).
     -   External global resource manager mode. Currently HAWQ supports YARN as a global resource manager. When you configure YARN as the global resource manager in a HAWQ cluster, HAWQ becomes an unmanaged YARN application. HAWQ negotiates resources with the YARN resource manager to consume YARN cluster resources.
-2.  If you are using standalone mode for HAWQ resource managent, decide on whether to limit the amount of memory and CPU usage allocated per HAWQ segment. See [Configuring Segment Resource Capacity](#topic_htk_fxh_15).
+2.  If you are using standalone mode for HAWQ resource management, decide on whether to limit the amount of memory and CPU usage allocated per HAWQ segment. See [Configuring Segment Resource Capacity](#topic_htk_fxh_15).
 3.  If you are using YARN as your global resource manager, configure the resource queue in YARN where HAWQ will register itself as a YARN application. Then configure HAWQ with the location and configuration requirements for communicating with YARN's resource manager. See [Integrating YARN with HAWQ](YARNIntegration.html) for details.
 4.  In HAWQ, create and define resource queues. See [Working with Hierarchical Resource Queues](ResourceQueues.html).
 
@@ -103,7 +103,7 @@ Note that given the dynamic nature of resource allocation in HAWQ, you cannot ex
 
 ## Configuring the Maximum Number of Virtual Segments <a id="topic_tl5_wq1_f5"></a>
 
-You can limit the number of virtual segments used during statement execution on a cluster-wise level.
+You can limit the number of virtual segments used during statement execution on a cluster-wide level.
 
 Limiting the number of virtual segments used during statement execution is useful for preventing resource bottlenecks during data load and the overconsumption of resources without performance benefits. The number of files that can be opened concurrently for write on both NameNode and DataNode are limited. Consider the following scenario:
 
@@ -114,7 +114,7 @@ Then there will be P \* V files opened per DataNode and at least P \* V threads 
 
 To alleviate the load on NameNode, you can limit V, the number of virtual segments started per node. Use the following server configuration parameters:
 
--   `hawq_rm_nvseg_perquery_limit` limits the maximum number of virtual segments that can be used for one statement execution on a cluster-wide level. The default value is 1000.
--   `hawq_rm_nvseg_perquery_perseg_limit` limits the maximum number of virtual segments in one HAWQ segment that can be used for one statement execution on a cluster-wide level. The default value is 8.
+-   `hawq_rm_nvseg_perquery_limit` limits the maximum number of virtual segments that can be used for one statement execution on a cluster-wide level.  The hash buckets defined in `default_hash_table_bucket_number` cannot exceed this number. The default value is 512.
+-   `default_hash_table_bucket_number` defines the number of buckets used by default when you create a hash table. When you query a hash table, the query's virtual segment resources are fixed and allocated based on the bucket number defined for the table. A best practice is to tune this configuration parameter after you expand the cluster.
 
 You can also limit the number of virtual segments used by queries when configuring your resource queues. \(See [CREATE RESOURCE QUEUE](/200/hawq/reference/sql/CREATE-RESOURCE-QUEUE.html).\) The global configuration parameters are a hard limit, however, and any limits set on the resource queue or on the statement-level cannot be larger than these limits set on the cluster-wide level.
