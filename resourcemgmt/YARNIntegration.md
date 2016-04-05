@@ -118,11 +118,11 @@ In HAWQ standalone mode, you can configure the resource capacity of individual s
 </property>
 ```
 
-We recommend that in your memory to core ratio that memory is a multiple of 1GB, such as 1GB per core, 2GB per core or 4 GB per core.
+We recommend that in your memory to core ratio that memory is a multiple of 1GB, such as 1GB per core, 2GB per core or 4 GB per core. 
 
 After you set limits on the segments, you can use resource queues to configure additional resource management rules in HAWQ.
 
-### Avoiding Resource Fragementation with YARN Managed Resources
+### Avoiding Resource Fragmentation with YARN Managed Resources
 
 To reduce the likelihood of resource fragmentation in deployments where resources are managed by YARN, ensure that you have configured the following:
 
@@ -138,7 +138,9 @@ For example, if you have the following properties set in YARN:
 -   `yarn.nodemanager.resource.memory-mb=48gb`
 -   `yarn.nodemanager.resource.cpu-vcores`=16
 
-Then the CPU to memory ratio equals 3GB \(48 divided by 16\). Since `yarn.scheduler.minimum-allocation-mb` is set to 4GB, each YARN container will be 4GB. This leaves 1GB of fragmented space \(4GB minus 3GB.\) To prevent fragmentation in this scenario, you could set `yarn.nodemanager.resource.memory-mb=64gb` \(or you could set `yarn.scheduler.minimum-allocation-mb=3gb`.\)
+Then the CPU to memory ratio calculated by HAWQ equals 3GB \(48 divided by 16\). Since `yarn.scheduler.minimum-allocation-mb` is set to 4GB, each YARN container will be 4GB. This leaves 1GB of fragmented space \(4GB minus 3GB.\) To prevent fragmentation in this scenario, you could set `yarn.nodemanager.resource.memory-mb=64gb` \(or you could set `yarn.scheduler.minimum-allocation-mb=3gb`.\)
+
+**Note:** If you are specifying 1GB or udner for `yarn.scheduler.minimum-allocation-mb` in `yarn-site.xml`, then make sure that the property is an equal subdivision of 1GB. For example, 1024, 512.
 
 See [Handling Segment Resource Fragmentation](/200/hawq/troubleshooting/Troubleshooting.html) for general information on resource fragmentation.
 

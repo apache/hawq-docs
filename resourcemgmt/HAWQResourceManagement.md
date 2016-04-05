@@ -32,7 +32,7 @@ When a query comes in, after query parsing and semantic analysis, the optimizer 
 
 In this hierarchical resource queue tree depicted in the diagram, there are branch queues \(rectangles outlined in dashed lines\) and leaf queues \(rectangles drawn with solid lines\). Only leaf queues can be associated with roles and accept queries.
 
-**Query resource allocation policy**
+**Query Resource Allocation Policy**
 
 The HAWQ resource manager follows several principles when allocating resources to queries:
 
@@ -40,6 +40,18 @@ The HAWQ resource manager follows several principles when allocating resources t
 -   When multiple queues are busy, the resource manager balances resources among queues based on resource queue capacities.
 -   In one resource queue, when multiple queries are waiting for resources, resources are distributed evenly to each query in a best effort manner.
 
-**Enforcing Limits on Resources**
+## Enforcing Limits on Resources
 
-You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html).
+You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Cre
+ating Resource Queues](ResourceQueues.html).
+
+**Cluster Memory to Core Ratio**
+
+If the resource manager is running in YARN mode, the HAWQ resource manager chooses a cluster memory to core ratio when most segments have registered and when the resource manager has received a cluster report from YARN. 
+
+HAWQ trims each segment's resource capacity automatically to fit the fixed cluster memory to core ratio. For example, if the resource manager chooses 1GB per core as the ratio, then a segment with 5GB of memory and 8 cores will have 3 cores cut. These cores will not be used by HAWQ. If a segment has 12GB and 10 cores, then 2GB of memory will be cut by HAWQ.
+
+The resource manager selects the smallest ratio possible based on registered segments and the amount of memory available in the cluster in order to minimize the waste of resources.
+
+After the cluster memory to core ratio is fixed, then the ratio will not change until you restart the HAWQ master node. Therefore, memory and core resources for any segments added dynamically to the cluster are cut based on the fixed cluster-wise ratio.
+
