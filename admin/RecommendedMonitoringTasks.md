@@ -222,14 +222,12 @@ GROUP BY 1;
   </tr>
   <tr>
     <td>
-      <p>Vacuum and reindex system catalogs (tables in the <code>pg_catalog</code> schema) to maintain an efficient catalog.</p>
+      <p>Vacuum system catalogs (tables in the <code>pg_catalog</code> schema) to maintain an efficient catalog.</p>
       <p>Recommended frequency: weekly, or more often if database objects are created and dropped frequently</p>
     </td>
     <td>
       <ol>
         <li><code>VACUUM</code> the system tables in each database.</li>
-        <li>Run <code>REINDEX SYSTEM</code> in each database.
-        <pre><code>REINDEXDB -s</code></pre></li>
       </ol>
     </td>
     <td>The optimizer retrieves information from the system tables to create query plans. If system tables and indexes are allowed to become bloated over time, scanning the system tables increases query execution time.</td>
