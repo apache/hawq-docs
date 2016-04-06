@@ -78,13 +78,16 @@ title: Install Apache HAWQ using Ambari
 
         |Property|Setting|
         |--------|-------|
-        |**dfs.block.access.token.enable**|*false* for an unsecured HDFS cluster, or *true* for a secure cluster|
         |**dfs.allow.truncate**|true|
-        |**dfs.support.append**|true|
-        |**HDFS Short-circuit read** \(**dfs.client.read.shortcircuit**\)|true|
+        |**dfs.block.access.token.enable**|*false* for an unsecured HDFS cluster, or *true* for a secure cluster|
         |**dfs.block.local-path-access.user**|gpadmin|
-        |**dfs.datanode.handler.count**|60|
+        |**HDFS Short-circuit read** \(**dfs.client.read.shortcircuit**\)|true|
+        |**dfs.client.socket-timeout**|300000000|
         |**dfs.client.use.legacy.blockreader.local**|false|
+        |**dfs.datanode.handler.count**|60|
+        |**dfs.datanode.socket.write.timeout**|7200000|
+        |**dfs.namenode.handler.count**|600|
+        |**dfs.support.append**|true|
 
         **Note:** HAWQ requires that you enable `dfs.allow.truncate`. The HAWQ service will fail to start if `dfs.allow.truncate` is not set to "true."
 

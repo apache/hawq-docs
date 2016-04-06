@@ -65,12 +65,15 @@ Configure operating system parameters on each host machine before you begin to i
      |**dfs.allow.truncate**|true|
      |**dfs.block.access.token.enable**|*false* for an unsecured HDFS cluster, or *true* for a secure cluster|
      |**dfs.block.local-path-access.user**|gpadmin|
-     |**dfs.client.read.shortcircuit**)|true|
+     |**dfs.client.read.shortcircuit**|true|
+     |**dfs.client.socket-timeout**|300000000|
      |**dfs.client.use.legacy.blockreader.local**|false|
      |**dfs.datanode.data.dir.perm**|750|
      |**dfs.datanode.handler.count**|60|
      |**dfs.datanode.max.transfer.threads**|40960|
+     |**dfs.datanode.socket.write.timeout**|7200000|
      |**dfs.namenode.accesstime.precision**|0|
+     |**dfs.namenode.handler.count**|600|
      |**dfs.support.append**|true|
 
 4.  Use a text editor to edit the `core-site.xml` file. Ensure that the following HDFS parameters are set to the correct value:
