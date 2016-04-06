@@ -492,8 +492,8 @@ For manual installations, perform these additional steps after you complete the 
     3.  Run the following commands to enable security and configure the keytab file:
 
         ```
-        $ hawq config --masteronly -c enable_secure_filesystem -v ON
-        $ hawq config --masteronly -c krb_server_keyfile -v /etc/security/keytabs/hawq.service.keytab
+        $ hawq config -c enable_secure_filesystem -v ON
+        $ hawq config -c krb_server_keyfile -v /etc/security/keytabs/hawq.service.keytab
         ```
 
         **Note:** Substitute the correct value of MASTER_DATA_DIRECTORY for your configuration.
