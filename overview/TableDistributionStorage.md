@@ -25,3 +25,17 @@ Data is distributed across HDFS DataNodes. Since remote read involves network I/
 -   Ratio of local read
 -   Continuity of file read
 -   Data balance among virtual segments
+
+## External Data Access
+
+HAWQ can access data in external files using the HAWQ Extension Framework (PXF).
+PXF is an extensible framework that allows HAWQ to access data in external
+sources as readable or writable HAWQ tables. PXF has built-in connectors for
+accessing data inside HDFS files, Hive tables, and HBase tables. PXF also
+integrates with HCatalog to query Hive tables directly. See [Working with PXF
+and External Data](/200/hawq/pxf/PivotalExtensionFrameworkPXF.html) for more
+details.
+
+Users can create custom PXF connectors to access other parallel data stores or
+processing engines. Connectors are Java plugins that use the PXF API. For more
+information see [PXF External Tables and API](/pxf/PXFExternalTableandAPIReference.html)
