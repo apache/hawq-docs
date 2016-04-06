@@ -84,6 +84,7 @@ title: Install Apache HAWQ using Ambari
         |**HDFS Short-circuit read** \(**dfs.client.read.shortcircuit**\)|true|
         |**dfs.block.local-path-access.user**|gpadmin|
         |**dfs.datanode.handler.count**|60|
+        |**dfs.client.use.legacy.blockreader.local**|false|
 
         **Note:** HAWQ requires that you enable `dfs.allow.truncate`. The HAWQ service will fail to start if `dfs.allow.truncate` is not set to "true."
 
@@ -119,7 +120,7 @@ title: Install Apache HAWQ using Ambari
 
 17.  On the Customize Services page, the **Settings** tab configures basic properties of the HAWQ cluster. In most cases you can accept the default values provided on this page. Several configuration options may require attention depending on your deployment:
     *  **HAWQ Master Directory**, **HAWQ Segment Directory**: This specifies the base path for the HAWQ master or segment data directory.
-    *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ Master or a HAWQ segment stores temporary files. Separate multiple directories with a space. Any directories that you specify must already be available on all host machines. As a best practice, use multiple temporary directories on separate disks to load balance writes to temporary files \(for example, ``/disk1/tmp /disk2/tmp`\). If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.
+    *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ Master or a HAWQ segment stores temporary files. Separate multiple directories with a space. Any directories that you specify must already be available on all host machines. As a best practice, use multiple temporary directories on separate disks to load balance writes to temporary files \(for example, `/disk1/tmp /disk2/tmp\`). If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.
     *  **Resource Manager**: Select the resource manager to use for allocating resources in your HAWQ cluster. If you choose **Standalone**, HAWQ exclusively uses resources from the whole cluster. If you choose **YARN**, HAWQ contacts the YARN resource manager to negotiate resources. You can change the resource manager type after the initial installation. See [Managing Resources](/200/hawq/resourcemgmt/HAWQResourceManagement.html).
     *  **VM Overcommit**: Set this value according to the instructions in the [System Requirements](/20/requirements/system-requirements.html) document.
 
@@ -144,7 +145,7 @@ title: Install Apache HAWQ using Ambari
 
     ```
     $ su - gpadmin
-    $ source /usr/local/hawq/greenplum\_path.sh
+    $ source /usr/local/hawq/greenplum_path.sh
     $ psql
     ```
 

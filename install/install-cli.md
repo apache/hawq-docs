@@ -44,7 +44,7 @@ Configure operating system parameters on each host machine before you begin to i
 2.  Execute the following command to apply your updated /etc/sysctl.conf file to the operating system configuration:
 
     ```
-    $ **sysctl -p**
+    $ sysctl -p
     ```
 
 3.  Use a text editor to edit the /etc/security/limits.conf file. Add the following definitions in the exact order that they are listed:
@@ -58,10 +58,30 @@ Configure operating system parameters on each host machine before you begin to i
 
     Save the file after making the required changes.
 
-4.  Ensure that the following HDFS parameters are set to the correct value:
-    -   Set `dfs.block.access.token.enable` to false for unsecured HDFS clusters \(or true for secured clusters\).
-    -   Set `dfs.client.use.legacy.blockreader.local` to false for all manual installations. This disables disables the legacy read short circuit implementation, and is required for executing HAWQ queries.
-    These properties can be set within Ambari via **Services \> HDFS \> Configs \> Advanced hdfs-site**, or by manually editing the hdfs-site.xml file. If you modify these parameters, restart HDFS to apply your changes.
+4.  Use a text editor to edit the `hdfs-site.xml` file. Ensure that the following HDFS parameters are set to the correct value:
+
+     |Property|Setting|
+     |--------|-------|
+     |**dfs.allow.truncate**|true|
+     |**dfs.block.access.token.enable**|*false* for an unsecured HDFS cluster, or *true* for a secure cluster|
+     |**dfs.block.local-path-access.user**|gpadmin|
+     |**dfs.client.read.shortcircuit**)|true|
+     |**dfs.client.use.legacy.blockreader.local**|false|
+     |**dfs.datanode.data.dir.perm**|750|
+     |**dfs.datanode.handler.count**|60|
+     |**dfs.datanode.max.transfer.threads**|40960|
+     |**dfs.namenode.accesstime.precision**|0|
+     |**dfs.support.append**|true|
+
+4.  Use a text editor to edit the `core-site.xml` file. Ensure that the following HDFS parameters are set to the correct value:
+
+     |Property|Setting|
+     |--------|-------|
+     |**ipc.client.connection.maxidletime**|3600000|
+     |**ipc.client.connect.timeout**|300000|
+     |**ipc.server.listen.queue.size**|3300|
+
+     Restart HDFS to apply your changes.
 
 5.  Ensure that the /etc/hosts file on each  cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master /etc/hosts file and either copying it or referencing it on every host that will take part in the  cluster.
 
@@ -142,7 +162,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
 10. Create the gpadmin user on all hosts in the cluster:
 
     ```
-    $ hawq ssh -f hostfile -e '/usr/sbin/useradd gpadmin’
+    $ hawq ssh -f hostfile -e '/usr/sbin/useradd gpadmin'
     $ hawq ssh –f hostfile -e 'echo -e "changeme\changeme" | passwd gpadmin'
     ```
 
@@ -188,7 +208,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     $ hawq ssh -f seg_hosts -e 'chown gpadmin /data/segment'
     ```
 
-16. Create the HAWQ temporary directories on all HAWQ hosts in your cluster. As a best practice, use a directory from each mounted drive available on your machines to load balance writing for temporary files. These drives are typically the same drives that are used by your DataNode service. For example, if you have two drives mounted on /data1 and /data2, you could use /data1/tmp and /data2/tmp for storing temporary files.
+16. Create the HAWQ temporary directories on all HAWQ hosts in your cluster. As a best practice, use a directory from each mounted drive available on your machines to load balance writing for temporary files. These drives are typically the same drives that are used by your DataNode service. For example, if you have two drives mounted on `/data1` and `/data2`, you could use `/data1/tmp` and `/data2/tmp` for storing temporary files.
 
     The following example commands use two disks with the paths /data1/tmp and /data2/tmp:
 
@@ -230,8 +250,8 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
         |hawq\_segment\_address\_port|40000|
         |hawq\_master\_directory|/data/master|
         |hawq\_segment\_directory|/data/segment|
-        |hawq\_master\_temp\_directory|/data1/tmp,/data2/tmp|
-        |hawq\_segment\_temp\_directory|/data1/tmp,/data2/tmp|
+        |hawq\_master\_temp\_directory|/data1/tmp /data2/tmp|
+        |hawq\_segment\_temp\_directory|/data1/tmp /data2/tmp|
         |hawq\_rm\_yarn\_address|mdw:9980 **Note:** This property must match the `yarn.resourcemanager.address` value.|
         |hawq\_rm\_yarn\_scheduler\_address|mdw:9981 **Note:** This property must match the `yarn.resourcemanager.scheduler.address` value.|
         |hawq\_global\_rm\_type|none|
