@@ -75,7 +75,7 @@ the HAWQ master and standby master hosts. This example uses the directory `/etc/
 
 3. Configure an OpenLDAP configuration file for HAWQ with the CA certificate directory and certificate file specified.
 
-   As the root user, edit the OpenLDAP configuration file `/etc/openldap/ldap.conf`:
+    As the root user, edit the OpenLDAP configuration file `/etc/openldap/ldap.conf`:
 
     ```
     SASL_NOCANON on
@@ -84,7 +84,8 @@ the HAWQ master and standby master hosts. This example uses the directory `/etc/
     TLS_CACERTDIR /etc/pki/tls/certs
     TLS_CACERT /etc/pki/tls/certs/<ca-certificate-file>
     ```
-   **Note**: For certificate validation to succeed, the hostname in the certificate must match a hostname in the URI property. Otherwise, you must also add `TLS_REQCERT allow` to the file.
+
+    **Note**: For certificate validation to succeed, the hostname in the certificate must match a hostname in the URI property. Otherwise, you must also add `TLS_REQCERT allow` to the file.
 
 4. As the gpadmin user, edit `/usr/local/hawq/greenplum_path.sh` and add the following line.
 
