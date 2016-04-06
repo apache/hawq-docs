@@ -60,31 +60,31 @@ Configure operating system parameters on each host machine before you begin to i
 
 4.  Use a text editor to edit the `hdfs-site.xml` file. Ensure that the following HDFS parameters are set to the correct value:
 
-     |Property|Setting|
-     |--------|-------|
-     |**dfs.allow.truncate**|true|
-     |**dfs.block.access.token.enable**|*false* for an unsecured HDFS cluster, or *true* for a secure cluster|
-     |**dfs.block.local-path-access.user**|gpadmin|
-     |**dfs.client.read.shortcircuit**|true|
-     |**dfs.client.socket-timeout**|300000000|
-     |**dfs.client.use.legacy.blockreader.local**|false|
-     |**dfs.datanode.data.dir.perm**|750|
-     |**dfs.datanode.handler.count**|60|
-     |**dfs.datanode.max.transfer.threads**|40960|
-     |**dfs.datanode.socket.write.timeout**|7200000|
-     |**dfs.namenode.accesstime.precision**|0|
-     |**dfs.namenode.handler.count**|600|
-     |**dfs.support.append**|true|
+    |Property|Setting|
+    |--------|-------|
+    |**dfs.allow.truncate**|true|
+    |**dfs.block.access.token.enable**|*false* for an unsecured HDFS cluster, or *true* for a secure cluster|
+    |**dfs.block.local-path-access.user**|gpadmin|
+    |**dfs.client.read.shortcircuit**|true|
+    |**dfs.client.socket-timeout**|300000000|
+    |**dfs.client.use.legacy.blockreader.local**|false|
+    |**dfs.datanode.data.dir.perm**|750|
+    |**dfs.datanode.handler.count**|60|
+    |**dfs.datanode.max.transfer.threads**|40960|
+    |**dfs.datanode.socket.write.timeout**|7200000|
+    |**dfs.namenode.accesstime.precision**|0|
+    |**dfs.namenode.handler.count**|600|
+    |**dfs.support.append**|true|
 
 4.  Use a text editor to edit the `core-site.xml` file. Ensure that the following HDFS parameters are set to the correct value:
 
-     |Property|Setting|
-     |--------|-------|
-     |**ipc.client.connection.maxidletime**|3600000|
-     |**ipc.client.connect.timeout**|300000|
-     |**ipc.server.listen.queue.size**|3300|
+    |Property|Setting|
+    |--------|-------|
+    |**ipc.client.connection.maxidletime**|3600000|
+    |**ipc.client.connect.timeout**|300000|
+    |**ipc.server.listen.queue.size**|3300|
 
-     Restart HDFS to apply your changes.
+    Restart HDFS to apply your changes.
 
 5.  Ensure that the /etc/hosts file on each  cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master /etc/hosts file and either copying it or referencing it on every host that will take part in the  cluster.
 
