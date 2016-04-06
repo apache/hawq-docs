@@ -38,4 +38,4 @@ details.
 
 Users can create custom PXF connectors to access other parallel data stores or
 processing engines. Connectors are Java plugins that use the PXF API. For more
-information see [PXF External Tables and API](/pxf/PXFExternalTableandAPIReference.html)
+information see [PXF External Tables and API](/200/hawq/pxf/PXFExternalTableandAPIReference.html)
