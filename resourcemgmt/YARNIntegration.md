@@ -136,11 +136,11 @@ For example, if you have the following properties set in YARN:
     **Note:** This is the default value set by Ambari in some cases.
 
 -   `yarn.nodemanager.resource.memory-mb=48gb`
--   `yarn.nodemanager.resource.cpu-vcores`=16
+-   `yarn.nodemanager.resource.cpu-vcores=16`
 
 Then the CPU to memory ratio calculated by HAWQ equals 3GB \(48 divided by 16\). Since `yarn.scheduler.minimum-allocation-mb` is set to 4GB, each YARN container will be 4GB. This leaves 1GB of fragmented space \(4GB minus 3GB.\) To prevent fragmentation in this scenario, you could set `yarn.nodemanager.resource.memory-mb=64gb` \(or you could set `yarn.scheduler.minimum-allocation-mb=3gb`.\)
 
-**Note:** If you are specifying 1GB or udner for `yarn.scheduler.minimum-allocation-mb` in `yarn-site.xml`, then make sure that the property is an equal subdivision of 1GB. For example, 1024, 512.
+**Note:** If you are specifying 1GB or under for `yarn.scheduler.minimum-allocation-mb` in `yarn-site.xml`, then make sure that the property is an equal subdivision of 1GB. For example, 1024, 512.
 
 See [Handling Segment Resource Fragmentation](/200/hawq/troubleshooting/Troubleshooting.html) for general information on resource fragmentation.
 

@@ -47,11 +47,9 @@ ating Resource Queues](ResourceQueues.html).
 
 **Cluster Memory to Core Ratio**
 
-If the resource manager is running in YARN mode, the HAWQ resource manager chooses a cluster memory to core ratio when most segments have registered and when the resource manager has received a cluster report from YARN. 
+The HAWQ resource manager chooses a cluster memory to core ratio when most segments have registered and when the resource manager has received a cluster report from YARN \(if the resource manager is running in YARN mode.\) The HAWQ resource manager selects the ratio based on the amount of memory available in the cluster and the number of cores available on registered segments. The resource manager selects the smallest ratio possible in order to minimize the waste of resources.
 
-HAWQ trims each segment's resource capacity automatically to fit the fixed cluster memory to core ratio. For example, if the resource manager chooses 1GB per core as the ratio, then a segment with 5GB of memory and 8 cores will have 3 cores cut. These cores will not be used by HAWQ. If a segment has 12GB and 10 cores, then 2GB of memory will be cut by HAWQ.
+HAWQ trims each segment's resource capacity automatically to match the selected ratio. For example, if the resource manager chooses 1GB per core as the ratio, then a segment with 5GB of memory and 8 cores will have 3 cores cut. These cores will not be used by HAWQ. If a segment has 12GB and 10 cores, then 2GB of memory will be cut by HAWQ.
 
-The resource manager selects the smallest ratio possible based on registered segments and the amount of memory available in the cluster in order to minimize the waste of resources.
-
-After the cluster memory to core ratio is fixed, then the ratio will not change until you restart the HAWQ master node. Therefore, memory and core resources for any segments added dynamically to the cluster are cut based on the fixed cluster-wise ratio.
+After the HAWQ resource manager has selected its ratio, then the ratio will not change until you restart the HAWQ master node. Therefore, memory and core resources for any segments added dynamically to the cluster are automtaically cut based on the fixed ratio.
 
