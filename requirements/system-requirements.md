@@ -7,15 +7,16 @@ Follow these guidelines to configure each host machine that will run an Apache H
 
 ## Host Memory Configuration<a id="topic_d3f_vlz_g5"></a>
 
-In order to prevent data loss or corruption in an Apach HAWQ cluster, you must configure the memory on each host machine so that the Linux Out-of-Memory \(OOM\) killer process never kills a HAWQ process due to OOM conditions. \(HAWQ applies its own rules to enforce memory restrictions.\)
+In order to prevent data loss or corruption in an Apache HAWQ cluster, you must configure the memory on each host machine so that the Linux Out-of-Memory \(OOM\) killer process never kills a HAWQ process due to OOM conditions. \(HAWQ applies its own rules to enforce memory restrictions.\)
 
 **For mission critical deployments of HAWQ, perform these steps on each host machine to configure memory:**
 
 1.  Set the operating system `vm.overcommit_memory` parameter to 2. With this setting, the OOM killer process reports an error instead of killing running processes. To set this parameter:
     1.  Open the /etc/sysctl.conf file with a text editor.
-    2.  Add or change the parameter definition so that the file includes the line:
+    2.  Add or change the parameter definition so that the file includes these lines:
 
         ```
+        kernel.threads-max=798720
         vm.overcommit_memory=2
         ```
 
