@@ -79,7 +79,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
       kdc = kerberos-gpdb:88
       admin_server = kerberos-gpdb:749
       default_domain = kerberos-gpdb
-     "></a>
+     }
 
     [domain_realm]
      .kerberos-gpdb = KRB.MYCOMPANY.COM
@@ -92,8 +92,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
         renew_lifetime = 36000
         forwardable = true
         krb4_convert = false
-     "></a>
-
+       }
     ```
 
     The `kdc` and `admin_server` keys in the `[realms]` section specify the host \(`kerberos-gpdb`\) and port where the Kerberos server is running. IP numbers can be used in place of host names.
@@ -294,14 +293,13 @@ You can configure HAWQ to use Kerberos to run user-defined Java functions.
       useTicketCache=true
       debug=true
       client=true;
-    "></a>;
+    };
     ```
 
 3.  Create a Java application that connects to HAWQ using Kerberos authentication. The following example database connection URL uses a PostgreSQL JDBC driver and specifies parameters for Kerberos authentication:
 
     ```
-    jdbc:postgresql://mdw:5432/mytest?kerberosServerName=postgres
-    &jaasApplicationName=pgjdbc&user=gpadmin/kerberos-gpdb
+    jdbc:postgresql://mdw:5432/mytest?kerberosServerName=postgres&jaasApplicationName=pgjdbc&user=gpadmin/kerberos-gpdb
     ```
 
     The parameter names and values specified depend on how the Java application performs Kerberos authentication.
