@@ -42,8 +42,7 @@ The HAWQ resource manager follows several principles when allocating resources t
 
 ## Enforcing Limits on Resources
 
-You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Cre
-ating Resource Queues](ResourceQueues.html).
+You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html).
 
 **Cluster Memory to Core Ratio**
 
@@ -53,3 +52,18 @@ HAWQ trims each segment's resource capacity automatically to match the selected 
 
 After the HAWQ resource manager has selected its ratio, then the ratio will not change until you restart the HAWQ master node. Therefore, memory and core resources for any segments added dynamically to the cluster are automtaically cut based on the fixed ratio.
 
+To find out the cluster memory to core ratio selected by the resource manager, check the HAWQ master database logs for messages similar to the following:
+
+```
+Resource manager chooses ratio 1024 MB per core as cluster level memory to core ratio, there are 3072 MB memory 0 CORE resource unable to be utilized.
+```
+
+You can also check the segment logs to see how resources are being cut from individual segments due to the cluster memory to core ratio. For example:
+
+```
+Resource manager adjusts segment localhost original resource capacity from (8192 MB, 5 CORE) to (5120 MB, 5 CORE)
+
+Resource manager adjusts segment localhost original global resource manager resource capacity from (8192 MB, 5 CORE) to (5120 MB, 5 CORE)
+```
+
+See [Viewing the Database Server Log Files](/20/admin/monitor.html#topic28) for more information on working with HAWQ log files.
