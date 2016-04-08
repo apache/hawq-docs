@@ -29,19 +29,23 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
 3.  At the prompt, enter a name for the filespace, a master file system location, and the primary segment file system locations. For example:
 
     ```
-    Checking your configuration:
+    [gpadmin@test1 ~]$ hawq filespace -o hawqfilespace_config
+    Enter a name for this filespace
+    > fs1
+    Enter replica num for filespace. If 0, default replica num is used (default=3)
+    > 3
 
-    Your system has 2 hosts with 2 primary segments
-    per host.
+    Please specify the DFS location for the filespace (for example: localhost:9000/fs)
+    location> test5:9000/fs1
+    20160406:20:25:19:105512 hawqfilespace:test1:gpadmin-[INFO]:-[created]
+    20160406:20:25:19:105512 hawqfilespace:test1:gpadmin-[INFO]:-
+    To add this filespace to the database please run the command:
+    hawqfilespace --config /home/gpadmin/hawqfilespace_config
 
-    Configuring hosts: [sdw1, sdw2]
-
-    Please specify 2 locations for the primary segments, one per line:
-    primary location 1>
-    primary location 2> /hawq_pri_filespc
-
-    Enter a file system location for the master:
-    master location> /hawq_master_filespc
+    [gpadmin@test1 ~]$ cat /home/gpadmin/hawqfilespace_config
+    filespace:fs1
+    fsreplica:3
+    dfs_url::test5:9000/fs1
     ```
 
 4.  hawq filespace creates a configuration file. Examine the file to verify that the hawq filespace configuration is correct. The following is a sample configuration file:

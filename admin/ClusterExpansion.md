@@ -4,6 +4,8 @@ title: Expanding a Cluster
 
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
+**Note:** This topic describes how to expand a cluster using the command-line interface. If you are using Ambari to manage your HAWQ cluster, see [Expanding the HAWQ Cluster](/20/admin/ambari-admin.html#amb-expand) in [Managing HAWQ Using Ambari](/20/admin/ambari-admin.html)
+
 ## Guidelines for Cluster Expansion <a id="topic_kkc_tgb_h5"></a>
 
 This topic provides some guidelines around expanding your HAWQ cluster.
@@ -84,6 +86,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
 
 3.  If not already installed, install the target machine \(`sdw4`\) as an HDFS DataNode.
+4.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node.
 4.  Download and install HAWQ on the target machine \(`sdw4`\) as described in the [software build instructions](https://cwiki.apache.org/confluence/display/HAWQ/Build+and+Install) or in the distribution installation documentation.
 5.  On the HAWQ master node, check current cluster and host information using `psql`.
 
@@ -180,6 +183,21 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     postgres=#select gp_metadata_cache_clear();
     ```
 
-16. If you are using hash tables, adjust the `default_hash_table_bucket_number` server configuration property to reflect the cluster's new size. Update this configuration's value by multiplying the new number of nodes in the cluster by 6.
-    -   `default_hash_table_bucket_number` = \(new number of nodes\) \* 6
-17. Redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
+16. After expansion, if the new size of your cluster is greater than or equal \(#nodes >=4\) to 4, change the value of the `output.replace-datanode-on-failure` HDFS parameter in `hdfs-client.xml` to `false`.
+
+17. (Optional) If you are using hash tables, adjust the `default_hash_table_bucket_number` server configuration property to reflect the cluster's new size. Update this configuration's value by multiplying the new number of nodes in the cluster by the appropriate amount indicated below.
+
+	|Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
+	|---------------|------------------------------------------|
+	|<= 85|6 \* \#nodes|
+	|\> 85 and <= 102|5 \* \#nodes|
+	|\> 102 and <= 128|4 \* \#nodes|
+	|\> 128 and <= 170|3 \* \#nodes|
+	|\> 170 and <= 256|2 \* \#nodes|
+	|\> 256 and <= 512|1 \* \#nodes|
+	|\> 512|512| 
+   
+18. If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter. 
+
+
+	**Note:** The redistribution of table data can take a significant amount of time.
