@@ -185,5 +185,10 @@ If this system uses YARN for resource management, you would set `yarn.nodemanage
 -   Gigabit Ethernet within the array. For a production cluster, 10 Gigabit Ethernet recommended.
 -   Dedicated, non-blocking switch.
 
+## Port Requirements<a id="port-req"></a>
+Individual PXF plug-ins, which you install after adding the HAWQ and PXF services, require that you Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009.
+
+If you have configured Oozie JXM reporting on a host that will run a PXF plug-in, make sure that the reporting service uses a port other than 8005. This helps to prevent port conflict errors from occurring when you start the PXF service.
+
 ## Umask Requirement<a id="umask"></a>
 Set the OS file system umask to 022 on all cluster hosts. This ensure that users can read the HDFS block files.
