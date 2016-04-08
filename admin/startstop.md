@@ -144,3 +144,4 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
     ```
     $ hawq stop allsegments
     ```
+-	Typically you should always use `hawq start cluster` or `hawq restart cluster` to start the cluster. If you do end up using `hawq start standby|master|segment` to start nodes individually, make sure you always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
