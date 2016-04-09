@@ -50,7 +50,9 @@ By default, the interconnect uses UDP \(User Datagram Protocol\) to send message
 
 ## HAWQ Resource Manager <a id="topic_jjf_11m_g5"></a>
 
-The HAWQ resource manager obtains resources from YARN and responds to resource requests. Resources are buffered by the HAWQ resource manager to support low latency queries.
+The HAWQ resource manager obtains resources from YARN and responds to resource requests. Resources are buffered by the HAWQ resource manager to support low latency queries. The HAWQ resource manager can also run in standalone mode. In these deployments, HAWQ manages resources by itself without YARN.
+
+See [How HAWQ Manages Resources](/20/resourcemgmt/HAWQResourceManagement.html) for more details on HAWQ resource management.
 
 ## HAWQ Catalog Service <a id="topic_mrl_psq_f5"></a>
 
@@ -59,6 +61,8 @@ The HAWQ catalog service stores all metadata, such as UDF/UDT information, relat
 ## HAWQ Fault Tolerance Service <a id="topic_dcs_rjm_g5"></a>
 
 The HAWQ fault tolerance service \(FTS\) is responsible for detecting segment failures and accepting heartbeats from segments.
+
+See [Understanding the Fault Tolerance Service](/20/admin/FaultTolerance.html) for more information on this service.
 
 ## HAWQ Dispatcher <a id="topic_jtc_nkm_g5"></a>
 
