@@ -8,13 +8,13 @@ Hardware components eventually fail either due to normal wear or to unexpected c
 
 With HAWQ, fault tolerance and data availability is achieved with:
 
-* [Hardware Level RAID](#ha_raid)
+* [Hardware Level Redundancy (RAID and JBOD)](#ha_raid)
 * [Master Mirroring](#ha_master_mirroring)
 * [Dual Clusters](#ha_dual_clusters)
 
-## Hardware Level RAID <a id="ha_raid"></a>
+## Hardware Level Redundancy (RAID and JBOD) <a id="ha_raid"></a>
 
-As a best practice, HAWQ deployments use hardware level RAID to provide high performance redundancy for single disk failure without having to go into the database level fault tolerance. This provides a lower level of redundancy at the disk level.
+As a best practice, HAWQ deployments should use RAID for master nodes and JBOD for segment nodes. Using these hardware-level systems provides high performance redundancy for single disk failure without having to go into database level fault tolerance. RAID and JBOD provide a lower level of redundancy at the disk level.
 
 ## Master Mirroring <a id="ha_master_mirroring"></a>
 
