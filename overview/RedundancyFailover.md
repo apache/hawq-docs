@@ -6,8 +6,6 @@ HAWQ ensures high availability for its clusters through system redundancy. HAWQ 
 
 To maintain cluster health, HAWQ uses a fault tolerance service based on heartbeats and on-demand probe protocols. It can identify newly added nodes dynamically and remove nodes from the cluster when it becomes unusable.
 
-HAWQ uses a fault tolerance service based on heartbeats and on-demand probe protocols. It can identify newly added node dynamically and remove node from the cluster when it becomes unusable.
-
 ## About High Availability <a id="abouthighavailability"></a>
 
 HAWQ employs several mechanisms for ensuring high availability. The foremost mechanisms are specific to HAWQ and include the following:
