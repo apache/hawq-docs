@@ -2,7 +2,7 @@
 title: High Availability, Redundancy and Fault Tolerance
 ---
 
-HAWQ ensures high availability for its clusters through system redundancy. HAWQ deployments utilize platform hardware redundancy, such as RAID and network redundancy for its interconnect layer. On the software level, HAWQ provides redundancy via master mirroring and dual cluster maintenance. In addition, HAWQ supports high availability NameNode configuration within HDFS.
+HAWQ ensures high availability for its clusters through system redundancy. HAWQ deployments utilize platform hardware redundancy, such as RAID for the master catalog, JBOD for segments and network redundancy for its interconnect layer. On the software level, HAWQ provides redundancy via master mirroring and dual cluster maintenance. In addition, HAWQ supports high availability NameNode configuration within HDFS.
 
 To maintain cluster health, HAWQ uses a fault tolerance service based on heartbeats and on-demand probe protocols. It can identify newly added nodes dynamically and remove nodes from the cluster when it becomes unusable.
 
