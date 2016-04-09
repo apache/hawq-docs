@@ -24,7 +24,7 @@ There are two masters in a highly available cluster, a primary and a standby. As
 
 You can add another level of redundancy to your deployment by maintaining two HAWQ clusters, both storing the same data.
 
-The main two methods for keeping data synchronized on dual clusters are "dual ETL" and "backup/restore."
+The two main methods for keeping data synchronized on dual clusters are "dual ETL" and "backup/restore."
 
 Dual ETL provides a complete standby cluster with the same data as the primary cluster. ETL (extract, transform, and load) refers to the process of cleansing, transforming, validating, and loading incoming data into a data warehouse. With dual ETL, this process is executed twice in parallel, once on each cluster, and is validated each time. It also allows data to be queried on both clusters, doubling the query throughput.
 
