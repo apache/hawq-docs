@@ -10,7 +10,7 @@ As an administrator, you will need to back up and restore your database. HAWQ pr
 -   PXF
 -   `pg_dump`
 
-`gpfdist` and PXF are parallel loading and unloading tools that provide the best performance.  You can use `pg_dump`, a non-parallel utility, to migrate from PostgreSQL to HAWQ.
+`gpfdist` and PXF are parallel loading and unloading tools that provide the best performance.  You can use `pg_dump`, a non-parallel utility inherited from PostgreSQL.
 
 In addition, in some situations you should back up your raw data from ETL processes.
 
