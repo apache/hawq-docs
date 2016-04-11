@@ -36,7 +36,7 @@ When using the template for initializing a new cluster configuration, replace th
 
 Start an initialized HAWQ system by running the `hawq start` command on the master instance.
 
-Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts HAWQ by starting all the Postgres database instances on the HAWQ cluster. `hawq start cluster` orchestrates this process and performs the process in parallel.
+Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts HAWQ by starting all the Postgres database segments on the HAWQ cluster. `hawq start cluster` orchestrates this process and performs the process in parallel.
 
 You can also use the `hawq start master` command to start only the HAWQ master, without segment nodes, then add these later, using `hawq start segment`.
 
@@ -107,7 +107,7 @@ Maintenance mode should only be used when required for a particular maintenance 
 
 ## Stopping HAWQ <a id="task_gpdb_stop"></a>
 
-The `hawq stop cluster` command stops or restarts your HAWQ system and always runs on the master host. When activated, `hawq stop cluster` stops all `postgres` processes in the system, including the master and all segment instances. The `hawq stop cluster` command uses a default of up to 64 parallel worker threads to bring down the Postgres instances that make up the HAWQ cluster. The system waits for any active transactions to finish before shutting down. To stop HAWQ immediately, use fast mode. The commands `hawq stop master`, `hawq stop segment`, `hawq stop standby`, or `hawq stop allsegments` can be used to stop the master, the local segment node, standby, or all segments in the cluster. Stopping the master will stop only the master segment, and will not shut down a cluster.
+The `hawq stop cluster` command stops or restarts your HAWQ system and always runs on the master host. When activated, `hawq stop cluster` stops all `postgres` processes in the system, including the master and all segment instances. The `hawq stop cluster` command uses a default of up to 64 parallel worker threads to bring down the Postgres segments that make up the HAWQ cluster. The system waits for any active transactions to finish before shutting down. To stop HAWQ immediately, use fast mode. The commands `hawq stop master`, `hawq stop segment`, `hawq stop standby`, or `hawq stop allsegments` can be used to stop the master, the local segment node, standby, or all segments in the cluster. Stopping the master will stop only the master segment, and will not shut down a cluster.
 
 -   To stop HAWQ:
 
