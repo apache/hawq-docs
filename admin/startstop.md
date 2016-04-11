@@ -126,7 +126,7 @@ The `hawq stop cluster` command stops or restarts your HAWQ system and always ru
 
 For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
 
--   Stop the entire HAWQ system by stopping the cluster on the master host:
+-   Stop the entire HAWQ system by stopping the cluster on the master host. Perform a checkpoint before stopping the cluster.
 
     ```
     $ hawq stop cluster
