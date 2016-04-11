@@ -45,7 +45,7 @@ You can perform a parallel backup in HAWQ using `gpfdist` or PXF to unload all 
 -   `gpfdist` stores backup files on local file system, while PXF stores files on HDFS.
 -   `gpfdist` only supports plain text format, while PXF also supports binary format like AVRO and customized format.
 -   `gpfdist` doesn’t support generating compressed files, while PXF supports compression \(you can specify a compression codec used in Hadoop such as `org.apache.hadoop.io.compress.GzipCodec`\).
--   Both `gpfdist` and PXF both have fast loading performance, but `gpfdist` is much faster than PXF.
+-   Both `gpfdist` and PXF have fast loading performance, but `gpfdist` is much faster than PXF.
 
 ## About pg\_dump and pg\_restore <a id="usingpg_dumpandpg_restore"></a>
 
