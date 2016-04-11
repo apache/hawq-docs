@@ -29,7 +29,6 @@ WHERE status <> 'u';
   <ol>
     <li>Verify that the hosts with down segments are responsive.</li>
     <li>If hosts are OK, check the pg_log files for the down segments to discover the root cause of the segments going down.</li>
-    <li>If no unexpected errors are found, run the `gprecoverseg` utility to bring the segments back online.</li>
     </ol>
     </td>
     </tr>
@@ -82,7 +81,7 @@ GROUP BY 1;
       <p>Set up system check for hardware and OS errors.</p>
     </td>
     <td>
-      <p>If required, remove a machine from the HAWQ cluster to resolve hardware and OS issues, then, after add it back to the cluster and run `gprecoverseg`.</p>
+      <p>If required, remove a machine from the HAWQ cluster to resolve hardware and OS issues, then add it back to the cluster.</p>
     </td>
   </tr>
   <tr>
