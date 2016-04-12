@@ -32,7 +32,7 @@ HAWQ global resource manager type. Valid values are `yarn` and `none`. Setting t
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|yarn or none|none|master<br/><br/>session<br/><br/>reload|
+|yarn or none|none|master<br/><br/>system<br/><br/>restart|
 
 ## Configuring Segment Resource Capacity <a id="topic_htk_fxh_15"></a>
 
