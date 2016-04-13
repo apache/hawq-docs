@@ -245,7 +245,7 @@ Perform the following steps as the HAWQ administrator `gpadmin`:
 
     The gphosts\_file file contains a list of the Greenplum Database hosts.
 
-3.  Set the `pljava_classpath` server configuration parameter in the master postgresql.conf file. The parameter value is a colon \(`:`\) separated list of the JAR files containing the Java classes used in any PL/Java functions. For example:
+3.  Set the `pljava_classpath` server configuration parameter in the master hawq-site.xml file. The parameter value is a colon \(`:`\) separated list of the JAR files containing the Java classes used in any PL/Java functions. For example:
 
     ```
     $ gpconfig -c pljava_classpath -v \'examples.jar:myclasses.jar\' --masteronly
@@ -272,7 +272,7 @@ Perform the following steps as the HAWQ administrator `gpadmin`:
 
 #### Configuring PL/Java vmoptions <a id="configuringpljavavmoptions"></a>
 
-PL/Java JVM options can be configured via the `pljava_vmoptions` parameter in the postgresql.conf file. For example, `pljava_vmoptions=-Xmx512M` sets the maximum heap size of the JVM. The default `Xmx` value is set to `-Xmx64M`.
+PL/Java JVM options can be configured via the `pljava_vmoptions` parameter in the hawq-site.xml file. For example, `pljava_vmoptions=-Xmx512M` sets the maximum heap size of the JVM. The default `Xmx` value is set to `-Xmx64M`.
 
 ### Uninstalling PL/Java <a id="uninstallingpljava"></a>
 
@@ -293,7 +293,7 @@ $ psql -d mydatabase -f $GPHOME/share/postgresql/pljava/uninstall.sql
 
 If no databases have PL/Java as a registered language, remove the Java JAR files and uninstall the Greenplum PL/Java extension with the `gppkg` utility:
 
-1.  Remove the `pljava_classpath` server configuration parameter in the master postgresql.conf file.
+1.  Remove the `pljava_classpath` server configuration parameter in the master hawq-site.xml file.
 2.  Remove the JAR files from the $GPHOME/lib/postgresql/java/ directory of the HAWQ hosts.
 3.  Use the `gppkg` utility with the `-r` option to uninstall the PL/Java extension. The following example uninstalls the PL/Java extension on a Linux system:
 
