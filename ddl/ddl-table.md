@@ -123,7 +123,7 @@ The `LIKE` clause specifies a table from which the new table automatically copie
 
 #### Declaring Distribution Keys <a id="topic_kjg_tqm_gv"></a>
 
-`CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `hawq_rm_nvseg_perquery_limit` parameter.
+`CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `default_hash_table_bucket_number` parameter.
 
 #### Performance Tuning <a id="topic_wff_mqm_gv"></a>
 
