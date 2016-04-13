@@ -185,6 +185,8 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 
 -   Gigabit Ethernet within the array. For a production cluster, 10 Gigabit Ethernet recommended.
 -   Dedicated, non-blocking switch.
+-   Systems with multiple NICs require NIC bonding to utilize all available network bandwidth.
+
 
 ## Port Requirements<a id="port-req"></a>
 Individual PXF plug-ins, which you install after adding the HAWQ and PXF services, require that you Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009.
