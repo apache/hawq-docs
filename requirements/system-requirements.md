@@ -117,9 +117,9 @@ An example large host machine uses the memory configuration:
 
 For this machine, `TOTAL_MEMORY = 256GB * 1 + 4GB = 260GB`.
 
-If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` to `TOTAL_MEMORY - NON_HAWQ_MEMORY` = 260GB - 7GB = 253 \(because 253GB is smaller than the available amount of RAM\).
+If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` to `TOTAL_MEMORY - NON_HAWQ_MEMORY` = 260GB - 7GB = 253 \(because 253GB is smaller than the available amount of RAM\).
 
-If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` = `RAM - NON_HAWQ_MEMORY` = 256 GB - 7GB = 249.
+If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` = `RAM - NON_HAWQ_MEMORY` = 256 GB - 7GB = 249.
 
 ### Example 2 - Medium Host Machine
 
@@ -143,9 +143,9 @@ An example medium host machine uses the memory configuration:
 
 For this machine, `TOTAL_MEMORY = 64GB * .5 + 32GB = 64GB`.
 
-If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` to `TOTAL_MEMORY - NON_HAWQ_MEMORY` = 64GB - 7GB = 57 \(because 57GB is smaller than the available amount of RAM\).
+If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` to `TOTAL_MEMORY - NON_HAWQ_MEMORY` = 64GB - 7GB = 57 \(because 57GB is smaller than the available amount of RAM\).
 
-If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` = `RAM - NON_HAWQ_MEMORY` = 64 GB - 11GB = 57.
+If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` = `RAM - NON_HAWQ_MEMORY` = 64 GB - 11GB = 57.
 
 ### Example 3 - Small Host Machine \(Not recommended for production use\)
 
@@ -169,9 +169,9 @@ An example small machine uses the memory configuration:
 
 For this machine, `TOTAL_MEMORY = 8GB * .5 + 8GB = 12GB`.
 
-If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` to `TOTAL_MEMORY - NON_HAWQ_MEMORY` = 12GB - 7GB = 5 \(because 5GB is smaller than the available amount of RAM\).
+If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` to `TOTAL_MEMORY - NON_HAWQ_MEMORY` = 12GB - 7GB = 5 \(because 5GB is smaller than the available amount of RAM\).
 
-If this system uses YARN for resource management, you would set `yarn.nodemanager.resource.memory-mb` = `RAM - NON_HAWQ_MEMORY` = 8 GB - 7GB = 1.
+If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` = `RAM - NON_HAWQ_MEMORY` = 8 GB - 7GB = 1.
 
 ## Disk Requirements<a id="topic_bsm_hhv_2v"></a>
 
