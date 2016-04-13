@@ -32,7 +32,7 @@ HAWQ global resource manager type. Valid values are `yarn` and `none`. Setting t
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|yarn or none|none|master<br/><br/>session<br/><br/>reload|
+|yarn or none|none|master<br/><br/>system<br/><br/>restart|
 
 ## Configuring Segment Resource Capacity <a id="topic_htk_fxh_15"></a>
 
@@ -110,7 +110,7 @@ Limiting the number of virtual segments used during statement execution is usefu
 -   You need to load data into a table with P partitions
 -   There are N nodes in the cluster and V virtual segments per node started for the load query
 
-Then there will be P \* V files opened per DataNode and at least P \* V threads started in the DataNode. If the number of partitions and the number of virtual segments per node is very high, the DataNode becomes a bottleneck. Conversely, on the NameNode side, there will be V \* N connections. If the number of nodes is very high, then NameNode can become a bottleneck.
+Then there will be P \* V files opened per DataNode and at least P \* V threads started in the DataNode. If the number of partitions and the number of virtual segments per node is very high, the DataNode becomes a bottleneck. On the NameNode side, there will be V \* N connections. If the number of nodes is very high, then NameNode can become a bottleneck.
 
 To alleviate the load on NameNode, you can limit V, the number of virtual segments started per node. Use the following server configuration parameters:
 
