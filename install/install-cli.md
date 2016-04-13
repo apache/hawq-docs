@@ -225,6 +225,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     $ hawq ssh -f seg_hosts -e "chown -R gpadmin $dirs"
     ```
 
+    If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.
 17. Login to the master host as the gpadmin user. Create a customized a $GPHOME/etc/hawq-site.xml file using the template $GPHOME/etc/template-hawq-site.xml file for a multi-node cluster. Your custom hawq-site.xml should include the following modifications:
     1.  Change the `hawq_dfs_url` property definition to use the actual Namenode port number as well as the HAWQ data directory:
 

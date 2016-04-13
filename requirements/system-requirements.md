@@ -177,6 +177,7 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 
 -   2GB per host for HAWQ installation. 
 -   Approximately 300MB per segment instance for metadata.
+-   Multiple large (2TB or greater) disks are recommended for HAWQ segment temporary directories. For a given query, HAWQ will use a separate temp directory (if available) for each virtual segment to store spill files. Multiple HAWQ sessions will also use separate temp directories where available to avoid disk contention. If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.  
 -   Appropriate free space for data: disks should have at least 30% free space \(no more than 70% capacity\).
 -   High-speed, local storage
 
