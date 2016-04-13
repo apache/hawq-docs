@@ -4,7 +4,7 @@ title: Install Apache HAWQ using Ambari
 
 ## Prerequisites <a id="section_mqs_f3j_5r"></a>
 
--   Install a compatible version of HDP and Ambari, and ensure that your HDP system is fully functional.
+-   Install a compatible version of HDP and Ambari, and ensure that your HDP system is fully functional. See the [Release Notes](/hdb20/releasenotes/HAWQ20ReleaseNotes.html#topic_dhh_2jx_yt) for more information about HDFS compatibility.
 -   Select and prepare all host machines that will run the HAWQ and PXF services. See [Select HAWQ Host Machines](select-hosts.html).
 
 ## Procedure <a id="section_kwy_f3j_5r"></a>
