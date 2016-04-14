@@ -7,7 +7,7 @@ Ambari provides an easy interface to perform some of the most common HAWQ and PX
 ## Performing a Rolling Restart<a id="amb-restart"></a>
 Ambari provides the ability to restart a HAWQ cluster by restarting one or more segments at a time until all segments (or all segments with stale configurations) restart. You can specify a delay between restarting segments, and Ambari can stop the process if a specified number of segments fail to restart. Performing a rolling restart in this manner can help ensure that some HAWQ segments are available to service client requests.
 
-**Note** If you do not need to preserve client connections, you can instead perform an full restart of the entire HAWQ cluster using **Service Actions > Restart All**. 
+**Note** If you do not need to preserve client connections, you can instead perform an full restart of the entire HAWQ cluster using **Service Actions > Restart All**.
 
 ### Procedure
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
@@ -104,6 +104,7 @@ If you need to perform maintenance on the HAWQ Standby Master host, first remove
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
 ### Procedure
+1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Select the **Hosts** tab at the top of the screen to display the Hosts summary.
 3.  If the host(s) that you want to add are not currently listed in the Host summary, follow these steps:
@@ -120,6 +121,11 @@ Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAW
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
    2. In the Components summary, select **Add > PXF**.
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
+6.  Speed up the clearing of the metadata cache by selecting the **Service Actions > Clear HDFS Metadata Cache** option in Ambari.
+5.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
+
+   	**Note:** The redistribution of table data can take a significant amount of time.
+7.  The `hawq_hosts` and `slaves` files in `$GPHOME/etc/` are not updated with the newly-added hosts until you reboot the HAWQ cluster. Reboot the cluster as necessary during a scheduled maintenance window.
 
 ## Performing a Configuration check<a id="amb-config-check"></a>
 
