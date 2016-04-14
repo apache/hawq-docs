@@ -29,24 +29,35 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
 3.  At the prompt, enter a name for the filespace, a master file system location, and the primary segment file system locations. For example:
 
     ```
-    [gpadmin@test1 ~]$ hawq filespace -o hawqfilespace_config
+    [gpadmin@hawq ~]$ hawq filespace -o hawqfilespace_config
     Enter a name for this filespace
-    > fs1
+    > testfs
     Enter replica num for filespace. If 0, default replica num is used (default=3)
-    > 3
+    > 
 
     Please specify the DFS location for the filespace (for example: localhost:9000/fs)
-    location> test5:9000/fs1
-    20160406:20:25:19:105512 hawqfilespace:test1:gpadmin-[INFO]:-[created]
-    20160406:20:25:19:105512 hawqfilespace:test1:gpadmin-[INFO]:-
+    location> localhost:8020/fs        
+    20160409:16:53:25:028082 hawqfilespace:gpadmin:gpadmin-[INFO]:-[created]
+    20160409:16:53:25:028082 hawqfilespace:gpadmin:gpadmin-[INFO]:-
     To add this filespace to the database please run the command:
-    hawqfilespace --config /home/gpadmin/hawqfilespace_config
+       hawqfilespace --config /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
 
-    [gpadmin@test1 ~]$ cat /home/gpadmin/hawqfilespace_config
-    filespace:fs1
+    gpadmin:incubator-hawq gpadmin$ vim /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
+    gpadmin:incubator-hawq gpadmin$ cat /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
+    filespace:testfs
     fsreplica:3
-    dfs_url::test5:9000/fs1
+    dfs_url::localhost:8020/fs
+
+    gpadmin:incubator-hawq gpadmin$ hawqfilespace --config /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
+    Reading Configuration file: '/Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config'
+
+    CREATE FILESPACE testfs ON hdfs 
+    ('localhost:8020/fs/testfs') WITH (NUMREPLICA = 3);
+    20160409:16:57:56:028104 hawqfilespace:gpadmin:gpadmin-[INFO]:-Connecting to database
+    20160409:16:57:56:028104 hawqfilespace:gpadmin:gpadmin-[INFO]:-Filespace "testfs" successfully created
+
     ```
+
 
 4.  hawq filespace creates a configuration file. Examine the file to verify that the hawq filespace configuration is correct. The following is a sample configuration file:
 
