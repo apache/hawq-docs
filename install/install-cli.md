@@ -488,7 +488,7 @@ For manual installations, perform these additional steps after you complete the 
         $ source /usr/local/hawq/greenplum_path.sh
         ```
 
-        **Note:** Substitute the correct value of MASTER_DATA_DIRECTORY for your configuration.
+        **Note:** Substitute the correct value of MASTER\_DATA\_DIRECTORY for your configuration.
 
     3.  Run the following commands to enable security and configure the keytab file:
 
@@ -497,7 +497,7 @@ For manual installations, perform these additional steps after you complete the 
         $ hawq config -c krb_server_keyfile -v /etc/security/keytabs/hawq.service.keytab
         ```
 
-        **Note:** Substitute the correct value of MASTER_DATA_DIRECTORY for your configuration.
+        **Note:** Substitute the correct value of MASTER\_DATA\_DIRECTORY for your configuration.
 
     4.  Start the HAWQ service:
 
