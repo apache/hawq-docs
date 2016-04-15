@@ -6,7 +6,7 @@ In a HAWQ DBMS, the database server instances \(the master and all segments\) ar
 
 Because a HAWQ system is distributed across many machines, the process for starting and stopping a HAWQ system is different than the process for starting and stopping a regular PostgreSQL DBMS.
 
-Use the `hawq start `*`object`* and `hawq stop` commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. Initializing a HAWQ system also starts it.
+Use the `hawq start `*`object`* and `hawq stop `*`object`* commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. Initializing a HAWQ system also starts it.
 
 **Important:**
 
