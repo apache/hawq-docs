@@ -353,53 +353,54 @@ Follow this procedure to install HAWQ software on a single host machine.
 8.  If your HDFS cluster is configured with NameNode high availability (HA):
 
     1. Edit the ` ${GPHOME}/etc/hdfs-client.xml` file on each segment and add the following NameNode properties:
-       ```
-    <property>
-      <name>dfs.ha.namenodes.hdpcluster</name>
-      <value>nn1,nn2</value>
-    </property>
 
-    <property>
-      <name>dfs.namenode.http-address.hdpcluster.nn1</name>
-      <value>ip-address-1.mycompany.com:50070</value>
-    </property>
+        ```
+        <property>
+          <name>dfs.ha.namenodes.hdpcluster</name>
+          <value>nn1,nn2</value>
+        </property>
 
-    <property>
-      <name>dfs.namenode.http-address.hdpcluster.nn2</name>
-      <value>ip-address-2.mycompany.com:50070</value>
-    </property>
+        <property>
+          <name>dfs.namenode.http-address.hdpcluster.nn1</name>
+          <value>ip-address-1.mycompany.com:50070</value>
+        </property>
 
-    <property>
-      <name>dfs.namenode.rpc-address.hdpcluster.nn1</name>
-      <value>ip-address-1.mycompany.com:8020</value>
-    </property>
+        <property>
+          <name>dfs.namenode.http-address.hdpcluster.nn2</name>
+          <value>ip-address-2.mycompany.com:50070</value>
+        </property>
 
-    <property>
-      <name>dfs.namenode.rpc-address.hdpcluster.nn2</name>
-      <value>ip-address-2.mycompany.com:8020</value>
-    </property>
+        <property>
+          <name>dfs.namenode.rpc-address.hdpcluster.nn1</name>
+          <value>ip-address-1.mycompany.com:8020</value>
+        </property>
 
-    <property>
-      <name>dfs.nameservices</name>
-      <value>hdpcluster</value>
-    </property>
-       ---
+        <property>
+          <name>dfs.namenode.rpc-address.hdpcluster.nn2</name>
+          <value>ip-address-2.mycompany.com:8020</value>
+        </property>
 
-       In the listing above:
-       * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
-       * Replace `ip-address-2.mycompany.com:50070` with the actual NameNode RPC host and port number that is configured in HDFS.
-       * Replace `ip-address-`1`.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
-       * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
+        <property>
+          <name>dfs.nameservices</name>
+          <value>hdpcluster</value>
+        </property>
+        ```
 
-    2. Change the following parameters in the `$GPHOME/etc/hawq-site.xml` file:
+        In the listing above:
+        * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
+        * Replace `ip-address-2.mycompany.com:50070` with the actual NameNode RPC host and port number that is configured in HDFS.
+        * Replace `ip-address-`1`.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
+        * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
 
-       ```
+    2.  Change the following parameters in the `$GPHOME/etc/hawq-site.xml` file:
+
+        ```
 DFS_NAME=hdfs
 DFS_URL=phdcluster/path/to/hawq/data
-       ```
-       In the listing above:
-       * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
-       * Replace `/path/to/hawq/data` with the directory to use for storing data on HDFS. Make sure this directory exists and is writable.
+        ```
+        In the listing above:
+        * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
+        * Replace `/path/to/hawq/data` with the directory to use for storing data on HDFS. Make sure this directory exists and is writable.
 
 9.  Finally, initialize and start the new HAWQ cluster using the command:
 
