@@ -389,7 +389,7 @@ Follow this procedure to install HAWQ software on a single host machine.
         In the listing above:
         * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
         * Replace `ip-address-2.mycompany.com:50070` with the actual NameNode RPC host and port number that is configured in HDFS.
-        * Replace `ip-address-`1`.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
+        * Replace `ip-address-1.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
         * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
 
     2.  Change the following parameters in the `$GPHOME/etc/hawq-site.xml` file:
