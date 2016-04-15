@@ -242,6 +242,17 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
 
         ```
 
+        If HDFS is configured with NameNode high availability (HA), `hawq_dfs_url` should instead include the service ID that you configured. For example, if you configured HA with the service name `hdpcluster` the entry would be similar to:
+
+        ```
+            <property>
+                <name>hawq_dfs_url</name>
+                <value>hdpcluster/hawq_default</value>
+                <description>URL for accessing HDFS.</description>
+            </property>
+
+        ```
+
         Also set gpadmin as the owner of the parent directory HDFS directory you specify. For example:
 
         ```
@@ -271,6 +282,46 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     sdw2
     sdw3
     ```
+
+8.  If your HDFS cluster is configured with NameNode high availability (HA), edit the ` ${GPHOME}/etc/hdfs-client.xml` file on each segment and add the following NameNode properties:
+
+    ```
+    <property>
+     <name>dfs.ha.namenodes.hdpcluster</name>
+     <value>nn1,nn2</value>
+    </property>
+
+    <property>
+     <name>dfs.namenode.http-address.hdpcluster.nn1</name>
+     <value>ip-address-1.mycompany.com:50070</value>
+    </property>
+
+    <property>
+     <name>dfs.namenode.http-address.hdpcluster.nn2</name>
+     <value>ip-address-2.mycompany.com:50070</value>
+    </property>
+
+    <property>
+     <name>dfs.namenode.rpc-address.hdpcluster.nn1</name>
+     <value>ip-address-1.mycompany.com:8020</value>
+    </property>
+
+    <property>
+     <name>dfs.namenode.rpc-address.hdpcluster.nn2</name>
+     <value>ip-address-2.mycompany.com:8020</value>
+    </property>
+
+    <property>
+     <name>dfs.nameservices</name>
+     <value>hdpcluster</value>
+    </property>
+    ```
+
+    In the listing above:
+    * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
+    * Replace `ip-address-2.mycompany.com:50070` with the actual NameNode RPC host and port number that is configured in HDFS.
+    * Replace `ip-address-1.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
+    * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
 
 19. Synchronize the customized hawq-site.xml and slaves files to all cluster nodes:
 
@@ -349,58 +400,6 @@ Follow this procedure to install HAWQ software on a single host machine.
     ```
     $ hdfs dfs -chown gpadmin hdfs://localhost:8020/
     ```
-
-8.  If your HDFS cluster is configured with NameNode high availability (HA):
-
-    1. Edit the ` ${GPHOME}/etc/hdfs-client.xml` file on each segment and add the following NameNode properties:
-
-        ```
-        <property>
-          <name>dfs.ha.namenodes.hdpcluster</name>
-          <value>nn1,nn2</value>
-        </property>
-
-        <property>
-          <name>dfs.namenode.http-address.hdpcluster.nn1</name>
-          <value>ip-address-1.mycompany.com:50070</value>
-        </property>
-
-        <property>
-          <name>dfs.namenode.http-address.hdpcluster.nn2</name>
-          <value>ip-address-2.mycompany.com:50070</value>
-        </property>
-
-        <property>
-          <name>dfs.namenode.rpc-address.hdpcluster.nn1</name>
-          <value>ip-address-1.mycompany.com:8020</value>
-        </property>
-
-        <property>
-          <name>dfs.namenode.rpc-address.hdpcluster.nn2</name>
-          <value>ip-address-2.mycompany.com:8020</value>
-        </property>
-
-        <property>
-          <name>dfs.nameservices</name>
-          <value>hdpcluster</value>
-        </property>
-        ```
-
-        In the listing above:
-        * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
-        * Replace `ip-address-2.mycompany.com:50070` with the actual NameNode RPC host and port number that is configured in HDFS.
-        * Replace `ip-address-1.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
-        * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
-
-    2.  Change the following parameters in the `$GPHOME/etc/hawq-site.xml` file:
-
-        ```
-DFS_NAME=hdfs
-DFS_URL=phdcluster/path/to/hawq/data
-        ```
-        In the listing above:
-        * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
-        * Replace `/path/to/hawq/data` with the directory to use for storing data on HDFS. Make sure this directory exists and is writable.
 
 9.  Finally, initialize and start the new HAWQ cluster using the command:
 

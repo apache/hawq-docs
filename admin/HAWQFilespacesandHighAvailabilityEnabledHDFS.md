@@ -68,15 +68,19 @@ For command-line administrators:
     * Replace `ip-address-1.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
     * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
 
-2.  Change the following parameters in the `$GPHOME/etc/hawq-site.xml` file:
+2.  Change the following parameter in the `$GPHOME/etc/hawq-site.xml` file:
 
     ```
-DFS_NAME=hdfs
-DFS_URL=phdcluster/path/to/hawq/data
+    <property>
+        <name>hawq_dfs_url</name>
+        <value>hdpcluster/hawq_default</value>
+        <description>URL for accessing HDFS.</description>
+    </property>
     ```
-  In the listing above:
-  * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
-  * Replace `/path/to/hawq/data` with the directory to use for storing data on HDFS. Make sure this directory exists and is writable.
+
+    In the listing above:
+    * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
+    * Replace `/hawq_default` with the directory you want to use for storing data on HDFS. Make sure this directory exists and is writable.
 
 ### Step 3: Collect Information about the Target Filespace <a id="collectinginformationaboutthetargetfilespace"></a>
 
