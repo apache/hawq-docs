@@ -1,10 +1,14 @@
 ---
-title: (Optional) Install HAWQ from the Command Line
+title: Install HAWQ from the Command Line (Optional)
 ---
 
 This section provides instructions for installing a HAWQ system.
 
-**Note:** This section provides instructions for installing HAWQ from the command line. You can optionally install HAWQ using the HAWQ plug-in for Ambari. See [Install HAWQ using Ambari](install-ambari.html) for more information.
+**Note:** Install HAWQ from the command line only if you do not use Ambari to install and manage HDFS. If you use Ambari for HDFS and management, follow the instructions in [Install HAWQ using Ambari](install-ambari.html) instead.
+
+## Prerequisites <a id="cliprereq"></a>
+
+Install a compatible HDFS cluster before you attempt to install HAWQ.
 
 ## Prepare Host Machines <a id="topic_eqn_fc4_15"></a>
 
@@ -116,7 +120,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     $ rpm -ivh hawq-2.0.0.0-18407.x86_64.rpm
     ```
 
-5.  Source the `greenplum_path.sh` file to set your environment for . For RPM installations, enter:
+5.  Source the `greenplum_path.sh` file to set your environment for HAWQ. For RPM installations, enter:
 
     ```
     $ source /usr/local/hawq/greenplum_path.sh
@@ -323,7 +327,7 @@ Follow this procedure to install HAWQ software on a single host machine.
 
     If you downloaded the tarball, substitute the path to the extracted greenplum\_path.sh file \(for example /opt/hawq-2.0.0.0/greenplum\_path.sh\).
 
-7.   requires passwordless ssh access to all cluster nodes, even on a single-node cluster installation. Execute the following `hawq` command to exchange keys and enable passwordless SSH to localhost:
+7.   HAWQ requires passwordless ssh access to all cluster nodes, even on a single-node cluster installation. Execute the following `hawq` command to exchange keys and enable passwordless SSH to localhost:
 
     ```
     $ hawq ssh-exkeys -h localhost
@@ -346,6 +350,58 @@ Follow this procedure to install HAWQ software on a single host machine.
     $ hdfs dfs -chown gpadmin hdfs://localhost:8020/
     ```
 
+8.  If your HDFS cluster is configured with NameNode high availability (HA):
+
+    1. Edit the ` ${GPHOME}/etc/hdfs-client.xml` file on each segment and add the following NameNode properties:
+
+      ```
+    <property>
+      <name>dfs.ha.namenodes.hdpcluster</name>
+      <value>nn1,nn2</value>
+    </property>
+
+    <property>
+      <name>dfs.namenode.http-address.hdpcluster.nn1</name>
+      <value>ip-address-1.mycompany.com:50070</value>
+    </property>
+
+    <property>
+      <name>dfs.namenode.http-address.hdpcluster.nn2</name>
+      <value>ip-address-2.mycompany.com:50070</value>
+    </property>
+
+    <property>
+      <name>dfs.namenode.rpc-address.hdpcluster.nn1</name>
+      <value>ip-address-1.mycompany.com:8020</value>
+    </property>
+
+    <property>
+      <name>dfs.namenode.rpc-address.hdpcluster.nn2</name>
+      <value>ip-address-2.mycompany.com:8020</value>
+    </property>
+
+    <property>
+      <name>dfs.nameservices</name>
+      <value>hdpcluster</value>
+    </property>
+      ---
+
+      In the listing above:
+      * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
+      * Replace `ip-address-2.mycompany.com:50070` with the actual NameNode RPC host and port number that is configured in HDFS.
+      * Replace `ip-address-`1`.mycompany.com:8020` with the actual NameNode HTTP host and port number that is configured in HDFS.
+      * The order of the NameNodes listed in `dfs.ha.namenodes.hdpcluster` is important for performance, especially when running secure HDFS. The first entry (`nn1` in the example above) should correspond to the active NameNode.
+
+    2. Change the following parameters in the `$GPHOME/etc/hawq-site.xml` file:
+
+      ```
+DFS_NAME=hdfs
+DFS_URL=phdcluster/path/to/hawq/data
+      ```
+      In the listing above:
+      * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
+      * Replace `/path/to/hawq/data` with the directory to use for storing data on HDFS. Make sure this directory exists and is writable.
+      
 9.  Finally, initialize and start the new HAWQ cluster using the command:
 
     ```
