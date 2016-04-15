@@ -81,7 +81,7 @@ The `hawq stop` command can reload changes to the pg\_hba.conf configuration fil
 
 Start only the master to perform maintenance or administrative tasks without affecting data on the segments.
 
-Maintenance mode should only be used when required for a particular maintenance task. For example, you can connect to a database only on the master instance in maintenance mode and edit system catalog settings.
+Maintenance mode is a superuser-only mode that should only be used when required for a particular maintenance task. For example, you can connect to a database only on the master instance in maintenance mode and edit system catalog settings.
 
 1.  Run `hawq start` using the master -m option:
 
@@ -94,10 +94,10 @@ Maintenance mode should only be used when required for a particular maintenance 
     ```
     $ PGOPTIONS='-c gp_session_role=utility' psql template1
     ```
-3.  After completing your administrative tasks, restart the master in maintenance mode. Maintenance mode is a special utility mode.
+3.  After completing your administrative tasks, restart the master in production mode. 
 
     ```
-    $ hawq restart master --special-mode maintenance
+    $ hawq restart master 
     ```
 
     **Warning:**
@@ -126,7 +126,7 @@ The `hawq stop cluster` command stops or restarts your HAWQ system and always ru
 
 For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
 
--   Create a checkpoint before stopping the cluster.
+-   Issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file, before stopping the cluster. A checkpoint assures that, in the event of a crash, files can be restored from the checkpoint snapshot.
 
 -   Stop the entire HAWQ system by stopping the cluster on the master host. 
 
