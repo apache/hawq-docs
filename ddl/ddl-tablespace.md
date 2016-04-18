@@ -40,16 +40,16 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
     20160409:16:53:25:028082 hawqfilespace:gpadmin:gpadmin-[INFO]:-[created]
     20160409:16:53:25:028082 hawqfilespace:gpadmin:gpadmin-[INFO]:-
     To add this filespace to the database please run the command:
-       hawqfilespace --config /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
+       hawqfilespace --config /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
 
-    gpadmin:incubator-hawq gpadmin$ vim /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
-    gpadmin:incubator-hawq gpadmin$ cat /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
+    gpadmin:hawq gpadmin$ vim /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
+    gpadmin:hawq gpadmin$ cat /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
     filespace:testfs
     fsreplica:3
     dfs_url::localhost:8020/fs
 
-    gpadmin:incubator-hawq gpadmin$ hawqfilespace --config /Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config
-    Reading Configuration file: '/Users/gpadmin/curwork/git/incubator-hawq/hawqfilespace_config'
+    gpadmin:hawq gpadmin$ hawqfilespace --config /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
+    Reading Configuration file: '/Users/gpadmin/curwork/git/hawq/hawqfilespace_config'
 
     CREATE FILESPACE testfs ON hdfs 
     ('localhost:8020/fs/testfs') WITH (NUMREPLICA = 3);
