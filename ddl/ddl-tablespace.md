@@ -42,7 +42,6 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
     To add this filespace to the database please run the command:
        hawqfilespace --config /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
 
-    gpadmin:hawq gpadmin$ vim /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
     gpadmin:hawq gpadmin$ cat /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
     filespace:testfs
     fsreplica:3
