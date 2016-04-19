@@ -8,10 +8,10 @@ To integrate YARN with HAWQ, use the following high-level steps.
 
 1.  Install YARN, if you have not already done so.
 
-    **Note:** See the Release Notes for additional YARN workaround configurations.
-
+    **Note:** If you are using HDP 2.3, you must set `yarn.resourcemanager.system-metrics-publisher.enabled` to `false`. See the Release Notes for additional YARN workaround configurations.
 
 2.  Configure YARN using CapacityScheduler and reserve one application queue exclusively for HAWQ. See [Configuring YARN for HAWQ](#hawqinputformatexample) and [Setting HAWQ Segment Resource Capacity in YARN](#topic_pzf_kqn_c5).
+3.  If desired, enable high availability in YARN.
 3.  Enable YARN within HAWQ. See [Enabling YARN Mode in HAWQ](#topic_rtd_cjh_15).
 4.  After you integrate YARN with HAWQ, adjust HAWQ's resource usage as needed by doing any of the following:
     -   Change the capacity of the corresponding YARN resource queue for HAWQ. For example, see the properties described for CapacityScheduler configuration. You can then refresh the YARN queues without having to restart or reload HAWQ. See See [Configuring YARN for HAWQ](#hawqinputformatexample) and [Setting HAWQ Segment Resource Capacity in YARN](#topic_pzf_kqn_c5).
@@ -130,14 +130,16 @@ To reduce the likelihood of resource fragmentation in deployments where resource
 
 For example, if you have the following properties set in YARN:
 
--   `yarn.scheduler.minimum-allocation-mb=4gb`
+-   `yarn.scheduler.minimum-allocation-mb=1gb`
 
     **Note:** This is the default value set by Ambari in some cases.
 
 -   `yarn.nodemanager.resource.memory-mb=48gb`
 -   `yarn.nodemanager.resource.cpu-vcores=16`
 
-Then the CPU to memory ratio calculated by HAWQ equals 3GB \(48 divided by 16\). Since `yarn.scheduler.minimum-allocation-mb` is set to 4GB, each YARN container will be 4GB. This leaves 1GB of fragmented space \(4GB minus 3GB.\) To prevent fragmentation in this scenario, you could set `yarn.nodemanager.resource.memory-mb=64gb` \(or you could set `yarn.scheduler.minimum-allocation-mb=3gb`.\)
+Then the CPU to memory ratio calculated by HAWQ equals 3GB \(48 divided by 16\). Since `yarn.scheduler.minimum-allocation-mb` is set to 1GB, each YARN container will be 1GB. Since 3GB is a multiple of 1GB, you should not encounter fragmentation.
+
+However, if you had set `yarn.scheduler.minimum-allocation-mb` to 4GB, then it would leave 1GB of fragmented space \(4GB minus 3GB.\) To prevent fragmentation in this scenario, you could reconfigure `yarn.nodemanager.resource.memory-mb=64gb` \(or you could set `yarn.scheduler.minimum-allocation-mb=1gb`.\)
 
 **Note:** If you are specifying 1GB or under for `yarn.scheduler.minimum-allocation-mb` in `yarn-site.xml`, then make sure that the property is an equal subdivision of 1GB. For example, 1024, 512.
 
@@ -158,7 +160,9 @@ To configure YARN as the global resource manager in a HAWQ cluster, add the foll
 
 When enabled, the HAWQ resource manager only uses resources allocated from YARN.
 
-If you set the global resource manager to YARN, you must also configure the following properties:
+### Configuring HAWQ in YARN Environments
+
+If you set the global resource manager to YARN, you must also configure the following properties in `hawq-site.xml`:
 
 ```
 <property>
@@ -176,10 +180,10 @@ If you set the global resource manager to YARN, you must also configure the foll
       <name>hawq_rm_yarn_app_name</name>
       <value>hawq</value>
 </property>
-
 ```
+**Note:** If you have enabled high availability for your YARN resource managers, then you must configure `yarn.resourcemanager.ha` and `yarn.resourcemanager.scheduler.ha` in `yarn-client.xml` located in `$GPHOME/etc` instead. The values specified for `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` are ignored. See [Configuring HAWQ in High Availablity-Enabled YARN Environments](#highlyavailableyarn)
 
-### hawq\_rm\_yarn\_address <a id="id_uvp_3pm_q5"></a>
+#### hawq\_rm\_yarn\_address <a id="id_uvp_3pm_q5"></a>
 
 Server address \(host and port\) of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). User must define this if `hawq_global_rm_type` is set to `yarn`. For example, `localhost:8032`.
 
@@ -187,7 +191,7 @@ Server address \(host and port\) of the YARN resource manager server \(the value
 |-----------|-------|-------------------|
 |valid hostname| |master<br/><br/>session<br/><br/>reload|
 
-### hawq\_rm\_yarn\_scheduler\_address <a id="id_ocq_jpm_q5"></a>
+#### hawq\_rm\_yarn\_scheduler\_address <a id="id_ocq_jpm_q5"></a>
 
 Server address \(host and port\) of the YARN resource manager scheduler \(the value of `yarn.resourcemanager.scheduler.address`\). User must define this if `hawq_global_rm_type` is set to `yarn`. For example, `localhost:8030`.
 
@@ -195,7 +199,7 @@ Server address \(host and port\) of the YARN resource manager scheduler \(the va
 |-----------|-------|-------------------|
 |valid hostname and port| |master<br/><br/>session<br/><br/>reload|
 
-### hawq\_rm\_yarn\_queue\_name <a id="id_y23_kpm_q5"></a>
+#### hawq\_rm\_yarn\_queue\_name <a id="id_y23_kpm_q5"></a>
 
 The name of the YARN resource queue to register with HAWQ's resource manager.
 
@@ -203,7 +207,7 @@ The name of the YARN resource queue to register with HAWQ's resource manager.
 |-----------|-------|-------------------|
 |string|default|master<br/><br/>session<br/><br/>reload|
 
-### hawq\_rm\_yarn\_app\_name <a id="id_h1c_lpm_q5"></a>
+#### hawq\_rm\_yarn\_app\_name <a id="id_h1c_lpm_q5"></a>
 
 The name of the YARN application registered with HAWQ's resource manager. For example, `hawq`.
 
@@ -211,7 +215,27 @@ The name of the YARN application registered with HAWQ's resource manager. For ex
 |-----------|-------|-------------------|
 |string|hawq|master<br/><br/>session<br/><br/>reload|
 
-### Tune HAWQ Resource Negotiations with YARN <a id="topic_wp3_4bx_15"></a>
+### Configuring HAWQ in High Availablity-Enabled YARN Environments <a id="highlyavailableyarn"></a>
+
+If you have enabled high-availability for your YARN resource managers, then specify the following parameters in `yarn-client.xml` located in `$GPHOME/etc` instead. 
+
+**Note:** The values specified for `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` are ignored.
+
+```
+    <property>
+      <name>yarn.resourcemanager.ha</name>
+      <value>{0}:8032,{1}:8032</value>
+    </property>
+    
+    <property>
+      <name>yarn.resourcemanager.scheduler.ha</name>
+      <value>{0}:8030,{1}:8030</value>
+    </property>
+```
+
+where {0} and {1} are substituted with the fully qualified hostnames of the YARN resource manager host machines.
+
+## Tune HAWQ Resource Negotiations with YARN <a id="topic_wp3_4bx_15"></a>
 
 To ensure efficient management of resources and highest performance, you can configure some aspects of how HAWQ's resource manager negotiate resources from YARN.
 

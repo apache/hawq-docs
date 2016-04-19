@@ -58,7 +58,7 @@ To find out the cluster memory to core ratio selected by the resource manager, c
 Resource manager chooses ratio 1024 MB per core as cluster level memory to core ratio, there are 3072 MB memory 0 CORE resource unable to be utilized.
 ```
 
-You can also check the segment logs to see how resources are being cut from individual segments due to the cluster memory to core ratio. For example:
+You can also check the master logs to see how resources are being cut from individual segments due to the cluster memory to core ratio. For example:
 
 ```
 Resource manager adjusts segment localhost original resource capacity from (8192 MB, 5 CORE) to (5120 MB, 5 CORE)
