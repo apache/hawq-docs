@@ -86,7 +86,7 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
 	export MASTER_DATA_DIRECTORY=/path/to/master/catalog
 	```
 
-	See [Environment Variables](200/hawq/reference/HAWQEnvironmentVariables.html) for more information on environment variables.
+	See [Environment Variables](/200/hawq/reference/HAWQEnvironmentVariables.html) for more information on environment variables.
 
 1.  Disconnect all workload connections. Check the active connection with:
 
