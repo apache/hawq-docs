@@ -90,7 +90,7 @@ Configure operating system parameters on each host machine before you begin to i
 
     Restart HDFS to apply your changes.
 
-5.  Ensure that the /etc/hosts file on each  cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master /etc/hosts file and either copying it or referencing it on every host that will take part in the  cluster.
+5.  Ensure that the `/etc/hosts` file on each cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master `/etc/hosts` file and either copying it or referencing it on every host that will take part in the cluster.
 
 ## Install the HAWQ Cluster on Multiple Machines <a id="topic_ld1_bh4_15"></a>
 
@@ -148,7 +148,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
 
     You will use the hostfile and seg\_hosts files in subsequent steps to perform common configuration tasks on multiple nodes of the cluster.
 
-7.   requires passwordless ssh access to all cluster nodes. Execute the following `hawq` command to set up passwordless ssh on the nodes defined in your hostfile:
+7.   HAWQ requires passwordless ssh access to all cluster nodes. Execute the following `hawq` command to set up passwordless ssh on the nodes defined in your hostfile:
 
     ```
     $ hawq ssh-exkeys -f hostfile
@@ -230,7 +230,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     ```
 
     If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.
-17. Login to the master host as the gpadmin user. Create a customized a $GPHOME/etc/hawq-site.xml file using the template $GPHOME/etc/template-hawq-site.xml file for a multi-node cluster. Your custom hawq-site.xml should include the following modifications:
+17. Login to the master host as the gpadmin user. Create a customized a `$GPHOME/etc/hawq-site.xml` file using the template `$GPHOME/etc/template-hawq-site.xml` file for a multi-node cluster. Your custom hawq-site.xml should include the following modifications:
     1.  Change the `hawq_dfs_url` property definition to use the actual Namenode port number as well as the HAWQ data directory:
 
         ```
@@ -271,10 +271,27 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
         |hawq\_segment\_directory|/data/segment|
         |hawq\_master\_temp\_directory|/data1/tmp /data2/tmp|
         |hawq\_segment\_temp\_directory|/data1/tmp /data2/tmp|
-        |hawq\_rm\_yarn\_address|mdw:9980 **Note:** This property must match the `yarn.resourcemanager.address` value.|
-        |hawq\_rm\_yarn\_scheduler\_address|mdw:9981 **Note:** This property must match the `yarn.resourcemanager.scheduler.address` value.|
         |hawq\_global\_rm\_type|none|
 
+        **Note:** If you are installing HAWQ in secure mode (Kerberos-enabled), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
+        
+	3. If you wish to use YARN mode for HAWQ resource management, configure YARN properties for HAWQ. For example, in `$GPHOME/etc/hawq-site.xml`:
+	
+	    |Property|Example Value|Comment|
+        |--------|-------------|-------|
+        |hawq\_global\_rm\_type|yarn| When set to `yarn`, HAWQ requires that you configure additional YARN configuration parameters (`hawq\_rm\_yarn\_address` or `hawq\_rm\_yarn\_scheduler\_address` or ) |
+		|hawq\_rm\_yarn\_address|mdw:9980 | This property must match the `yarn.resourcemanager.address` value in `yarn-site.xml`.|
+        |hawq\_rm\_yarn\_scheduler\_address|mdw:9981 | This property must match the `yarn.resourcemanager.scheduler.address` value in `yarn-site.xml`.|
+        
+        If you have high availability enabled for YARN resource managers, then you must also configure the HA parameters in `$GPHOME/etc/yarn-client.xml`. For example:
+        
+        |Property|Example Value|Comment|
+        |--------|-------------|-------|
+        |yarn.resourcemanager.ha| rm1.example.com:8032,rm2.example.com:8032| Comma-delimited list of resource manager hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property's value instead.|
+        |yarn.resourcemanager.scheduler.ha|rm1.example.com:8030,rm2.example.com:8030 | Comma-delimited list of scheduler hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property's value instead.|
+        
+        Replace the example hostnames with the fully qualified domain names of your resource manager host machines.
+     
 18. Edit the $GPHOME/etc/slaves file to list all of the segment host names for your cluster. For example:
 
     ```
