@@ -11,8 +11,8 @@ To integrate YARN with HAWQ, use the following high-level steps.
     **Note:** If you are using HDP 2.3, you must set `yarn.resourcemanager.system-metrics-publisher.enabled` to `false`. See the Release Notes for additional YARN workaround configurations.
 
 2.  Configure YARN using CapacityScheduler and reserve one application queue exclusively for HAWQ. See [Configuring YARN for HAWQ](#hawqinputformatexample) and [Setting HAWQ Segment Resource Capacity in YARN](#topic_pzf_kqn_c5).
-3.  If desired, enable high availability in YARN.
-3.  Enable YARN within HAWQ. See [Enabling YARN Mode in HAWQ](#topic_rtd_cjh_15).
+3.  If desired, enable high availability in YARN. See your Ambari or Hadoop documentation for details.
+3.  Enable YARN mode within HAWQ. See [Enabling YARN Mode in HAWQ](#topic_rtd_cjh_15).
 4.  After you integrate YARN with HAWQ, adjust HAWQ's resource usage as needed by doing any of the following:
     -   Change the capacity of the corresponding YARN resource queue for HAWQ. For example, see the properties described for CapacityScheduler configuration. You can then refresh the YARN queues without having to restart or reload HAWQ. See See [Configuring YARN for HAWQ](#hawqinputformatexample) and [Setting HAWQ Segment Resource Capacity in YARN](#topic_pzf_kqn_c5).
     -   Change resource consumption within HAWQ on a finer grained level by altering HAWQ's resource queues. See [Working with Hierarchical Resource Queues](ResourceQueues.html).
@@ -219,7 +219,7 @@ The name of the YARN application registered with HAWQ's resource manager. For ex
 
 If you have enabled high-availability for your YARN resource managers, then specify the following parameters in `yarn-client.xml` located in `$GPHOME/etc` instead. 
 
-**Note:** The values specified for `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` are ignored.
+**Note:** When you use high availability in YARN, HAWQ ignores the values specified for `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` and uses the values specified in `yarn-client.xml` instead.
 
 ```
     <property>
