@@ -273,7 +273,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
         |hawq\_segment\_temp\_directory|/data1/tmp /data2/tmp|
         |hawq\_global\_rm\_type|none|
 
-        **Note:** If you are installing HAWQ in secure mode (Kerberos-enabled), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
+        **Caution:** If you are installing HAWQ in secure mode (Kerberos-enabled), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
         
 	3. If you wish to use YARN mode for HAWQ resource management, configure YARN properties for HAWQ. For example, in `$GPHOME/etc/hawq-site.xml`:
 	
