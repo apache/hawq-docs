@@ -23,13 +23,13 @@ title: Install Apache HAWQ using Ambari
 
     |**Stack Name**|**Filename**|**Description**|
     |--------------|------------|---------------|
-    |HDB-2.0.0.0 Beta|pivotal-hdb-2.0.0.0\_beta-20068.tar.gz|Pivotal HDB is a parallel SQL query engine that includes features from Apache HAWQ \(Incubating\) such as PXF.|
+    |HDB-2.0.0.0|pivotal-hdb-2.0.0.0-20068.tar.gz|Pivotal HDB is a parallel SQL query engine that includes features from Apache HAWQ \(Incubating\) such as PXF.|
     |HAWQ-PLUGIN-2.0.0|hawq-plugin-2.0.0-hdp-429.tar.gz|The HAWQ plug-in provides Ambari installation and monitoring functionality for Apache HAWQ \(Incubating\).|
 
 4.  Extract each tarball file into the staging directory:
 
     ```
-    $ tar -xvzf /staging/pivotal-hdb-2.0.0.0_beta-20068.tar.gz -C /staging/
+    $ tar -xvzf /staging/pivotal-hdb-2.0.0.0-20068.tar.gz -C /staging/
     $ tar -xvzf /staging/hawq-plugin-2.0.0-hdp-429.tar.gz -C /staging/
     ```
 
@@ -138,7 +138,7 @@ title: Install Apache HAWQ using Ambari
     |**General > HAWQ DFS URL**|The URL that HAWQ uses to access HDFS|
     |**General > HAWQ Master Port**|Enter the port to use for the HAWQ master host or accept the default, 5432. **CAUTION:** If you are installing HAWQ in a single-node environment \(or when the Ambari server and HAWQ are installed the same node\) then *you cannot accept the default port*. Enter a unique port for the HAWQ master|
     |**General > HAWQ Segment Port**|The base port to use for HAWQ segment hosts|
-    
+
 1.  If you selected YARN as the **Resource Manager**, then you must configure several YARN properties for HAWQ. On the **Advanced** tab of HAWQ configuration, enter values for the following parameters:
 
 	|Property|Action|
@@ -148,12 +148,12 @@ title: Install Apache HAWQ using Ambari
     |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030|
 
 	If you have enabled high availability for YARN, then verify that the following values have been populated correctly in HAWQ:
-	
+
 	|Property|Action|
     |--------|------|
 	|**Custom yarn-client > yarn.resourcemanager.ha**|Comma-delimited list of the fully qualified hostnames of the resource managers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property’s value instead. For example, `rm1.example.com:8032,rm2.example.com:8032` |
 	|**Custom yarn-client > yarn.resourcemanager.scheduler.ha**|Comma-delimited list of fully qualified hostnames of the resource manager schedulers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property’s value instead. For example,`rm1.example.com:8030,rm2.example.com:8030` |
-	
+
 18.  Click **Next** to continue the installation. (Depending on your cluster configuration, Ambari may recommend that you change other properties before proceeding.)
 18. Review your configuration choices, then click **Deploy** to begin the installation. Ambari now begins to install, start, and test the HAWQ and PXF configuration. During this procedure, you can click on the **Message** links to view the console output of individual tasks.
 
