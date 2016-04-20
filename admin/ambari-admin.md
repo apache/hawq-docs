@@ -133,7 +133,7 @@ There are several recommendations to keep in mind when modifying the size of you
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
    2. In the Components summary, select **Add > PXF**.
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
-17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting on the **HAWQ Configs** page, **Settings** tab. Update this setting's value by multiplying the new number of nodes in the cluster by the appropriate amount indicated below.
+17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting on the HAWQ service's **Configs > Settings** tab. Update this setting's value by multiplying the new number of nodes in the cluster by the appropriate amount indicated below.
 
 	|Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
 	|---------------|------------------------------------------|
