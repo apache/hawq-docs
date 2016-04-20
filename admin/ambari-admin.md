@@ -103,7 +103,7 @@ If you need to perform maintenance on the HAWQ Standby Master host, first remove
 
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
-### Guidelines for Cluster Expansion <a id="topic_kkc_tgb_h5"></a>
+### Guidelines for Cluster Expansion
 
 This topic provides some guidelines around expanding your HAWQ cluster.
 
@@ -133,7 +133,7 @@ There are several recommendations to keep in mind when modifying the size of you
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
    2. In the Components summary, select **Add > PXF**.
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
-17. (Optional) If you are using hash tables, adjust the `Default buckets for Hash Distributed tables` setting on the **HAWQ Configs** page, **Settings** tab. Update this setting's value by multiplying the new number of nodes in the cluster by the appropriate amount indicated below.
+17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting on the **HAWQ Configs** page, **Settings** tab. Update this setting's value by multiplying the new number of nodes in the cluster by the appropriate amount indicated below.
 
 	|Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
 	|---------------|------------------------------------------|
@@ -145,12 +145,12 @@ There are several recommendations to keep in mind when modifying the size of you
 	|\> 256 and <= 512|1 \* \#nodes|
 	|\> 512|512|
 6.  Stop and then start the HAWQ service to apply your configuration changes. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment.
+>**Note:** The `hawq_hosts` and `slaves` files in `$GPHOME/etc/` are not updated with the newly-added hosts until you reboot the HAWQ cluster.
 6.  Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 6.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
 5.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
 
    	**Note:** The redistribution of table data can take a significant amount of time.
-7.  The `hawq_hosts` and `slaves` files in `$GPHOME/etc/` are not updated with the newly-added hosts until you reboot the HAWQ cluster. Reboot the cluster as necessary during a scheduled maintenance window.
 
 ## Performing a Configuration check<a id="amb-config-check"></a>
 
