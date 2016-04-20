@@ -124,7 +124,7 @@ title: Install Apache HAWQ using Ambari
 17.  On the Customize Services page, the **Settings** tab configures basic properties of the HAWQ cluster. In most cases you can accept the default values provided on this page. Several configuration options may require attention depending on your deployment:
     *  **HAWQ Master Directory**, **HAWQ Segment Directory**: This specifies the base path for the HAWQ master or segment data directory.
     *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ Master or a HAWQ segment stores temporary files. Separate multiple directories with a space. Any directories that you specify must already be available on all host machines. If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.<br/><br/>As a best practice, use multiple segment temporary directories on separate, large disks (2TB or greater) to load balance writes to temporary files \(for example, `/disk1/tmp /disk2/tmp`\). For a given query, HAWQ will use a separate temp directory (if available) for each virtual segment to store spill files. Multiple HAWQ sessions will also use separate temp directories where available to avoid disk contention. If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.
-    *  **Resource Manager**: Select the resource manager to use for allocating resources in your HAWQ cluster. If you choose **Standalone**, HAWQ exclusively uses resources from the whole cluster. If you choose **YARN**, HAWQ contacts the YARN resource manager to negotiate resources. You can change the resource manager type after the initial installation. See [Managing Resources](/200/hawq/resourcemgmt/HAWQResourceManagement.html).
+    *  **Resource Manager**: Select the resource manager to use for allocating resources in your HAWQ cluster. If you choose **Standalone**, HAWQ exclusively uses resources from the whole cluster. If you choose **YARN**, HAWQ contacts the YARN resource manager to negotiate resources. You can change the resource manager type after the initial installation. You will also have to configure some YARN-related properties in step 22. For more inforatmion on using YARN to manage resources, see [Managing Resources](/200/hawq/resourcemgmt/HAWQResourceManagement.html).
 
 		**Caution:** If you are installing HAWQ in secure mode (Kerberos-enabled), then set **Resource Manager** to **Standalone** to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
     *  **VM Overcommit**: Set this value according to the instructions in the [System Requirements](/20/requirements/system-requirements.html) document.
@@ -135,13 +135,25 @@ title: Install Apache HAWQ using Ambari
 
     |Property|Action|
     |--------|------|
-    |**General > HAWQ DFS URL**|The URL that HAWQ uses to access HDFS.|
-    |**General > HAWQ Master Port**|Enter the port to use for the HAWQ master host or accept the default, 5432. **CAUTION:** If you are installing HAWQ in a single-node environment \(or when the Ambari server and HAWQ are installed the same node\) then *you cannot accept the default port*. Enter a unique port for the HAWQ master.|
-    |**General > HAWQ Segment Port**|The base port to use for HAWQ segment hosts.|
-    |**Advanced hawq-site > hawq\_rm\_yarn\_address**|If you are using YARN for resource management, specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: localhost:8032.|
-    |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|If you are using YARN for resource management, specify the YARN queue name to use for registering the HAWQ resource manager. For example: default.|
-    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|If you are using YARN for resource management, specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030.|
+    |**General > HAWQ DFS URL**|The URL that HAWQ uses to access HDFS|
+    |**General > HAWQ Master Port**|Enter the port to use for the HAWQ master host or accept the default, 5432. **CAUTION:** If you are installing HAWQ in a single-node environment \(or when the Ambari server and HAWQ are installed the same node\) then *you cannot accept the default port*. Enter a unique port for the HAWQ master|
+    |**General > HAWQ Segment Port**|The base port to use for HAWQ segment hosts|
+    
+1.  If you selected YARN as the **Resource Manager**, then you must configure several YARN properties for HAWQ. On the **Advanced** tab of HAWQ configuration, enter values for the following parameters:
 
+	|Property|Action|
+    |--------|------|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_address**|Specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: localhost:8032|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|Specify the YARN queue name to use for registering the HAWQ resource manager. For example: `default`|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030|
+
+	If you have enabled high availability for YARN, then verify that the following values have been populated correctly in HAWQ:
+	
+	|Property|Action|
+    |--------|------|
+	|**Custom yarn-client > yarn.resourcemanager.ha**|Comma-delimited list of the fully qualified hostnames of the resource managers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property’s value instead. For example, `rm1.example.com:8032,rm2.example.com:8032` |
+	|**Custom yarn-client > yarn.resourcemanager.scheduler.ha**|Comma-delimited list of fully qualified hostnames of the resource manager schedulers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property’s value instead. For example,`rm1.example.com:8030,rm2.example.com:8030` |
+	
 18.  Click **Next** to continue the installation. (Depending on your cluster configuration, Ambari may recommend that you change other properties before proceeding.)
 18. Review your configuration choices, then click **Deploy** to begin the installation. Ambari now begins to install, start, and test the HAWQ and PXF configuration. During this procedure, you can click on the **Message** links to view the console output of individual tasks.
 
