@@ -279,16 +279,18 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
 	
 	    |Property|Example Value|Comment|
         |--------|-------------|-------|
-        |hawq\_global\_rm\_type|yarn| When set to `yarn`, HAWQ requires that you configure additional YARN configuration parameters (`hawq\_rm\_yarn\_address` or `hawq\_rm\_yarn\_scheduler\_address` or ) |
+        |hawq\_global\_rm\_type|yarn| When set to `yarn`, HAWQ requires that you configure additional YARN configuration parameters (`hawq_rm_yarn_address` or `hawq_rm_yarn_scheduler_address` |
 		|hawq\_rm\_yarn\_address|mdw:9980 | This property must match the `yarn.resourcemanager.address` value in `yarn-site.xml`.|
         |hawq\_rm\_yarn\_scheduler\_address|mdw:9981 | This property must match the `yarn.resourcemanager.scheduler.address` value in `yarn-site.xml`.|
         
+        
         If you have high availability enabled for YARN resource managers, then you must also configure the HA parameters in `$GPHOME/etc/yarn-client.xml`. For example:
+        
         
         |Property|Example Value|Comment|
         |--------|-------------|-------|
-        |yarn.resourcemanager.ha| rm1.example.com:8032,rm2.example.com:8032| Comma-delimited list of resource manager hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property's value instead.|
-        |yarn.resourcemanager.scheduler.ha|rm1.example.com:8030,rm2.example.com:8030 | Comma-delimited list of scheduler hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property's value instead.|
+        |yarn.resourcemanager.ha| rm1.example.com:8032, rm2.example.com:8032| Comma-delimited list of resource manager hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property's value instead.|
+        |yarn.resourcemanager.scheduler.ha|rm1.example.com:8030, rm2.example.com:8030 | Comma-delimited list of scheduler hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property's value instead.|
         
         Replace the example hostnames with the fully qualified domain names of your resource manager host machines.
      
