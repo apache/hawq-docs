@@ -144,7 +144,7 @@ title: Install Apache HAWQ using Ambari
 	|Property|Action|
     |--------|------|
     |**Advanced hawq-site > hawq\_rm\_yarn\_address**|Specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: localhost:8032|
-    |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|Specify the YARN queue name to use for registering the HAWQ resource manager. For example: `default`|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|Specify the YARN queue name to use for registering the HAWQ resource manager. For example: `default` **Note:** If you specify a custom queue name other than `default`, you must configure the YARN scheduler and custom queue capacity, either through the Ambari or directly in YARN's configuration files. See [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for more details. |
     |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030|
 
 	If you have enabled high availability for YARN, then verify that the following values have been populated correctly in HAWQ:
