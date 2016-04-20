@@ -103,6 +103,18 @@ If you need to perform maintenance on the HAWQ Standby Master host, first remove
 
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
+### Guidelines for Cluster Expansion <a id="topic_kkc_tgb_h5"></a>
+
+This topic provides some guidelines around expanding your HAWQ cluster.
+
+There are several recommendations to keep in mind when modifying the size of your running HAWQ cluster:
+
+-   When you add a new node, install both a DataNode and a physical segment on the new node.
+-   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
+-   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, execute **`select gp_metadata_cache_clear();`** (for CLI users) or the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
+-   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
+-   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
+
 ### Procedure
 1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
@@ -121,7 +133,20 @@ Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAW
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
    2. In the Components summary, select **Add > PXF**.
    3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
-6.  Speed up the clearing of the metadata cache by selecting the **Service Actions > Clear HDFS Metadata Cache** option in Ambari.
+17. (Optional) If you are using hash tables, adjust the `Default buckets for Hash Distributed tables` setting on the **HAWQ Configs** page, **Settings** tab. Update this setting's value by multiplying the new number of nodes in the cluster by the appropriate amount indicated below.
+
+	|Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
+	|---------------|------------------------------------------|
+	|<= 85|6 \* \#nodes|
+	|\> 85 and <= 102|5 \* \#nodes|
+	|\> 102 and <= 128|4 \* \#nodes|
+	|\> 128 and <= 170|3 \* \#nodes|
+	|\> 170 and <= 256|2 \* \#nodes|
+	|\> 256 and <= 512|1 \* \#nodes|
+	|\> 512|512|
+6.  Stop and then start the HAWQ service to apply your configuration changes. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment.
+6.  Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
+6.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
 5.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
 
    	**Note:** The redistribution of table data can take a significant amount of time.
