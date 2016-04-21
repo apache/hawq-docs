@@ -88,9 +88,9 @@ Configure operating system parameters on each host machine before you begin to i
     |**ipc.client.connect.timeout**|300000|
     |**ipc.server.listen.queue.size**|3300|
 
-    Restart HDFS to apply your changes.
+5.  Restart HDFS to apply your configuration changes.
 
-5.  Ensure that the `/etc/hosts` file on each cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master `/etc/hosts` file and either copying it or referencing it on every host that will take part in the cluster.
+6.  Ensure that the `/etc/hosts` file on each cluster node contains the hostname of every other member of the  cluster. Consider creating a single, master `/etc/hosts` file and either copying it or referencing it on every host that will take part in the cluster.
 
 ## Install the HAWQ Cluster on Multiple Machines <a id="topic_ld1_bh4_15"></a>
 
@@ -273,7 +273,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
         |hawq\_segment\_temp\_directory|/data1/tmp /data2/tmp|
         |hawq\_global\_rm\_type|none|
 
-        **Caution:** If you are installing HAWQ in secure mode (Kerberos-enabled), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
+        **Caution:** If you are installing HAWQ in [secure mode (Kerberos-enabled)](#topic_iwy_5fb_1t), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
         
 	3. If you wish to use YARN mode for HAWQ resource management, configure YARN properties for HAWQ. For example, in `$GPHOME/etc/hawq-site.xml`:
 	
@@ -348,7 +348,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     $ hawq scp -f hostfile hawq-site.xml slaves =:$GPHOME/etc/
     ```
 
-20. Finally, initialize and start the new HAWQ cluster using the command:
+21. Finally, initialize and start the new HAWQ cluster using the command:
 
     ```
     $ hawq init cluster
