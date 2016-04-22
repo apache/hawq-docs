@@ -24,13 +24,13 @@ title: Install Apache HAWQ using Ambari
     |**Stack Name**|**Filename**|**Description**|
     |--------------|------------|---------------|
     |HDB-2.0.0.0|hdb-2.0.0.0-20068.tar.gz|Pivotal HDB is a parallel SQL query engine that includes features from Apache HAWQ \(Incubating\) such as PXF.|
-    |HAWQ-PLUGIN-2.0.0|hawq-plugin-2.0.0-hdp-429.tar.gz|The HAWQ plug-in provides Ambari installation and monitoring functionality for Apache HAWQ \(Incubating\).|
+    |HDB-AMBARI-PLUGIN-2.0.0|hdb-ambari-plugin-2.0.0-hdp-429.tar.gz|The HAWQ plug-in provides Ambari installation and monitoring functionality for Apache HAWQ \(Incubating\).|
 
 4.  Extract each tarball file into the staging directory:
 
     ```
     $ tar -xvzf /staging/hdb-2.0.0.0-20068.tar.gz -C /staging/
-    $ tar -xvzf /staging/hawq-plugin-2.0.0-hdp-429.tar.gz -C /staging/
+    $ tar -xvzf /staging/hdb-ambari-plugin-2.0.0-hdp-429.tar.gz -C /staging/
     ```
 
 5.  Each tarball is an archived yum repository and has a setup\_repo.sh script. The script creates a symlink from the document root of the httpd server \(/var/www/html\) to the directory where the tarball was extracted. On the host that will be used as a YUM repo, execute the setup\_repo.sh script that is shipped as a part of each tarball file:
@@ -38,14 +38,14 @@ title: Install Apache HAWQ using Ambari
     ```
     $ cd /staging/hdb*
     $ ./setup_repo.sh
-    $ cd /staging/hawq-plugin*
+    $ cd /staging/hdb-ambari-plugin*
     $ ./setup_repo.sh
     ```
 
 6.  Update the Yum repo to install the HAWQ Ambari plug-in:
 
     ```
-    $ yum install hawq-plugin
+    $ yum install hdb-ambari-plugin
     ```
 
 7.  Execute the following script to add the HDB repository to the Ambari server:
