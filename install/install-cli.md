@@ -104,19 +104,19 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     $ su - root
     ```
 
-2.  Download the Apache HAWQ tarball distribution \(pivotal-hdb-2.0.0.0-18407.tar.gz\) to the local machine.
+2.  Download the Apache HAWQ tarball distribution \(hdb-2.0.0.0-18407.tar.gz\) to the local machine.
 3.  Unzip the tarball file:
 
     ```
-    $ tar xzf pivotal-hdb-2.0.0.0-18407.tar.gz
+    $ tar xzf hdb-2.0.0.0-18407.tar.gz
     ```
 
-    The files are uncompressed into a pivotal-hdb-2.0.0.0 subdirectory.
+    The files are uncompressed into a hdb-2.0.0.0 subdirectory.
 
 4.  Execute the  RPM installer:
 
     ```
-    $ cd pivotal-hdb-2.0.0.0
+    $ cd hdb-2.0.0.0
     $ rpm -ivh hawq-2.0.0.0-18407.x86_64.rpm
     ```
 
@@ -274,26 +274,26 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
         |hawq\_global\_rm\_type|none|
 
         **Caution:** If you are installing HAWQ in [secure mode (Kerberos-enabled)](#topic_iwy_5fb_1t), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
-        
+
 	3. If you wish to use YARN mode for HAWQ resource management, configure YARN properties for HAWQ. For example, in `$GPHOME/etc/hawq-site.xml`:
-	
+
 	    |Property|Example Value|Comment|
         |--------|-------------|-------|
         |hawq\_global\_rm\_type|yarn| When set to `yarn`, HAWQ requires that you configure additional YARN configuration parameters (`hawq_rm_yarn_address` or `hawq_rm_yarn_scheduler_address` |
 		|hawq\_rm\_yarn\_address|mdw:9980 | This property must match the `yarn.resourcemanager.address` value in `yarn-site.xml`.|
         |hawq\_rm\_yarn\_scheduler\_address|mdw:9981 | This property must match the `yarn.resourcemanager.scheduler.address` value in `yarn-site.xml`.|
-        
-        
+
+
         If you have high availability enabled for YARN resource managers, then you must also configure the HA parameters in `$GPHOME/etc/yarn-client.xml`. For example:
-        
-        
+
+
         |Property|Example Value|Comment|
         |--------|-------------|-------|
         |yarn.resourcemanager.ha| rm1.example.com:8032, rm2.example.com:8032| Comma-delimited list of resource manager hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property's value instead.|
         |yarn.resourcemanager.scheduler.ha|rm1.example.com:8030, rm2.example.com:8030 | Comma-delimited list of scheduler hosts. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property's value instead.|
-        
+
         Replace the example hostnames with the fully qualified domain names of your resource manager host machines.
-     
+
 18. Edit the $GPHOME/etc/slaves file to list all of the segment host names for your cluster. For example:
 
     ```
@@ -367,19 +367,19 @@ Follow this procedure to install HAWQ software on a single host machine.
     $ su - root
     ```
 
-2.  Download the HAWQ tarball distribution \(tar xzf pivotal-hdb-2.0.0.0-18407.tar.gz\) to the local machine.
+2.  Download the HAWQ tarball distribution \(tar xzf hdb-2.0.0.0-18407.tar.gz\) to the local machine.
 3.  Unzip the tarball file:
 
     ```
-    $ tar xzf pivotal-hdb-2.0.0.0-18407.tar.gz
+    $ tar xzf hdb-2.0.0.0-18407.tar.gz
     ```
 
-    The files are uncompressed into a pivotal-hdb-2.0.0.0 subdirectory.
+    The files are uncompressed into a `hdb-2.0.0.0` subdirectory.
 
 4.  Execute the RPM installer:
 
     ```
-    $ cd pivotal-hdb-2.0.0.0
+    $ cd hdb-2.0.0.0
     $ rpm -ivh hawq-2.0.0.0-18407.x86_64.rpm
     ```
 
