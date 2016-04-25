@@ -209,10 +209,9 @@ For command-line administrators:
 	$ hawq start cluster -a
 	```
 
-1. Moving the filespace to a new location renders the standby master catalog invalid. To update the standby, reinitialize and resync the standby master.  On the active master, run the following command to ensure that the standby master's catalog is resynced with the active master.
+1. Moving the filespace to a new location renders the standby master catalog invalid. To update the standby, resync the standby master.  On the active master, run the following command to ensure that the standby master's catalog is resynced with the active master.
 
 	```
-	$ hawq restart standby -a M fast
 	$ hawq init standby -n -M fast
 
 	```
