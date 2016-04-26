@@ -1,12 +1,12 @@
 ---
-title: Elastic Virtual Segment Allocation
+title: Elastic Query Execution Runtime
 ---
 
 HAWQ uses dynamically allocated virtual segments to provide resources for query execution.
 
 In HAWQ 1.x, the number of segments \(compute resource carrier\) used to run a query is fixed, no matter whether the underlying query is big query requiring many resources or a small query requiring little resources. This architecture is simple, however it uses resources inefficiently.
 
-To address this issue, HAWQ now uses the elastic virtual segment allocation feature, which is based on virtual segments. HAWQ allocates virtual segments on demand based on the costs of queries. In other words, for big queries, HAWQ starts a large number of virtual segments, while for small queries HAWQ starts fewer virtual segments.
+To address this issue, HAWQ now uses the elastic query execution runtime feature, which is based on virtual segments. HAWQ allocates virtual segments on demand based on the costs of queries. In other words, for big queries, HAWQ starts a large number of virtual segments, while for small queries HAWQ starts fewer virtual segments.
 
 ## Storage
 
