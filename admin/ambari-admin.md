@@ -200,6 +200,74 @@ If you need to expand your HAWQ cluster without restarting the HAWQ service, fol
     ```
 3.  Continue with Step 8 in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
 
+## Using Ambari to Integrate YARN with HAWQ<a id="amb-yarn"></a>
+
+HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources (containers) dynamically from YARN, and return resources when HAWQ’s workload is not heavy. This feature makes HAWQ a native citizen of the whole Hadoop eco-system.
+
+### When to Perform
+
+Follow this procedure if you have already installed YARN and HAWQ, but you are currently using the HAWQ Standalone mode (not YARN) for resource management. This procedure helps you configure YARN and HAWQ so that HAWQ uses YARN for resource management. Keep in mind that different steps are required depending on whether you choose to use YARN's default queue or a custom queue:
+* [Procedure for Integrating HAWQ with the Default YARN Queue](#amb-yarn-default)
+* [Procedure for Integrating HAWQ with a Custom YARN Queue](#amb-yarn-custom)
+
+### Procedure for Integrating HAWQ with the Default YARN Queue<a id="amb-yarn-default"></a>
+1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+2.  Select **HAWQ** from the list of installed services.
+3.  Select the **Configs** tab.
+4.  Use the **Resource Manager** menu to change select the **YARN** option.
+5.  Click **Save**.
+6.  If you are using HDP 2.3, follow these additional instructions:
+    1. Select **YARN** from the list of installed services.
+    2. Select the **Configs** tab, then the **Advanced** tab.
+    3. Expand the **Advanced yarn-site** section.
+    4. Locate the `yarn.resourcemanager.system-metrics-publisher.enabled` property and change its value to `false`.
+    5. Click **Save**.
+HAWQ will use the default YARN queue, and Ambari automatically configures settings for `hawq_rm_yarn_address`, `hawq_rm_yarn_app_name`, and `hawq_rm_yarn_scheduler_address`.
+
+### Procedure for Integrating HAWQ with a Custom YARN Queue<a id="amb-yarn-custom"></a>
+1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+2.  Select **YARN** from the list of installed services.
+3.  Select the **Configs** tab, then the **Advanced** tab.
+4.  Expand the **Scheduler** section.
+5.  To integrate YARN with HAWQ, you must define one YARN application resource queue exclusively for HAWQ. YARN resource queues are configured for a specific YARN resource scheduler. The YARN resource scheduler uses resource queue configuration to allocate resources to applications. There are several available YARN resource schedulers; however, HAWQ currently only supports using CapacityScheduler to manage YARN resources. Follow these steps:
+    1. Check the `yarn.resourcemanager.scheduler.class` property and ensure that it is set to `org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler`.
+    2. In the **Capacity Scheduler** section, add the name of the custom queue that you want to use for HAWQ to the value of the `yarn.scheduler.capacity.root.queues` property. For example, if you want to use a queue named `hawqqueue`, the value of this property would be similar to `root,hawqque`.
+    3. In the **Capacity Scheduler** section, modify the `.capacity.` property of each queue so that the sum of all of a queue's `.capacity.` properties equals 100. (Note that the `maximum-capacity` property is not considered when adding the totals to 100.) The HAWQ resource queue can utilize 20% to a maximum of 80% resources of the whole cluster.  For example:
+
+       ```
+       yarn.scheduler.capacity.root.default.capacity=50
+       yarn.scheduler.capacity.root.hawqque.capacity=50
+       yarn.scheduler.capacity.root.default.maximum-capacity=100
+       yarn.scheduler.capacity.root.hawqque.maximum-capacity=80
+       ```
+    4. Optionally configure these additional properties for the HAWQ queue:
+
+       |Item|Description|
+       |----|-----------|
+       |yarn.scheduler.capacity.&lt;queue\_name&gt;.maximum-applications|Maximum number of HAWQ applications in the system that can be concurrently active (both running and pending.) The current recommendation is to let one HAWQ instance exclusively use one resource queue.|
+       |yarn.scheduler.capacity.&lt;queue\_name&gt;.user-limit-factor|Multiple of the queue capacity, which can be configured to allow a single user to acquire more resources. By default this is set to 1, which ensures that a single user can never take more than the queue’s configured capacity irrespective of how idle the cluster is. Value is specified as a float.<br/><br/>Setting this to a value higher than 1 allows the overcommittment of resources at the application level. For example, in terms of HAWQ configuration, if we want twice the maximum capacity for the HAWQ’s application, we can set this as 2.|
+
+5. Follow these steps to configure the resource capacity of segments in YARN:
+   1. Click the **Settings** tab.
+   2. In the **Memory** section, adjust the **Node** slider (`yarn.nodemanager.resource.memory-mb`) to configure the memory allocated for YARN containers on a node. In the **CPU** section, set the **Number of virtual cores** value (`yarn.nodemanager.resource.cpu-vcores`).<br/><br/>We recommend that in your memory to core ratio that memory is a multiple of 1GB, such as 1GB per core, 2GB per core or 4 GB per core.
+   3. In the **Memory** section, adjust the **Container** slider to set the minimum container size (`yarn.scheduler.minimum-allocation-mb`). In the **CPU** section, set the **Number of virtual cores** value (`yarn.nodemanager.resource.cpu-vcores`).<br/><br/>To avoid memory fragmentation, the CPU to memory ratio must be a multiple of the amount configured for this property. Many Ambari installations use a default value of 1GB for this property.
+   4. Click **Save** to save your configuration changes.
+6. Finally, follow these steps to configure HAWQ to use YARN for resource management:
+   1.  Select **HAWQ** from the list of installed services.
+   2.  Select the **Configs** tab, then the **Advanced** tab.
+   3.  Expand the **Advanced hawq-site** section.
+   4.  Change the `hawq_global_rm_type` value to `yarn`.
+   5.  Change the `hawq_rm_yarn_queue_name` value to the name of the custom YARN queue that you configured (for example, `hawqqueue`).
+   6.  (Optional.)  When HAWQ is integrated with YARN and has no workload, HAWQ does not acquire any resources right away. HAWQ’s resource manager only requests resources from YARN when HAWQ receives its first query request. In order to guarantee optimal resource allocation for subsequent queries and to avoid frequent YARN resource negotiation, you can adjust `hawq_rm_min_resource_perseg` so HAWQ receives at least some number of YARN containers per segment regardless of the size of the initial query. The default value is 2, which means HAWQ’s resource manager acquires at least 2 YARN containers for each segment even if the first query’s resource request is small.<br/><br/>This configuration property cannot exceed the capacity of HAWQ’s YARN queue. For example, if HAWQ’s queue capacity in YARN is no more than 50% of the whole cluster, and each YARN node has a maximum of 64GB memory and 16 vcores, then `hawq_rm_min_resource_perseg` in HAWQ cannot be set to more than 8 since HAWQ’s resource manager acquires YARN containers by vcore. In the case above, the HAWQ resource manager acquires a YARN container quota of 4GB memory and 1 vcore.<br/><br/>To change this parameter, expand **Custom hawq-site** and click **Add Property ...** Then specify `hawq_rm_min_resource_perseg` as the key and enter the desired Value. Click **Add** to add the property definition.
+   7.  Click **Save** to save your configuration changes.
+7. Select **Service Actions > Run Service Check** and ensure that the new HAWQ configuration passes the service check.
+8.  If you are using HDP 2.3, follow these additional instructions:
+    1. Select **YARN** from the list of installed services.
+    2. Select the **Configs** tab, then the **Advanced** tab.
+    3. Expand the **Advanced yarn-site** section.
+    4. Locate the `yarn.resourcemanager.system-metrics-publisher.enabled` property and change its value to `false`.
+    5. Click **Save**.
+
 ## Performing a Configuration check<a id="amb-config-check"></a>
 
 A configuration check determines if operating system parameters on a HAWQ host machines match their recommended settings. You can also perform this procedure from the command line using the `hawq check` command.
