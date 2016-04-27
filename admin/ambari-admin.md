@@ -242,3 +242,52 @@ A HAWQ Service check uses the `hawq state` command to display the configuration 
 ## Upgrading the HDP Stack<a id="hdp-upgrade"></a>
 
 If you install HAWQ using Ambari 2.2.2 with the HDP 2.3 stack, before you attempt to upgrade to HDP 2.4 you must use Ambari to change the `dfs.allow.truncate` property to `false`. Ambari will display a configuration warning with this setting, but it is required in order to complete the upgrade; choose **Proceed Anyway** when Ambari warns you about the configured value of `dfs.allow.truncate`. After you complete the upgrade to HDP 2.4, change the value of `dfs.allow.truncate` back to `true` to ensure that HAWQ can operate as intended.
+
+## Changing the HAWQ gpadmin Password<a id="gpadmin-password-change"></a>
+
+### Prerequisites
+HAWQ service on the cluster must be already installed and managed through Ambari.
+
+### Changing the gpadmin Password
+
+The all of the listed steps are mandatory. This ensures that HAWQ service remains fully functional.
+1.  Use the reference script to manually change the password for the gpadmin user on all HAWQ hosts \(all Master and Slave component hosts\) by updating the `hawq_hosts` file with its contents. 
+Each line of the `hawq_hosts` file represents the hostname of a host on which a HAWQ component has been installed. To execute this script, you must have ssh access to all host machines as the gpadmin user.
+2. Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) 
+  1. Click **HAWQ** in the list of installed services. 
+  1. On the HAWQ server Configs page, go to the ##Advanced## tab and update the HAWQ System User Password to the new password specified in the script. Click **Save** to save the updated configuration.
+3. Restart HAWQ service to propagate the configuration change to all Ambari agents. 
+
+###Reference Script
+
+Change the contents of this file to reflect your old and new gpadmin passwords.
+
+        ```
+        #!/bin/bash
+
+        # Read Password (old and new) from the User
+        echo -n "Enter old password:":
+        read -s oldPassword
+        echo-n "Enter new password:":
+        read -s newPassword
+
+        # Change Password on all Hosts
+        for host in $(cat hawq_hosts: do
+        echo "Changing password for gpadmin user on "$host;
+        ssh gpadmin@$host "passwd <<EOF
+        oldPassword
+        newPassword
+        newPassword
+        EOF";
+        done
+        ```
+
+##What if the HAWQ System User Password on Ambari Is Not Updated?
+
+Not updating the Ambari system user password causes Ambari to behave as if the gpadmin password was never changed \(it keeps the old password\). The password issued by the Ambari web console is used for the `hawq ssh-exkeys` utility, which is run during the start phase of HAWQMASTER. 
+If passwordless ssh has already been set up \(a key has been exchanged earlier and the host has it stored in ~/.ssh/authorized_keys\), the `hawq ssh-exkeys` utility will not exchange the key. 
+If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key from the HAWQMASTER fails. Components without passwordless ssh might not be registered with the HAWQ cluster. 
+
+##What if the Password Expires on the Host Machines?
+
+Use the procedure above to create a new password on the host machines, then update the ##HAWQ System User Password## on the Ambari Web Console. This will synchronize the password on the host machines with the password recognized by Ambari. 
