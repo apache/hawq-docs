@@ -8,12 +8,12 @@ If you initialized HAWQ without the HDFS High Availability \(HA\) feature, you c
 
 To enable the HDFS NameNode HA feature for use with HAWQ, you need to perform the following tasks:
 
-1. Enable high availability in your HDFS cluster
-1. Collect information about the target filespace
+1. Enable high availability in your HDFS cluster.
+1. Collect information about the target filespace.
 1. Stop the HAWQ cluster and backup the catalog (**Note:** Ambari users must perform this manual step.)
 1. Move the filespace location using the command line tool (**Note:** Ambari users must perform this manual step.)
-1. Configure $\{GPHOME\}/etc/hdfs-client.xml
-1. Resynchronize the standby master after moving the filespace
+1. Reconfigure $\{GPHOME\}/etc/hdfs-client.xml and $\{GPHOME\}/etc/hawq-site.xml files. Then, synchronize updated configuration files to all HAWQ nodes.
+1. Resynchronize the standby master after moving the filespace.
 
 
 ### Step 1: Enable High Availability in Your HDFS Cluster <a id="enablehahdfs"></a>
@@ -200,6 +200,11 @@ For command-line administrators:
     * Replace `hdpcluster` with the actual service ID that is configured in HDFS.
     * Replace `/hawq_default` with the directory you want to use for storing data on HDFS. Make sure this directory exists and is writable.
 
+3. Copy the updated configuration files to all nodes in the cluster (as listed in `hawq_hosts`).
+
+	```
+	$ hawq scp -f hawq_hosts hdfs-client.xml hawq-site.xml =:$GPHOME/etc/
+	```
 
 ### Step 6: Restart the HAWQ Cluster and Resynchronize the Standby Master <a id="reinitializethestandbymaster"></a>
 
