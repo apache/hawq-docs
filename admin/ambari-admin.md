@@ -145,43 +145,52 @@ There are several recommendations to keep in mind when modifying the size of you
 	|\> 256 and <= 512|1 \* \#nodes|
 	|\> 512|512|
 6.  **Note:** Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
-    Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, updates the `hawq_hosts` and `slaves` files in `$GPHOME/etc/`, and applies the new configuration.
+    <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, updates the `hawq_hosts` and `slaves` files in `$GPHOME/etc/`, and applies the new configuration.
 >**Note:** Do not use the **Restart All** service action to complete this step.
 6.  **Note** Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
-    Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
+    <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 6.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
 5.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
 
    	**Note:** The redistribution of table data can take a significant amount of time.
 
 #### Manually Updating the HAWQ Configuration<a id="manual-config-steps"></a>
-If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration *instead* of following Step 7 in the above procedure:
+If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
+
 1.  Update your configuration to use the new `default_hash_table_bucket_number` value that you calculated:
-    a. SSH into the HAWQ master host as the `gpadmin` user:
-       ```
-       $ ssh gpadmin@<HAWQ_MASTER_HOST>
-       ```
-    b. Source the `greenplum_path.sh` file update shell environment:
-       ```
-       $ source /usr/local/hawq/greenplum_path.sh
-       ```
-    c. Verify the current value of `default_hash_table_bucket_number`:
-       ```
-       $ hawq config -s default_hash_table_bucket_number
-       ```
-    d. Update `default_hash_table_bucket_number` to the new value that you calculated:
-       ```
-       $ config -c default_hash_table_bucket_number -v <new_value>
-       ```
-    e. Reload the configuration without restarting the cluster:
-       ```
-       $ hawq stop cluster -u
-       ```
-    f. Verify that the `default_hash_table_bucket_number` value was updated:
-       ```
-       $ hawq config -s default_hash_table_bucket_number
-       ```
+
+      1. SSH into the HAWQ master host as the `gpadmin` user:
+
+         ```
+         $ ssh gpadmin@<HAWQ_MASTER_HOST>
+         ```
+      2. Source the `greenplum_path.sh` file to update the shell environment:
+
+         ```
+         $ source /usr/local/hawq/greenplum_path.sh
+         ```
+      3. Verify the current value of `default_hash_table_bucket_number`:
+
+         ```
+         $ hawq config -s default_hash_table_bucket_number
+         ```
+      4. Update `default_hash_table_bucket_number` to the new value that you calculated:
+
+         ```
+         $ config -c default_hash_table_bucket_number -v <new_value>
+         ```
+      5. Reload the configuration without restarting the cluster:
+
+         ```
+         $ hawq stop cluster -u
+         ```
+      6. Verify that the `default_hash_table_bucket_number` value was updated:
+
+         ```
+         $ hawq config -s default_hash_table_bucket_number
+         ```
 2.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Separate multiple hosts with new lines. For example, after adding host4 and host5 to a cluster already contains hosts 1-3, the updated file contents would be:
+
     ```
     host1
     host2
