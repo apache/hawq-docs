@@ -200,15 +200,18 @@ If you need to expand your HAWQ cluster without restarting the HAWQ service, fol
     ```
 3.  Continue with Step 8 in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
 
-## Using Ambari to Integrate YARN with HAWQ<a id="amb-yarn"></a>
+## Integrating YARN for Resource Management<a id="amb-yarn"></a>
 
 HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources (containers) dynamically from YARN, and return resources when HAWQ’s workload is not heavy. This feature makes HAWQ a native citizen of the whole Hadoop eco-system.
+
+See also [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for command-line instructions and additional details about using HAWQ with YARN.
 
 ### When to Perform
 
 Follow this procedure if you have already installed YARN and HAWQ, but you are currently using the HAWQ Standalone mode (not YARN) for resource management. This procedure helps you configure YARN and HAWQ so that HAWQ uses YARN for resource management. Keep in mind that different steps are required depending on whether you choose to use YARN's default queue or a custom queue:
-* [Procedure for Integrating HAWQ with the Default YARN Queue](#amb-yarn-default)
-* [Procedure for Integrating HAWQ with a Custom YARN Queue](#amb-yarn-custom)
+
+*  [Procedure for Integrating HAWQ with the Default YARN Queue](#amb-yarn-default)
+*  [Procedure for Integrating HAWQ with a Custom YARN Queue](#amb-yarn-custom)
 
 ### Procedure for Integrating HAWQ with the Default YARN Queue<a id="amb-yarn-default"></a>
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
@@ -231,21 +234,21 @@ HAWQ will use the default YARN queue, and Ambari automatically configures settin
 4.  Expand the **Scheduler** section.
 5.  To integrate YARN with HAWQ, you must define one YARN application resource queue exclusively for HAWQ. YARN resource queues are configured for a specific YARN resource scheduler. The YARN resource scheduler uses resource queue configuration to allocate resources to applications. There are several available YARN resource schedulers; however, HAWQ currently only supports using CapacityScheduler to manage YARN resources. Follow these steps:
     1. Check the `yarn.resourcemanager.scheduler.class` property and ensure that it is set to `org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler`.
-    2. In the **Capacity Scheduler** section, add the name of the custom queue that you want to use for HAWQ to the value of the `yarn.scheduler.capacity.root.queues` property. For example, if you want to use a queue named `hawqqueue`, the value of this property would be similar to `root,hawqque`.
+    2. In the **Capacity Scheduler** section, add the name of the custom queue that you want to use for HAWQ to the value of the `yarn.scheduler.capacity.root.queues` property. Separate multiple queue names with commas. For example, if you want to use a queue named `hawqqueue`, the value of this property would be similar to `root,hawqqueue`.
     3. In the **Capacity Scheduler** section, modify the `.capacity.` property of each queue so that the sum of all of a queue's `.capacity.` properties equals 100. (Note that the `maximum-capacity` property is not considered when adding the totals to 100.) The HAWQ resource queue can utilize 20% to a maximum of 80% resources of the whole cluster.  For example:
 
-       ```
-       yarn.scheduler.capacity.root.default.capacity=50
-       yarn.scheduler.capacity.root.hawqque.capacity=50
-       yarn.scheduler.capacity.root.default.maximum-capacity=100
-       yarn.scheduler.capacity.root.hawqque.maximum-capacity=80
-       ```
+        ```
+        yarn.scheduler.capacity.root.default.capacity=50
+        yarn.scheduler.capacity.root.hawqque.capacity=50
+        yarn.scheduler.capacity.root.default.maximum-capacity=100
+        yarn.scheduler.capacity.root.hawqque.maximum-capacity=80
+        ```
     4. Optionally configure these additional properties for the HAWQ queue:
 
-       |Item|Description|
-       |----|-----------|
-       |yarn.scheduler.capacity.&lt;queue\_name&gt;.maximum-applications|Maximum number of HAWQ applications in the system that can be concurrently active (both running and pending.) The current recommendation is to let one HAWQ instance exclusively use one resource queue.|
-       |yarn.scheduler.capacity.&lt;queue\_name&gt;.user-limit-factor|Multiple of the queue capacity, which can be configured to allow a single user to acquire more resources. By default this is set to 1, which ensures that a single user can never take more than the queue’s configured capacity irrespective of how idle the cluster is. Value is specified as a float.<br/><br/>Setting this to a value higher than 1 allows the overcommittment of resources at the application level. For example, in terms of HAWQ configuration, if we want twice the maximum capacity for the HAWQ’s application, we can set this as 2.|
+        |Item|Description|
+        |----|-----------|
+        |yarn.scheduler.capacity.&lt;queue\_name&gt;.maximum-applications|Maximum number of HAWQ applications in the system that can be concurrently active (both running and pending.) The current recommendation is to let one HAWQ instance exclusively use one resource queue.|
+        |yarn.scheduler.capacity.&lt;queue\_name&gt;.user-limit-factor|Multiple of the queue capacity, which can be configured to allow a single user to acquire more resources. By default this is set to 1, which ensures that a single user can never take more than the queue’s configured capacity irrespective of how idle the cluster is. Value is specified as a float.<br/><br/>Setting this to a value higher than 1 allows the overcommittment of resources at the application level. For example, in terms of HAWQ configuration, if we want twice the maximum capacity for the HAWQ’s application, we can set this as 2.|
 
 5. Follow these steps to configure the resource capacity of segments in YARN:
    1. Click the **Settings** tab.
@@ -324,13 +327,13 @@ The all of the listed steps are mandatory. This ensures that HAWQ service remain
 
 You might want to generate a hosts file containing the IP addresses of all hosts in the HAWQ cluster.
 
-A sample script for updating the host passwords is shown below. 
+A sample script for updating the host passwords is shown below.
 
-2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps: 
-   1. Click **HAWQ** in the list of installed services. 
+2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps:
+   1. Click **HAWQ** in the list of installed services.
    2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script. Click **Save** to save the updated configuration.
 
-3.  Restart HAWQ service to propagate the configuration change to all Ambari agents. 
+3.  Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
 ###Reference Script
 
@@ -358,10 +361,10 @@ Change the contents of this file to reflect your old and new gpadmin passwords.
 
 ###What if the HAWQ System User Password on Ambari Is Not Updated?
 
-Not updating the Ambari system user password causes Ambari to behave as if the gpadmin password was never changed \(it keeps the old password\). The password issued by the Ambari web console is used for the `hawq ssh-exkeys` utility, which is run during the start phase of HAWQMASTER. 
-If passwordless ssh has already been set up \(a key has been exchanged earlier and the host has it stored in `~/.ssh/authorized_keys`\), the `hawq ssh-exkeys` utility will not exchange the key. 
-If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key with the HAWQMASTER fails. Components without passwordless ssh might not be registered with the HAWQ cluster. 
+Not updating the Ambari system user password causes Ambari to behave as if the gpadmin password was never changed \(it keeps the old password\). The password issued by the Ambari web console is used for the `hawq ssh-exkeys` utility, which is run during the start phase of HAWQMASTER.
+If passwordless ssh has already been set up \(a key has been exchanged earlier and the host has it stored in `~/.ssh/authorized_keys`\), the `hawq ssh-exkeys` utility will not exchange the key.
+If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key with the HAWQMASTER fails. Components without passwordless ssh might not be registered with the HAWQ cluster.
 
 ###What if the Password Expires on the Host Machines?
 
-Use the procedure above to create a new password on the host machines, then update the HAWQ **System User Password** on the Ambari Web Console. This will synchronize the password on the host machines with the password recognized by Ambari. 
+Use the procedure above to create a new password on the host machines, then update the HAWQ **System User Password** on the Ambari Web Console. This will synchronize the password on the host machines with the password recognized by Ambari.
