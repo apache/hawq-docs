@@ -202,31 +202,31 @@ If you need to expand your HAWQ cluster without restarting the HAWQ service, fol
 
 ## Integrating YARN for Resource Management<a id="amb-yarn"></a>
 
-HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources (containers) dynamically from YARN, and return resources when HAWQ’s workload is not heavy. This feature makes HAWQ a native citizen of the whole Hadoop eco-system.
+HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources (containers) dynamically from YARN, and return resources when HAWQ’s workload is not heavy.
 
 See also [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for command-line instructions and additional details about using HAWQ with YARN.
 
 ### When to Perform
 
-Follow this procedure if you have already installed YARN and HAWQ, but you are currently using the HAWQ Standalone mode (not YARN) for resource management. This procedure helps you configure YARN and HAWQ so that HAWQ uses YARN for resource management. Keep in mind that different steps are required depending on whether you choose to use YARN's default queue or a custom queue:
+Follow this procedure if you have already installed YARN and HAWQ, but you are currently using the HAWQ Standalone mode (not YARN) for resource management. This procedure helps you configure YARN and HAWQ so that HAWQ uses YARN for resource management. This procedure assumes that you will use the default YARN queue for managing HAWQ.
 
-*  [Procedure for Integrating HAWQ with the Default YARN Queue](#amb-yarn-default)
-*  [Procedure for Integrating HAWQ with a Custom YARN Queue](#amb-yarn-custom)
-
-### Procedure for Integrating HAWQ with the Default YARN Queue<a id="amb-yarn-default"></a>
+### Procedure
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Select **HAWQ** from the list of installed services.
-3.  Select the **Configs** tab.
+3.  Select the **Configs** tab, then the **Settings** tab.
 4.  Use the **Resource Manager** menu to change select the **YARN** option.
-5.  Click **Save**.
+5.  Click **Save**.<br/><br/>HAWQ will use the default YARN queue, and Ambari automatically configures settings for `hawq_rm_yarn_address`, `hawq_rm_yarn_app_name`, and `hawq_rm_yarn_scheduler_address` in the `hawq-site.xml` file.<br/><br/>If YARN HA was enabled, Ambari also automatically configures the `yarn.resourcemanager.ha` and `yarn.resourcemanager.scheduler.ha` properties in `yarn-site.xml`.
 6.  If you are using HDP 2.3, follow these additional instructions:
     1. Select **YARN** from the list of installed services.
     2. Select the **Configs** tab, then the **Advanced** tab.
     3. Expand the **Advanced yarn-site** section.
     4. Locate the `yarn.resourcemanager.system-metrics-publisher.enabled` property and change its value to `false`.
     5. Click **Save**.
-HAWQ will use the default YARN queue, and Ambari automatically configures settings for `hawq_rm_yarn_address`, `hawq_rm_yarn_app_name`, and `hawq_rm_yarn_scheduler_address`.
+6.  (Optional.)  When HAWQ is integrated with YARN and has no workload, HAWQ does not acquire any resources right away. HAWQ’s resource manager only requests resources from YARN when HAWQ receives its first query request. In order to guarantee optimal resource allocation for subsequent queries and to avoid frequent YARN resource negotiation, you can adjust `hawq_rm_min_resource_perseg` so HAWQ receives at least some number of YARN containers per segment regardless of the size of the initial query. The default value is 2, which means HAWQ’s resource manager acquires at least 2 YARN containers for each segment even if the first query’s resource request is small.<br/><br/>This configuration property cannot exceed the capacity of HAWQ’s YARN queue. For example, if HAWQ’s queue capacity in YARN is no more than 50% of the whole cluster, and each YARN node has a maximum of 64GB memory and 16 vcores, then `hawq_rm_min_resource_perseg` in HAWQ cannot be set to more than 8 since HAWQ’s resource manager acquires YARN containers by vcore. In the case above, the HAWQ resource manager acquires a YARN container quota of 4GB memory and 1 vcore.<br/><br/>To change this parameter, expand **Custom hawq-site** and click **Add Property ...** Then specify `hawq_rm_min_resource_perseg` as the key and enter the desired Value. Click **Add** to add the property definition.
+7.  (Optional.)  If the level of HAWQ’s workload is lowered, then HAWQ's resource manager may have some idle YARN resources. You can adjust `hawq_rm_resource_idle_timeout` to let the HAWQ resource manager return idle resources more quickly or more slowly.<br/><br/>For example, when HAWQ's resource manager has to reacquire resources, it can cause latency for query resource requests. To let HAWQ resource manager retain resources longer in anticipation of an upcoming workload, increase the value of `hawq_rm_resource_idle_timeout`. The default value of `hawq_rm_resource_idle_timeout` is 300 seconds.<br/><br/>To change this parameter, expand **Custom hawq-site** and click **Add Property ...** Then specify `hawq_rm_resource_idle_timeout` as the key and enter the desired Value. Click **Add** to add the property definition.
+8.  Click **Save** to save your configuration changes.
 
+<!--
 ### Procedure for Integrating HAWQ with a Custom YARN Queue<a id="amb-yarn-custom"></a>
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Select **YARN** from the list of installed services.
@@ -270,6 +270,7 @@ HAWQ will use the default YARN queue, and Ambari automatically configures settin
     3. Expand the **Advanced yarn-site** section.
     4. Locate the `yarn.resourcemanager.system-metrics-publisher.enabled` property and change its value to `false`.
     5. Click **Save**.
+-->
 
 ## Performing a Configuration check<a id="amb-config-check"></a>
 
