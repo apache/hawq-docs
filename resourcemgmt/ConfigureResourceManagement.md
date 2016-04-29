@@ -65,7 +65,7 @@ Limit of memory usage by a HAWQ segment when `hawq_global_rm_type` is set to `no
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-| | |session<br/><br/>reload|
+| no specific lower or upper limit | 64GB |session<br/><br/>reload|
 
 ### hawq\_rm\_nvcore\_limit\_perseg <a id="id_xpv_t4m_q5"></a>
 
