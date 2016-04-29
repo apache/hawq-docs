@@ -189,7 +189,7 @@ Server address \(host and port\) of the YARN resource manager server \(the value
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|valid hostname| |master<br/><br/>session<br/><br/>reload|
+|valid hostname| |master|
 
 #### hawq\_rm\_yarn\_scheduler\_address <a id="id_ocq_jpm_q5"></a>
 
@@ -197,7 +197,7 @@ Server address \(host and port\) of the YARN resource manager scheduler \(the va
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|valid hostname and port| |master<br/><br/>session<br/><br/>reload|
+|valid hostname and port| |master|
 
 #### hawq\_rm\_yarn\_queue\_name <a id="id_y23_kpm_q5"></a>
 
@@ -205,7 +205,7 @@ The name of the YARN resource queue to register with HAWQ's resource manager.
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|string|default|master<br/><br/>session<br/><br/>reload|
+|string|default|master|
 
 #### hawq\_rm\_yarn\_app\_name <a id="id_h1c_lpm_q5"></a>
 
@@ -213,7 +213,7 @@ The name of the YARN application registered with HAWQ's resource manager. For ex
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|string|hawq|master<br/><br/>session<br/><br/>reload|
+|string|hawq|master|
 
 ### Configuring HAWQ in High Availablity-Enabled YARN Environments <a id="highlyavailableyarn"></a>
 
