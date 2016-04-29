@@ -189,7 +189,7 @@ Server address \(host and port\) of the YARN resource manager server \(the value
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|valid hostname| |master|
+|valid hostname and port| none set |master|
 
 #### hawq\_rm\_yarn\_scheduler\_address <a id="id_ocq_jpm_q5"></a>
 
@@ -197,7 +197,7 @@ Server address \(host and port\) of the YARN resource manager scheduler \(the va
 
 |Value Range|Default|Set Classifications|
 |-----------|-------|-------------------|
-|valid hostname and port| |master|
+|valid hostname and port| none set |master|
 
 #### hawq\_rm\_yarn\_queue\_name <a id="id_y23_kpm_q5"></a>
 
