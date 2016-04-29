@@ -118,6 +118,9 @@ There are several recommendations to keep in mind when modifying the size of you
 ### Procedure
 1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+1.  Click **HAWQ** in the list of installed services.
+1.  Select the **Configs** tab, then select the **Advanced** tab in the settings.
+1.  Expand the **General** section, and ensure that the **Exchange SSH Keys** property (`hawq_ssh_keys`) is set to `true`.  Change this property to `true` if needed, and click **Save** to continue. Ambari must be able to exchange SSH keys with any hosts that you add to the cluster in the following steps.
 2.  Select the **Hosts** tab at the top of the screen to display the Hosts summary.
 3.  If the host(s) that you want to add are not currently listed in the Host summary, follow these steps:
    1. Select **Actions > Add New Hosts** to start the Add Host Wizard.
@@ -151,6 +154,7 @@ There are several recommendations to keep in mind when modifying the size of you
     <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 6.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
 5.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
+6.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
 
    	**Note:** The redistribution of table data can take a significant amount of time.
 
