@@ -126,7 +126,7 @@ The `hawq stop cluster` command stops or restarts your HAWQ system and always ru
 
 For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
 
--   Issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file, before stopping the cluster. A checkpoint assures that, in the event of a crash, files can be restored from the checkpoint snapshot.
+-   Issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file before stopping the cluster. A checkpoint ensures that, in the event of a crash, files can be restored from the checkpoint snapshot.
 
 -   Stop the entire HAWQ system by stopping the cluster on the master host. 
 
