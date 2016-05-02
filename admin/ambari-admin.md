@@ -286,37 +286,11 @@ The all of the listed steps are mandatory. This ensures that HAWQ service remain
 
 You might want to generate a hosts file containing the IP addresses of all hosts in the HAWQ cluster.
 
-A sample script for updating the host passwords is shown below.
-
 2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps:
    1. Click **HAWQ** in the list of installed services.
    2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script. Click **Save** to save the updated configuration.
 
 3.  Restart HAWQ service to propagate the configuration change to all Ambari agents.
-
-###Reference Script
-
-Change the contents of this file to reflect your old and new gpadmin passwords.
-
-        ```
-        #!/bin/bash
-
-        # Read Password (old and new) from the User
-        echo -n "Enter old password:":
-        read -s oldPassword
-        echo-n "Enter new password:":
-        read -s newPassword
-
-        # Change Password on all Hosts
-        for host in $(cat hawq_hosts: do
-        echo "Changing password for gpadmin user on "$host;
-        ssh gpadmin@$host "passwd <<EOF
-        oldPassword
-        newPassword
-        newPassword
-        EOF";
-        done
-        ```
 
 ###What if the HAWQ System User Password on Ambari Is Not Updated?
 
