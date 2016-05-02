@@ -134,16 +134,23 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
     $ hawq stop cluster
     ```
 
--   To stop segments and kill any running queries without causing data loss or inconstency issues, use `fast` or `immediate` mode on the master or segments:
+-   To stop segments and kill any running queries without causing data loss or inconsistency issues, use `fast` or `immediate` mode on the cluster:
 
     ```
     $ hawq stop cluster -M fast
+    $ hawq stop cluster -M immediate
     ```
 
--   Use `hawq stop master` to stop the master only. If, due to running transactions, you cannot stop the master, try using fast shutdown. If fast shutdown does not work, use immediate shutdown. Use immediate shutdown with caution, as it will result in a crash-recovery run when the system is restarted.
--   When stopping a segment, you can use the default mode, smart mode. Using fast or immediate mode on segments will have no effect, as the segment is stateless.
+-   Use `hawq stop master` to stop the master only. If you cannot stop the master due to running transactions, try using fast shutdown. If fast shutdown does not work, use immediate shutdown. Use immediate shutdown with caution, as it will result in a crash-recovery run when the system is restarted.
+	```
+    $ hawq stop master -M fast
+    $ hawq stop master -M immediate
+    ```
+
+-   When stopping a segment or all segments, you can use the default mode of smart mode. Using fast or immediate mode on segments will have no effect since segments are stateless.
 
     ```
+    $ hawq stop segment
     $ hawq stop allsegments
     ```
 -	Typically you should always use `hawq start cluster` or `hawq restart cluster` to start the cluster. If you do end up using `hawq start standby|master|segment` to start nodes individually, make sure you always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
