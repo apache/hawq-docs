@@ -179,6 +179,7 @@ If you are using Kerberos to secure Hive and HBase, you must configure proxy use
 Follow this procedure to make the required changes:
 
 1.  Use either a text editor or the Ambari Web interface to edit the `hbase-env.sh` file, and add the line:
+
     ```
     export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
     ```
@@ -186,6 +187,7 @@ Follow this procedure to make the required changes:
     **Note:** You do not need to manually edit `hbase-env.sh` for Pivotal HD deployments. However, you do need to restart HBase after adding the PXF service in order to load the newly-installed PXF JAR file.
 
 2.  (Optional.) For secure Hive installations, use either a text editor or the Ambari Web interface to edit the `hive-site.xml` file, and add the property:
+
     ```
     <property>
       <name>hive.server2.enable.impersonation</name>
@@ -195,6 +197,7 @@ Follow this procedure to make the required changes:
     ```
 
 3.  (Optional.) For secure Hive and HBase installations, use either a text editor or the Ambari Web interface to edit the core-site.xml file, and add the properties:
+
     ```
     <property>
       <name>hadoop.proxyuser.hive.hosts</name>
