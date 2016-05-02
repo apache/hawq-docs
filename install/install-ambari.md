@@ -169,3 +169,56 @@ title: Install Apache HAWQ using Ambari
     **Note:** HAWQ queries timeout after a period of 600 seconds. If a query on a newly-installed system appears to hang, wait for the timeout period to expire so that you can view the associated error message.
 
 20. If you want to access data in external systems such as HDFS files, Hive or HBase, you must install the appropriate PXF plugin RPM for the external system on all the individual nodes of your cluster. See [Installing PXF Plugins](/200/hawq/pxf/InstallPXFPlugins.html) in the Apache HAWQ \(Incubating\) documentation for instructions.
+
+## Post-Install Procedure for Hive and HBase on HDP<a id="post-install-pxf"></a>
+
+In order to use the installed PXF service with HBase on a HDP cluster, you must manually add the path to the `pxf-hbase.jar` file to the `HBASE_CLASSPATH` environment variable and restart HBase.
+
+If you are using Kerberos to secure Hive and HBase, you must configure proxy users, enable user impersonation, and configure PXF access to tables.
+
+Follow this procedure to make the required changes:
+
+1.  Use either a text editor or the Ambari Web interface to edit the `hbase-env.sh` file, and add the line:
+    ```
+    export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
+    ```
+
+    **Note:** You do not need to manually edit `hbase-env.sh` for Pivotal HD deployments. However, you do need to restart HBase after adding the PXF service in order to load the newly-installed PXF JAR file.
+
+2.  (Optional.) For secure Hive installations, use either a text editor or the Ambari Web interface to edit the `hive-site.xml` file, and add the property:
+    ```
+    <property>
+      <name>hive.server2.enable.impersonation</name>
+      <description>Enable user impersonation for HiveServer2</description>
+      <value>true</value>
+    </property>
+    ```
+
+3.  (Optional.) For secure Hive and HBase installations, use either a text editor or the Ambari Web interface to edit the core-site.xml file, and add the properties:
+    ```
+    <property>
+      <name>hadoop.proxyuser.hive.hosts</name>
+      <value>*</value>
+    </property>
+
+    <property>
+      <name>hadoop.proxyuser.hive.groups</name>
+      <value>*</value>
+    </property>
+
+    <property>
+      <name>hadoop.proxyuser.hbase.hosts</name>
+      <value>*</value>
+    </property>
+
+    <property>
+      <name>hadoop.proxyuser.hbase.groups</name>
+      <value>*</value>
+    </property>
+    ```
+
+4.  Restart both Hive and HBase to use the updated classpath and new properties.
+5.  In order to use PXF with HBase or Hive tables, you must grant the `pxf` user read permission on those tables:
+    * For HBase, use the `GRANT` command for each table that you want to access with PXF. For example:
+hbase(main):001:0> grant 'pxf', 'R', 'my_table'
+    * Because Hive uses the HDFS ACLs for access control, ensure that the pxf has read permission on all of the HDFS directories that map to your database, tables, and partitions.
