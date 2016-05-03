@@ -33,6 +33,13 @@ title: Install Apache HAWQ using Ambari
     $ tar -xvzf /staging/hdb-ambari-plugin-2.0.0-hdp-*.tar.gz -C /staging/
     ```
 
+4.  Install and/or run the HTTP service if it is not already running:
+
+    ```
+    $ yum install httpd
+    $ service httpd start
+    ```
+
 5.  Each tarball is an archived yum repository and has a setup\_repo.sh script. The script creates a symlink from the document root of the httpd server \(/var/www/html\) to the directory where the tarball was extracted. On the host that will be used as a YUM repo, execute the setup\_repo.sh script that is shipped as a part of each tarball file:
 
     ```
@@ -48,7 +55,15 @@ title: Install Apache HAWQ using Ambari
     $ yum install hdb-ambari-plugin
     ```
 
-7.  Execute the following script to add the HDB repository to the Ambari server:
+6.  Restart the Ambari server:
+
+    ```
+    $ ambari-server Restart
+    ```
+
+    **Note:** You must restart the Ambari server before proceeding. The above command restarts only the Ambari server, but leaves other Hadoop services running.
+
+7.  If you have already installed a HDP cluster and are adding HDB to the existing cluster, execute the following script to add the HDB repository to the Ambari server. (This step is not required if you are installing a new HDP cluster and HDB together at the same time.):
 
     ```
     $ cd /var/lib/hawq
@@ -158,15 +173,46 @@ title: Install Apache HAWQ using Ambari
 18. Review your configuration choices, then click **Deploy** to begin the installation. Ambari now begins to install, start, and test the HAWQ and PXF configuration. During this procedure, you can click on the **Message** links to view the console output of individual tasks.
 
 18.  Click **Next** after all tasks have completed. Review the summary of the install process, then click **Complete**.  Ambari may indicate that components on cluster need to be restarted. Choose **Restart > Restart All Affected** if necessary.
-19. To verify that HAWQ is installed, login to the HAWQ master as `gpadmin`:
+19. To verify that HAWQ is installed, login to the HAWQ master as `gpadmin` and perform some basic commands:
 
-    ```
-    $ su - gpadmin
-    $ source /usr/local/hawq/greenplum_path.sh
-    $ psql
-    ```
+    1.  Start the `psql` interactive utility, connecting to the postgres database:
 
-    **Note:** HAWQ queries timeout after a period of 600 seconds. If a query on a newly-installed system appears to hang, wait for the timeout period to expire so that you can view the associated error message.
+        ```
+        $ psql -d postgres
+        psql (8.2.15)
+        Type "help" for help.
+        postgres=#
+        ```
+
+    3.  Create a new database and connect to it:
+
+        ```
+        postgres=# create database mytest;
+        CREATE DATABASE
+        postgres=# \c mytest
+        You are now connected to database "mytest" as user "*username*".
+        ```
+
+    4.  Create a new table and insert sample data:
+
+        ```
+        mytest=# create table t (i int);
+        CREATE TABLE
+        mytest=# insert into t select generate_series(1,100);
+        ```
+
+    5.  Activate timing and perform a simple query:
+
+        ```
+        mytest=# \timing
+        Timing is on.
+        mytest=# select count(*) from t;
+        count
+        -------
+        100
+        (1 row)
+        Time: 7.266 ms
+        ```
 
 20. If you want to access data in external systems such as HDFS files, Hive or HBase, you must install the appropriate PXF plugin RPM for the external system on all the individual nodes of your cluster. See [Installing PXF Plugins](/200/hawq/pxf/InstallPXFPlugins.html) in the Apache HAWQ \(Incubating\) documentation for instructions.
 
