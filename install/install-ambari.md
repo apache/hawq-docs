@@ -214,8 +214,6 @@ title: Install Apache HAWQ using Ambari
         Time: 7.266 ms
         ```
 
-20. If you want to access data in external systems such as HDFS files, Hive or HBase, you must install the appropriate PXF plugin RPM for the external system on all the individual nodes of your cluster. See [Installing PXF Plugins](/200/hawq/pxf/InstallPXFPlugins.html) in the Apache HAWQ \(Incubating\) documentation for instructions.
-
 ## Post-Install Procedure for Hive and HBase on HDP<a id="post-install-pxf"></a>
 
 In order to use the installed PXF service with HBase on a HDP cluster, you must manually add the path to the `pxf-hbase.jar` file to the `HBASE_CLASSPATH` environment variable and restart HBase.
