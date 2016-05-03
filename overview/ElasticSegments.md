@@ -10,13 +10,13 @@ To address this issue, HAWQ now uses the elastic query execution runtime feature
 
 ## Storage
 
-In HAWQ 2.0, the number of invoked segments varies based on cost of query. In order to simplify table data management, all data of one relation are saved under one HDFS folder.
+In HAWQ, the number of invoked segments varies based on cost of query. In order to simplify table data management, all data of one relation are saved under one HDFS folder.
 
-For all the HAWQ 2.0 table storage formats, AO \(Append-Only\) and Parquet, the data files are splittable, so that HAWQ can assign multiple virtual segments to consume one data file concurrently to increase the parallelism of a query.
+For all the HAWQ table storage formats, AO \(Append-Only\) and Parquet, the data files are splittable, so that HAWQ can assign multiple virtual segments to consume one data file concurrently to increase the parallelism of a query.
 
 ## Physical Segments and Virtual Segments
 
-In HAWQ 2.0, only one physical segment needs to be installed on one host, in which multiple virtual segments can be started to run queries. HAWQ 2.0 allocates multiple virtual segments distributed across different hosts on demand to run one query. Virtual segments are carriers \(containers\) for resources such as memory and CPU. Queries are executed by query executors in virtual segments.
+In HAWQ, only one physical segment needs to be installed on one host, in which multiple virtual segments can be started to run queries. HAWQ allocates multiple virtual segments distributed across different hosts on demand to run one query. Virtual segments are carriers \(containers\) for resources such as memory and CPU. Queries are executed by query executors in virtual segments.
 
 **Note:** In this documentation, when we refer to segment by itself, we mean a *physical segment*.
 
