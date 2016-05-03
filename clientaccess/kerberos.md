@@ -150,7 +150,7 @@ Start `kadmin.local` in interactive mode, then add two principals to the HAWQ Re
     kadmin.local: addprinc postgres/master.test.com@KRB.MYCOMPANY.COM
     ```
 
-    The `adprinc` commands prompt for passwords for each principal. The first `addprinc` creates a HAWQ user as a principal, `gpadmin/kerberos-gpdb`. The second `addprinc` command creates the `postgres` process on the HAWQ master host as a principal in the Kerberos KDC. This principal is required when using Kerberos authentication with HAWQ.
+    The `addprinc` commands prompt for passwords for each principal. The first `addprinc` creates a HAWQ user as a principal, `gpadmin/kerberos-gpdb`. The second `addprinc` command creates the `postgres` process on the HAWQ master host as a principal in the Kerberos KDC. This principal is required when using Kerberos authentication with HAWQ.
 
 3.  Create a Kerberos keytab file with `kadmin.local`. The following example creates a keytab file `gpdb-kerberos.keytab` in the current directory with authentication information for the two principals.
 
