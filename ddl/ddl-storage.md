@@ -12,7 +12,7 @@ HAWQ provides storage orientation models of either row-oriented or Parquet table
 
 -   Row-oriented storage: good for OLTP types of workloads with many iterative transactions and many columns of a single row needed all at once, so retrieving is efficient.
 
-    **Note:** Column-oriented storage is deprecated, and can only be enabled by specifically enabling the `gp_enable_ column_oriented_table` parameter. Parquet storage should be used, instead.
+    **Note:** Column-oriented storage is no longer available. Parquet storage should be used, instead.
 
 Row-oriented storage provides the best options for the following situations:
 
@@ -20,7 +20,6 @@ Row-oriented storage provides the best options for the following situations:
 -   **Frequent INSERTs.** Where rows are frequently inserted into the table
 -   **Number of columns requested in queries.** Where you typically request all or the majority of columns in the `SELECT` list or `WHERE` clause of your queries, choose a row-oriented model. 
 -   **Number of columns in the table.** Row-oriented storage is most efficient when many columns are required at the same time, or when the row-size of a table is relatively small. 
--   **Compression.** Column data has the same data type. Many compression schemes use the similarity of adjacent data to compress. However, the greater adjacent compression achieved, the more difficult random access becomes, as data must be uncompressed to be read.
 
 ## Altering a Table <a id="topic55"></a>
 
