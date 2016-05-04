@@ -126,33 +126,6 @@ The `LIKE` clause specifies a table from which the new table automatically copie
 
 `CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `default_hash_table_bucket_number` parameter.
 
--   **Table Data Distribution:**
-
-The tables below show how data is distributed in 2.0 hash table queries, depending on how it was created from an original table and whether that table was random or hash. The last column shows whether the `bucketnum` of `new_table` comes from `origintable`, uses the default `bucketnum` set by `default_hash_table_bucket_number`, or uses the `with` clause `( with ( bucketnum = x ))`.
-
-<br/><br/>
-        **Origin Table: Random Table**
-        <table>
-        <thead>
-        <tr><th>Function</th><th>Data Distribution</th><th>Distribution By</th><th>New Distribution</th></tr></thead>
-        <tr><td/><td>not distributed</td><td>distributed \(by specified column | randomly\)</td><td>`bucketnum = origintable / default / x`</td></tr>
-        <tr><td>inherits</td><td>randomly</td><td>specified col | randomly</td><td>`if have x then x, else origintable`</td></tr>
-        <tr><td>like</td><td>randomly</td><td>specified col | randomly</td><td>`if have x then x, else default`</td></tr>
-        <tr><td>as</td><td>randomly</td><td>specified col | randomly</td><td>`if have x then x, else default`</td></tr>
-        <tr><td>select into</td><td>Cannot specify distributed by col. new\_table always distributed randomly</td><td>Cannot specify distributed by col. new\_table always distributed randomly</td><td>`select * into new_table from origin_table` can't be used with clause.default</td></tr>
-        </table>
-<br/><br/>
-        **Origin Table : Hash Table**
-        <table>
-        <thead>
-        <tr><th>Function</th><th>Data Distribution</th><th>Distribution By</th><th>New Distribution</th></tr></thead>
-        <tr><td/><td>not distributed</td><td>distributed \(by specified column | randomly\)</td><td>`bucketnum = origintable / default / x`</td></tr>
-        <tr><td>inherits</td><td>inherits origin</td><td>specified col | randomly</td><td>`if have x then x, else origintable`</td></tr>
-        <tr><td>like</td><td>inherits origin</td><td>specified col | randomly</td><td>`if have x then x, else default`</td></tr>
-        <tr><td>as</td><td>randomly</td><td>specified col | randomly</td><td>`if have x then x, else default`</td></tr>
-        <tr><td>select into</td><td>Cannot specify distributed by col. new\_table always distributed randomly</td><td>Cannot specify distributed by col. new\_table always distributed randomly</td><td>`select * into new_table from origin_table` can't be used with clause.default</td></tr>
-        </table>
-
 Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments in the next section and in [Query Performance](/200/hawq/query/query-performance.html#topic38).
 
 #### Performance Tuning <a id="topic_wff_mqm_gv"></a>
