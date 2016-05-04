@@ -15,7 +15,6 @@ As a HAWQ administrator, you must monitor the system for problem events such as 
 -   [Checking System State](#topic12)
 -   [Checking Disk Space Usage](#topic15)
 -   [Viewing Metadata Information about Database Objects](#topic24)
--   [Viewing Session Memory Usage Information](#topic_slt_ddv_1q)
 -   [Viewing Query Workfile Usage Information](#topic27)
 
 ### Checking System State <a id="topic12"></a>
@@ -102,41 +101,6 @@ To see the definition of an object, such as a table or view, you can use the `\d
 
 <pre><code>=> \d+ <i>mytable</i></code></pre>
 
-### Viewing Session Memory Usage Information <a id="topic_slt_ddv_1q"></a>
-
-You can create and use the *session\_level\_memory\_consumption* view that provides information about the current memory utilization for sessions that are running queries on HAWQ. The view contains session information and information such as the database that the session is connected to, the query that the session is currently running, and memory consumed by the session processes.
-
--   [Creating the session\_level\_memory\_consumption View](#topic_nby_j1b_dq)
--   [The session\_level\_memory\_consumption View](#topic7)
-
-#### Creating the session\_level\_memory\_consumption View <a id="topic_nby_j1b_dq"></a>
-
-To create the *session\_level\_memory\_consumption* view in a HAWQ, run the script `$GPHOME/share/postgresql/contrib/gp_session_state.sql` once for each database. For example, to install the view in the database `testdb`, use this command:
-
-```
-$ psql -d testdb -f $GPHOME/share/postgresql/contrib/gp_session_state.sql
-```
-
-#### The session\_level\_memory\_consumption View <a id="topic7"></a>
-
-The *session\_level\_memory\_consumption* view provides information about memory consumption for sessions that are running SQL queries.
-
-In the view, the column `is_runaway` indicates whether HAWQ considers the session a runaway session based on the vmem memory consumption of the session's queries. When the queries consume an excessive amount of memory, HAWQ considers the session a runaway. The HAWQ server configuration parameter `runaway_detector_activation_percent` controlling when HAWQ considers a session a runaway session.
-
-|column|type|references|description|
-|------|----|----------|-----------|
-|`datname`|name| |Name of the database that the session is connected to.|
-|`sess_id`|integer| |Session ID.|
-|`usename`|name| |Name of the session user.|
-|`current_query`|text| |Current SQL query that the session is running.|
-|`segid`|integer| |Segment ID.|
-|`vmem_mb`|integer| |Total vmem memory usage for the session in MB.|
-|`is_runaway`|boolean| |Session is marked as runaway on the segment.|
-|`qe_count`|integer| |Number of query processes for the session.|
-|`active_qe_count`|integer| |Number of active query processes for the session.|
-|`dirty_qe_count`|integer| |Number of query processes that have not yet released their memory.The value is `-1` for sessions that are not running.|
-|`runaway_vmem_mb`|integer| |Amount of vmem memory that the session was consuming when it was marked as a runaway session.|
-|`runaway_command_cnt`|integer| |Command count for the session when it was marked as a runaway session.|
 
 ### Viewing Query Workfile Usage Information <a id="topic27"></a>
 

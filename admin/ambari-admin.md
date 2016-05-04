@@ -35,7 +35,7 @@ Follow this procedure if you have already installed YARN and HAWQ, but you are c
 A HAWQ Service check uses the `hawq state` command to display the configuration and status of segment hosts in a HAWQ Cluster. It also performs tests to ensure that HAWQ can write to and read from tables, and to ensure that HAWQ can write to and read from HDFS external tables using PXF.
 
 ### When to Perform
-* Execute this procedure immediately after any common maintenance operations, such as adding, activating, or removing a HAWQ Master Standby.
+* Execute this procedure immediately after any common maintenance operations, such as adding, activating, or removing the HAWQ Master Standby.
 * Execute this procedure as a first step in troubleshooting problems in accessing HDFS data.
 
 ### Procedure
@@ -191,7 +191,7 @@ Ambari provides the ability to restart a HAWQ cluster by restarting one or more 
         ```
     3.  Continue with Step 8 in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
 
-    ## Activating a HAWQ Standby Master<a id="amb-activate-standby"></a>
+    ## Activating the HAWQ Standby Master<a id="amb-activate-standby"></a>
     Activating the HAWQ Standby Master promotes the standby host as the new HAWQ Master host. The previous HAWQ Master configuration is automatically removed from the cluster.
 
     ### When to Perform
@@ -213,7 +213,7 @@ Ambari provides the ability to restart a HAWQ cluster by restarting one or more 
 
 ## Adding a HAWQ Standby Master<a id="amb-add-standby"></a>
 
-A HAWQ Standby Master serves as a backup of the HAWQ Master host, and is an important part of providing high availability for the HAWQ cluster. When your cluster uses a standby master, you can activate the standby if the active HAWQ Master host fails or becomes unreachable.
+The HAWQ Standby Master serves as a backup of the HAWQ Master host, and is an important part of providing high availability for the HAWQ cluster. When your cluster uses a standby master, you can activate the standby if the active HAWQ Master host fails or becomes unreachable.
 
 ### When to Perform
 * Execute this procedure during a scheduled maintenance period, because it requires a restart of the HAWQ service.
@@ -244,7 +244,7 @@ A HAWQ Standby Master serves as a backup of the HAWQ Master host, and is an impo
      Ambari displays a list of tasks that are performed to install the standby master server and reconfigure the cluster. Click on any of the tasks to view progress or to view the actual log messages that are generated while performing the task.
 7. Click **Complete** after the Wizard finishes all tasks.
 
-## Removing a HAWQ Standby Master<a id="amb-remove-standby"></a>
+## Removing the HAWQ Standby Master<a id="amb-remove-standby"></a>
 
 This service action enables you to remove the HAWQ Standby Master component in situations where you may need to reinstall the component.
 
