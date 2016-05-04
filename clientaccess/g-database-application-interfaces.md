@@ -6,8 +6,8 @@ You may want to develop your own client applications that interface to HAWQ. Pos
 
 |API|PostgreSQL Driver|Download Link|
 |---|-----------------|-------------|
-|ODBC|pgodbc|Available on [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb#/releases/1503/file_groups/230).<br/><br/>See also [Compatible ODBC/JDBC Drivers](/hdb20/releasenotes/HAWQ20ReleaseNotes.html#odbc)|
-|JDBC|pgjdbc|Available on [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb#/releases/1503/file_groups/230).<br/><br/>See also [Compatible ODBC/JDBC Drivers](/hdb20/releasenotes/HAWQ20ReleaseNotes.html#odbc)|
+|ODBC|pgodbc|Available on [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb#/releases/1503/file_groups/230).|
+|JDBC|pgjdbc|Available on [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb#/releases/1503/file_groups/230).|
 |Perl DBI|pgperl|[http://search.cpan.org/dist/DBD-Pg/](http://search.cpan.org/dist/DBD-Pg/)|
 |Python DBI|pygresql|[http://www.pygresql.org/](http://www.pygresql.org/)|
 
