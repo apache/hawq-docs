@@ -84,65 +84,65 @@ Ambari provides the ability to restart a HAWQ cluster by restarting one or more 
    * Select **Turn On Maintenance Mode for HAWQ** to enable maintenance mode before starting the rolling restart process. This suppresses alerts that are normally generated when a segment goes offline.
 5. Click **Trigger Rolling Restart** to begin the restart process.
 
-    Ambari displays the **Rolling Restart of HAWQ segments** task in the list of background operations, and indicates the current batch of segments that it is restarting. Click the name of the task to view the log messages generated during the restart. If any segment fails to restart, Ambari displays a red warning icon next to the task.
+   Ambari displays the **Rolling Restart of HAWQ segments** task in the list of background operations, and indicates the current batch of segments that it is restarting. Click the name of the task to view the log messages generated during the restart. If any segment fails to restart, Ambari displays a red warning icon next to the task.
 
-    ## Expanding the HAWQ Cluster<a id="amb-expand"></a>
+## Expanding the HAWQ Cluster<a id="amb-expand"></a>
 
-    Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
+Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
 
-    ### Guidelines for Cluster Expansion
+### Guidelines for Cluster Expansion
 
-    This topic provides some guidelines around expanding your HAWQ cluster.
+This topic provides some guidelines around expanding your HAWQ cluster.
 
-    There are several recommendations to keep in mind when modifying the size of your running HAWQ cluster:
-    -   When you add a new node, install both a DataNode and a HAWQ segment on the new node.
-    -   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
-    -   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
-    -   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
-    -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
+There are several recommendations to keep in mind when modifying the size of your running HAWQ cluster:
+-  When you add a new node, install both a DataNode and a HAWQ segment on the new node.
+-  After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
+-  Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
+-  Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
+-  If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
-    ### Procedure
-    1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
-    1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
-    1.  Click **HAWQ** in the list of installed services.
-    1.  Select the **Configs** tab, then select the **Advanced** tab in the settings.
-    1.  Expand the **General** section, and ensure that the **Exchange SSH Keys** property (`hawq_ssh_keys`) is set to `true`.  Change this property to `true` if needed, and click **Save** to continue. Ambari must be able to exchange SSH keys with any hosts that you add to the cluster in the following steps.
-    2.  Select the **Hosts** tab at the top of the screen to display the Hosts summary.
-    3.  If the host(s) that you want to add are not currently listed in the Hosts summary page, follow these steps:
-       1. Select **Actions > Add New Hosts** to start the Add Host Wizard.
-       2. Follow the initial steps of the Add Host Wizard to identify the new host, specify SSH keys or manually register the host, and confirm the new host(s) to add.
+### Procedure
+1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
+2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+3.  Click **HAWQ** in the list of installed services.
+4.  Select the **Configs** tab, then select the **Advanced** tab in the settings.
+5.  Expand the **General** section, and ensure that the **Exchange SSH Keys** property (`hawq_ssh_keys`) is set to `true`.  Change this property to `true` if needed, and click **Save** to continue. Ambari must be able to exchange SSH keys with any hosts that you add to the cluster in the following steps.
+6.  Select the **Hosts** tab at the top of the screen to display the Hosts summary.
+7.  If the host(s) that you want to add are not currently listed in the Hosts summary page, follow these steps:
+    1. Select **Actions > Add New Hosts** to start the Add Host Wizard.
+    2. Follow the initial steps of the Add Host Wizard to identify the new host, specify SSH keys or manually register the host, and confirm the new host(s) to add.
 
-             See [Set Up Password-less SSH](http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.1.1/bk_Installing_HDP_AMB/content/_set_up_password-less_ssh.html) in the HDP documentation if you need more information about performing these tasks.
-        3. When you reach the Assign Slaves and Clients page, ensure that the **DataNode**, **HAWQ Segment**, and **PXF** (if the PXF service is instsalled) components are selected. Select additional components as necessary for your cluster.
-       4. Complete the wizard to add the new host and install the selected components.
-    4. If the host(s) that you want to add already appear in the Hosts summary, follow these steps:
-       1. Click the hostname that you want to add to the HAWQ cluster from the list of hosts.
-       2. In the Components summary, ensure that the host already runs the DataNode component. If it does not, select **Add > DataNode** and then click **Confirm Add**.  Click **OK** when the task completes.
-       2. In the Components summary, select **Add > HAWQ Segment**.
-       3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
-       2. In the Components summary, select **Add > PXF**.
-       3. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
-    17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting (`default_hash_table_bucket_number`) on the HAWQ service's **Configs > Settings** tab. Update this property's value by multiplying the new number of nodes in the cluster by the appropriate number indicated below.
+         See [Set Up Password-less SSH](http://docs.hortonworks.com/HDPDocuments/Ambari-2.2.1.1/bk_Installing_HDP_AMB/content/_set_up_password-less_ssh.html) in the HDP documentation if you need more information about performing these tasks.
+    3. When you reach the Assign Slaves and Clients page, ensure that the **DataNode**, **HAWQ Segment**, and **PXF** (if the PXF service is installed) components are selected. Select additional components as necessary for your cluster.
+    4. Complete the wizard to add the new host and install the selected components.
+8. If the host(s) that you want to add already appear in the Hosts summary, follow these steps:
+   1. Click the hostname that you want to add to the HAWQ cluster from the list of hosts.
+   2. In the Components summary, ensure that the host already runs the DataNode component. If it does not, select **Add > DataNode** and then click **Confirm Add**.  Click **OK** when the task completes.
+   3. In the Components summary, select **Add > HAWQ Segment**.
+   4. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
+   5. In the Components summary, select **Add > PXF**.
+   6. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
+17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting (`default_hash_table_bucket_number`) on the HAWQ service's **Configs > Settings** tab. Update this property's value by multiplying the new number of nodes in the cluster by the appropriate number indicated below.
 
-    	|Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
-    	|---------------|------------------------------------------|
-    	|<= 85|6 \* \#nodes|
-    	|\> 85 and <= 102|5 \* \#nodes|
-    	|\> 102 and <= 128|4 \* \#nodes|
-    	|\> 128 and <= 170|3 \* \#nodes|
-    	|\> 170 and <= 256|2 \* \#nodes|
-    	|\> 256 and <= 512|1 \* \#nodes|
-    	|\> 512|512|
-    6.  **Note:** Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
-        <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, and applies the new configuration.
+    |Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
+    |---------------|------------------------------------------|
+    |<= 85|6 \* \#nodes|
+    |\> 85 and <= 102|5 \* \#nodes|
+    |\> 102 and <= 128|4 \* \#nodes|
+    |\> 128 and <= 170|3 \* \#nodes|
+    |\> 170 and <= 256|2 \* \#nodes|
+    |\> 256 and <= 512|1 \* \#nodes|
+    |\> 512|512|
+18.  **Note:** Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
+    <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, and applies the new configuration.
     >**Note:** Do not use the **Restart All** service action to complete this step.
-    6.  **Note:** Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
-        <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
-    6.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
-    5.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
+19.  **Note:** Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
+    <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
+20.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
+21.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
 
-       	**Note:** The redistribution of table data can take a significant amount of time.
-    6.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
+    **Note:** The redistribution of table data can take a significant amount of time.
+22.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
 
 #### Manually Updating the HAWQ Configuration<a id="manual-config-steps"></a>
 If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
