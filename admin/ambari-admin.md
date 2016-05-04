@@ -288,13 +288,14 @@ The all of the listed steps are mandatory. This ensures that HAWQ service remain
 
 ###Procedure
 1.  Use a script to manually change the password for the gpadmin user on all HAWQ hosts \(all Master and Slave component hosts\). To manually update the password, you must have ssh access to all host machines as the gpadmin user. Generate a hosts file to use with the `hawq ssh` command to reset the password on all hosts. Use a text editor to create a file that lists the hostname of the master node, the standby master node, and each segment node used in the cluster. Specify one hostname per line, for example:
-```
-mdw
-smdw
-sdw1
-sdw2
-sdw3
-```
+
+  ```
+  mdw
+  smdw
+  sdw1
+  sdw2
+  sdw3
+  ```
 
 You can then use a command similar to the following to change the password:
 ```
