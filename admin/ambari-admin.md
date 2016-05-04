@@ -95,7 +95,6 @@ Ambari provides the ability to restart a HAWQ cluster by restarting one or more 
     This topic provides some guidelines around expanding your HAWQ cluster.
 
     There are several recommendations to keep in mind when modifying the size of your running HAWQ cluster:
-
     -   When you add a new node, install both a DataNode and a HAWQ segment on the new node.
     -   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
     -   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
@@ -145,71 +144,71 @@ Ambari provides the ability to restart a HAWQ cluster by restarting one or more 
        	**Note:** The redistribution of table data can take a significant amount of time.
     6.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
 
-    #### Manually Updating the HAWQ Configuration<a id="manual-config-steps"></a>
-    If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
+#### Manually Updating the HAWQ Configuration<a id="manual-config-steps"></a>
+If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
 
-    1.  Update your configuration to use the new `default_hash_table_bucket_number` value that you calculated:
+1.  Update your configuration to use the new `default_hash_table_bucket_number` value that you calculated:
 
-          1. SSH into the HAWQ master host as the `gpadmin` user:
+    1. SSH into the HAWQ master host as the `gpadmin` user:
 
-             ```
-             $ ssh gpadmin@<HAWQ_MASTER_HOST>
-             ```
-          2. Source the `greenplum_path.sh` file to update the shell environment:
+    ```
+    $ ssh gpadmin@<HAWQ_MASTER_HOST>
+    ```
+    2. Source the `greenplum_path.sh` file to update the shell environment:
 
-             ```
-             $ source /usr/local/hawq/greenplum_path.sh
-             ```
-          3. Verify the current value of `default_hash_table_bucket_number`:
+    ```
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+    3. Verify the current value of `default_hash_table_bucket_number`:
 
-             ```
-             $ hawq config -s default_hash_table_bucket_number
-             ```
-          4. Update `default_hash_table_bucket_number` to the new value that you calculated:
+    ```
+    $ hawq config -s default_hash_table_bucket_number
+    ```
+    4. Update `default_hash_table_bucket_number` to the new value that you calculated:
 
-             ```
-             $ config -c default_hash_table_bucket_number -v <new_value>
-             ```
-          5. Reload the configuration without restarting the cluster:
+    ```
+    $ config -c default_hash_table_bucket_number -v <new_value>
+    ```
+    5. Reload the configuration without restarting the cluster:
 
-             ```
-             $ hawq stop cluster -u
-             ```
-          6. Verify that the `default_hash_table_bucket_number` value was updated:
+    ```
+    $ hawq stop cluster -u
+    ```
+    6. Verify that the `default_hash_table_bucket_number` value was updated:
 
-             ```
-             $ hawq config -s default_hash_table_bucket_number
-             ```
-    2.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Separate multiple hosts with new lines. For example, after adding host4 and host5 to a cluster already contains hosts 1-3, the updated file contents would be:
+    ```
+    $ hawq config -s default_hash_table_bucket_number
+    ```
+2.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Separate multiple hosts with new lines. For example, after adding host4 and host5 to a cluster already contains hosts 1-3, the updated file contents would be:
 
-        ```
-        host1
-        host2
-        host3
-        host4
-        host5
-        ```
-    3.  Continue with Step 8 in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
+     ```
+     host1
+     host2
+     host3
+     host4
+     host5
+     ```
+3.  Continue with Step 8 in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
 
-    ## Activating the HAWQ Standby Master<a id="amb-activate-standby"></a>
-    Activating the HAWQ Standby Master promotes the standby host as the new HAWQ Master host. The previous HAWQ Master configuration is automatically removed from the cluster.
+## Activating the HAWQ Standby Master<a id="amb-activate-standby"></a>
+Activating the HAWQ Standby Master promotes the standby host as the new HAWQ Master host. The previous HAWQ Master configuration is automatically removed from the cluster.
 
-    ### When to Perform
-    * Execute this procedure immediately if the HAWQ Master fails or becomes unreachable.
-    * If you want to take the current HAWQ Master host offline for maintenance, execute this procedure during a scheduled maintenance period. This procedure requires a restart of the HAWQ service.
+### When to Perform
+* Execute this procedure immediately if the HAWQ Master fails or becomes unreachable.
+* If you want to take the current HAWQ Master host offline for maintenance, execute this procedure during a scheduled maintenance period. This procedure requires a restart of the HAWQ service.
 
-    ### Procedure
-    1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
-    2.  Click **HAWQ** in the list of installed services.
-    3.  Select **Service Actions > Activate HAWQ Standby Master** to start the Activate HAWQ Standby Master Wizard.
-    4.  Read the description of the Wizard and click **Next** to review the tasks that will be performed.
-    5.  Ambari displays the host name of the current HAWQ Master that will be removed from the cluster, as well as the HAWQ Standby Master host that will be activated. The information is provided only for review and cannot be edited on this page. Click **Next** to confirm the operation.
-    6. Click **OK** to confirm that you want to perform the procedure, as it is not possible to roll back the operation using Ambari.
+### Procedure
+1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+2.  Click **HAWQ** in the list of installed services.
+3.  Select **Service Actions > Activate HAWQ Standby Master** to start the Activate HAWQ Standby Master Wizard.
+4.  Read the description of the Wizard and click **Next** to review the tasks that will be performed.
+5.  Ambari displays the host name of the current HAWQ Master that will be removed from the cluster, as well as the HAWQ Standby Master host that will be activated. The information is provided only for review and cannot be edited on this page. Click **Next** to confirm the operation.
+6. Click **OK** to confirm that you want to perform the procedure, as it is not possible to roll back the operation using Ambari.
 
-         Ambari displays a list of tasks that are performed to activate the standby server and remove the previous HAWQ Master host. Click on any of the tasks to view progress or to view the actual log messages that are generated while performing the task.
-    7. Click **Complete** after the Wizard finishes all tasks.
+   Ambari displays a list of tasks that are performed to activate the standby server and remove the previous HAWQ Master host. Click on any of the tasks to view progress or to view the actual log messages that are generated while performing the task.
+7. Click **Complete** after the Wizard finishes all tasks.
 
-       **Important:** After the Wizard completes, your HAWQ cluster no longer includes a HAWQ Standby Master host. As a best practice, follow the instructions in [Adding a HAWQ Standby Master](#amb-add-standby) to configure a new one.
+   **Important:** After the Wizard completes, your HAWQ cluster no longer includes a HAWQ Standby Master host. As a best practice, follow the instructions in [Adding a HAWQ Standby Master](#amb-add-standby) to configure a new one.
 
 ## Adding a HAWQ Standby Master<a id="amb-add-standby"></a>
 
