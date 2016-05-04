@@ -276,25 +276,26 @@ If you install HAWQ using Ambari 2.2.2 with the HDP 2.3 stack, before you attemp
 HAWQ service on the cluster must be already installed and managed through Ambari.
 
 ### Changing the gpadmin Password
+The password issued by the Ambari web console is used for the `hawq ssh-exkeys` utility, which is run during the start phase of HAWQMASTER.
+Ambari stores and uses its own copy of the gpadmin password, independently of the host system. Passwords on the master and slave nodes are not automatically updated and synchronized with Ambari. Not updating the Ambari system user password causes Ambari to behave as if the gpadmin password was never changed \(it keeps the old password\).
+If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key with the HAWQMASTER fails. Components without passwordless ssh might not be registered with the HAWQ cluster.
 
+### When to Perform
+You should change the gpadmin password when:
+ -  The gpadmin password on the host machines has expired.
+ -  You want to change passwords as part of the normal system security procedures. 
+When updating the gpadmin password, it must be kept in synch with the gpadmin user on the HAWQ hosts. This requires manually changing the password on the Master and Slave hosts, then updating the Ambari password.
 The all of the listed steps are mandatory. This ensures that HAWQ service remains fully functional.
 
-1.  Use a script to manually change the password for the gpadmin user on all HAWQ hosts \(all Master and Slave component hosts\). To manually update the password, you must have ssh access to all host machines as the gpadmin user.
-
+###Procedure
+1.  Use a script to manually change the password for the gpadmin user on all HAWQ hosts \(all Master and Slave component hosts\). To manually update the password, you must have ssh access to all host machines as the gpadmin user. Generate a hosts file to use with the `hawq ssh` command to reset the password on all hosts. You can use a command similar to the following:
+```
+hawq ssh -f hawq_hosts 'echo "gpadmin:newpassword" | /usr/sbin/chpasswd'
+```    
 You might want to generate a hosts file containing the IP addresses of all hosts in the HAWQ cluster.
-
 2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps:
    1. Click **HAWQ** in the list of installed services.
    2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script. Click **Save** to save the updated configuration.
-
 3.  Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
-###What if the HAWQ System User Password on Ambari Is Not Updated?
-
-Not updating the Ambari system user password causes Ambari to behave as if the gpadmin password was never changed \(it keeps the old password\). The password issued by the Ambari web console is used for the `hawq ssh-exkeys` utility, which is run during the start phase of HAWQMASTER.
-If passwordless ssh has already been set up \(a key has been exchanged earlier and the host has it stored in `~/.ssh/authorized_keys`\), the `hawq ssh-exkeys` utility will not exchange the key.
-If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key with the HAWQMASTER fails. Components without passwordless ssh might not be registered with the HAWQ cluster.
-
-###What if the Password Expires on the Host Machines?
-
-Use the procedure above to create a new password on the host machines, then update the HAWQ **System User Password** on the Ambari Web Console. This will synchronize the password on the host machines with the password recognized by Ambari.
+This will synchronize the password on the host machines with the password recognized by Ambari.
