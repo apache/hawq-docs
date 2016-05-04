@@ -12,7 +12,7 @@ The `CREATE TABLE` command creates a table and defines its structure. When you c
 -   Any table constraints to limit the data that a column or table can contain. See [Setting Table Constraints](#topic28).
 -   The distribution policy of the table, which determines how HAWQ divides data is across the segments. See [Choosing the Table Distribution Policy](#topic34).
 -   The way the table is stored on disk.
--   The table partitioning strategy for large tables, which specifies how the data should be divided. See [Creating and Managing Databases](ddl-database.html).
+-   The table partitioning strategy for large tables, which specifies how the data should be divided. See [Creating and Managing Databases](/20/ddl/ddl-database.html).
 
 ### Choosing Column Data Types <a id="topic27"></a>
 
@@ -24,7 +24,7 @@ Use the smallest numeric data type that will accommodate your numeric data and a
 
 Use the same data types for columns that you plan to use in cross-table joins. When the data types are different, the database must convert one of them so that the data values can be compared correctly, which adds unnecessary overhead.
 
-Columnar storage can optimize searches and reads of large data sets. HAWQ supports the parquet columnar storage format, which can increase performance on large queries. Use parquet tables for HAWQ internal tables.
+HAWQ supports the parquet columnar storage format, which can increase performance on large queries. Use parquet tables for HAWQ internal tables.
 
 ### Setting Table Constraints <a id="topic28"></a>
 
@@ -73,6 +73,7 @@ However, hash distributed tables can be faster than randomly distributed tables.
 HAWQ's elastic execution runtime is based on virtual segments, which are allocated on demand, based on the cost of the query. Each node uses one physical segment and a number of dynamically allocated virtual segments distributed to different hosts, thus simplifying performance tuning. Large queries use large numbers of virtual segments, while smaller queries use fewer virtual segments.Tables do not need to be redistributed when nodes are added or removed.
 
 In general, the more virtual segments are used, the faster the query will be executed. You can tune the parameters for `default_hash_table_bucket_number` and `hawq_rm_nvseg_perquery_limit` to adjust performance by controlling the number of virtual segments used for a query. However, be aware that if the value of `default_hash_table_bucket_number` is changed, data must be redistributed, which can be costly. Therefore, it is better to set the `default_hash_table_bucket_number` up front, if you expect to need a larger number of virtual segments. However, you might need to adjust the value in `default_hash_table_bucket_number` after cluster expansion, but should take care not to exceed the number of virtual segments per query set in `hawq_rm_nvseg_perquery_limit`. Refer to the recommended guidelines for setting the value of `default_hash_table_bucket_number`, later in this section.
+rameters for `default_hash_table_bucket_number` and `hawq_rm_nvseg_perquery_limit`
 
 For random or gpfdist external tables, as well as user-defined functions, the value set in the `hawq_rm_nvseg_perquery_perseg_limit` parameter limits the number of virtual segments that are used for one segment for one query, to optimize query resources. Resetting this parameter is not recommended.
 
@@ -127,7 +128,7 @@ The `LIKE` clause specifies a table from which the new table automatically copie
 
 -   **Table Data Distribution:**
 
-The tables below show how data is distributed in 2.0 hash table queries, depending on how it was created from an original table and whether that table was random or hash. The last column shows whether the `bucketnum` of `new_table` comes from `origintable`, uses the default `bucketnum` (set by `default_hash_table_bucket_number`, or uses the `with` clause `( with ( bucketnum = x ))`.
+The tables below show how data is distributed in 2.0 hash table queries, depending on how it was created from an original table and whether that table was random or hash. The last column shows whether the `bucketnum` of `new_table` comes from `origintable`, uses the default `bucketnum` set by `default_hash_table_bucket_number`, or uses the `with` clause `( with ( bucketnum = x ))`.
 
 <br/><br/>
         **Origin Table: Random Table**
@@ -152,7 +153,7 @@ The tables below show how data is distributed in 2.0 hash table queries, dependi
         <tr><td>select into</td><td>Cannot specify distributed by col. new\_table always distributed randomly</td><td>Cannot specify distributed by col. new\_table always distributed randomly</td><td>`select * into new_table from origin_table` can't be used with clause.default</td></tr>
         </table>
 
-Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments the next section and in [Query Performance](/200/hawq/query/query-performance.html#topic38).
+Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments in the next section and in [Query Performance](/200/hawq/query/query-performance.html#topic38).
 
 #### Performance Tuning <a id="topic_wff_mqm_gv"></a>
 
