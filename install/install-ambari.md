@@ -258,5 +258,8 @@ Follow this procedure to make the required changes:
 4.  Restart both Hive and HBase to use the updated classpath and new properties.
 5.  In order to use PXF with HBase or Hive tables, you must grant the `pxf` user read permission on those tables:
     * For HBase, use the `GRANT` command for each table that you want to access with PXF. For example:
-hbase(main):001:0> grant 'pxf', 'R', 'my_table'
+    
+        ```
+        hbase(main):001:0> grant 'pxf', 'R', 'my_table'
+        ```
     * Because Hive uses the HDFS ACLs for access control, ensure that the pxf has read permission on all of the HDFS directories that map to your database, tables, and partitions.
