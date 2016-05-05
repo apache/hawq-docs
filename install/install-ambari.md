@@ -58,7 +58,7 @@ title: Install Apache HAWQ using Ambari
 6.  Restart the Ambari server:
 
     ```
-    $ ambari-server Restart
+    $ ambari-server restart
     ```
 
     **Note:** You must restart the Ambari server before proceeding. The above command restarts only the Ambari server, but leaves other Hadoop services running.
@@ -73,15 +73,6 @@ title: Install Apache HAWQ using Ambari
     **Note:** Substitute the correct Ambari administrator password for your system.
 
 8.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) Verify that the HDB component is now available.
-9.  Restart the Ambari server:
-
-    ```
-    $ ambari-server restart
-    ```
-
-    **Note:** You must restart the Ambari server before proceeding. The above command restarts only the Ambari server, but leaves other Hadoop services running.
-
-10. Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user.
 11. Select **HDFS**, then click the **Configs** tab.
 12. Customize the HDFS configuration by following these steps:
     1.  On the **Settings** tab, change the DataNode setting **DataNode max data transfer threads** \(dfs.datanode.max.transfer.threads parameter \) to *40960*.
@@ -117,7 +108,7 @@ title: Install Apache HAWQ using Ambari
         |**ipc.server.listen.queue.size**|3300|
 
 13. Click **Save** and enter a name for the configuration change (for example, *HAWQ prerequisites*). Click **Save** again, then **OK**.
-13. If Ambari indicates that hosts must be restarted, click **Restart** and allow the cluster to restart before you continue.
+13. If Ambari indicates that a service must be restarted, click **Restart** and allow the service to restart before you continue.
 13. Select **Actions \> Add Service** on the home page.
 14. Select both **HAWQ** and **PXF** from the list of services, then click **Next** to display the Assign Masters page.
 15. Select the hosts that should run the HAWQ Master and HAWQ Standby Master, or accept the defaults. The HAWQ Master and HAWQ Standby Master must reside on separate hosts. Click **Next** to display the Assign Slaves and Clients page.
@@ -138,7 +129,7 @@ title: Install Apache HAWQ using Ambari
 
 17.  On the Customize Services page, the **Settings** tab configures basic properties of the HAWQ cluster. In most cases you can accept the default values provided on this page. Several configuration options may require attention depending on your deployment:
     *  **HAWQ Master Directory**, **HAWQ Segment Directory**: This specifies the base path for the HAWQ master or segment data directory.
-    *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ Master or a HAWQ segment stores temporary files. Separate multiple directories with a space. Any directories that you specify must already be available on all host machines. If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.<br/><br/>As a best practice, use multiple segment temporary directories on separate, large disks (2TB or greater) to load balance writes to temporary files \(for example, `/disk1/tmp /disk2/tmp`\). For a given query, HAWQ will use a separate temp directory (if available) for each virtual segment to store spill files. Multiple HAWQ sessions will also use separate temp directories where available to avoid disk contention. If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.
+    *  **HAWQ Master Temp Directories**, **HAWQ Segment Temp Directories**: Enter one or more directories in which the HAWQ Master or a HAWQ segment stores temporary files. Separate multiple directories with a comma. Any directories that you specify must already be available on all host machines. If you do not specify a temporary directory, the HAWQ data directory is used to store temporary files.<br/><br/>As a best practice, use multiple segment temporary directories on separate, large disks (2TB or greater) to load balance writes to temporary files \(for example, `/disk1/tmp,/disk2/tmp`\). For a given query, HAWQ will use a separate temp directory (if available) for each virtual segment to store spill files. Multiple HAWQ sessions will also use separate temp directories where available to avoid disk contention. If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.
     *  **Resource Manager**: Select the resource manager to use for allocating resources in your HAWQ cluster. If you choose **Standalone**, HAWQ exclusively uses resources from the whole cluster. If you choose **YARN**, HAWQ contacts the YARN resource manager to negotiate resources. You can change the resource manager type after the initial installation. You will also have to configure some YARN-related properties in step 22. For more inforatmion on using YARN to manage resources, see [Managing Resources](/200/hawq/resourcemgmt/HAWQResourceManagement.html).
 
 		**Caution:** If you are installing HAWQ in secure mode (Kerberos-enabled), then set **Resource Manager** to **Standalone** to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
@@ -158,16 +149,16 @@ title: Install Apache HAWQ using Ambari
 
 	|Property|Action|
     |--------|------|
-    |**Advanced hawq-site > hawq\_rm\_yarn\_address**|Specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: localhost:8032|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_address**|Specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: rm1.example.com:8050|
     |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|Specify the YARN queue name to use for registering the HAWQ resource manager. For example: `default` **Note:** If you specify a custom queue name other than `default`, you must configure the YARN scheduler and custom queue capacity, either through Ambari or directly in YARN's configuration files. See [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for more details. |
-    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: localhost:8030|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: rm1.example.com:8050|
 
 	If you have enabled high availability for YARN, then verify that the following values have been populated correctly in HAWQ:
 
 	|Property|Action|
     |--------|------|
-	|**Custom yarn-client > yarn.resourcemanager.ha**|Comma-delimited list of the fully qualified hostnames of the resource managers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property’s value instead. For example, `rm1.example.com:8032,rm2.example.com:8032` |
-	|**Custom yarn-client > yarn.resourcemanager.scheduler.ha**|Comma-delimited list of fully qualified hostnames of the resource manager schedulers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property’s value instead. For example,`rm1.example.com:8030,rm2.example.com:8030` |
+	|**Custom yarn-client > yarn.resourcemanager.ha**|Comma-delimited list of the fully qualified hostnames of the resource managers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property’s value instead. For example, `rm1.example.com:8050,rm2.example.com:8050` |
+	|**Custom yarn-client > yarn.resourcemanager.scheduler.ha**|Comma-delimited list of fully qualified hostnames of the resource manager schedulers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property’s value instead. For example,`rm1.example.com:8050,rm2.example.com:8050` |
 
 18.  Click **Next** to continue the installation. (Depending on your cluster configuration, Ambari may recommend that you change other properties before proceeding.)
 18. Review your configuration choices, then click **Deploy** to begin the installation. Ambari now begins to install, start, and test the HAWQ and PXF configuration. During this procedure, you can click on the **Message** links to view the console output of individual tasks.
@@ -228,7 +219,7 @@ Follow this procedure to make the required changes:
     export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
     ```
 
-    **Note:** You do not need to manually edit `hbase-env.sh` for Pivotal HD deployments. However, you do need to restart HBase after adding the PXF service in order to load the newly-installed PXF JAR file.
+    **Note:** Restart HBase after adding the PXF service in order to load the newly-installed PXF JAR file.
 
 2.  (Optional.) For secure Hive installations, use either a text editor or the Ambari Web interface to edit the `hive-site.xml` file, and add the property:
 

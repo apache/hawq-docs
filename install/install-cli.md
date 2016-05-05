@@ -269,8 +269,8 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
         |hawq\_segment\_address\_port|40000|
         |hawq\_master\_directory|/data/master|
         |hawq\_segment\_directory|/data/segment|
-        |hawq\_master\_temp\_directory|/data1/tmp /data2/tmp|
-        |hawq\_segment\_temp\_directory|/data1/tmp /data2/tmp|
+        |hawq\_master\_temp\_directory|/data1/tmp,/data2/tmp|
+        |hawq\_segment\_temp\_directory|/data1/tmp,/data2/tmp|
         |hawq\_global\_rm\_type|none|
 
         **Caution:** If you are installing HAWQ in [secure mode (Kerberos-enabled)](#topic_iwy_5fb_1t), then set `hawq_global_rm_type` to standalone mode (`none`) to avoid encountering a known installation issue. You can enable YARN mode post-installation if YARN resource management is desired in HAWQ.  
