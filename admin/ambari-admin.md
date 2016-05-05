@@ -70,7 +70,7 @@ A configuration check determines if operating system parameters on the HAWQ host
 ## Performing a Rolling Restart<a id="amb-restart"></a>
 Ambari provides the ability to restart a HAWQ cluster by restarting one or more segments at a time until all segments (or all segments with stale configurations) restart. You can specify a delay between restarting segments, and Ambari can stop the process if a specified number of segments fail to restart. Performing a rolling restart in this manner can help ensure that some HAWQ segments are available to service client requests.
 
-**Note** If you do not need to preserve client connections, you can instead perform an full restart of the entire HAWQ cluster using **Service Actions > Restart All**.
+**Note:** If you do not need to preserve client connections, you can instead perform an full restart of the entire HAWQ cluster using **Service Actions > Restart All**.
 
 ### Procedure
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
@@ -116,6 +116,7 @@ Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAW
 This topic provides some guidelines around expanding your HAWQ cluster.
 
 There are several recommendations to keep in mind when modifying the size of your running HAWQ cluster:
+
 -  When you add a new node, install both a DataNode and a HAWQ segment on the new node.
 -  After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -  Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
@@ -288,7 +289,9 @@ This service action enables you to remove the HAWQ Standby Master component in s
 
 ## Upgrading the HDP Stack<a id="hdp-upgrade"></a>
 
-If you install HAWQ using Ambari 2.2.2 with the HDP 2.3 stack, before you attempt to upgrade to HDP 2.4 you must use Ambari to change the `dfs.allow.truncate` property to `false`. Ambari will display a configuration warning with this setting, but it is required in order to complete the upgrade; choose **Proceed Anyway** when Ambari warns you about the configured value of `dfs.allow.truncate`. After you complete the upgrade to HDP 2.4, change the value of `dfs.allow.truncate` back to `true` to ensure that HAWQ can operate as intended.
+If you install HAWQ using Ambari 2.2.2 with the HDP 2.3 stack, before you attempt to upgrade to HDP 2.4 you must use Ambari to change the `dfs.allow.truncate` property to `false`. Ambari will display a configuration warning with this setting, but it is required in order to complete the upgrade; choose **Proceed Anyway** when Ambari warns you about the configured value of `dfs.allow.truncate`.
+
+After you complete the upgrade to HDP 2.4, change the value of `dfs.allow.truncate` back to `true` to ensure that HAWQ can operate as intended.
 
 ## Changing the HAWQ gpadmin Password<a id="gpadmin-password-change"></a>
 
