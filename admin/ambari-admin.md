@@ -97,14 +97,14 @@ Ambari host-level actions enable you to perform actions on one or more hosts in 
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Select the **Hosts** tab at the top of the screen to display a list of all hosts in the cluster.
 3.  To apply a host-level action to all HAWQ segment hosts or PXF hosts, select an action using the applicable menu:
-    *  **Actions > Filtered Hosts > HAWQ Segments > ** [ **Start** | **Stop** |  **Restart** ]
-    *  **Actions > Filtered Hosts > PXF Hosts > ** [ **Start** | **Stop** |  **Restart** ]
+    *  **Actions > Filtered Hosts > HAWQ Segments >** [ **Start** | **Stop** |  **Restart** ]
+    *  **Actions > Filtered Hosts > PXF Hosts >** [ **Start** | **Stop** |  **Restart** ]
 4.  To apply a host level action to a subset of HAWQ segments or PXF hosts:
     1.  Filter the list of available hosts using one of the filter options:
         *  **Filter > HAWQ Segments**
         *  **Filter > PXF Hosts**
     2.  Use the check boxes to select the hosts to which you want to apply the action.
-    3.  Select **Actions > Selected Hosts > ** [ **Start** | **Stop** |  **Restart** ] to apply the action to your selected hosts.
+    3.  Select **Actions > Selected Hosts >** [ **Start** | **Stop** |  **Restart** ] to apply the action to your selected hosts.
 
 
 ## Expanding the HAWQ Cluster<a id="amb-expand"></a>
