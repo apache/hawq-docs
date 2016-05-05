@@ -86,6 +86,27 @@ Ambari provides the ability to restart a HAWQ cluster by restarting one or more 
 
    Ambari displays the **Rolling Restart of HAWQ segments** task in the list of background operations, and indicates the current batch of segments that it is restarting. Click the name of the task to view the log messages generated during the restart. If any segment fails to restart, Ambari displays a red warning icon next to the task.
 
+## Performing Host-Level Actions on HAWQ Segment and PXF Hosts<a id="bulk-lifecycle"></a>
+
+Ambari host-level actions enable you to perform actions on one or more hosts in the cluster at once. With HAWQ clusters, you can apply the **Start**, **Stop**, or **Restart** actions to one or more HAWQ segment hosts or PXF hosts. Using the host-level actions saves you the trouble of accessing individual hosts in Ambari and applying service actions one-by-one.
+
+### When to Perform
+*  Use the Ambari host-level actions when you have a large number of hosts in your cluster and you want to start, stop, or restart all HAWQ segment hosts or all PXF hosts as part of regularly-scheduled maintenance.
+
+### Procedure
+1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+2.  Select the **Hosts** tab at the top of the screen to display a list of all hosts in the cluster.
+3.  To apply a host-level action to all HAWQ segment hosts or PXF hosts, select an action using the applicable menu:
+    *  **Actions > Filtered Hosts > HAWQ Segments > ** [ **Start** | **Stop** |  **Restart** ]
+    *  **Actions > Filtered Hosts > PXF Hosts > ** [ **Start** | **Stop** |  **Restart** ]
+4.  To apply a host level action to a subset of HAWQ segments or PXF hosts:
+    1.  Filter the list of available hosts using one of the filter options:
+        *  **Filter > HAWQ Segments**
+        *  **Filter > PXF Hosts**
+    2.  Use the check boxes to select the hosts to which you want to apply the action.
+    3.  Select **Actions > Selected Hosts > ** [ **Start** | **Stop** |  **Restart** ] to apply the action to your selected hosts.
+
+
 ## Expanding the HAWQ Cluster<a id="amb-expand"></a>
 
 Apache HAWQ supports dynamic node expansion. You can add segment nodes while HAWQ is running without having to suspend or terminate cluster operations.
@@ -282,7 +303,7 @@ If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange 
 ### When to Perform
 You should change the gpadmin password when:
  -  The gpadmin password on the host machines has expired.
- -  You want to change passwords as part of the normal system security procedures. 
+ -  You want to change passwords as part of the normal system security procedures.
 When updating the gpadmin password, it must be kept in synch with the gpadmin user on the HAWQ hosts. This requires manually changing the password on the Master and Slave hosts, then updating the Ambari password.
 The all of the listed steps are mandatory. This ensures that HAWQ service remains fully functional.
 
