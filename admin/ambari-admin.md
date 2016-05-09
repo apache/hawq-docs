@@ -294,20 +294,19 @@ If you install HAWQ using Ambari 2.2.2 with the HDP 2.3 stack, before you attemp
 After you complete the upgrade to HDP 2.4, change the value of `dfs.allow.truncate` back to `true` to ensure that HAWQ can operate as intended.
 
 ## Changing the HAWQ gpadmin Password<a id="gpadmin-password-change"></a>
-
-### Prerequisites
-HAWQ service on the cluster must be already installed and managed through Ambari.
-
-### Changing the gpadmin Password
 The password issued by the Ambari web console is used for the `hawq ssh-exkeys` utility, which is run during the start phase of the HAWQ Master.
 Ambari stores and uses its own copy of the gpadmin password, independently of the host system. Passwords on the master and slave nodes are not automatically updated and synchronized with Ambari. Not updating the Ambari system user password causes Ambari to behave as if the gpadmin password was never changed \(it keeps using the old password\).
 
 If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key with the HAWQ Master fails. Components without passwordless ssh might not be registered with the HAWQ cluster.
 
+### Prerequisites
+HAWQ service on the cluster must be already installed and managed through Ambari.
+
 ### When to Perform
 You should change the gpadmin password when:
--  The gpadmin password on the host machines has expired.
--  You want to change passwords as part of normal system security procedures.
+
+* The gpadmin password on the host machines has expired.
+* You want to change passwords as part of normal system security procedures.
 When updating the gpadmin password, it must be kept in synch with the gpadmin user on the HAWQ hosts. This requires manually changing the password on the Master and Slave hosts, then updating the Ambari password.
 
 ###Procedure
