@@ -117,9 +117,11 @@ There are four ways of creating a table from an origin table. The ways in which 
   <tr><td>SELECT INTO</td><td><pre><code>create table origintable [with(bucketnum=x)] [distributed by col]; select * <br/>into new_table from origintable;</code></pre></td></tr>
 </table>
 
-The optional `INHERITS` clause specifies a list of tables from which the new table automatically inherits all columns. If `WITH` specifies `bucketnum` in creating a hash-distributed table, it will be copied. If distribution is specified by column, the table will inherit it. Otherwise, the table will use default distribution.
+The optional `INHERITS` clause specifies a list of tables from which the new table automatically inherits all columns. Hash tables inherit bucketnumbers from their origin table if not otherwise specified. If `WITH` specifies `bucketnum` in creating a hash-distributed table, it will be copied. If distribution is specified by column, the table will inherit it. Otherwise, the table will use default distribution from `default_hash_table_bucket_number`.
 
 The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. If a `bucketnum` is specified, it will be copied. Otherwise, the table will use default distribution.
+
+For hash tables, the `SELECT INTO` function always uses random distribution.
 
 #### Declaring Distribution Keys <a id="topic_kjg_tqm_gv"></a>
 
