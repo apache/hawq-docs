@@ -20,7 +20,7 @@ When a query comes in, after query parsing and semantic analysis, the optimizer 
 
 In this hierarchical resource queue tree depicted in the diagram, there are branch queues \(rectangles outlined in dashed lines\) and leaf queues \(rectangles drawn with solid lines\). Only leaf queues can be associated with roles and accept queries.
 
-**Query resource allocation policy**
+**Query Resource Allocation Policy**
 
 The HAWQ resource manager follows several principles when allocating resources to queries:
 
@@ -30,7 +30,7 @@ The HAWQ resource manager follows several principles when allocating resources t
 
 **Enforcing Limits on Resources**
 
-You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html).
+You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html). For some best practices on designing and using resource queues in HAWQ, see [Best Practices for Managing Resources](/200/hawq/bestpractices/managing_resources_bestpractices.html).
 
 For a high-level overview of how resource management works in HAWQ, see [Managing Resources](HAWQResourceManagement.html).
 
