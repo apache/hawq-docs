@@ -151,14 +151,14 @@ title: Install Apache HAWQ using Ambari
     |--------|------|
     |**Advanced hawq-site > hawq\_rm\_yarn\_address**|Specify the address and port number of the YARN resource manager server \(the value of `yarn.resourcemanager.address`\). For example: rm1.example.com:8050|
     |**Advanced hawq-site > hawq\_rm\_yarn\_queue\_name**|Specify the YARN queue name to use for registering the HAWQ resource manager. For example: `default` **Note:** If you specify a custom queue name other than `default`, you must configure the YARN scheduler and custom queue capacity, either through Ambari or directly in YARN's configuration files. See [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for more details. |
-    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: rm1.example.com:8050|
+    |**Advanced hawq-site > hawq\_rm\_yarn\_scheduler\_address**|Specify the address and port number of the YARN scheduler server \(the value of `yarn.resourcemanager.scheduler.address`\). For example: rm1.example.com:8030|
 
 	If you have enabled high availability for YARN, then verify that the following values have been populated correctly in HAWQ:
 
 	|Property|Action|
     |--------|------|
 	|**Custom yarn-client > yarn.resourcemanager.ha**|Comma-delimited list of the fully qualified hostnames of the resource managers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_address and uses this property’s value instead. For example, `rm1.example.com:8050,rm2.example.com:8050` |
-	|**Custom yarn-client > yarn.resourcemanager.scheduler.ha**|Comma-delimited list of fully qualified hostnames of the resource manager schedulers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property’s value instead. For example,`rm1.example.com:8050,rm2.example.com:8050` |
+	|**Custom yarn-client > yarn.resourcemanager.scheduler.ha**|Comma-delimited list of fully qualified hostnames of the resource manager schedulers. When high availability is enabled, YARN ignores the value in hawq\_rm\_yarn\_scheduler\_address and uses this property’s value instead. For example,`rm1.example.com:8030,rm2.example.com:8030` |
 
 18.  Click **Next** to continue the installation. (Depending on your cluster configuration, Ambari may recommend that you change other properties before proceeding.)
 18. Review your configuration choices, then click **Deploy** to begin the installation. Ambari now begins to install, start, and test the HAWQ and PXF configuration. During this procedure, you can click on the **Message** links to view the console output of individual tasks.
@@ -258,7 +258,7 @@ Follow this procedure to make the required changes:
 4.  Restart both Hive and HBase to use the updated classpath and new properties.
 5.  In order to use PXF with HBase or Hive tables, you must grant the `pxf` user read permission on those tables:
     * For HBase, use the `GRANT` command for each table that you want to access with PXF. For example:
-    
+
         ```
         hbase(main):001:0> grant 'pxf', 'R', 'my_table'
         ```
