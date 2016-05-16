@@ -619,6 +619,21 @@ For manual installations, perform these additional steps after you complete the 
 Perform these basic commands to ensure that the new  cluster is functional.
 
 1.  Ensure that you have initialized and started the new cluster by using the `hawq init cluster` command, as described in the previous procedures.
+
+1.  Source the `greenplum_path.sh` file to set your environment for HAWQ. For RPM installations, enter:
+
+    ```
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+
+    If you downloaded the tarball, substitute the path to the extracted `greenplum_path.sh` file \(for example `/opt/hawq-2.0.0.0/greenplum_path.sh`\).
+
+1.  If you use a custom HAWQ master port number, set it in your environment. For example:
+
+    ```
+    $ export PGPORT=5432
+    ```
+
 2.  Start the `psql` interactive utility, connecting to the postgres database:
 
     ```

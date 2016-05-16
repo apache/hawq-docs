@@ -166,6 +166,18 @@ title: Install Apache HAWQ using Ambari
 18.  Click **Next** after all tasks have completed. Review the summary of the install process, then click **Complete**.  Ambari may indicate that components on cluster need to be restarted. Choose **Restart > Restart All Affected** if necessary.
 19. To verify that HAWQ is installed, login to the HAWQ master as `gpadmin` and perform some basic commands:
 
+    1.  Source the `greenplum_path.sh` file to set your environment for HAWQ:
+
+        ```
+        $ source /usr/local/hawq/greenplum_path.sh
+        ```
+
+    1.  If you use a custom HAWQ master port number, set it in your environment. For example:
+
+        ```
+        $ export PGPORT=5432
+        ```
+
     1.  Start the `psql` interactive utility, connecting to the postgres database:
 
         ```
