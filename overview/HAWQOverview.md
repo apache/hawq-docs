@@ -31,3 +31,13 @@ HAWQ breaks complex queries into small tasks and distributes them to MPP query p
 HAWQ's basic unit of parallelism is the segment instance. Multiple segment instances on commodity servers work together to form a single parallel query processing system. A query submitted to HAWQ is optimized, broken into smaller components, and dispatched to segments that work together to deliver a single result set. All relational operations - such as table scans, joins, aggregations, and sorts - simultaneously execute in parallel across the segments. Data from upstream components in the dynamic pipeline are transmitted to downstream components through the scalable User Datagram Protocol \(UDP\) interconnect.
 
 Based on Hadoop's distributed storage, HAWQ has no single point of failure and supports fully-automatic online recovery. System states are continuously monitored, therefore if a segment fails, it is automatically removed from the cluster. During this process, the system continues serving customer queries, and the segments can be added back to the system when necessary.
+
+These topics provide more information about HAWQ and its main components:
+
+* <a class="subnav" href="./HAWQArchitecture.html">HAWQ Architecture</a>
+* <a class="subnav" href="./TableDistributionStorage.html">Table Distribution and Storage</a>
+* <a class="subnav" href="./ElasticSegments.html">Elastic Segments</a>
+* <a class="subnav" href="./ResourceManagement.html">Resource Management</a>
+* <a class="subnav" href="./HDFSCatalogCache.html">HDFS Catalog Cache</a>
+* <a class="subnav" href="./ManagementTools.html">Management Tools</a>
+* <a class="subnav" href="./RedundancyFailover.html">High Availability, Redundancy, and Fault Tolerance</a>

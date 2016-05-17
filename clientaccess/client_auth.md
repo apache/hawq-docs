@@ -2,8 +2,6 @@
 title: Configuring Client Authentication
 ---
 
-This topic explains how to configure client connections and authentication for HAWQ.
-
 When a HAWQ system is first initialized, the system contains one predefined *superuser* role. This role will have the same name as the operating system user who initialized the HAWQ system. This role is referred to as `gpadmin`. By default, the system is configured to only allow local connections to the database from the `gpadmin` role. To allow any other roles to connect, or to allow connections from remote hosts, you configure HAWQ to allow such connections.
 
 ## Allowing Connections to HAWQ <a id="topic2"></a>
