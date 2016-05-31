@@ -82,7 +82,7 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
 	export PGPORT=9000
 	```
 
-1. If you have not configured it already, export the MASTER_DATA_DIRECTORY environment variable.
+1. If you have not configured it already, export the MASTER\_DATA\_DIRECTORY environment variable.
  
 	```
 	export MASTER_DATA_DIRECTORY=/path/to/master/catalog
