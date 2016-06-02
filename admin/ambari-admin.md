@@ -15,6 +15,7 @@ See also [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for
 Follow this procedure if you have already installed YARN and HAWQ, but you are currently using the HAWQ Standalone mode (not YARN) for resource management. This procedure helps you configure YARN and HAWQ so that HAWQ uses YARN for resource management. This procedure assumes that you will use the default YARN queue for managing HAWQ.
 
 ### Procedure
+
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Select **HAWQ** from the list of installed services.
 3.  Select the **Configs** tab, then the **Settings** tab.
@@ -29,6 +30,31 @@ Follow this procedure if you have already installed YARN and HAWQ, but you are c
 6.  (Optional.)  When HAWQ is integrated with YARN and has no workload, HAWQ does not acquire any resources right away. HAWQ’s resource manager only requests resources from YARN when HAWQ receives its first query request. In order to guarantee optimal resource allocation for subsequent queries and to avoid frequent YARN resource negotiation, you can adjust `hawq_rm_min_resource_perseg` so HAWQ receives at least some number of YARN containers per segment regardless of the size of the initial query. The default value is 2, which means HAWQ’s resource manager acquires at least 2 YARN containers for each segment even if the first query’s resource request is small.<br/><br/>This configuration property cannot exceed the capacity of HAWQ’s YARN queue. For example, if HAWQ’s queue capacity in YARN is no more than 50% of the whole cluster, and each YARN node has a maximum of 64GB memory and 16 vcores, then `hawq_rm_min_resource_perseg` in HAWQ cannot be set to more than 8 since HAWQ’s resource manager acquires YARN containers by vcore. In the case above, the HAWQ resource manager acquires a YARN container quota of 4GB memory and 1 vcore.<br/><br/>To change this parameter, expand **Custom hawq-site** and click **Add Property ...** Then specify `hawq_rm_min_resource_perseg` as the key and enter the desired Value. Click **Add** to add the property definition.
 7.  (Optional.)  If the level of HAWQ’s workload is lowered, then HAWQ's resource manager may have some idle YARN resources. You can adjust `hawq_rm_resource_idle_timeout` to let the HAWQ resource manager return idle resources more quickly or more slowly.<br/><br/>For example, when HAWQ's resource manager has to reacquire resources, it can cause latency for query resource requests. To let HAWQ resource manager retain resources longer in anticipation of an upcoming workload, increase the value of `hawq_rm_resource_idle_timeout`. The default value of `hawq_rm_resource_idle_timeout` is 300 seconds.<br/><br/>To change this parameter, expand **Custom hawq-site** and click **Add Property ...** Then specify `hawq_rm_resource_idle_timeout` as the key and enter the desired Value. Click **Add** to add the property definition.
 8.  Click **Save** to save your configuration changes.
+
+## Moving a YARN Resource Manager<a id="move_yarn_rm"></a>
+
+Use one of the following procedures to move YARN resource manager component from one node to another when HAWQ is configured to use YARN as the global resource manager (`hawq_global_rm_type` is `yarn`). The procedure you should use depends on whether you have enabled high availability in YARN.
+
+<p class="note"><b>Note:</b> In a Kerberos-secured environments, you must update <code>hadoop.proxyuser.yarn.hosts</code> property in HDFS <code>core-site.xml</code> before running a service check. The values should be set to the current YARN Resource Managers.</p>
+
+### Procedure (Single YARN Resource Manager)
+
+1. Move Resource Manager to the desired host using the **Move ResourceManager**  on YARN service page in Ambari.
+1. On the HAWQ **Configs** page, select the **Advanced** tab.
+1. under Advanced hawq-site section, update the following HAWQ properties:
+   - `hawq_rm_yarn_address`. Enter the same value defined in the `yarn.resourcemanager.address` property of `yarn-site.xml`.
+   - `hawq_rm_yarn_scheduler_address`. Enter the same value in the `yarn.resourcemanager.scheduler.address` property of `yarn-site.xml`.
+1. Restart all HAWQ components so that the configurations get updated on all HAWQ hosts.
+1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure it succeeds.
+
+### Procedure (Highly Available YARN Resource Managers)
+
+1. Move Resource Manager to the desired host using the **Move ResourceManager** service action on the YARN service page in Ambari.
+1. On the HAWQ **Configs** page, select the **Advanced** tab.
+1. Under `Custom yarn-client` section, update the HAWQ properties `yarn.resourcemanager.ha` and `yarn.resourcemanager.scheduler.ha`. These parameter values should be updated to match the corresponding parameters for the YARN service. Check the values under **ResourceManager hosts** in the **Resource Manager** section of the **Advanced** configurations for the YARN service. 
+1. Restart all HAWQ components so that the configuration change is updated on all HAWQ hosts. You can ignore the warning about the values of `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` not matching the values in yarn-site.xml, and click **Proceed Anyway**. 
+1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure it succeeds.
+
 
 ## Performing a HAWQ Service Check<a id="amb-service-check"></a>
 
