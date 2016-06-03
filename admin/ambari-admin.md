@@ -33,27 +33,37 @@ Follow this procedure if you have already installed YARN and HAWQ, but you are c
 
 ## Moving a YARN Resource Manager<a id="move_yarn_rm"></a>
 
-Use one of the following procedures to move YARN resource manager component from one node to another when HAWQ is configured to use YARN as the global resource manager (`hawq_global_rm_type` is `yarn`). The procedure you should use depends on whether you have enabled high availability in YARN.
+If you are using YARN to manage HAWQ resources and need to move a YARN resource manager, then you must update your HAWQ configuration.
+
+### When to Perform
+
+Use one of the following procedures to move YARN resource manager component from one node to another when HAWQ is configured to use YARN as the global resource manager (`hawq_global_rm_type` is `yarn`). The exact procedure you should use depends on whether you have enabled high availability in YARN.
 
 <p class="note"><b>Note:</b> In a Kerberos-secured environments, you must update <code>hadoop.proxyuser.yarn.hosts</code> property in HDFS <code>core-site.xml</code> before running a service check. The values should be set to the current YARN Resource Managers.</p>
 
 ### Procedure (Single YARN Resource Manager)
 
-1. Move Resource Manager to the desired host using the **Move ResourceManager**  on YARN service page in Ambari.
+1. Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+1. Click **YARN** in the list of installed services.
+1. Select **Move ResourceManager**, and complete the steps in the Ambari wizard to move the Resource Manager to a new host.
+1. After moving the Resource Manager successfully in YARN, click **HAWQ** in the list of installed services. 
 1. On the HAWQ **Configs** page, select the **Advanced** tab.
 1. under Advanced hawq-site section, update the following HAWQ properties:
    - `hawq_rm_yarn_address`. Enter the same value defined in the `yarn.resourcemanager.address` property of `yarn-site.xml`.
    - `hawq_rm_yarn_scheduler_address`. Enter the same value in the `yarn.resourcemanager.scheduler.address` property of `yarn-site.xml`.
 1. Restart all HAWQ components so that the configurations get updated on all HAWQ hosts.
-1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure it succeeds.
+1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure that HAWQ is operating properly.
 
 ### Procedure (Highly Available YARN Resource Managers)
 
-1. Move Resource Manager to the desired host using the **Move ResourceManager** service action on the YARN service page in Ambari.
+1. Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
+1. Click **YARN** in the list of installed services.
+1. Select **Move ResourceManager**, and complete the steps in the Ambari wizard to move the Resource Manager to a new host.
+1. After moving the Resource Manager successfully in YARN, click **HAWQ** in the list of installed services. 
 1. On the HAWQ **Configs** page, select the **Advanced** tab.
 1. Under `Custom yarn-client` section, update the HAWQ properties `yarn.resourcemanager.ha` and `yarn.resourcemanager.scheduler.ha`. These parameter values should be updated to match the corresponding parameters for the YARN service. Check the values under **ResourceManager hosts** in the **Resource Manager** section of the **Advanced** configurations for the YARN service. 
-1. Restart all HAWQ components so that the configuration change is updated on all HAWQ hosts. You can ignore the warning about the values of `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` not matching the values in yarn-site.xml, and click **Proceed Anyway**. 
-1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure it succeeds.
+1. Restart all HAWQ components so that the configuration change is updated on all HAWQ hosts. You can ignore the warning about the values of `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` not matching the values in `yarn-site.xml`, and click **Proceed Anyway**. 
+1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure that HAWQ is operating properly.
 
 
 ## Performing a HAWQ Service Check<a id="amb-service-check"></a>
