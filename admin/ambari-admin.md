@@ -52,7 +52,7 @@ Use one of the following procedures to move YARN resource manager component from
    - `hawq_rm_yarn_address`. Enter the same value defined in the `yarn.resourcemanager.address` property of `yarn-site.xml`.
    - `hawq_rm_yarn_scheduler_address`. Enter the same value in the `yarn.resourcemanager.scheduler.address` property of `yarn-site.xml`.
 1. Restart all HAWQ components so that the configurations get updated on all HAWQ hosts.
-1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure that HAWQ is operating properly.
+1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#amb-service-check), to ensure that HAWQ is operating properly.
 
 ### Procedure (Highly Available YARN Resource Managers)
 
@@ -63,7 +63,7 @@ Use one of the following procedures to move YARN resource manager component from
 1. On the HAWQ **Configs** page, select the **Advanced** tab.
 1. Under `Custom yarn-client` section, update the HAWQ properties `yarn.resourcemanager.ha` and `yarn.resourcemanager.scheduler.ha`. These parameter values should be updated to match the corresponding parameters for the YARN service. Check the values under **ResourceManager hosts** in the **Resource Manager** section of the **Advanced** configurations for the YARN service. 
 1. Restart all HAWQ components so that the configuration change is updated on all HAWQ hosts. You can ignore the warning about the values of `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` not matching the values in `yarn-site.xml`, and click **Proceed Anyway**. 
-1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#ambari-service-check), to ensure that HAWQ is operating properly.
+1. Run HAWQ Service Check, as described in [Performing a HAWQ Service Check](#amb-service-check), to ensure that HAWQ is operating properly.
 
 
 ## Performing a HAWQ Service Check<a id="amb-service-check"></a>
