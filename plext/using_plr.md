@@ -21,8 +21,11 @@ $$
   return(x)
 $$
 LANGUAGE 'plr';
-The following CREATE TABLE command uses the r_norm function to populate the table. The r_norm function creates an array of 10 numbers.
+```
 
+The following `CREATE TABLE` command uses the `r_norm` function to populate the table. The `r_norm` function creates an array of 10 numbers.
+
+```sql
 CREATE TABLE test_norm_var
   AS SELECT id, r_norm(10,0,1) as x
   FROM (SELECT generate_series(1,30:: bigint) AS ID) foo
@@ -86,28 +89,28 @@ R packages are modules that contain R functions and data sets. You can install R
 	
 1. From the command line, use the wget utility to download the tar.gz files for the `arm` package to the HAWQ master host:
 
-	```
+	```shell
 	$ wget http://cran.r-project.org/src/contrib/Archive/arm/arm_1.5-03.tar.gz
 	$ wget http://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_0.9996875-1.tar.gz
 	```
 
 1. Use the `hawq scp` utility and the `hosts_all` file to copy the `tar.gz` files to the same directory on all nodes of the HAWQ cluster. The hawq_hosts file contains a list of all the HAWQ segment hosts. You might require root access to do this.
 
-	```
+	```shell
 	$ hawq scp -f hosts_all Matrix_0.9996875-1.tar.gz =:/home/gpadmin 
 	$ hawq scp -f hawq_hosts arm_1.5-03.tar.gz =:/home/gpadmin
 	```
 
 1. Use the hawq ssh utility in interactive mode to log into each HAWQ segment host (`hawq ssh -f hawq_hosts`). Install the packages from the command prompt using the `R CMD INSTALL` command. Note that this may require root access. For example, this R install command installs the packages for the `arm` package.
 
-	```
+	```shell
 	$ $R_HOME/bin/R CMD INSTALL Matrix_0.9996875-1.tar.gz   arm_1.5-03.tar.gz
 	```
 	<p class="note"><strong>Note:</strong> Some packages require compilation. Refer to the package documentation for any system build requirements.</p>
 
 1. Ensure that the package is installed in the `$R_HOME/library` directory on all the segments (the hawq ssh utility can be use to install the package). For example, this hawq ssh command lists the contents of the R library directory.
 
-	```
+	```shell
 	$ hawq ssh -f hawq_hosts "ls $R_HOME/library"
 	```
 	
