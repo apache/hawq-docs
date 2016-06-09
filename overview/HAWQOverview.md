@@ -14,7 +14,7 @@ HAWQ delivers industry-leading performance and linear scalability. It provides u
 -   Dynamic data flow engine through high speed UDP based interconnect
 -   Elastic execution engine based on on-demand virtual segments and data locality
 -   Support multiple level partitioning and List/Range based partitioned tables.
--   Multiple compression method support: snappy, gzip, quicklz, RLE
+-   Multiple compression method support: snappy, gzip
 -   Multi-language user defined function support: Python, Perl, Java, C/C++, R
 -   Advanced machine learning and data mining functionalities through MADLib
 -   Dynamic node expansion: in seconds
