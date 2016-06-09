@@ -9,11 +9,11 @@ PL/R is a procedural language. With the HAWQ PL/R extension you can write databa
 
 This section contains simple PL/R examples.
 
-### Example 1: Using PL/R for Single Row Operators
+### Example 1: Using PL/R for Single Row Operators <a id="example1"></a>
 
 This function generates an array of numbers with a normal distribution using the R function `rnorm()`.
 
-``` SQL
+```sql
 CREATE OR REPLACE FUNCTION r_norm(n integer, mean float8, 
   std_dev float8) RETURNS float8[ ] AS
 $$
@@ -29,13 +29,13 @@ CREATE TABLE test_norm_var
   DISTRIBUTED BY (id);
 ```
 
-### Example 2: Returning PL/R data.frames in Tabular Form
+### Example 2: Returning PL/R data.frames in Tabular Form <a id="example2"></a>
 
-Assuming your PL/R function returns an R `data.frame` as its output \(unless you want to use arrays of arrays\), some work is required in order for HAWQ to see your PL/R data.frame as a simple SQL table:
+Assuming your PL/R function returns an R `data.frame` as its output \(unless you want to use arrays of arrays\), some work is required in order for HAWQ to see your PL/R `data.frame` as a simple SQL table:
 
 Create a TYPE in a HAWQ with the same dimensions as your R `data.frame`:
 
-```
+```sql
 CREATE TYPE t1 AS ...
 Use this TYPE when defining your PL/R function
 ... RETURNS SET OF t1 AS ...
@@ -43,11 +43,11 @@ Use this TYPE when defining your PL/R function
 
 Sample SQL for this is given in the next example.
 
-### Example 3: Process Employee Information Using PL/R
+### Example 3: Process Employee Information Using PL/R <a id="example3"></a>
 
 The SQL below defines a TYPE and process employee information with data.frame using PL/R:
 
-```
+```sql
 -- Create type to store employee information
 DROP TYPE IF EXISTS emp_type CASCADE;
 CREATE TYPE emp_type AS (name text, age int, salary numeric(10,2));
@@ -115,7 +115,7 @@ R packages are modules that contain R functions and data sets. You can install R
 
 	This function performs a simple test to if an R package can be loaded:
 	
-	```
+	```sql
 	CREATE OR REPLACE FUNCTION R_test_require(fname text)
 	RETURNS boolean AS
 	$BODY$
@@ -126,7 +126,7 @@ R packages are modules that contain R functions and data sets. You can install R
 
 	This SQL command checks if the R package arm can be loaded:
 	
-	```
+	```sql
 	SELECT R_test_require('arm');
 	```
 
@@ -136,27 +136,27 @@ You can use the R command line to display information about the installed librar
 
 This R function lists the available R packages from the R command line:
 
-```
+```r
 > library()
 ```
 
 Display the documentation for a particular R package
 
-```
+```r
 > library(help="package_name")
 > help(package="package_name")
 ```
 
 Display the help file for an R function:
 
-```
+```r
 > help("function_name")
 > ?function_name
 ```
 
 To see what packages are installed, use the R command `installed.packages()`. This will return a matrix with a row for each package that has been installed. Below, we look at the first 5 rows of this matrix.
 
-```
+```r
 > installed.packages()
 ```
 
@@ -164,25 +164,25 @@ Any package that does not appear in the installed packages matrix must be instal
 
 An R package can be installed with `install.packages()`:
 
-```
+```r
 > install.packages("package_name") 
 > install.packages("mypkg", dependencies = TRUE, type="source")
 ```
 
 Load a package from the R command line.
 
-```
+```r
 > library(" package_name ") 
 ```
 An R package can be removed with remove.packages
 
-```
+```r
 > remove.packages("package_name")
 ```
 
 You can use the R command `-e` option to run functions from the command line. For example, this command displays help on the R package MASS.
 
-```
+```shell
 $ R -e 'help("MASS")'
 ```
 
@@ -196,21 +196,21 @@ $ R -e 'help("MASS")'
 
 R documentation is installed with the HAWQ R package:
 
-```
+```shell
 $GPHOME/ext/R-N.N.N/lib64/R/doc
 ```
 
 where N.N.N corresponds to the version of R installed.
 
-### R Functions and Arguments
+### R Functions and Arguments <a id="rfunctions"></a>
 
 See [http://www.joeconway.com/plr/doc/plr-funcs.html](http://www.joeconway.com/plr/doc/plr-funcs.html).
 
-### Passing Data Values in R
+### Passing Data Values in R <a id="passdatavalues"></a>
 
 See [http://www.joeconway.com/plr/doc/plr-data.html](http://www.joeconway.com/plr/doc/plr-data.html).
 
-### Aggregate Functions in R
+### Aggregate Functions in R <a id="aggregatefunctions"></a>
 
 See [http://www.joeconway.com/plr/doc/plr-aggregate-funcs.html](http://www.joeconway.com/plr/doc/plr-aggregate-funcs.html).
 

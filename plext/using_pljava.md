@@ -53,49 +53,50 @@ The following functions are not supported in HAWQ. The classpath is handled diff
 
 HAWQ uses the `pljava_classpath` server configuration parameter in place of the `sqlj.set_classpath` function.
 
-### Server Configuration Parameters
+### Server Configuration Parameters <a id="serverconfigparams"></a>
 
-The following server configuration parameters are used by PL/Java in HAWQ. These parameters replace the pljava.* parameters that are used in the standard PostgreSQL PL/Java implementation:
+The following server configuration parameters are used by PL/Java in HAWQ. These parameters replace the `pljava.*` parameters that are used in the standard PostgreSQL PL/Java implementation.
 
-See the [HAWQ Reference](/200/hawq/reference/hawq-reference.html) for information about the HAWQ server configuration parameters.
+<p class="note"><b>Note:</b> See the [HAWQ Reference](/200/hawq/reference/hawq-reference.html) for information about HAWQ server configuration parameters.<p>
 
-#### pljava_classpath
+#### pljava\_classpath
 
 A colon (:) separated list of the jar files containing the Java classes used in any PL/Java functions. The jar files must be installed in the same locations on all HAWQ hosts. With the trusted PL/Java language handler, jar file paths must be relative to the `$GPHOME/lib/postgresql/java/` directory. With the untrusted language handler (javaU language tag), paths may be relative to `$GPHOME/lib/postgresql/java/` or absolute.
 
-#### pljava_statement_cache_size
+#### pljava\_statement\_cache\_size
 
 Sets the size in KB of the Most Recently Used (MRU) cache for prepared statements.
 
-#### pljava_release_lingering_savepoints
+#### pljava\_release\_lingering\_savepoints
 
 If TRUE, lingering savepoints will be released on function exit. If FALSE, they will be rolled back.
 
-#### pljava_vmoptions
+#### pljava\_vmoptions
 
 Defines the start up options for the Java VM.
 
 
-## Writing PL/Java Functions
+## Writing PL/Java Functions <a id="writingpljavafunc"></a>
 
-Information about writing functions with PL/Java.
+This section provides information about writing functions with PL/Java.
 
-- SQL Declaration
-- Type Mapping
-- NULL Handling
-- Complex Types
-- Returning Complex Types
-- Returning Complex Types
-- Functions That Return Sets
-- Returning a SETOF <scalar type>
-- Returning a SETOF <complex type>
-- SQL Declaration
+- [SQL Declaration](#sqldeclaration)
+- [Type Mapping](#typemapping)
+- [NULL Handling](#nullhandling)
+- [Complex Types](#complextypes)
+- [Returning Complex Types](#returningcomplextypes)
+- [Functions That Return Sets](#functionreturnsets)
+- [Returning a SETOF \<scalar type\>](#returnsetofscalar)
+- [Returning a SETOF \<complex type\>](#returnsetofcomplex)
+
+
+### SQL Declaration <a id="sqldeclaration"></a>
 
 A Java function is declared with the name of a class and a static method on that class. The class will be resolved using the classpath that has been defined for the schema where the function is declared. If no classpath has been defined for that schema, the public schema is used. If no classpath is found there either, the class is resolved using the system classloader.
 
 The following function can be declared to access the static method getProperty on `java.lang.System` class:
 
-```
+```sql
 CREATE FUNCTION getsysprop(VARCHAR)
   RETURNS VARCHAR
   AS 'java.lang.System.getProperty'
@@ -104,11 +105,11 @@ CREATE FUNCTION getsysprop(VARCHAR)
 
 Run the following command to return the Java `user.home` property:
 
-```
+```sql
 SELECT getsysprop('user.home');
 ```
 
-###Type Mapping
+### Type Mapping <a id="typemapping"></a>
 
 Scalar types are mapped in a straightforward way. This table lists the current mappings.
 
@@ -134,11 +135,11 @@ Scalar types are mapped in a straightforward way. This table lists the current m
 
 All other types are mapped to `java.lang.String` and will utilize the standard textin/textout routines registered for respective type.
 
-### NULL Handling
+### NULL Handling <a id="nullhandling"></a>
 
 The scalar types that map to Java primitives can not be passed as NULL values. To pass NULL values, those types can have an alternative mapping. You enable this mapping by explicitly denoting it in the method reference.
 
-```
+```sql
 CREATE FUNCTION trueIfEvenOrNull(integer)
   RETURNS bool
   AS 'foo.fee.Fum.trueIfEvenOrNull(java.lang.Integer)'
@@ -147,7 +148,7 @@ CREATE FUNCTION trueIfEvenOrNull(integer)
 
 The Java code would be similar to this:
 
-```
+```java
 package foo.fee;
 public class Fum
 {
@@ -162,20 +163,20 @@ public class Fum
 
 The following two statements both yield true:
 
-```
+```sql
 SELECT trueIfEvenOrNull(NULL);
 SELECT trueIfEvenOrNull(4);
 ```
 
 In order to return NULL values from a Java method, you use the object type that corresponds to the primitive (for example, you return `java.lang.Integer` instead of `int`). The PL/Java resolve mechanism finds the method regardless. Since Java cannot have different return types for methods with the same name, this does not introduce any ambiguity.
 
-### Complex Types
+### Complex Types <a id="complextypes"></a>
 
 A complex type will always be passed as a read-only `java.sql.ResultSet` with exactly one row. The `ResultSet` is positioned on its row so a call to `next()` should not be made. The values of the complex type are retrieved using the standard getter methods of the `ResultSet`.
 
 Example:
 
-```
+```sql
 CREATE TYPE complexTest
   AS(base integer, incbase integer, ctime timestamptz);
 CREATE FUNCTION useComplexTest(complexTest)
@@ -186,7 +187,7 @@ CREATE FUNCTION useComplexTest(complexTest)
 
 In the Java class `Fum`, we add the following static method:
 
-``` Java
+```java
 public static String useComplexTest(ResultSet complexTest)
 throws SQLException
 {
@@ -199,13 +200,13 @@ throws SQLException
 }
 ```
 
-### Returning Complex Types
+### Returning Complex Types <a id="returningcomplextypes"></a>
 
 Java does not stipulate any way to create a `ResultSet`. Hence, returning a ResultSet is not an option. The SQL-2003 draft suggests that a complex return value should be handled as an IN/OUT parameter. PL/Java implements a `ResultSet` that way. If you declare a function that returns a complex type, you will need to use a Java method with boolean return type with a last parameter of type `java.sql.ResultSet`. The parameter will be initialized to an empty updateable ResultSet that contains exactly one row.
 
 Assume that the complexTest type in previous section has been created.
 
-```
+```sql
 CREATE FUNCTION createComplexTest(int, int)
   RETURNS complexTest
   AS 'foo.fee.Fum.createComplexTest'
@@ -214,7 +215,7 @@ CREATE FUNCTION createComplexTest(int, int)
 
 The PL/Java method resolve will now find the following method in the `Fum` class:
 
-```
+```java
 public static boolean complexReturn(int base, int increment, 
   ResultSet receiver)
 throws SQLException
@@ -229,15 +230,15 @@ throws SQLException
 
 The return value denotes if the receiver should be considered as a valid tuple (true) or NULL (false).
 
-### Functions That Return Sets
+### Functions that Return Sets <a id="functionreturnsets"></a>
 
 When returning result set, you should not build a result set before returning it, because building a large result set would consume a large amount of resources. It is better to produce one row at a time. Incidentally, that is what the HAWQ backend expects a function with SETOF return to do. You can return a SETOF a scalar type such as an int, float or varchar, or you can return a SETOF a complex type.
 
-### Returning a SETOF <scalar type>
+### Returning a SETOF \<scalar type\> <a id="returnsetofscalar"></a>
 
-In order to return a set of a scalar type, you need create a Java method that returns something that implements the java.util.Iterator interface. Here is an example of a method that returns a SETOF varchar:
+In order to return a set of a scalar type, you need create a Java method that returns something that implements the `java.util.Iterator` interface. Here is an example of a method that returns a SETOF varchar:
 
-```
+```sql
 CREATE FUNCTION javatest.getSystemProperties()
   RETURNS SETOF varchar
   AS 'foo.fee.Bar.getNames'
@@ -246,7 +247,7 @@ CREATE FUNCTION javatest.getSystemProperties()
 
 This simple Java method returns an iterator:
 
-```
+```java
 package foo.fee;
 import java.util.Iterator;
 
@@ -264,17 +265,17 @@ public class Bar
 }
 ```
 
-### Returning a SETOF <complex type>
+### Returning a SETOF \<complex type\> <a id="returnsetofcomplex"></a>
 
 A method returning a SETOF <complex type> must use either the interface `org.postgresql.pljava.ResultSetProvider` or `org.postgresql.pljava.ResultSetHandle`. The reason for having two interfaces is that they cater for optimal handling of two distinct use cases. The former is for cases when you want to dynamically create each row that is to be returned from the SETOF function. The latter makes is in cases where you want to return the result of an executed query.
 
-### Using the ResultSetProvider Interface
+#### Using the ResultSetProvider Interface
 
 This interface has two methods. The boolean `assignRowValues(java.sql.ResultSet tupleBuilder, int rowNumber)` and the `void close()` method. The HAWQ query evaluator will call the `assignRowValues` repeatedly until it returns false or until the evaluator decides that it does not need any more rows. Then it calls close.
 
 You can use this interface the following way:
 
-```
+```sql
 CREATE FUNCTION javatest.listComplexTests(int, int)
   RETURNS SETOF complexTest
   AS 'foo.fee.Fum.listComplexTest'
@@ -283,7 +284,7 @@ CREATE FUNCTION javatest.listComplexTests(int, int)
 
 The function maps to a static java method that returns an instance that implements the `ResultSetProvider` interface.
 
-```
+```java
 public class Fum implements ResultSetProvider
 {
   private final int m_base;
@@ -322,13 +323,13 @@ int increment)
 
 The `listComplextTests` method is called once. It may return NULL if no results are available or an instance of the `ResultSetProvider`. Here the Java class `Fum` implements this interface so it returns an instance of itself. The method `assignRowValues` will then be called repeatedly until it returns false. At that time, close will be called.
 
-### Using the ResultSetHandle Interface
+#### Using the ResultSetHandle Interface
 
 This interface is similar to the `ResultSetProvider` interface in that it has a `close()` method that will be called at the end. But instead of having the evaluator call a method that builds one row at a time, this method has a method that returns a `ResultSet`. The query evaluator will iterate over this set and deliver the `ResultSet` contents, one tuple at a time, to the caller until a call to `next()` returns false or the evaluator decides that no more rows are needed.
 
 Here is an example that executes a query using a statement that it obtained using the default connection. The SQL suitable for the deployment descriptor looks like this:
 
-```
+```sql
 CREATE FUNCTION javatest.listSupers()
   RETURNS SETOF pg_user
   AS 'org.postgresql.pljava.example.Users.listSupers'
@@ -341,7 +342,7 @@ CREATE FUNCTION javatest.listNonSupers()
 
 And in the Java package `org.postgresql.pljava.example` a class `Users` is added:
 
-```
+```java
 public class Users implements ResultSetHandle
 {
   private final String m_filter;
@@ -376,4 +377,100 @@ eateStatement();
     return new Users("usesuper = false");
   }
 }
+```
+
+## Example <a id="pljavaexample"></a>
+
+The following simple Java example creates a JAR file that contains a single method and runs the method.
+
+<p class="note"><b>Note:</b> The example requires Java SDK to compile the Java file.</p>
+
+The following method returns a substring.
+
+```java
+{
+public static String substring(String text, int beginIndex,
+  int endIndex)
+    {
+    return text.substring(beginIndex, endIndex);
+    }
+}
+```
+
+Enter the Java code in a text file `example.class`.
+
+Contents of the file `manifest.txt`:
+
+```plaintext
+Manifest-Version: 1.0
+Main-Class: Example
+Specification-Title: "Example"
+Specification-Version: "1.0"
+Created-By: 1.6.0_35-b10-428-11M3811
+Build-Date: 01/20/2013 10:09 AM
+```
+
+Compile the Java code:
+
+```shell
+$ javac *.java
+```
+
+Create a JAR archive named `analytics.jar` that contains the class file and the manifest file in the JAR.
+
+```shell
+$ jar cfm analytics.jar manifest.txt *.class
+```
+
+Upload the JAR file to the HAWQ master host.
+
+Run the `hawq scp` utility to copy the jar file to the HAWQ Java directory. Use the `-f` option to specify the file that contains a list of the master and segment hosts.
+
+```shell
+$ hawq scp -f hawq_hosts analytics.jar =:/usr/local/hawq/lib/postgresql/java/
+```
+
+Use the `hawq config` utility to set the HAWQ `pljava_classpath` server configuration parameter. The parameter lists the installed JAR files.
+
+```shell
+$ hawq config -c pljava_classpath -v \'analytics.jar\'
+```
+
+Run the `hawq restart` utility to reload the configuration files.
+
+```shell
+$ hawq restart cluster
+```
+
+From the `psql` command line, run the following command to show the installed JAR files.
+
+```shell
+psql# show pljava_classpath
+```
+
+The following SQL commands create a table and define a Java function to test the method in the JAR file:
+
+```sql
+CREATE TABLE temp (a varchar) DISTRIBUTED randomly; 
+INSERT INTO temp values ('my string'); 
+--Example function 
+CREATE OR REPLACE FUNCTION java_substring(varchar, int, int) 
+RETURNS varchar AS 'Example.substring' LANGUAGE java; 
+--Example execution 
+SELECT java_substring(a, 1, 5) FROM temp;
+```
+
+You can place the contents in a file, `mysample.sql` and run the command from a psql command line:
+
+```shell
+psql# \i mysample.sql 
+```
+
+The output is similar to this:
+
+```shell
+java_substring
+----------------
+ y st
+(1 row)
 ```

@@ -1,6 +1,6 @@
 ---
 title: Using PL/pgSQL in HAWQ
---------------
+---
 
 SQL is the language of most other relational databases use as query language. It is portable and easy to learn. But every SQL statement must be executed individually by the database server. 
 
@@ -26,10 +26,8 @@ This can result in a considerable performance increase as compared to an applica
 
 PL/pgSQL supports all the data types, operators, and functions of SQL.
 
-<a id="supportedargumentandresultdatatypes"></a>
 
-Supported Data Types for Arguments and Results
-----------------------------------------------
+## Supported Data Types for Arguments and Results <a id="supportedargumentandresultdatatypes"></a>
 
 Functions written in PL/pgSQL accept as arguments any scalar or array data type supported by the server, and they can return a result containing this data type. They can also accept or return any composite type (row type) specified by name. It is also possible to declare a PL/pgSQL function as returning record, which means that the result is a row type whose columns are determined by specification in the calling query. See <a href="#tablefunctions" class="xref">Table Functions</a>.
 
@@ -43,16 +41,15 @@ Finally, a PL/pgSQL function can be declared to return void if it has no useful 
 
 PL/pgSQL functions can also be declared with output parameters in place of an explicit specification of the return type. This does not add any fundamental capability to the language, but it is often convenient, especially for returning multiple values. The RETURNS TABLE notation can also be used in place of RETURNS SETOF .
 
-This topis describes the following PL/pgSQLconcepts:
+This topic describes the following PL/pgSQLconcepts:
 
--   Table Functions
--   SQL Functions with Variable number of Arguments
--   Polymorphic Functions
+-   [Table Functions](#tablefunctions)
+-   [SQL Functions with Variable number of Arguments](#sqlfunctionswithvariablenumbersofarguments)
+-   [Polymorphic Types](#polymorphictypes)
 
-<a id="tablefunctions"></a>
 
-Table Functions
----------------
+## Table Functions <a id="tablefunctions"></a>
+
 
 Table functions are functions that produce a set of rows, made up of either base data types (scalar types) or composite data types (table rows). They are used like a table, view, or subquery in the FROM clause of a query. Columns returned by table functions can be included in SELECT, JOIN, or WHERE clauses in the same manner as a table, view, or subquery column.
 
@@ -62,7 +59,7 @@ A table function can be aliased in the FROM clause, but it also can be left unal
 
 Some examples:
 
-```
+```sql
 CREATE TABLE foo (fooid int, foosubid int, fooname text);
 
 CREATE FUNCTION getfoo(int) RETURNS SETOF foo AS $$
@@ -85,7 +82,7 @@ SELECT * FROM vw_getfoo;
 
 In some cases, it is useful to define table functions that can return different column sets depending on how they are invoked. To support this, the table function can be declared as returning the pseudotype record. When such a function is used in a query, the expected row structure must be specified in the query itself, so that the system can know how to parse and plan the query. Consider this example:
 
-```
+```sql
 SELECT *
     FROM dblink('dbname=mydb', 'SELECT proname, prosrc FROM pg_proc')
       AS t1(proname name, prosrc text)
@@ -94,14 +91,12 @@ SELECT *
 
 The `dblink` function executes a remote query (see `contrib/dblink`). It is declared to return `record` since it might be used for any kind of query. The actual column set must be specified in the calling query so that the parser knows, for example, what `*` should expand to.
 
-<a id="sqlfunctionswithvariablenumbersofarguments"></a>
 
-SQL Functions with Variable Numbers of Arguments
-------------------------------------------------
+## SQL Functions with Variable Numbers of Arguments <a id="sqlfunctionswithvariablenumbersofarguments"></a>
 
 SQL functions can be declared to accept variable numbers of arguments, so long as all the "optional" arguments are of the same data type. The optional arguments will be passed to the function as an array. The function is declared by marking the last parameter as VARIADIC; this parameter must be declared as being of an array type. For example:
 
-``` pre
+```sql
 CREATE FUNCTION mleast(VARIADIC numeric[]) RETURNS numeric AS $$
     SELECT min($1[i]) FROM generate_subscripts($1, 1) g(i);
 $$ LANGUAGE SQL;
@@ -115,7 +110,7 @@ SELECT mleast(10, -1, 5, 4.4);
 
 Effectively, all the actual arguments at or beyond the VARIADIC position are gathered up into a one-dimensional array, as if you had written
 
-``` pre
+```sql
 SELECT mleast(ARRAY[10, -1, 5, 4.4]);    -- doesn't work
 ```
 
@@ -123,16 +118,15 @@ You can't actually write that, though; or at least, it will not match this funct
 
 Sometimes it is useful to be able to pass an already-constructed array to a variadic function; this is particularly handy when one variadic function wants to pass on its array parameter to another one. You can do that by specifying VARIADIC in the call:
 
-``` pre
+```sql
 SELECT mleast(VARIADIC ARRAY[10, -1, 5, 4.4]);
 ```
 
 This prevents expansion of the function's variadic parameter into its element type, thereby allowing the array argument value to match normally. VARIADIC can only be attached to the last actual argument of a function call.
 
-<a id="polymorphictypes"></a>
 
-Polymorphic Types
------------------
+
+## Polymorphic Types <a id="polymorphictypes"></a>
 
 Four pseudo-types of special interest are anyelement,anyarray, anynonarray, and anyenum, which are collectively called *polymorphic types*. Any function declared using these types is said to be a*polymorphic function*. A polymorphic function can operate on many different data types, with the specific data type(s) being determined by the data types actually passed to it in a particular call.
 
