@@ -86,7 +86,6 @@ HAWQ utilizes dynamic parallelism, which can affect the performance of a query e
 
 -   The size of a randomly distributed table.
 -   The `bucketnum` of a hash distributed table.
--   The number of virtual segments specified in the definition of an external table.
 -   Data locality.
 -   The values of `default_hash_table_bucket_number`, and `hawq_rm_nvseg_perquery_limit` \(including defaults and user-defined values\).
 
