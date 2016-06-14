@@ -215,7 +215,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     $ hawq ssh -f seg_hosts -e 'chown gpadmin /data/segment'
     ```
 
-16. Create the HAWQ temporary directories on all HAWQ hosts in your cluster. As a best practice, use a directory from each mounted drive available on your machines to load balance writing for temporary files. These drives are typically the same drives that are used by your DataNode service. For example, if you have two drives mounted on `/data1` and `/data2`, you could use `/data1/tmp` and `/data2/tmp` for storing temporary files.
+16. HAWQ temporary directories are used for spill files. Create the HAWQ temporary directories on all HAWQ hosts in your cluster. As a best practice, use a directory from each mounted drive available on your machines to load balance writing for temporary files. These drives are typically the same drives that are used by your DataNode service. For example, if you have two drives mounted on `/data1` and `/data2`, you could use `/data1/tmp` and `/data2/tmp` for storing temporary files.  If you do not specify master or segment temporary directories, temporary files are stored in `/tmp`.
 
     The following example commands use two disks with the paths /data1/tmp and /data2/tmp:
 
@@ -230,7 +230,7 @@ Follow this procedure to install the HAWQ cluster on multiple host machines or V
     ```
 
     If you configure too few temp directories, or you place multiple temp directories on the same disk, you increase the risk of disk contention or running out of disk space when multiple virtual segments target the same disk. Each HAWQ segment node can have 6 virtual segments.
-17. Login to the master host as the gpadmin user. Create a customized a `$GPHOME/etc/hawq-site.xml` file using the template `$GPHOME/etc/template-hawq-site.xml` file for a multi-node cluster. Your custom hawq-site.xml should include the following modifications:
+17. Login to the master host as the gpadmin user. Create a customized `$GPHOME/etc/hawq-site.xml` file using the template `$GPHOME/etc/template-hawq-site.xml` file for a multi-node cluster. Your custom hawq-site.xml should include the following modifications:
     1.  Change the `hawq_dfs_url` property definition to use the actual Namenode port number as well as the HAWQ data directory:
 
         ```
