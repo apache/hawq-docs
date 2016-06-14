@@ -370,4 +370,63 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
     2. Click **Save** to save the updated configuration.
     3. Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
-    This will synchronize the password on the host machines with the password that you specified in Ambari.
+    This will synchronize the password on the host machines with the password that you specified in Ambari.^M
+##Setting Up Alerts ^M
+When you want to be advised of when a HAWQ process is down or not responding.
+Alerts can be created for the Master, Standby Master, Segments, and PXF services.
+
+### Prerequisites
+HAWQ service on the cluster must be already installed and managed through Ambari.
+
+### When to Perform
+Alerts are enabled by default. However, yoou might want to disable them alert function when performing system operations in maintenance mode and re-enable them when returning to normal operation.
+
+Alerts can be configured to display messages for all system status, on only conditions of interest, such as warnings or critical conditions. Alerts can advise you of the following conditions: 
+* The HAWQ Master process is down or not responding.
+* The HAWQ Standby Master process is down or not responding.
+* A HAWQ Segment on a node is down or not listening on the network.
+* The HAWQ Standby Master is not synchronized with HAWQ Master.
+* When any of the HAWQ segments fail to register with the HAWQ Master. 
+* If the number of available  HAWQ Segments falls below the specified alert threshhold.
+* The PXF process on a node is down or not responding. 
+
+You can set Ambari to check for alerts at specified intervals, on a particular service or host, and what level of criticality you want to trigger an alert (OK, WARNING, CRITICAL) or if the system goes into an unknown status..
+###Procedure
+To view the alert information, click on the Alert button at the top of the Ambari console. The default interval for checking the functionality of the HAWQ system is 1 minute. To customize the alert, perform the following steps:
+1.  Click on the name of the Alert you want to edit. 
+2.  When the Configuration screen appears, click **Edit**. 
+3.  Change the setting for the interval for the instance you want to configure and click **Save**.
+
+
+The Alerts you can configure are as follows:
+
+HAWQ Master Process
+This alert is triggered when the HAWQ Master process is down or not responding.
+
+HAWQ Segment Process
+This alert is triggered when a HAWQ Segment on a node is down or not responding.
+
+HAWQ Standby Master Process
+This alert is triggered when the HAWQ Standby Master process is down or not responding.
+
+HAWQ Standby Master Sync Status
+This alert is triggered when the HAWQ Standby Master is not synchronized with the HAWQ Master. Using this Alert eliminates the need to check the gp_master_mirroring catalog table to determine if the Standby Master is fully synchronized. 
+If this Alert is triggered, use the service action  Re-Sync HAWQ Standby Master on the HAWQ service page to re-synchronize HAWQ Standby Master with HAWQ Master.
+
+HAWQ Segment Registration Status
+This alert is triggered when any of the HAWQ Segments fail to register with HAWQ Master. This indicates that the HAWQ segments having up status  in the gp_segment_configuration table do not match the HAWQ Segments listed in /usr/local/hawq/etc/slaves file on HAWQ Master. 
+
+Percent HAWQ Segment Status Available
+Tp change the threshhold for the number of unresponsive segments that will trigger an alert, use the following procedure:
+1.  Click on **Percent HAWQ Segments Available**. 
+2.  Click **Edit** to change the percentage of total segments that will create a Warning alert (default is 10 percent of total) or Critical Alert (default is 25 percent of total segments).
+3.  Click **Save** when done.
+
+Alerts for **OK**, **WARN**, and **CRITICAL** will be displayed when the number of unresponsive HAWQ segments in the cluster is greater than  the specified threshhold. 
+
+
+PXF Alerts
+PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network. 
+
+Go to the Groups dropdown button at the top right of the Alerts page. Select PXF Default. 
+Click on PXF Process to set the time interval for checking the network.
