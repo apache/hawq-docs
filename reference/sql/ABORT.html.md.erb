@@ -1,0 +1,37 @@
+---
+title: ABORT
+---
+
+Aborts the current transaction.
+
+## Synopsis
+
+``` pre
+ABORT [WORK | TRANSACTION]
+```
+
+## Description<a id="abort__section3"></a>
+
+`ABORT` rolls back the current transaction and causes all the updates made by the transaction to be discarded. This command is identical in behavior to the standard SQL command `ROLLBACK`, and is present only for historical reasons.
+
+## Parameters<a id="abort__section4"></a>
+
+WORK
+TRANSACTION  
+Optional key words. They have no effect.
+
+## Notes<a id="abort__section5"></a>
+
+Use `COMMIT` to successfully terminate a transaction.
+
+Issuing `ABORT` when not inside a transaction does no harm, but it will provoke a warning message.
+
+## Compatibility
+
+This command is a HAWQ extension present for historical reasons. ROLLBACK is the equivalent standard SQL command.
+
+## See Also
+
+/3/4, /3/4, /3/4
+
+

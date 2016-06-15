@@ -1,0 +1,24 @@
+---
+title: URL-based Web External Tables
+---
+
+A URL-based web table accesses data from a web server using the HTTP protocol. Web table data is dynamic; the data is not rescannable.
+
+Specify the `LOCATION` of files on a web server using `http://`. The web data file(s) must reside on a web server that HAWQ segment hosts can access. The number of URLs specified corresponds to the minimum number of virtual segments that work in parallel to access the web table.
+
+The following sample command defines a web table that gets data from several URLs.
+
+``` pre
+=# CREATE EXTERNAL WEB TABLE ext_expenses (
+    name text, date date, amount float4, category text, description text) 
+  LOCATION ('http://intranet.company.com/expenses/sales/file.csv',
+            'http://intranet.company.com/expenses/exec/file.csv',
+            'http://intranet.company.com/expenses/finance/file.csv',
+            'http://intranet.company.com/expenses/ops/file.csv',
+            'http://intranet.company.com/expenses/marketing/file.csv',
+            'http://intranet.company.com/expenses/eng/file.csv' 
+           )
+  FORMAT 'CSV' ( HEADER );
+```
+
+

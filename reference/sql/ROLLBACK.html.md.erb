@@ -1,0 +1,43 @@
+---
+title: ROLLBACK
+---
+
+Aborts the current transaction.
+
+## Synopsis<a id="topic1__section2"></a>
+
+``` pre
+ROLLBACK [WORK | TRANSACTION]
+```
+
+## Description<a id="topic1__section3"></a>
+
+`ROLLBACK` rolls back the current transaction and causes all the updates made by the transaction to be discarded.
+
+## Parameters<a id="topic1__section4"></a>
+
+WORK
+TRANSACTION  
+Optional key words. They have no effect.
+
+## Notes<a id="topic1__section5"></a>
+
+Use `COMMIT` to successfully end the current transaction.
+
+Issuing `ROLLBACK` when not inside a transaction does no harm, but it will provoke a warning message.
+
+## Examples<a id="topic1__section6"></a>
+
+To discard all changes made in the current transaction:
+
+``` pre
+ROLLBACK;
+```
+
+## Compatibility<a id="topic1__section7"></a>
+
+The SQL standard only specifies the two forms `ROLLBACK` and `ROLLBACK WORK`. Otherwise, this command is fully conforming.
+
+## See Also<a id="topic1__section8"></a>
+
+/3/4, /3/4, /3/4, /3/4

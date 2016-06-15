@@ -1,0 +1,22 @@
+---
+title: Transforming with INSERT INTO SELECT FROM
+---
+
+Specify the transformation in the `CREATE EXTERNAL TABLE` definition's `LOCATION` clause. For example, the transform is shown in bold in the following command. (Run `gpfdist` first, using the command `gpfdist             -c config.yaml`).
+
+``` pre
+CREATE READABLE EXTERNAL TABLE prices_readable (LIKE prices)
+   LOCATION ('gpfdist://hostname:8081/prices.xml#transform=prices_input')
+   FORMAT 'TEXT' (DELIMITER '|')
+   LOG ERRORS INTO error_log SEGMENT REJECT LIMIT 10;
+```
+
+In the command above, change *hostname* to your hostname. `prices_input` comes from the configuration file.
+
+The following query loads data into the `prices` table.
+
+``` pre
+INSERT INTO prices SELECT * FROM prices_readable;
+```
+
+

@@ -1,0 +1,12 @@
+---
+title: Unloading Data Using COPY
+---
+
+`COPY TO` copies data from a table to a file (or standard input) on the HAWQ master host using a single process on the HAWQ master instance. Use `COPY` to output a table's entire contents, or filter the output using a `SELECT` statement. For example:
+
+``` pre
+COPY (SELECT * FROM country WHERE country_name LIKE 'A%') 
+TO '/home/gpadmin/a_list_countries.out';
+```
+
+

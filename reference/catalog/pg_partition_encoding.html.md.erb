@@ -1,0 +1,17 @@
+---
+title: pg_partition_encoding
+---
+
+The `pg_partition_encoding` system catalog table describes the available column compression options for a partition template.
+
+<a id="topic1__hb177831"></a>
+
+| column             | type       | modifers | storage  | description |
+|--------------------|------------|----------|----------|-------------|
+| `parencoid`        | oid        | not null | plain    |             |
+| `parencattnum`     | smallint   | not null | plain    |             |
+| `parencattoptions` | text \[ \] |          | extended |             |
+
+: <span class="tablecap">Table 1. pg\_catalog.pg\_attribute\_encoding</span>
+
+
