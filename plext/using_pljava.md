@@ -57,7 +57,7 @@ HAWQ uses the `pljava_classpath` server configuration parameter in place of the 
 
 The following server configuration parameters are used by PL/Java in HAWQ. These parameters replace the `pljava.*` parameters that are used in the standard PostgreSQL PL/Java implementation.
 
-<p class="note"><b>Note:</b> See the <a href="/200/hawq/reference/hawq-reference.html">HAWQ Reference</a> for information about HAWQ server configuration parameters.</p>
+<p class="note"><b>Note:</b> See the <a href="/20/reference/hawq-reference.html">HAWQ Reference</a> for information about HAWQ server configuration parameters.</p>
 
 #### pljava\_classpath
 

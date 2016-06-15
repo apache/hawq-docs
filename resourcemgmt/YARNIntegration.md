@@ -143,7 +143,7 @@ However, if you had set `yarn.scheduler.minimum-allocation-mb` to 4GB, then it w
 
 **Note:** If you are specifying 1GB or under for `yarn.scheduler.minimum-allocation-mb` in `yarn-site.xml`, then make sure that the property is an equal subdivision of 1GB. For example, 1024, 512.
 
-See [Handling Segment Resource Fragmentation](/200/hawq/troubleshooting/Troubleshooting.html) for general information on resource fragmentation.
+See [Handling Segment Resource Fragmentation](/20/troubleshooting/Troubleshooting.html) for general information on resource fragmentation.
 
 ## Enabling YARN Mode in HAWQ <a id="topic_rtd_cjh_15"></a>
 

@@ -15,7 +15,7 @@ There are several recommendations to keep in mind when modifying the size of you
 -   When you add a new node, install both a DataNode and a physical segment on the new node.
 -   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, execute **`select gp_metadata_cache_clear();`**.
--   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
+-   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command.
 -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
 ## Adding a New Node to an Existing HAWQ Cluster <a id="task_hawq_expand"></a>
@@ -197,7 +197,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 	|\> 256 and <= 512|1 \* \#nodes|
 	|\> 512|512| 
    
-18. If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter. 
+18. If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter. 
 
 
 	**Note:** The redistribution of table data can take a significant amount of time.

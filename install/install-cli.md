@@ -680,4 +680,4 @@ If you plan on accessing data in external systems such as HDFS files, Hive or HB
 
 1.  Follow the instructions in [Post-Install Procedure for Hive and HBase on HDP](/20/install/install-ambari.html#post-install-pxf) to complete the PXF configuration.
 
-2.  Install the appropriate PXF plugin for the external system. We recommend installing the PXF plugin for the desired external system on all nodes in your cluster. See [Installing PXF Plugins](/200/hawq/pxf/InstallPXFPlugins.html).
+2.  Install the appropriate PXF plugin for the external system. We recommend installing the PXF plugin for the desired external system on all nodes in your cluster. See [Installing PXF Plugins](/20/pxf/InstallPXFPlugins.html).

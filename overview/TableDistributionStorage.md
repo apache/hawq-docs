@@ -16,7 +16,7 @@ Randomly distributed tables have some benefits over hash distributed tables. For
 
 On the other hand, for some queries, hash distributed tables are faster than randomly distributed tables. For example, hash distributed tables have some performance benefits for some TPC-H queries. You should choose the distribution policy that is best suited for your application's scenario.
 
-See [Choosing the Table Distribution Policy](/200/hawq/ddl/ddl-table.html) for more details.
+See [Choosing the Table Distribution Policy](/20/ddl/ddl-table.html) for more details.
 
 ## Data Locality
 
@@ -33,9 +33,9 @@ PXF is an extensible framework that allows HAWQ to access data in external
 sources as readable or writable HAWQ tables. PXF has built-in connectors for
 accessing data inside HDFS files, Hive tables, and HBase tables. PXF also
 integrates with HCatalog to query Hive tables directly. See [Working with PXF
-and External Data](/200/hawq/pxf/PivotalExtensionFrameworkPXF.html) for more
+and External Data](/20/pxf/PivotalExtensionFrameworkPXF.html) for more
 details.
 
 Users can create custom PXF connectors to access other parallel data stores or
 processing engines. Connectors are Java plugins that use the PXF API. For more
-information see [PXF External Tables and API](/200/hawq/pxf/PXFExternalTableandAPIReference.html).
+information see [PXF External Tables and API](/20/pxf/PXFExternalTableandAPIReference.html).

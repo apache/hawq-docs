@@ -189,7 +189,7 @@ GROUP BY 1;
   </tr>
   <tr>
     <td>
-    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="/200/hawq/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
+    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="/20/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
     <p>Recommended frequency: daily</p>
     <p>Severity: CRITICAL</p>
     </td>
@@ -197,7 +197,7 @@ GROUP BY 1;
       <p><p>Vacuum an individual table:</p>
       <pre><code>VACUUM &lt;<i>table</i>&gt;;</code></pre>
     </td>
-    <td>After the <a href="/200/hawq/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
+    <td>After the <a href="/20/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
   </tr>
     <td>
       <p>Update table statistics.</p>

@@ -30,7 +30,7 @@ The HAWQ resource manager follows several principles when allocating resources t
 
 **Enforcing Limits on Resources**
 
-You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html). For some best practices on designing and using resource queues in HAWQ, see [Best Practices for Managing Resources](/200/hawq/bestpractices/managing_resources_bestpractices.html).
+You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html). For some best practices on designing and using resource queues in HAWQ, see [Best Practices for Managing Resources](/20/bestpractices/managing_resources_bestpractices.html).
 
 For a high-level overview of how resource management works in HAWQ, see [Managing Resources](HAWQResourceManagement.html).
 
@@ -66,7 +66,7 @@ postgres=# show hawq_rm_nresqueue_limit;
 
 Use CREATE RESOURCE QUEUE to create a new resource queue. Only a superuser can run this DDL statement.
 
-Creating a resource queue involves giving it a name, a parent, setting the CPU and memory limits for the queue, and optionally a limit to the number of active statements on the resource queue. See [CREATE RESOURCE QUEUE](/200/hawq/reference/sql/CREATE-RESOURCE-QUEUE.html).
+Creating a resource queue involves giving it a name, a parent, setting the CPU and memory limits for the queue, and optionally a limit to the number of active statements on the resource queue. See [CREATE RESOURCE QUEUE](/20/reference/sql/CREATE-RESOURCE-QUEUE.html).
 
 **Note:** You can only associate roles and queries with leaf-level resource queues. Leaf-level resource queues are resource queues that do not have any children.
 
@@ -98,7 +98,7 @@ However, when you alter a resource queue, queued resource requests may encounter
 
 To prevent conflicts, HAWQ cancels by default all resource requests that are in conflict with the new resource queue definition. This behavior is controlled by the `hawq_rm_force_alterqueue_cancel_queued_request` server configuration parameter, which is by default set to true \(`on`\). If you set the server configuration parameter `hawq_rm_force_alterqueue_cancel_queued_request` to false, the actions specified in ALTER RESOURCE QUEUE are canceled if the resource manager finds at least one resource request that is in conflict with the new resource definitions supplied in the altering command.
 
-For more information, see [ALTER RESOURCE QUEUE](/200/hawq/reference/sql/ALTER-RESOURCE-QUEUE.html).
+For more information, see [ALTER RESOURCE QUEUE](/20/reference/sql/ALTER-RESOURCE-QUEUE.html).
 
 **Note:** To change the roles \(users\) assigned to a resource queue, use the ALTER ROLE command.
 
@@ -155,7 +155,7 @@ FROM pg_resqueue WHERE rsqname='test_queue_1';
  test_queue_1 |      9800 |         100 | 50%         | 50%       |             2 | even        | mem:128mb         | 0               | 0               | 0                     |1
 ```
 
-The query displays all the attributes and their values of the selected resource queue. See [CREATE RESOURCE QUEUE](/200/hawq/reference/sql/CREATE-RESOURCE-QUEUE.html) for a description of these attributes.
+The query displays all the attributes and their values of the selected resource queue. See [CREATE RESOURCE QUEUE](/20/reference/sql/CREATE-RESOURCE-QUEUE.html) for a description of these attributes.
 
 You can also check the runtime status of existing resource queues by querying the `pg_resqueue_status` view:
 
