@@ -371,6 +371,7 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
     3. Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
     This will synchronize the password on the host machines with the password that you specified in Ambari.
+
 ## Setting Up Alerts
  
 Alerts advise you of when a HAWQ process is down or not responding, or when certain conditions occur.n.
@@ -394,7 +395,7 @@ Alerts can be configured to display messages for all system status, on only cond
 You can set Ambari to check for alerts at specified intervals, on a particular service or host, and what level of criticality you want to trigger an alert (OK, WARNING, CRITICAL) or if the system goes into an unknown status.
 
 ### Procedure
-To view the alert information, click on the **Alert** button at the top of the Ambari console. Ambati will display a list of all available alert functions. To view current settings, click on the name of the alert.
+To view the alert information, click on the **Alert** button at the top of the Ambari console. Ambati will display a list of all available alert functions and their current status. To view current Alert settings, click on the name of the alert.
 You can customize how often you wish the system to check for certain conditions. The default interval for checking the functionality of the HAWQ system is 1 minute. To customize the interval, perform the following steps:
 
 1.  Click on the name of the Alert you want to edit. 
@@ -405,18 +406,18 @@ You can customize how often you wish the system to check for certain conditions.
 The Alerts you can configure are as follows:
 
 * HAWQ Master Process
-This alert is triggered when the HAWQ Master process is down or not responding.
+This alert is triggered when the HAWQ Master process is down or not responding. To customize the Alert, follow the procedure above. 
 
 * HAWQ Segment Process
-This alert is triggered when a HAWQ Segment on a node is down or not responding.
+This alert is triggered when a HAWQ Segment on a node is down or not responding. To customize the Alert, follow the procedure above. 
 
 * HAWQ Standby Master Process
-This alert is triggered when the HAWQ Standby Master process is down or not responding.
+This alert is triggered when the HAWQ Standby Master process is down or not responding. If no standby is present, the Alert shows as **NONE**. 
 
 * HAWQ Standby Master Sync Status
 This alert is triggered when the HAWQ Standby Master is not synchronized with the HAWQ Master. Using this Alert eliminates the need to check the gp\_master\_mirroring catalog table to determine if the Standby Master is fully synchronized. 
-f no standby Master is present, the status will show as UNKNOWN.
-   If this Alert is triggered, use the service action  Re-Sync HAWQ Standby Master  by going to the HAWQ **Service** page to re-synchronize HAWQ Standby Master with HAWQ Master.
+f no standby Master is present, the status will show as **UNKNOWN**..
+   If this Alert is triggered, go to the HAWQ **Services** tab and click on the **Service Action** button to re-sync the HAWQ Standby Master with the HAWQ Master.
 
 * HAWQ Segment Registration Status
 This alert is triggered when any of the HAWQ Segments fail to register with HAWQ Master. This indicates that the HAWQ segments having up status in the gp\_segment\_configuration table do not match the HAWQ Segments listed in /usr/local/hawq/etc/slaves file on HAWQ Master. 
