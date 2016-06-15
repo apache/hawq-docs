@@ -1,0 +1,17 @@
+---
+title: pg_filespace_entry
+---
+
+A tablespace requires a file system location to store its database files. In HAWQ, the master and each segment needs its own distinct storage location. This collection of file system locations for all components in a HAWQ system is referred to as a *filespace*. The `pg_filespace_entry` table contains information about the collection of file system locations across a HAWQ system that comprise a HAWQ filespace.
+
+<a id="topic1__gp138428"></a>
+
+| column        | type    | references                       | description                               |
+|---------------|---------|----------------------------------|-------------------------------------------|
+| `fsefsoid`    | oid     | pg\_filespace.oid                | Object id of the filespace.               |
+| `fsedbid`     | integer | gp\_segment\_ configuration.dbid | Segment id.                               |
+| `fselocation` | text    |                                  | File system location for this segment id. |
+
+: <span class="tablecap">Table 1. pg\_catalog.pg\_filespace\_entry</span>
+
+

@@ -1,0 +1,25 @@
+---
+title: Best Practices for Querying Data
+---
+
+To obtain the best results when querying data in HAWQ, review the best practices described in this topic.
+
+## Examining Query Plans to Solve Problems<a id="id_xtk_jmq_1v"></a>
+
+If a query performs poorly, examine its query plan and ask the following questions:
+
+-   **Do operations in the plan take an exceptionally long time?** Look for an operation that consumes the majority of query processing time. For example, if a scan on a hash table takes longer than expected, the data locality may be low; reloading the data can increase the data locality and speed up the query. Or, adjust `enable_<operator>` parameters to see if you can force the legacy query optimizer (planner) to choose a different plan by disabling a particular query plan operator for that query.
+-   **Are the optimizer's estimates close to reality?** Run `EXPLAIN             ANALYZE` and see if the number of rows the optimizer estimates is close to the number of rows the query operation actually returns. If there is a large discrepancy, collect more statistics on the relevant columns.
+-   **Are selective predicates applied early in the plan?** Apply the most selective filters early in the plan so fewer rows move up the plan tree. If the query plan does not correctly estimate query predicate selectivity, collect more statistics on the relevant columns. You can also try reordering the `WHERE` clause of your SQL statement.
+-   **Does the optimizer choose the best join order?** When you have a query that joins multiple tables, make sure that the optimizer chooses the most selective join order. Joins that eliminate the largest number of rows should be done earlier in the plan so fewer rows move up the plan tree.
+
+    If the plan is not choosing the optimal join order, set `join_collapse_limit=1` and use explicit `JOIN` syntax in your SQL statement to force the legacy query optimizer (planner) to the specified join order. You can also collect more statistics on the relevant join columns.
+
+-   **Does the optimizer selectively scan partitioned tables?** If you use table partitioning, is the optimizer selectively scanning only the child tables required to satisfy the query predicates? Scans of the parent tables should return 0 rows since the parent tables do not contain any data. See [Verifying Your Partition Strategy](/20/ddl/ddl-partition.html#topic74) for an example of a query plan that shows a selective partition scan.
+-   **Does the optimizer choose hash aggregate and hash join operations where applicable?** Hash operations are typically much faster than other types of joins or aggregations. Row comparison and sorting is done in memory rather than reading/writing from disk. To enable the query optimizer to choose hash operations, there must be sufficient memory available to hold the estimated number of rows. Try increasing work memory to improve performance for a query. If possible, run an `EXPLAIN             ANALYZE` for the query to show which plan operations spilled to disk, how much work memory they used, and how much memory was required to avoid spilling to disk. For example:
+
+    `Work_mem used: 23430K bytes avg, 23430K bytes max (seg0). Work_mem               wanted: 33649K bytes avg, 33649K bytes max (seg0) to lessen workfile I/O affecting 2               workers.`
+
+    The "bytes wanted" message from `EXPLAIN               ANALYZE` is based on the amount of data written to work files and is not exact. The minimum `work_mem` needed can differ from the suggested value.
+
+

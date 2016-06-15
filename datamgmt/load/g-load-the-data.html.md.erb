@@ -1,0 +1,17 @@
+---
+title: Load the Data
+---
+
+Create the tables with SQL statements based on the appropriate schema.
+
+There are no special requirements for the HAWQ tables that hold loaded data. In the prices example, the following command creates the appropriate table.
+
+``` pre
+CREATE TABLE prices (
+  itemnumber integer,       
+  price       decimal        
+) 
+DISTRIBUTED BY (itemnumber);
+```
+
+

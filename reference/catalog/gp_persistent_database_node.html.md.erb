@@ -1,0 +1,73 @@
+---
+title: gp_persistent_database_node
+---
+
+The `gp_persistent_database_node` table keeps track of the status of file system objects in relation to the transaction status of database objects. This information is used to make sure the state of the system catalogs and the file system files persisted to disk are synchronized.
+
+<a id="topic1__fi138428"></a>
+
+<table>
+<caption><span class="tablecap">Table 1. pg\_catalog.gp\_persistent\_database\_node</span></caption>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>column</th>
+<th>type</th>
+<th>references</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="ph codeph">tablespace_oid</code></td>
+<td>oid</td>
+<td>pg_tablespace.oid</td>
+<td>Table space object id.</td>
+</tr>
+<tr class="even">
+<td><code class="ph codeph">database_oid</code></td>
+<td>oid</td>
+<td>pg_database.oid</td>
+<td>Database object id.</td>
+</tr>
+<tr class="odd">
+<td><code class="ph codeph">persistent_state</code></td>
+<td>smallint</td>
+<td> </td>
+<td>0 - free
+<p>1 - create pending</p>
+<p>2 - created</p>
+<p>3 - drop pending</p>
+<p>4 - aborting create</p>
+<p>5 - &quot;Just in Time&quot; create pending</p>
+<p>6 - bulk load create pending</p></td>
+</tr>
+<tr class="even">
+<td><code class="ph codeph">parent_xid</code></td>
+<td>integer</td>
+<td> </td>
+<td>Global transaction id.</td>
+</tr>
+<tr class="odd">
+<td><code class="ph codeph">persistent_serial_num</code></td>
+<td>bigint</td>
+<td> </td>
+<td>Log sequence number position in the transaction log for a file block.</td>
+</tr>
+<tr class="even">
+<td><code class="ph codeph">previous_free_tid</code></td>
+<td>tid</td>
+<td> </td>
+<td>Used by HAWQ to internally manage persistent representations of file system objects.</td>
+</tr>
+</tbody>
+</table>
+
+: <span class="tablecap">Table 1. pg\_catalog.gp\_persistent\_database\_node</span>
+
+

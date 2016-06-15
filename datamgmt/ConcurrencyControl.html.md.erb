@@ -1,0 +1,30 @@
+---
+title: Concurrency Control
+---
+
+This topic discusses the mechanisms used in HAWQ to provide concurrency control.
+
+HAWQ and PostgreSQL do not use locks for concurrency control. They maintain data consistency using a multiversion model, Multiversion Concurrency Control (MVCC). MVCC achieves transaction isolation for each database session, and each query transaction sees a snapshot of data. This ensures the transaction sees consistent data that is not affected by other concurrent transactions.
+
+Because MVCC does not use explicit locks for concurrency control, lock contention is minimized and HAWQ maintains reasonable performance in multiuser environments. Locks acquired for querying (reading) data do not conflict with locks acquired for writing data.
+
+HAWQ provides multiple lock modes to control concurrent access to data in tables. Most HAWQ SQL commands automatically acquire the appropriate locks to ensure that referenced tables are not dropped or modified in incompatible ways while a command executes. For applications that cannot adapt easily to MVCC behavior, you can use the `LOCK` command to acquire explicit locks. However, proper use of MVCC generally provides better performance.
+
+<a id="topic_f5l_qnh_kr__ix140861"></a>
+
+| Lock Mode              | Associated SQL Commands                                                             | Conflicts With                                                                                                          |
+|------------------------|-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| ACCESS SHARE           | `SELECT`                                                                            | ACCESS EXCLUSIVE                                                                                                        |
+| ROW SHARE              | `SELECT FOR UPDATE`, `SELECT FOR                 SHARE`                             | EXCLUSIVE, ACCESS EXCLUSIVE                                                                                             |
+| ROW EXCLUSIVE          | `INSERT`, `COPY`                                                                    | SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE                                                                 |
+| SHARE UPDATE EXCLUSIVE | `VACUUM` (without `FULL`), `ANALYZE`                                                | SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE                                         |
+| SHARE                  | `CREATE INDEX`                                                                      | ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE                                 |
+| SHARE ROW EXCLUSIVE    |                                                                                     | ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE                          |
+| EXCLUSIVE              | `DELETE`, `UPDATE` See [Note](#topic_f5l_qnh_kr__lock_note) | ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE               |
+| ACCESS EXCLUSIVE       | `ALTER TABLE`, `DROP TABLE`, `TRUNCATE`, `REINDEX`, `CLUSTER`, `VACUUM FULL`        | ACCESS SHARE, ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE |
+
+: <span class="tablecap">Table 1. Lock Modes in HAWQ</span>
+
+**Note:** In HAWQ, `UPDATE` and `DELETE` acquire the more restrictive lock EXCLUSIVE rather than ROW EXCLUSIVE.
+
+

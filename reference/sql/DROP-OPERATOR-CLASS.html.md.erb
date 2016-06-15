@@ -1,0 +1,54 @@
+---
+title: DROP OPERATOR CLASS
+---
+
+Removes an operator class.
+
+## Synopsis<a id="topic1__section2"></a>
+
+``` pre
+DROP OPERATOR CLASS [IF EXISTS] name USING index_method [CASCADE | RESTRICT]
+```
+
+## Description<a id="topic1__section3"></a>
+
+`DROP OPERATOR` drops an existing operator class. To execute this command you must be the owner of the operator class.
+
+## Parameters<a id="topic1__section4"></a>
+
+IF EXISTS  
+Do not throw an error if the operator class does not exist. A notice is issued in this case.
+
+ *name*   
+The name (optionally schema-qualified) of an existing operator class.
+
+ *index\_method*   
+The name of the index access method the operator class is for.
+
+CASCADE  
+Automatically drop objects that depend on the operator class.
+
+RESTRICT  
+Refuse to drop the operator class if any objects depend on it. This is the default.
+
+## Notes
+
+This command will not succeed if there are any existing indexes that use the operator class. Add `CASCADE` to drop such indexes along with the operator class.
+
+## Examples<a id="topic1__section5"></a>
+
+Remove the B-tree operator class `widget_ops`:
+
+``` pre
+DROP OPERATOR CLASS widget_ops USING btree;
+```
+
+This command will not succeed if there are any existing indexes that use the operator class. Add `CASCADE` to drop such indexes along with the operator class.
+
+## Compatibility<a id="topic1__section6"></a>
+
+There is no `DROP OPERATOR CLASS` statement in the SQL standard.
+
+## See Also<a id="topic1__section7"></a>
+
+/3/4, /3/4 /3/4
