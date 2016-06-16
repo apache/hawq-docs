@@ -36,7 +36,7 @@ In this case, when this DDL is applied to queue `sampleque1`, the roles using th
 
 Another best practice is using resource queues to isolate your workloads. Workload isolation prevents your production workload from being starved of resources. To create this isolation, divide your workload by creating roles for specific purposes. For example, you could create one role for production online verification and another role for the regular running of production processes.
 
-In this scenario, let us assign`role1` for the production workload and `role2` for production software verification. We can define the following resource queues under the same parent queue `dept1que`, which is the resource queue defined for the entire department.
+In this scenario, let us assign `role1` for the production workload and `role2` for production software verification. We can define the following resource queues under the same parent queue `dept1que`, which is the resource queue defined for the entire department.
 
 ``` pre
 CREATE RESOURCE QUEUE dept1product

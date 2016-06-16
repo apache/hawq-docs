@@ -10,25 +10,31 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
 
 -   Issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file before stopping the cluster. A checkpoint ensures that, in the event of a crash, files can be restored from the checkpoint snapshot.
 -   Stop the entire HAWQ system by stopping the cluster on the master host:
-    ``` pre
+    ```
     $ hawq stop cluster
     ```
 
 -   To stop segments and kill any running queries without causing data loss or inconsistency issues, use `fast` or `immediate` mode on the cluster:
-    ``` pre
+    ```
     $ hawq stop cluster -M fast
+    ```
+    ```
     $ hawq stop cluster -M immediate
     ```
 
 -   Use `hawq stop master` to stop the master only. If you cannot stop the master due to running transactions, try using fast shutdown. If fast shutdown does not work, use immediate shutdown. Use immediate shutdown with caution, as it will result in a crash-recovery run when the system is restarted. 
-    ``` pre
+    ```
     $ hawq stop master -M fast
+    ```
+    ```
     $ hawq stop master -M immediate
     ```
 
 -   When stopping a segment or all segments, you can use the default mode of smart mode. Using fast or immediate mode on segments will have no effect since segments are stateless.
-    ``` pre
+    ```
     $ hawq stop segment
+    ```
+    ```
     $ hawq stop allsegments
     ```
 
@@ -82,7 +88,6 @@ WHERE status &lt;&gt; &#39;u&#39;;</code></pre></td>
 </tbody>
 </table>
 
-: <span class="tablecap">Table 1. Database State Monitoring Activities</span>
 
 ## Hardware and Operating System Monitoring<a id="id_d3w_p1j_1v"></a>
 
@@ -158,7 +163,6 @@ If transfer rates are lower than expected, consult with your data architect rega
 </tbody>
 </table>
 
-: <span class="tablecap">Table 2. Hardware and Operating System Monitoring Activities</span>
 
 ## Data Maintenance<a id="id_khd_q1j_1v"></a>
 
@@ -188,7 +192,6 @@ If transfer rates are lower than expected, consult with your data architect rega
 </tbody>
 </table>
 
-: <span class="tablecap">Table 3. Data Maintenance Activities</span>
 
 ## Database Maintenance<a id="id_lx4_q1j_1v"></a>
 
@@ -215,7 +218,7 @@ If transfer rates are lower than expected, consult with your data architect rega
 <p>Severity: CRITICAL</p></td>
 <td>Vacuum each system catalog:
 <pre class="pre codeblock"><code>VACUUM &lt;table&gt;;</code></pre></td>
-<td>Vacuum system catalogzs regularly to prevent bloating.</td>
+<td>Vacuum system catalogs regularly to prevent bloating.</td>
 </tr>
 <tr class="even">
 <td>Update table statistics.
@@ -229,7 +232,7 @@ If transfer rates are lower than expected, consult with your data architect rega
 <td>Backup the database data.
 <p>Recommended frequency: daily, or as required by your backup plan</p>
 <p>Severity: CRITICAL</p></td>
-<td>See [Backing up and Restoring HAWQ Databases](/20/admin/BackingUpandRestoringHAWQDatabases.html) for a discussion of backup procedures.</td>
+<td>See <a href="/20/admin/BackingUpandRestoringHAWQDatabases.html">Backing up and Restoring HAWQ Databases</a> for a discussion of backup procedures</td>
 <td>Best practice is to have a current backup ready in case the database must be restored.</td>
 </tr>
 <tr class="even">
@@ -242,7 +245,6 @@ If transfer rates are lower than expected, consult with your data architect rega
 </tbody>
 </table>
 
-: <span class="tablecap">Table 4. Database Maintenance Activities</span>
 
 ## Patching and Upgrading<a id="id_blv_q1j_1v"></a>
 
@@ -280,6 +282,5 @@ If transfer rates are lower than expected, consult with your data architect rega
 </tbody>
 </table>
 
-: <span class="tablecap">Table 5. Patch and Upgrade Activities</span>
 
 
