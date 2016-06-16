@@ -2,18 +2,6 @@
 title: Accessing HDFS File Data
 ---
 
-This topic describes how to access HDFS file data using PXF.
-
--   **[Prerequisites](../pxf/HDFSFileDataPXF.html#installingthepxfhdfsplugin)**
-
--   **[Syntax](../pxf/HDFSFileDataPXF.html#syntax1)**
-
--   **[Accessing Data on a High Availability HDFS Cluster](../pxf/HDFSFileDataPXF.html#accessingdataonahighavailabilityhdfscluster)**
-
--   **[Using a Record Key with Key-Value File Formats](../pxf/HDFSFileDataPXF.html#recordkeyinkey-valuefileformats)**
-
--   **[Working with Avro Files](../pxf/HDFSFileDataPXF.html#topic_oy3_qwm_ss)**
-
 ## Prerequisites<a id="installingthepxfhdfsplugin"></a>
 
 Before working with HDFS file data using HAWQ and PXF, you should perform the following operations:
@@ -179,7 +167,7 @@ Choose the Resolver format if data records are serialized in the HDFS file. 
 <li>Include the name of the Java class that uses Writable serialization in the URL under the optional <code class="ph codeph">Schema-Data.</code></li>
 <li>The class file must exist in the public stage directory (or in Hadoop's class path).</li>
 <li>Deserialize and Serialize (Read + Write). </li>
-<li>See [Customized Writable Schema File Guidelines](#customizedwritableschemafileguidelines).</li>
+<li>See <a href="#customizedwritableschemafileguidelines">Customized Writable Schema File Guidelines</a>.</li>
 </ul></td>
 </tr>
 <tr class="odd">
@@ -203,7 +191,6 @@ The class file must follow the following requirements:
 2.  WritableResolver uses reflection to recreate the schema and populate its fields (for both read and write). Then it uses the Writable interface functions to read/write. Therefore, fields must be public, to enable access to them. Private fields will be ignored.
 3.  Fields are accessed and populated in the order in which they are declared in the class file.
 4.  Supported field types:
-
     -   boolean
     -   byte array
     -   double
@@ -286,8 +273,6 @@ The class file must follow the following requirements:
 </tr>
 </tbody>
 </table>
-
-: <span class="tablecap">Table 1. Additional PXF Options</span>
 
 ## Accessing Data on a High Availability HDFS Cluster<a id="accessingdataonahighavailabilityhdfscluster"></a>
 
@@ -377,6 +362,8 @@ Avro files combine their data with a schema, and can support complex data types 
 
 The following table summarizes external table mapping rules for Avro data.
 
+<caption><span class="tablecap">Table 2. Avro Data Type Mapping</span></caption>
+
 <a id="topic_oy3_qwm_ss__table_j4s_h1n_ss"></a>
 
 | Avro Data Type                                                    | PXF Type                                                                                                                                                                                            |
@@ -385,8 +372,6 @@ The following table summarizes external table mapping rules for Avro data.
 | Complex type: Array, Map, Record, or Enum                         | TEXT, with default delimiters inserted between collection items, mapped key-value pairs, and record data.                                                                                           |
 | Complex type: Fixed                                               | BYTEA                                                                                                                                                                                               |
 | Union                                                             | Follows the above conventions for primitive or complex data types, depending on the union. Null values are supported in Unions.                                                                     |
-
-: <span class="tablecap">Table 2. Avro Data Type Mapping</span>
 
 For complex types, the PXF Avro profile inserts default delimiters between collection items and values. You can use non-default delimiter characters by including the `COLLECTION_DELIM`, `MAPKEY_DELIM`, and/or `RECORDKEY_DELIM` optional parameters on the Avro profile. See [Additional PXF Options](#additionaloptions__table_skq_kpz_4p) for a description of the parameters.
 

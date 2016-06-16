@@ -4,20 +4,6 @@ title: Accessing Hive Data
 
 This topic describes how to access Hive data using PXF. You have several options for querying data stored in Hive. You can create external tables in PXF and then query those tables, or you can easily query Hive tables by using HAWQ and PXF's integration with HCatalog. HAWQ accesses Hive table metadata stored in HCatalog.
 
--   **[Prerequisites](../pxf/HivePXF.html#installingthepxfhiveplugin)**
-
--   **[Hive Command Line](../pxf/HivePXF.html#hivecommandline)**
-
--   **[Using PXF Tables to Query Hive](../pxf/HivePXF.html#topic_p2s_lvl_25)**
-
--   **[Using PXF and HCatalog to Query Hive](../pxf/HivePXF.html#hcatalog)**
-
--   **[Partition Filtering](../pxf/HivePXF.html#partitionfiltering)**
-
--   **[Using PXF with Hive Default Partitions](../pxf/HivePXF.html#topic_fdm_zrh_1s)**
-
--   **[Accessing Hive Tables in Parquet Format](../pxf/HivePXF.html#topic_dbb_nz3_ts)**
-
 ## Prerequisites<a id="installingthepxfhiveplugin"></a>
 
 Check the following before using PXF to access Hive:
@@ -176,7 +162,6 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
          supplier_key | int4
          full_price   | float8 
         ```
-
     -   Use `\d hcatalog.hive-db-name.*` to describe the whole database schema. For example:
 
         ``` pre
@@ -196,7 +181,6 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
          type   | text
          name   | text
         ```
-
     -   Use `\d hcatalog.*.*` to describe the whole schema:
 
         ``` pre
