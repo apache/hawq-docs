@@ -43,6 +43,8 @@ The name of the index method this operator class is for. Choices are `btree`, `b
  *strategy\_number*   
 The operators associated with an operator class are identified by *strategy numbers*, which serve to identify the semantics of each operator within the context of its operator class. For example, B-trees impose a strict ordering on keys, lesser to greater, and so operators like *less than* and *greater than or equal to* are interesting with respect to a B-tree. These strategies can be thought of as generalized operators. Each operator class specifies which actual operator corresponds to each strategy for a particular data type and interpretation of the index semantics. The corresponding strategy numbers for each index method are as follows: <a id="topic1__bx145491"></a>
 
+<span class="tablecap">Table 1. B-tree and Bitmap Strategies</span>
+
 | Operation             | Strategy Number |
 |-----------------------|-----------------|
 | less than             | 1               |
@@ -51,7 +53,7 @@ The operators associated with an operator class are identified by *strategy numb
 | greater than or equal | 4               |
 | greater than          | 5               |
 
-: <span class="tablecap">Table 1. B-tree and Bitmap Strategies</span>
+<span class="tablecap">Table 2. GiST Two-Dimensional Strategies (R-Tree)</span>
 
 <a id="topic1__bx145491a"></a>
 
@@ -68,8 +70,6 @@ The operators associated with an operator class are identified by *strategy numb
 | does not extend above       | 9               |
 | strictly below              | 10              |
 | strictly above              | 11              |
-
-: <span class="tablecap">Table 2. GiST Two-Dimensional Strategies (R-Tree)</span>
 
  *operator\_name*   
 The name (optionally schema-qualified) of an operator associated with the operator class.
@@ -89,6 +89,8 @@ Index methods require additional support routines in order to work. These operat
 
 : <span class="tablecap">Table 3. B-tree and Bitmap Support Functions</span>
 
+<span class="tablecap">Table 4. GiST Support Functions</span>
+
 <a id="topic1__bx145974a"></a>
 
 | Function                                                                                                                      | Support Number |
@@ -100,8 +102,6 @@ Index methods require additional support routines in order to work. These operat
 | penalty - compute penalty for inserting new key into subtree with given subtree's key.                                        | 5              |
 | picksplit - determine which entries of a page are to be moved to the new page and compute the union keys for resulting pages. | 6              |
 | equal - compare two keys and return true if they are equal.                                                                   | 7              |
-
-: <span class="tablecap">Table 4. GiST Support Functions</span>
 
  *funcname*   
 The name (optionally schema-qualified) of a function that is an index method support procedure for the operator class.

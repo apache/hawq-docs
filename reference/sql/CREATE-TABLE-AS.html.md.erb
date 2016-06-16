@@ -83,7 +83,7 @@ The tablespace is the name of the tablespace in which the new table is to be cre
 AS *query*   
 A [SELECT](SELECT.html) command, or an [EXECUTE](EXECUTE.html) command that runs a prepared `SELECT` query.
 
-DISTRIBUTED BY (*column*, \[ ... \] )
+DISTRIBUTED BY (*column*, \[ ... \] )<br/>
 DISTRIBUTED RANDOMLY  
 Used to declare the HAWQ distribution policy for the table. The default is RANDOM distribution. `DISTIBUTED BY` can use hash distribution with one or more columns declared as the distribution key. If hash distribution is desired, it can be specified using `bucketnum` attribute, using the first eligible column of the table as the distribution key.
 

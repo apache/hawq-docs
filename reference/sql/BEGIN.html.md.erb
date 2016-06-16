@@ -7,7 +7,7 @@ Starts a transaction block.
 ## Synopsis<a id="topic1__section2"></a>
 
 ``` pre
-BEGIN [WORK | TRANSACTION] [SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED] 
+BEGIN [WORK | TRANSACTION] [SERIALIZABLE | REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED]
       [READ WRITE | READ ONLY]
 ```
 
@@ -19,18 +19,13 @@ Statements are executed more quickly in a transaction block, because transaction
 
 ## Parameters<a id="topic1__section4"></a>
 
-WORK, 
-TRANSACTION  
+WORK<br/>TRANSACTION
 Optional key words. They have no effect.
 
-SERIALIZABLE, 
-REPEATABLE READ, 
-READ COMMITTED, 
-READ UNCOMMITTED  
+SERIALIZABLE<br/>REPEATABLE READ<br/>READ COMMITTED<br/>READ UNCOMMITTED
 The SQL standard defines four transaction isolation levels: `READ COMMITTED`, `READ UNCOMMITTED`, `SERIALIZABLE`, and `REPEATABLE READ`. The default behavior is that a statement can only see rows committed before it began (`READ COMMITTED`). In HAWQ, `READ UNCOMMITTED` is treated the same as `READ COMMITTED`. `SERIALIZABLE` is supported the same as `REPEATABLE                      READ` wherein all statements of the current transaction can only see rows committed before the first statement was executed in the transaction. `SERIALIZABLE` is the strictest transaction isolation. This level emulates serial transaction execution, as if transactions had been executed one after another, serially, rather than concurrently. Applications using this level must be prepared to retry transactions due to serialization failures.
 
-READ WRITE, 
-READ ONLY  
+READ WRITE<br/>READ ONLY  
 Determines whether the transaction is read/write or read-only. Read/write is the default. When a transaction is read-only, the following SQL commands are disallowed: `INSERT`, `UPDATE`, `DELETE`, and `COPY FROM` if the table they would write to is not a temporary table; all `CREATE`, `ALTER`, and `DROP` commands; `GRANT`, `REVOKE`, `TRUNCATE`; and `EXPLAIN ANALYZE` and `EXECUTE` if the command they would execute is among those listed.
 
 ## Notes<a id="topic1__section5"></a>
