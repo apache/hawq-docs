@@ -10,6 +10,8 @@ Because MVCC does not use explicit locks for concurrency control, lock contentio
 
 HAWQ provides multiple lock modes to control concurrent access to data in tables. Most HAWQ SQL commands automatically acquire the appropriate locks to ensure that referenced tables are not dropped or modified in incompatible ways while a command executes. For applications that cannot adapt easily to MVCC behavior, you can use the `LOCK` command to acquire explicit locks. However, proper use of MVCC generally provides better performance.
 
+<caption><span class="tablecap">Table 1. Lock Modes in HAWQ</span></caption>
+
 <a id="topic_f5l_qnh_kr__ix140861"></a>
 
 | Lock Mode              | Associated SQL Commands                                                             | Conflicts With                                                                                                          |
@@ -23,7 +25,6 @@ HAWQ provides multiple lock modes to control concurrent access to data in tables
 | EXCLUSIVE              | `DELETE`, `UPDATE` See [Note](#topic_f5l_qnh_kr__lock_note) | ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE               |
 | ACCESS EXCLUSIVE       | `ALTER TABLE`, `DROP TABLE`, `TRUNCATE`, `REINDEX`, `CLUSTER`, `VACUUM FULL`        | ACCESS SHARE, ROW SHARE, ROW EXCLUSIVE, SHARE UPDATE EXCLUSIVE, SHARE, SHARE ROW EXCLUSIVE, EXCLUSIVE, ACCESS EXCLUSIVE |
 
-: <span class="tablecap">Table 1. Lock Modes in HAWQ</span>
 
 **Note:** In HAWQ, `UPDATE` and `DELETE` acquire the more restrictive lock EXCLUSIVE rather than ROW EXCLUSIVE.
 

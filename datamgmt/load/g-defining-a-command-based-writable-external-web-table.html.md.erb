@@ -16,6 +16,8 @@ Use `CREATE WRITABLE EXTERNAL WEB TABLE` to define the external table and specif
 
 The following HAWQ variables are available for use in OS commands executed by a web or writable external table. Set these variables as environment variables in the shell that executes the command(s). They can be used to identify a set of requests made by an external table statement across the HAWQ array of hosts and segment instances.
 
+<caption><span class="tablecap">Table 1. External Table EXECUTE Variables</span></caption>
+
 <a id="topic71__du224024"></a>
 
 | Variable            | Description                                                                                                                |
@@ -35,8 +37,6 @@ The following HAWQ variables are available for use in OS commands executed by a 
 | $GP\_TIME           | The time the external table command was executed.                                                                          |
 | $GP\_USER           | The database user executing the external table statement.                                                                  |
 | $GP\_XID            | The transaction ID of the external table statement.                                                                        |
-
-: <span class="tablecap">Table 1. External Table EXECUTE Variables</span>
 
 -   **[Disabling EXECUTE for Web or Writable External Tables](../../datamgmt/load/g-disabling-execute-for-web-or-writable-external-tables.html)**
 

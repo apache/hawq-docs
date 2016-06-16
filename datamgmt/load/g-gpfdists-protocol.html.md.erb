@@ -15,6 +15,7 @@ The `gpfdists://` protocol is a secure version of the `gpfdist://         protoc
 -   The SSL ignore host mismatch parameter is set to `false`.
 -   Private keys containing a passphrase are not supported for the `gpfdist` file server (server.key) and for the HAWQ (client.key).
 -   Issuing certificates that are appropriate for the operating system in use is the user's responsibility. Generally, converting certificates as shown in [https://www.sslshopper.com/ssl-converter.html](https://www.sslshopper.com/ssl-converter.html) is supported.
+
     **Note:** A server started with the `gpfdist --ssl` option can only communicate with the `gpfdists` protocol. A server that was started with `gpfdist` without the `--ssl` option can only communicate with the `gpfdist` protocol.
 
 -   The client certificate file, client.crt

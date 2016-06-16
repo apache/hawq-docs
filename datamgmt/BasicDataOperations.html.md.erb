@@ -4,11 +4,6 @@ title: Basic Data Operations
 
 This topic describes basic data operations that you perform in HAWQ.
 
-Basic database operations that you might perform in HAWQ include:
-
--   [Inserting Rows](#topic3)
--   [Vacuuming the Database](#topic9)
-
 ## Inserting Rows<a id="topic3"></a>
 
 Use the `INSERT` command to create rows in a table. This command requires the table name and a value for each column in the table; you may optionally specify the column names in any order. If you do not specify column names, list the data values in the order of the columns in the table, separated by commas.
@@ -28,7 +23,7 @@ INSERT INTO products VALUES (1, 'Cheese', 9.99);
 Usually, the data values are literals (constants), but you can also use scalar expressions. For example:
 
 ``` pre
-INSERT INTO films SELECT * FROM tmp_films WHERE date_prod < 
+INSERT INTO films SELECT * FROM tmp_films WHERE date_prod <
 '2004-05-07';
 ```
 
@@ -65,5 +60,3 @@ Size the free space map with the following server configuration parameters:
 
 -   `max_fsm_pages`
 -   `max_fsm_relations`
-
-

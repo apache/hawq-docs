@@ -2,7 +2,7 @@
 title: About Database Statistics
 ---
 
-An overview of statistics gathered by the `ANALYZE` command in HAWQ.
+## Overview<a id="overview"></a>
 
 Statistics are metadata that describe the data stored in the database. The query optimizer needs up-to-date statistics to choose the best execution plan for a query. For example, if a query joins two tables and one of them must be broadcast to all segments, the optimizer can choose the smaller of the two tables to minimize network traffic.
 
@@ -18,7 +18,7 @@ Calculating statistics consumes time and resources, so HAWQ produces estimates b
 
 ## System Statistics<a id="topic_oq3_qxj_3s"></a>
 
-### Table Size
+### Table Size<a id="tablesize"></a>
 
 The query planner seeks to minimize the disk I/O and network traffic required to execute a query, using estimates of the number of rows that must be processed and the number of disk pages the query must access. The data from which these estimates are derived are the `pg_class` system table columns `reltuples` and `relpages`, which contain the number of rows and pages at the time a `VACUUM` or `ANALYZE` command was last run. As rows are added or deleted, the numbers become less accurate. However, an accurate count of disk pages is always available from the operating system, so as long as the ratio of `reltuples` to `relpages` does not change significantly, the optimizer can produce an estimate of the number of rows that is sufficiently accurate to choose the correct query execution plan.
 
@@ -26,7 +26,7 @@ In append-optimized tables, the number of tuples is kept up-to-date in the syste
 
 When the `reltuples` column differs significantly from the row count returned by `SELECT COUNT(*)`, an analyze should be performed to update the statistics.
 
-### The pg\_statistic System Table and pg\_stats View
+### The pg\_statistic System Table and pg\_stats View<a id="views"></a>
 
 The `pg_statistic` system table holds the results of the last `ANALYZE` operation on each database table. There is a row for each column of every table. It has the following columns:
 starelid  
@@ -63,7 +63,7 @@ The `stakindN` columns each contain a numeric code to describe the type of stati
 <a id="topic_oq3_qxj_3s__table_upf_1yc_nt"></a>
 
 <table>
-<caption><span class="tablecap">Table 1. Contents of pg\_statistic &quot;slots&quot;</span></caption>
+<caption><span class="tablecap">Table 1. Contents of pg_statistic &quot;slots&quot;</span></caption>
 <colgroup>
 <col width="50%" />
 <col width="50%" />
@@ -107,8 +107,6 @@ The values are ordered in decreasing frequency. Since the arrays are variable-si
 </tbody>
 </table>
 
-: <span class="tablecap">Table 1. Contents of pg\_statistic "slots"</span>
-
 The `pg_stats` view presents the contents of `pg_statistic` in a friendlier format. For more information, see [pg\_stats](../reference/catalog/pg_stats.html#topic1).
 
 Newly created tables and indexes have no statistics.
@@ -141,7 +139,7 @@ If the Pivotal Query Optimizer is enabled, you also need to run `ANALYZE        
 
 There are several options for configuring HAWQ statistics collection.
 
-### Statistics Target
+### Statistics Target<a id="statstarget"></a>
 
 The statistics target is the size of the `most_common_vals`, `most_common_freqs`, and `histogram_bounds` arrays for an individual column. By default, the target is 25. The default target can be changed by setting a server configuration parameter and the target can be set for any column using the `ALTER TABLE` command. Larger values increase the time needed to do `ANALYZE`, but may improve the quality of the legacy query optimizer (planner) estimates.
 
