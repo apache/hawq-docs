@@ -416,7 +416,7 @@ This alert is triggered when the HAWQ Standby Master process is down or not resp
 
 * HAWQ Standby Master Sync Status
 This alert is triggered when the HAWQ Standby Master is not synchronized with the HAWQ Master. Using this Alert eliminates the need to check the gp\_master\_mirroring catalog table to determine if the Standby Master is fully synchronized. 
-f no standby Master is present, the status will show as **UNKNOWN**..
+If no standby Master is present, the status will show as **UNKNOWN**..
    If this Alert is triggered, go to the HAWQ **Services** tab and click on the **Service Action** button to re-sync the HAWQ Standby Master with the HAWQ Master.
 
 * HAWQ Segment Registration Status
@@ -426,7 +426,7 @@ This alert is triggered when any of the HAWQ Segments fail to register with HAWQ
 This Alert monitors the percentage of HAWQ segments available versus total segments. To change the threshhold for the number of unresponsive segments that will trigger an alert, use the following procedure:
 
    1.  Click on **Percent HAWQ Segments Available**. 
-   2.  Click **Edit** to change the percentage of total segments that will create a Warning alert (default is 10 percent of the total segments) or Critical Alert (default is 25 percent of total segments).
+   2.  Click **Edit** to change the percentage of total segments that will create a **Warning** alert (default is 10 percent of the total segments) or **Critical** alert (default is 25 percent of total segments).
    3.  Click **Save** when done.
 
    Alerts for **OK**, **WARN**, and **CRITICAL** will be displayed when the number of unresponsive HAWQ segments in the cluster is greater than  the specified threshhold. 
@@ -436,3 +436,5 @@ This Alert monitors the percentage of HAWQ segments available versus total segme
 
    1.  Go to the **Groups** dropdown button at the top right of the Alerts page. Select **PXF Default**. 
    2.  Click on **PXF Process** to set the time interval for checking the network.**
+
+  If PFX Alerts are enabled, the PXF Status page displays the status of the Alert.
