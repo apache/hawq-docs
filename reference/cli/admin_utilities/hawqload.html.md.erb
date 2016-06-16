@@ -23,13 +23,13 @@ The client machine where `hawq load` is executed must have the following:
 -   Python 2.6.2 or later, `pygresql` (the Python interface to PostgreSQL), and `pyyaml`. Note that Python and the required Python libraries are included with the HAWQ server installation, so if you have HAWQ installed on the machine where `hawq load` is running, you do not need a separate Python installation.
     **Note:** HAWQ Loaders for Windows supports only Python 2.5 (available from [www.python.org](http://python.org)).
 
--   The /3/4 parallel file distribution program installed and in your `$PATH`. This program is located in `$GPHOME/bin` of your HAWQ server installation.
+-   The [gpfdist](gpfdist.html#topic1) parallel file distribution program installed and in your `$PATH`. This program is located in `$GPHOME/bin` of your HAWQ server installation.
 -   Network access to and from all hosts in your HAWQ array (master and segments).
 -   Network access to and from the hosts where the data to be loaded resides (ETL servers).
 
 ## Description<a id="topic1__section4"></a>
 
-`hawq load` is a data loading utility that acts as an interface to HAWQ's external table parallel loading feature. Using a load specification defined in a YAML formatted control file, `hawq                     load` executes a load by invoking the HAWQ parallel file server (/3/4), creating an external table definition based on the source data defined, and executing an `INSERT`, `UPDATE` or `MERGE` operation to load the source data into the target table in the database.
+`hawq load` is a data loading utility that acts as an interface to HAWQ's external table parallel loading feature. Using a load specification defined in a YAML formatted control file, `hawq                     load` executes a load by invoking the HAWQ parallel file server ([gpfdist](gpfdist.html#topic1)), creating an external table definition based on the source data defined, and executing an `INSERT`, `UPDATE` or `MERGE` operation to load the source data into the target table in the database.
 
 The operation, including any SQL commands specified in the `SQL` collection of the YAML control file (see [Control File Format](#topic1__section7)), are performed as a single transaction to prevent inconsistent data when performing multiple, simultaneous load operations on a target table.
 
@@ -159,21 +159,21 @@ GPLOAD
 Required. Begins the load specification section. A `GPLOAD` specification must have an `INPUT` and an `OUTPUT` section defined.
 
 INPUT  
-Required. Defines the location and the format of the input data to be loaded. `hawq load` will start one or more instances of the /3/4 file distribution program on the current host and create the required external table definition(s) in HAWQ that point to the source data. Note that the host from which you run `hawq load` must be accessible over the network by all HAWQ hosts (master and segments).
+Required. Defines the location and the format of the input data to be loaded. `hawq load` will start one or more instances of the [gpfdist](gpfdist.html#topic1) file distribution program on the current host and create the required external table definition(s) in HAWQ that point to the source data. Note that the host from which you run `hawq load` must be accessible over the network by all HAWQ hosts (master and segments).
 
 SOURCE  
-Required. The `SOURCE` block of an `INPUT` specification defines the location of a source file. An `INPUT` section can have more than one `SOURCE` block defined. Each `SOURCE` block defined corresponds to one instance of the /3/4 file distribution program that will be started on the local machine. Each `SOURCE` block defined must have a `FILE` specification.
+Required. The `SOURCE` block of an `INPUT` specification defines the location of a source file. An `INPUT` section can have more than one `SOURCE` block defined. Each `SOURCE` block defined corresponds to one instance of the [gpfdist](gpfdist.html#topic1) file distribution program that will be started on the local machine. Each `SOURCE` block defined must have a `FILE` specification.
 
 LOCAL\_HOSTNAME  
 Optional. Specifies the host name or IP address of the local machine on which `hawq                                                   load` is running. If this machine is configured with multiple network interface cards (NICs), you can specify the host name or IP of each individual NIC to allow network traffic to use all NICs simultaneously. The default is to use the local machine's primary host name or IP only.
 
 PORT  
-Optional. Specifies the specific port number that the /3/4 file distribution program should use. You can also supply a `PORT_RANGE` to select an available port from the specified range. If both `PORT` and `PORT_RANGE` are defined, then `PORT` takes precedence. If neither `PORT` or `PORT_RANGE` are defined, the default is to select an available port between 8000 and 9000.
+Optional. Specifies the specific port number that the [gpfdist](gpfdist.html#topic1) file distribution program should use. You can also supply a `PORT_RANGE` to select an available port from the specified range. If both `PORT` and `PORT_RANGE` are defined, then `PORT` takes precedence. If neither `PORT` or `PORT_RANGE` are defined, the default is to select an available port between 8000 and 9000.
 
 If multiple host names are declared in `LOCAL_HOSTNAME`, this port number is used for all hosts. This configuration is desired if you want to use all NICs to load the same file or set of files in a given directory location.
 
 PORT\_RANGE  
-Optional. Can be used instead of `PORT` to supply a range of port numbers from which `hawq load` can choose an available port for this instance of the /3/4 file distribution program.
+Optional. Can be used instead of `PORT` to supply a range of port numbers from which `hawq load` can choose an available port for this instance of the [gpfdist](gpfdist.html#topic1) file distribution program.
 
 FILE  
 Required. Specifies the location of a file, named pipe, or directory location on the local file system that contains data to be loaded. You can declare more than one file so long as the data is of the same format in all files specified.
@@ -387,4 +387,4 @@ current_timestamp)"
 
 ## See Also<a id="topic1__section11"></a>
 
-/3/4, /3/4
+[gpfdist](gpfdist.html#topic1), [CREATE EXTERNAL TABLE](../../sql/CREATE-EXTERNAL-TABLE.html#topic1)

@@ -37,7 +37,7 @@ Resource queues with an `ACTIVE_STATEMENTS` threshold set a maximum limit on the
 
 When modifying the resource queue, use the MEMORY\_LIMIT\_CLUSTER and CORE\_LIMIT\_CLUSTER to tune the allowed resource usage of the resource queue. MEMORY\_LIMIT\_CLUSTER and CORE\_LIMIT\_CLUSTER must be equal for the same resource queue. In addition the sum of the percentages of MEMORY\_LIMIT\_CLUSTER (and CORE\_LIMIT\_CLUSTER) for resource queues that share the same parent cannot exceed 100%.
 
-To modify the role associated with the resource queue, use the /3/4 or /3/4 command. You can only assign roles to the leaf-level resource queues (resource queues that do not have any children.)
+To modify the role associated with the resource queue, use the [ALTER ROLE](ALTER-ROLE.html) or [CREATE ROLE](CREATE-ROLE.html) command. You can only assign roles to the leaf-level resource queues (resource queues that do not have any children.)
 
 The default memory allotment can be overridden on a per-query basis by using `hawq_rm_stmt_vseg_memory` and` hawq_rm_stmt_nvseg` configuration parameters. See [Configuring Resource Quotas for Query Statements](/20/resourcemgmt/ConfigureResourceManagement.html#topic_g2p_zdq_15).
 
@@ -130,4 +130,4 @@ ALTER RESOURCE QUEUE test_queue_1 WITH (ACTIVE_STATEMENTS=50);
 
 ## See Also<a id="topic1__section8"></a>
 
-/3/4, /3/4, /3/4, /3/4
+[ALTER ROLE](ALTER-ROLE.html), [CREATE RESOURCE QUEUE](CREATE-RESOURCE-QUEUE.html), [CREATE ROLE](CREATE-ROLE.html), [DROP RESOURCE QUEUE](DROP-RESOURCE-QUEUE.html)

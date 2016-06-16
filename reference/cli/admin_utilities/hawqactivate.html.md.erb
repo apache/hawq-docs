@@ -20,7 +20,7 @@ hawq activate -? | -h | --help
 
 If the primary master fails, the log replication process is shut down, and the standby master can be activated in its place. The `hawq activate                                         standby` utility activates a backup, standby master host and brings it into operation as the active master instance for a HAWQ system. The activated standby master effectively becomes the HAWQ master, accepting client connections on the master port.
 
-When you initialize a standby master, the default is to use the same port as the active master. For information about the master port for the standby master, see /3/4.
+When you initialize a standby master, the default is to use the same port as the active master. For information about the master port for the standby master, see [hawq init](hawqinit.html#topic1).
 
 You must run this utility from the master host you are activating, not the failed master host you are disabling. Running this utility assumes you have a standby master host configured for the system .
 
@@ -39,7 +39,7 @@ After activating a standby master, run `ANALYZE` to update the database query st
 psql dbname -c 'ANALYZE;'
 ```
 
-After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the /3/4 utility.
+After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the [hawq init](hawqinit.html#topic1) utility.
 
 ## Options<a id="topic1__section4"></a>
 
@@ -80,4 +80,4 @@ hawq activate standby  /gpdata
 
 ## See Also<a id="topic1__section6"></a>
 
-/3/4
+[hawq init](hawqinit.html#topic1)

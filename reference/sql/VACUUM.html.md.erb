@@ -16,7 +16,7 @@ VACUUM [FULL] [FREEZE] [VERBOSE] ANALYZE
 
 `VACUUM` reclaims storage occupied by deleted tuples. In normal HAWQ operation, tuples that are deleted or obsoleted by an update are not physically removed from their table; they remain present on disk until a `VACUUM` is done. Therefore it is necessary to do `VACUUM` periodically, especially on frequently-updated catalog tables. `VACUUM` has no effect on a normal HAWQ table, since the delete or update operations are not supported on normal HAWQ table.
 
-With no parameter, `VACUUM` processes every table in the current database. With a parameter, `VACUUM` processes only that table. `VACUUM ANALYZE` performs a `VACUUM` and then an `ANALYZE` for each selected table. This is a handy combination form for routine maintenance scripts. See /3/4 for more details about its processing.
+With no parameter, `VACUUM` processes every table in the current database. With a parameter, `VACUUM` processes only that table. `VACUUM ANALYZE` performs a `VACUUM` and then an `ANALYZE` for each selected table. This is a handy combination form for routine maintenance scripts. See [ANALYZE](ANALYZE.html) for more details about its processing.
 
 Plain `VACUUM` (without `FULL`) simply reclaims space and makes it available for re-use. This form of the command can operate in parallel with normal reading and writing of the table, as an exclusive lock is not obtained. `VACUUM FULL` does more extensive processing, including moving of tuples across blocks to try to compact the table to the minimum number of disk blocks. This form is much slower and requires an exclusive lock on each table while it is being processed.
 
@@ -88,4 +88,4 @@ There is no `VACUUM` statement in the SQL standard.
 
 ## See Also<a id="topic1__section9"></a>
 
-/3/4
+[ANALYZE](ANALYZE.html)

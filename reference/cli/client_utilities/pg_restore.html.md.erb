@@ -12,7 +12,7 @@ pg_restore [connection_option ...] [restore_option ...] filename
 
 ## Description<a id="topic1__section3"></a>
 
-`pg_restore` is a utility for restoring a database from an archive created by /3/4 in one of the non-plain-text formats. It will issue the commands necessary to reconstruct the database to the state it was in at the time it was saved. The archive files also allow `pg_restore` to be selective about what is restored, or even to reorder the items prior to being restored.
+`pg_restore` is a utility for restoring a database from an archive created by [pg\_dump](pg_dump.html#topic1) in one of the non-plain-text formats. It will issue the commands necessary to reconstruct the database to the state it was in at the time it was saved. The archive files also allow `pg_restore` to be selective about what is restored, or even to reorder the items prior to being restored.
 
 `pg_restore` can operate in two modes. If a database name is specified, the archive is restored directly into the database. Otherwise, a script containing the SQL commands necessary to rebuild the database is created and written to a file or standard output. The script output is equivalent to the plain text output format of `pg_dump`. Some of the options controlling the output are therefore analogous to `pg_dump` options.
 
@@ -43,7 +43,7 @@ Exit if an error is encountered while sending SQL commands to the database. The 
 Specify output file for generated script, or for the listing when used with `-l`. Default is the standard output.
 
 -F t |c | --format=tar | custom  
-The format of the archive produced by /3/4. It is not necessary to specify the format, since `pg_restore` will determine the format automatically. Format can be either `tar` or `custom`.
+The format of the archive produced by [pg\_dump](pg_dump.html#topic1). It is not necessary to specify the format, since `pg_restore` will determine the format automatically. Format can be either `tar` or `custom`.
 
 -i | --ignore-version  
 Ignore database version checks.
@@ -200,4 +200,4 @@ pg\_restore -L db.list db.dump
 
 ## See Also<a id="topic1__section8"></a>
 
-/3/4
+[pg\_dump](pg_dump.html#topic1)

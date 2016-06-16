@@ -14,7 +14,7 @@ pg_dumpall [connection_option ...] [dump_option ...]
 
 `pg_dumpall` is a standard PostgreSQL utility for backing up all databases in a HAWQ (or PostgreSQL) instance, and is also supported in HAWQ. It creates a single (non-parallel) dump file.
 
-`pg_dumpall` creates a single script file that contains SQL commands that can be used as input to /3/4 to restore the databases. It does this by calling /3/4 for each database. `pg_dumpall` also dumps global objects that are common to all databases. (`pg_dump` does not save these objects.) This currently includes information about database users and groups, and access permissions that apply to databases as a whole.
+`pg_dumpall` creates a single script file that contains SQL commands that can be used as input to [psql](psql.html#topic1) to restore the databases. It does this by calling [pg\_dump](pg_dump.html#topic1) for each database. `pg_dumpall` also dumps global objects that are common to all databases. (`pg_dump` does not save these objects.) This currently includes information about database users and groups, and access permissions that apply to databases as a whole.
 
 Since `pg_dumpall` reads tables from all databases you will most likely have to connect as a database superuser in order to produce a complete dump. Also you will need superuser privileges to execute the saved script in order to be allowed to add users and groups, and to create databases.
 
@@ -26,10 +26,10 @@ The SQL script will be written to the standard output. Shell operators should be
 
 **Dump Options**
 -a | --data-only  
-Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -c | --clean  
-Output commands to clean (drop) database objects prior to (the commands for) creating them. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Output commands to clean (drop) database objects prior to (the commands for) creating them. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -d | --inserts  
 Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.
@@ -44,13 +44,13 @@ Dump filespace definitions.
 Dump only global objects (roles and tablespaces), no databases.
 
 -i | --ignore-version  
-Ignore version mismatch between /3/4 and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.
+Ignore version mismatch between [pg\_dump](pg_dump.html#topic1) and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.
 
 -o | --oids  
 Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into HAWQ.
 
 -O | --no-owner  
-Do not output commands to set ownership of objects to match the original database. By default, /3/4 issues `ALTER                                 OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify `-O`. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Do not output commands to set ownership of objects to match the original database. By default, [pg\_dump](pg_dump.html#topic1) issues `ALTER                                 OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify `-O`. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -r | --resource-queues  
 Dump resource queue definitions.
@@ -64,7 +64,7 @@ Specify the superuser user name to use when disabling triggers. This is only rel
 **Note:** HAWQ does not support user-defined triggers.
 
 -v | --verbose  
-Specifies verbose mode. This will cause /3/4 to output detailed object comments and start/stop times to the dump file, and progress messages to standard error.
+Specifies verbose mode. This will cause [pg\_dump](pg_dump.html#topic1) to output detailed object comments and start/stop times to the dump file, and progress messages to standard error.
 
 -x | --no-privileges | --no-acl  
 Prevent dumping of access privileges (`GRANT/REVOKE` commands).
@@ -98,7 +98,7 @@ Force a password prompt.
 
 ## Notes<a id="topic1__section7"></a>
 
-Since `pg_dumpall` calls /3/4 internally, some diagnostic messages will refer to `pg_dump`.
+Since `pg_dumpall` calls [pg\_dump](pg_dump.html#topic1) internally, some diagnostic messages will refer to `pg_dump`.
 
 Once restored, it is wise to run `ANALYZE` on each database so the query planner has useful statistics. You can also run `vacuumdb -a                     -z` to analyze all databases.
 
@@ -126,4 +126,4 @@ pg_dumpall -g -f -r
 
 ## See Also<a id="topic1__section9"></a>
 
-/3/4
+[pg\_dump](pg_dump.html#topic1)

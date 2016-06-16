@@ -19,7 +19,7 @@ gplogfilter --version
 
 The `gplogfilter` utility can be used to search through a HAWQ log file for entries matching the specified criteria. If an input file is not supplied, then `gplogfilter` will use the `$MASTER_DATA_DIRECTORY` environment variable to locate the HAWQ master log file in the standard logging location. To read from standard input, use a dash (`-`) as the input file name. Input files may be compressed using `gzip`. In an input file, a log entry is identified by its timestamp in `YYYY-MM-DD [hh:mm[:ss]]` format.
 
-You can also use `gplogfilter` to search through all segment log files at once by running it through the /3/4 utility. For example, to display the last three lines of each segment log file:
+You can also use `gplogfilter` to search through all segment log files at once by running it through the [hawq ssh](hawqssh.html#topic1) utility. For example, to display the last three lines of each segment log file:
 
 ``` pre
 hawq ssh -f seg_hostfile_hawqssh
@@ -130,7 +130,7 @@ Display log messages in the master log file containing the string `|con6 cmd11|`
 gplogfilter -f '|con6 cmd11|'
 ```
 
-Using /3/4, run `gplogfilter` on the segment hosts and search for log messages in the segment log files containing the string `con6` and save output to a file.
+Using [hawq ssh](hawqssh.html#topic1), run `gplogfilter` on the segment hosts and search for log messages in the segment log files containing the string `con6` and save output to a file.
 
 ``` pre
 hawq ssh -f /data/hawq-2.x/segmentdd/pg_hba.conf -e 'source /data/hawq-2.x/greenplum_path.sh ; 
@@ -139,4 +139,4 @@ gplogfilter -f con6 /data/hawq-2.x/pg_log/hawq*.csv' > seglog.out
 
 ## See Also<a id="topic1__section10"></a>
 
-/3/4
+[hawq ssh](hawqssh.html#topic1)

@@ -79,7 +79,7 @@ The `SETOF` modifier indicates that the function will return a set of items, rat
 The type of a column is referenced by writing `                             tablename.columnname%TYPE`.
 
  *langname*   
-The name of the language that the function is implemented in. May be `SQL`, `C`, `internal`, or the name of a user-defined procedural language. See /3/4 for the procedural languages supported in HAWQ. For backward compatibility, the name may be enclosed by single quotes.
+The name of the language that the function is implemented in. May be `SQL`, `C`, `internal`, or the name of a user-defined procedural language. See [CREATE LANGUAGE](CREATE-LANGUAGE.html) for the procedural languages supported in HAWQ. For backward compatibility, the name may be enclosed by single quotes.
 
 IMMUTABLE
 STABLE
@@ -186,4 +186,4 @@ For compatibility with some other database systems, *argmode* can be written eit
 
 ## See Also<a id="topic1__section10"></a>
 
-/3/4, /3/4
+[ALTER FUNCTION](ALTER-FUNCTION.html), [DROP FUNCTION](DROP-FUNCTION.html)

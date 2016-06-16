@@ -14,7 +14,7 @@ pg_dump [connection_option ...] [dump_option ...] dbname
 
 `pg_dump` is a standard PostgreSQL utility for backing up a database, and is also supported in HAWQ. It creates a single (non-parallel) dump file.
 
-Use `pg_dump` if you are migrating your data to another database vendor's system, or to another HAWQ system with a different segment configuration (for example, if the system you are migrating to has greater or fewer segment instances). To restore, you must use the corresponding [pg\_restore](pg_restore.html#topic1) utility (if the dump file is in archive format), or you can use a client program such as /3/4 (if the dump file is in plain text format).
+Use `pg_dump` if you are migrating your data to another database vendor's system, or to another HAWQ system with a different segment configuration (for example, if the system you are migrating to has greater or fewer segment instances). To restore, you must use the corresponding [pg\_restore](pg_restore.html#topic1) utility (if the dump file is in archive format), or you can use a client program such as [psql](psql.html#topic1) (if the dump file is in plain text format).
 
 Since `pg_dump` is compatible with regular PostgreSQL, it can be used to migrate data into HAWQ. The `pg_dump` utility in HAWQ is very similar to the PostgreSQL `pg_dump` utility, with the following exceptions and limitations:
 
@@ -32,16 +32,16 @@ Specifies the name of the database to be dumped. If this is not specified, the e
 
 **Dump Options**
 -a | --data-only  
-Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -b | --blobs  
 Include large objects in the dump. This is the default behavior except when `--schema`, `--table`, or `--schema-only` is specified, so the `-b` switch is only useful to add large objects to selective dumps.
 
 -c | --clean  
-Adds commands to the text output file to clean (drop) database objects prior to (the commands for) creating them. Note that objects are not dropped before the dump operation begins, but `DROP` commands are added to the DDL dump output files so that when you use those files to do a restore, the `DROP` commands are run prior to the `CREATE` commands. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Adds commands to the text output file to clean (drop) database objects prior to (the commands for) creating them. Note that objects are not dropped before the dump operation begins, but `DROP` commands are added to the DDL dump output files so that when you use those files to do a restore, the `DROP` commands are run prior to the `CREATE` commands. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -C | --create  
-Begin the output with a command to create the database itself and reconnect to the created database. (With a script of this form, it doesn't matter which database you connect to before running the script.) This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Begin the output with a command to create the database itself and reconnect to the created database. (With a script of this form, it doesn't matter which database you connect to before running the script.) This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -d | --inserts  
 Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.
@@ -60,9 +60,9 @@ Selects the format of the output. format can be one of the following:
 
 p | plain — Output a plain-text SQL script file (the default).
 
-c | custom — Output a custom archive suitable for input into /3/4. This is the most flexible format in that it allows reordering of loading data as well as object definitions. This format is also compressed by default.
+c | custom — Output a custom archive suitable for input into [pg\_restore](pg_restore.html#topic1). This is the most flexible format in that it allows reordering of loading data as well as object definitions. This format is also compressed by default.
 
-t | tar — Output a tar archive suitable for input into /3/4. Using this archive format allows reordering and/or exclusion of database objects at the time the database is restored. It is also possible to limit which data is reloaded at restore time.
+t | tar — Output a tar archive suitable for input into [pg\_restore](pg_restore.html#topic1). Using this archive format allows reordering and/or exclusion of database objects at the time the database is restored. It is also possible to limit which data is reloaded at restore time.
 
 -i | --ignore-version  
 Ignore version mismatch between `pg_dump` and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.
@@ -81,7 +81,7 @@ Do not dump any schemas matching the schema pattern. The pattern is interpreted 
 Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into HAWQ.
 
 -O | --no-owner  
-Do not output commands to set ownership of objects to match the original database. By default, `pg_dump` issues `ALTER OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify `-O`. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+Do not output commands to set ownership of objects to match the original database. By default, `pg_dump` issues `ALTER OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify `-O`. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 -s | --schema-only  
 Dump only the object definitions (schema), not data.
@@ -112,7 +112,7 @@ Prevent dumping of access privileges (`GRANT/REVOKE` commands).
 This option disables the use of dollar quoting for function bodies, and forces them to be quoted using SQL standard string syntax.
 
 --disable-triggers  
-This option is only relevant when creating a data-only dump. It instructs `pg_dump` to include commands to temporarily disable triggers on the target tables while the data is reloaded. Use this if you have triggers on the tables that you do not want to invoke during data reload. The commands emitted for `--disable-triggers` must be done as superuser. So, you should also specify a superuser name with `-S`, or preferably be careful to start the resulting script as a superuser. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call /3/4.
+This option is only relevant when creating a data-only dump. It instructs `pg_dump` to include commands to temporarily disable triggers on the target tables while the data is reloaded. Use this if you have triggers on the tables that you do not want to invoke during data reload. The commands emitted for `--disable-triggers` must be done as superuser. So, you should also specify a superuser name with `-S`, or preferably be careful to start the resulting script as a superuser. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
 **Note:** HAWQ does not support user-defined triggers.
 
@@ -194,4 +194,4 @@ pg_dump -t '"MixedCaseName"' mydb > mytab.sql
 
 ## See Also<a id="topic1__section9"></a>
 
-/3/4, /3/4, /3/4
+[pg\_dumpall](pg_dumpall.html#topic1), [pg\_restore](pg_restore.html#topic1), [psql](psql.html#topic1)
