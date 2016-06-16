@@ -342,6 +342,7 @@ The character set support in HAWQ allows you to store text in a variety of chara
 </table>
 
 **Note:**
+
 -   Not all the APIs support all the listed character sets. For example, the JDBC driver does not support MULE\_INTERNAL, LATIN6, LATIN8, and LATIN10.
 -   The SQLASCII setting behaves considerable differently from the other settings. Byte values 0-127 are interpreted according to the ASCII standard, while byte values 128-255 are taken as uninterpreted characters. If you are working with any nonASCII data, it is unwise to use the SQL\_ASCII setting as a client encoding. SQL\_ASCII is not supported as a server encoding.
 
