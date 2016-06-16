@@ -2,7 +2,9 @@
 title: Using PL/Java
 ---
 
-This section contains an overview of the HAWQ PL/Java language.
+This section contains an overview of the HAWQ PL/Java language. 
+
+<p class="note"><b>Note:</b> For details on how to install PL/Java, see <a href="/hdb/install/install_pljava.html">Installing PL/Java</a>.</p>
 
 
 ## About PL/Java <a id="aboutpljava"></a>
@@ -113,7 +115,7 @@ SELECT getsysprop('user.home');
 
 Scalar types are mapped in a straightforward way. This table lists the current mappings.
 
-***Table: PL/Java data type mappings***
+***Table 1: PL/Java data type mappings***
 
 | PostgreSQL | Java |
 |------------|------|
@@ -378,6 +380,82 @@ eateStatement();
   }
 }
 ```
+## Using JDBC <a id="usingjdbc"></a>
+
+PL/Java contains a JDBC driver that maps to the PostgreSQL SPI functions. A connection that maps to the current transaction can be obtained using the following statement:
+
+```java
+Connection conn = 
+  DriverManager.getConnection("jdbc:default:connection"); 
+```
+
+After obtaining a connection, you can prepare and execute statements similar to other JDBC connections. These are limitations for the PL/Java JDBC driver:
+
+- The transaction cannot be managed in any way. Thus, you cannot use methods on the connection such as:
+   - `commit()`
+   - `rollback()`
+   - `setAutoCommit()`
+   - `setTransactionIsolation()`
+- Savepoints are available with some restrictions. A savepoint cannot outlive the function in which it was set and it must be rolled back or released by that same function.
+- A ResultSet returned from `executeQuery()` are always `FETCH_FORWARD` and `CONCUR_READ_ONLY`.
+- Meta-data is only available in PL/Java 1.1 or higher.
+- `CallableStatement` (for stored procedures) is not implemented.
+- The types `Clob` or `Blob` are not completely implemented, they need more work. The types `byte[]` and `String` can be used for `bytea` and `text` respectively.
+
+## Exception Handling <a id="exceptionhandling"></a>
+
+You can catch and handle an exception in the HAWQ backend just like any other exception. The backend `ErrorData` structure is exposed as a property in a class called `org.postgresql.pljava.ServerException` (derived from `java.sql.SQLException`) and the Java try/catch mechanism is synchronized with the backend mechanism.
+
+**Important:** You will not be able to continue executing backend functions until your function has returned and the error has been propagated when the backend has generated an exception unless you have used a savepoint. When a savepoint is rolled back, the exceptional condition is reset and you can continue your execution.
+
+## Savepoints <a id="savepoints"></a>
+
+HAWQ savepoints are exposed using the `java.sql.Connection` interface. Two restrictions apply.
+
+- A savepoint must be rolled back or released in the function where it was set.
+- A savepoint must not outlive the function where it was set.
+
+## Logging <a id="logging"></a>
+
+PL/Java uses the standard Java Logger. Hence, you can write things like:
+
+```java
+Logger.getAnonymousLogger().info( "Time is " + new 
+Date(System.currentTimeMillis()));
+```
+
+At present, the logger uses a handler that maps the current state of the HAWQ configuration setting `log_min_messages` to a valid Logger level and that outputs all messages using the HAWQ backend function `elog()`.
+
+**Note:** The `log_min_messages` setting is read from the database the first time a PL/Java function in a session is executed. On the Java side, the setting does not change after the first PL/Java function execution in a specific session until the HAWQ session that is working with PL/Java is restarted.
+
+The following mapping apply between the Logger levels and the HAWQ backend levels.
+
+***Table 2: PL/Java Logging Levels Mappings***
+
+| java.util.logging.Level | HAWQ Level |
+|-------------------------|------------|
+| SEVERE ERROR | ERROR |
+| WARNING |	WARNING |
+| CONFIG |	LOG |
+| INFO | INFO |
+| FINE | DEBUG1 |
+| FINER | DEBUG2 |
+| FINEST | DEBUG3 |
+
+## Security <a id="security"></a>
+
+This section describes security aspects of using PL/Java.
+
+### Installation <a id="installation"></a>
+
+Only a database super user can install PL/Java. The PL/Java utility functions are installed using SECURITY DEFINER so that they execute with the access permissions that where granted to the creator of the functions.
+
+### Trusted Language <a id="trustedlang"></a>
+
+PL/Java is a trusted language. The trusted PL/Java language has no access to the file system as stipulated by PostgreSQL definition of a trusted language. Any database user can create and access functions in a trusted language.
+
+PL/Java also installs a language handler for the language `javau`. This version is not trusted and only a superuser can create new functions that use it. Any user can call the functions.
+
 
 ## Example <a id="pljavaexample"></a>
 
