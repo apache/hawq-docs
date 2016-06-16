@@ -29,10 +29,10 @@ A query is not executing as quickly as you would expect. Here is how to investig
     2.  Are there many failed disks?
 
 2.  Check table statistics. Have the tables involved in the query been analyzed?
-3.  Check the plan of the query and run /3/4 to determine the bottleneck. 
+3.  Check the plan of the query and run `EXPLAIN ANALYZE` to determine the bottleneck. 
     Sometimes, there is not enough memory for some operators, such as Hash Join, or spill files are used. If an operator cannot perform all of its work in the memory allocated to it, it caches data on disk in *spill files*. Compared with no spill files, a query will run much slower.
 
-4.  Check data locality statistics using /3/4. Alternately you can check the logs. Data locality result for every query could also be found in the log of HAWQ. See [Data Locality Statistics](../query/query-performance.html#topic_amk_drc_d5) for information on the statistics.
+4.  Check data locality statistics using `EXPLAIN ANALYZE`. Alternately you can check the logs. Data locality result for every query could also be found in the log of HAWQ. See [Data Locality Statistics](../query/query-performance.html#topic_amk_drc_d5) for information on the statistics.
 5.  Check resource queue status. You can query view `pg_resqueue_status` to check if the target queue has already dispatched some resource to the queries, or if the target queue is lacking resources. See [Checking Existing Resource Queues](/20/resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
 6.  Analyze a dump of the resource manager's status to see more resource queue status. See [Analyzing Resource Manager Status](/20/resourcemgmt/ResourceQueues.html#topic_zrh_pkc_f5).
 
