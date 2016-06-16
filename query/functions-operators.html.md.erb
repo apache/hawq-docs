@@ -10,13 +10,14 @@ In HAWQ, functions can only be run on master.
 
 <a id="topic27__in201681"></a>
 
+<span class="tablecap">Table 1. Functions in HAWQ</span>
+
+
 | Function Type | HAWQ Support       | Description                                                                                                               | Comments                                                                                                                                               |
 |---------------|--------------------|---------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
 | IMMUTABLE     | Yes                | Relies only on information directly in its argument list. Given the same argument values, always returns the same result. |                                                                                                                                                        |
 | STABLE        | Yes, in most cases | Within a single table scan, returns the same result for same argument values, but results change across SQL statements.   | Results depend on database lookups or parameter values. `current_timestamp` family of functions is `STABLE`; values do not change within an execution. |
 | VOLATILE      | Restricted         | Function values can change within a single table scan. For example: `random()`, `currval()`, `timeofday()`.               | Any function with side effects is volatile, even if its result is predictable. For example: `setval()`.                                                |
-
-: <span class="tablecap">Table 1. Functions in HAWQ</span>
 
 HAWQ does not support functions that return a table reference (`rangeFuncs`) or functions that use the `refCursor` datatype.
 
@@ -321,13 +322,13 @@ The following table lists the categories of built-in functions and operators sup
 </tbody>
 </table>
 
-: <span class="tablecap">Table 2. Built-in functions and operators</span>
-
 ## Window Functions<a id="topic30"></a>
 
 The following built-in window functions are HAWQ extensions to the PostgreSQL database. All window functions are *immutable*. For more information about window functions, see [Window Expressions](defining-queries.html#topic13).
 
 <a id="topic30__in164369"></a>
+
+<span class="tablecap">Table 3. Window functions</span>
 
 | Function                                             | Return Type               | Full Syntax                                                                                               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 |------------------------------------------------------|---------------------------|-----------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -342,7 +343,6 @@ The following built-in window functions are HAWQ extensions to the PostgreSQL da
 | `rank()`                                             | bigint                    | `RANK () OVER ( [PARTITION BY expr] ORDER BY expr )`                                                      | Calculates the rank of a row in an ordered group of values. Rows with equal values for the ranking criteria receive the same rank. The number of tied rows are added to the rank number to calculate the next rank value. Ranks may not be consecutive numbers in this case.                                                                                                                                                                               |
 | `row_number(`)                                       | `bigint`                  | `ROW_NUMBER () OVER ( [PARTITION BY expr] ORDER BY expr                   )`                              | Assigns a unique number to each row to which it is applied (either each row in a window partition or each row of the query).                                                                                                                                                                                                                                                                                                                               |
 
-: <span class="tablecap">Table 3. Window functions</span>
 
 ## Advanced Aggregate Functions<a id="topic31"></a>
 
@@ -351,6 +351,7 @@ The following built-in advanced aggregate functions are HAWQ extensions of the P
 <a id="topic31__in2073121"></a>
 
 <table>
+
 <caption><span class="tablecap">Table 4. Advanced Aggregate Functions</span></caption>
 <colgroup>
 <col width="25%" />
@@ -421,7 +422,5 @@ SELECT sum(myvalue) FROM mymatrix;
 </tr>
 </tbody>
 </table>
-
-: <span class="tablecap">Table 4. Advanced Aggregate Functions</span>
 
 
