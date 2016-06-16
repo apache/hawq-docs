@@ -36,7 +36,7 @@ where *window\_specification* can be:
   [window_name]
   [PARTITION BY expression [, ...]]
   [ORDER BY expression [ASC | DESC | USING operator] [, ...]
-     [{RANGE | ROWS} 
+     [{RANGE | ROWS}
           { UNBOUNDED PRECEDING
           | expression PRECEDING
           | CURRENT ROW
@@ -55,9 +55,9 @@ where *from\_item* can be one of:
 [ONLY] table_name [[AS] alias [( column_alias [, ...] )]]
 (select) [AS] alias [( column_alias [, ...] )]
 function_name ( [argument [, ...]] ) [AS] alias
-             [( column_alias [, ...] 
+             [( column_alias [, ...]
                 | column_definition [, ...] )]
-function_name ( [argument [, ...]] ) AS 
+function_name ( [argument [, ...]] ) AS
               ( column_definition [, ...] )
 from_item [NATURAL] join_type
             from_item
@@ -83,6 +83,7 @@ You must have `SELECT` privilege on a table to read its values.
 ## Parameters<a id="topic1__section4"></a>
 
 **The SELECT List**
+
 The `SELECT` list (between the key words `SELECT` and `FROM`) specifies expressions that form the output rows of the `SELECT` statement. The expressions can (and usually do) refer to columns computed in the `FROM` clause.
 
 Using the clause `[AS] ` *output\_name*, another name can be specified for an output column. This name is primarily used to label the column for display. It can also be used to refer to the column's value in `ORDER BY` and `GROUP BY` clauses, but not in the `WHERE` or `HAVING` clauses; there you must write out the expression instead. The `AS` keyword is optional in most cases (such as when declaring an alias for column names, constants, function calls, and simple unary operator expressions). In cases where the declared alias is a reserved SQL keyword, the *output\_name* must be enclosed in double quotes to avoid ambiguity.
@@ -92,21 +93,22 @@ An *expression* in the `SELECT` list can be a constant value, a column reference
 Instead of an expression, `*` can be written in the output list as a shorthand for all the columns of the selected rows. Also, you can write `                   table_name.*` as a shorthand for the columns coming from just that table.
 
 **The FROM Clause**
+
 The `FROM` clause specifies one or more source tables for the `SELECT`. If multiple sources are specified, the result is the Cartesian product (cross join) of all the sources. But usually qualification conditions are added to restrict the returned rows to a small subset of the Cartesian product. The `FROM` clause can contain the following elements:
 
- *table\_name*   
+ *table\_name*
 The name (optionally schema-qualified) of an existing table or view. If `ONLY` is specified, only that table is scanned. If `ONLY` is not specified, the table and all its descendant tables (if any) are scanned.
 
- *alias*   
+ *alias*
 A substitute name for the `FROM` item containing the alias. An alias is used for brevity or to eliminate ambiguity for self-joins (where the same table is scanned multiple times). When an alias is provided, it completely hides the actual name of the table or function; for example given `FROM foo AS f`, the remainder of the `SELECT` must refer to this `FROM` item as `f` not `foo`. If an alias is written, a column alias list can also be written to provide substitute names for one or more columns of the table.
 
- *select*   
+ *select*
 A sub-`SELECT` can appear in the `FROM` clause. This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. Note that the sub-`SELECT` must be surrounded by parentheses, and an alias must be provided for it. A `VALUES` command can also be used here. See "Non-standard Clauses" in the [Compatibility](#topic1__section19) section for limitations of using correlated sub-selects in HAWQ.
 
- *function\_name*   
+ *function\_name*
 Function calls can appear in the `FROM` clause. (This is especially useful for functions that return result sets, but any function can be used.) This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. An alias may also be used. If an alias is written, a column alias list can also be written to provide substitute names for one or more attributes of the function's composite return type. If the function has been defined as returning the record data type, then an alias or the key word `AS` must be present, followed by a column definition list in the form `(                 column_name data_type [, ... ] )`. The column definition list must match the actual number and types of columns returned by the function.
 
- *join\_type*   
+ *join\_type*
 One of:
 
 -   **\[INNER\] JOIN**
@@ -129,13 +131,13 @@ Conversely, `RIGHT OUTER JOIN` returns all the joined rows, plus one row for eac
 
 <!-- -->
 
-ON *join\_condition*   
+ON *join\_condition*
 *join\_condition* is an expression resulting in a value of type `boolean` (similar to a `WHERE` clause) that specifies which rows in a join are considered to match.
 
-USING (*join\_column* \[, ...\])  
+USING (*join\_column* \[, ...\])
 A clause of the form `USING ( a, b, ... )` is shorthand for `ON left_table.a = right_table.a AND left_table.b = right_table.b ...               `. Also, `USING` implies that only one of each pair of equivalent columns will be included in the join output, not both.
 
-NATURAL  
+NATURAL
 `NATURAL` is shorthand for a `USING` list that mentions all columns in the two tables that have the same names.
 
 **The WHERE Clause**
@@ -143,7 +145,7 @@ The optional `WHERE` clause has the general form:
 
 ``` pre
 WHERE condition
-            
+
 ```
 
 where *condition* is any expression that evaluates to a result of type `boolean`. Any row that does not satisfy this condition will be eliminated from the output. A row satisfies the condition if it returns true when the actual row values are substituted for any variable references.
@@ -171,38 +173,38 @@ Aggregate functions, if any are used, are computed across all rows making up eac
 
 HAWQ has the following additional OLAP grouping extensions (often referred to as *supergroups*):
 
-ROLLUP  
+ROLLUP
 A `ROLLUP` grouping is an extension to the `GROUP BY` clause that creates aggregate subtotals that roll up from the most detailed level to a grand total, following a list of grouping columns (or expressions). `ROLLUP` takes an ordered list of grouping columns, calculates the standard aggregate values specified in the `GROUP BY` clause, then creates progressively higher-level subtotals, moving from right to left through the list. Finally, it creates a grand total. A `ROLLUP` grouping can be thought of as a series of grouping sets. For example:
 
 ``` pre
-GROUP BY ROLLUP (a,b,c) 
+GROUP BY ROLLUP (a,b,c)
 ```
 
 is equivalent to:
 
 ``` pre
-GROUP BY GROUPING SETS( (a,b,c), (a,b), (a), () ) 
+GROUP BY GROUPING SETS( (a,b,c), (a,b), (a), () )
 ```
 
 Notice that the *n* elements of a `ROLLUP` translate to *n*+1 grouping sets. Also, the order in which the grouping expressions are specified is significant in a `ROLLUP`.
 
-CUBE  
+CUBE
 A `CUBE` grouping is an extension to the `GROUP BY` clause that creates subtotals for all of the possible combinations of the given list of grouping columns (or expressions). In terms of multidimensional analysis, `CUBE` generates all the subtotals that could be calculated for a data cube with the specified dimensions. For example:
 
 ``` pre
-GROUP BY CUBE (a,b,c) 
+GROUP BY CUBE (a,b,c)
 ```
 
 is equivalent to:
 
 ``` pre
-GROUP BY GROUPING SETS( (a,b,c), (a,b), (a,c), (b,c), (a), 
-(b), (c), () ) 
+GROUP BY GROUPING SETS( (a,b,c), (a,b), (a,c), (b,c), (a),
+(b), (c), () )
 ```
 
 Notice that *n* elements of a `CUBE` translate to 2n grouping sets. Consider using `CUBE` in any situation requiring cross-tabular reports. `CUBE` is typically most suitable in queries that use columns from multiple dimensions rather than columns representing different levels of a single dimension. For instance, a commonly requested cross-tabulation might need subtotals for all the combinations of month, state, and product.
 
-GROUPING SETS  
+GROUPING SETS
 You can selectively specify the set of groups that you want to create using a `GROUPING SETS` expression within a `GROUP BY` clause. This allows precise specification across multiple dimensions without computing a whole `ROLLUP` or `CUBE`. For example:
 
 ``` pre
@@ -235,7 +237,7 @@ where *window\_specification* can be:
 [window_name]
 [PARTITION BY expression [, ...]]
 [ORDER BY expression [ASC | DESC | USING operator] [, ...]
-    [{RANGE | ROWS} 
+    [{RANGE | ROWS}
       { UNBOUNDED PRECEDING
       | expression PRECEDING
       | CURRENT ROW
@@ -248,18 +250,18 @@ where *window\_specification* can be:
                UNBOUNDED FOLLOWING
 ```
 
- *window\_name*   
+ *window\_name*
 Gives a name to the window specification.
 
-PARTITION BY  
+PARTITION BY
 The `PARTITION BY` clause organizes the result set into logical groups based on the unique values of the specified expression. When used with window functions, the functions are applied to each partition independently. For example, if you follow `PARTITION BY` with a column name, the result set is partitioned by the distinct values of that column. If omitted, the entire result set is considered one partition.
 
-ORDER BY  
+ORDER BY
 The `ORDER BY` clause defines how to sort the rows in each partition of the result set. If omitted, rows are returned in whatever order is most efficient and may vary.
 
 **Note:** Columns of data types that lack a coherent ordering, such as `time`, are not good candidates for use in the `ORDER                   BY` clause of a window specification. Time, with or without time zone, lacks a coherent ordering because addition and subtraction do not have the expected effects. For example, the following is not generally true: `x::time <                   x::time + '2 hour'::interval`
 
-ROWS | RANGE   
+ROWS | RANGE
 Use either a `ROWS` or `RANGE` clause to express the bounds of the window. The window bound can be one, many, or all rows of a partition. You can express the bound of the window either in terms of a range of data values offset from the value in the current row (`RANGE`), or in terms of the number of rows offset from the currentrow (`ROWS`). When using the `RANGE` clause, you must also use an `ORDER BY` clause. This is because the calculation performed to produce the window requires that the values be sorted. Additionally, the `ORDER BY` clause cannot contain more than one expression, and the expression must result in either a date or a numeric value. When using the `ROWS` or `RANGE` clauses, if you specify only a starting row, the current row is used as the last row in the window.
 
 **PRECEDING** — The `PRECEDING` clause defines the first row of the window using the current row as a reference point. The starting row is expressed in terms of the number of rows preceding the current row. For example, in the case of `ROWS` framing, 5 `PRECEDING` sets the window to start with the fifth row preceding the current row. In the case of `RANGE` framing, it sets the window to start with the first row whose ordering column value precedes that of the current row by 5 in the given order. If the specified order is ascending by date, this will be the first row within 5 days before the current row. `UNBOUNDED PRECEDING` sets the first row in the window to be the first row in the partition.
@@ -275,7 +277,7 @@ The optional `HAVING` clause has the general form:
 
 ``` pre
 HAVING condition
-            
+
 ```
 
 where *condition* is the same as specified for the `WHERE` clause. `HAVING` eliminates group rows that do not satisfy the condition. `HAVING` is different from `WHERE`: `WHERE` filters individual rows before the application of `GROUP BY`, while `HAVING` filters group rows created by `GROUP BY`. Each column referenced in *condition* must unambiguously reference a grouping column, unless the reference appears within an aggregate function.
@@ -287,7 +289,7 @@ The `UNION` clause has this general form:
 
 ``` pre
                select_statement UNION [ALL] select_statement
-            
+
 ```
 
 where *select\_statement* is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause. (`ORDER BY` and `LIMIT` can be attached to a subquery expression if it is enclosed in parentheses. Without parentheses, these clauses will be taken to apply to the result of the `UNION`, not to its right-hand input expression.)
@@ -305,7 +307,7 @@ The `INTERSECT` clause has this general form:
 
 ``` pre
                select_statement INTERSECT [ALL] select_statement
-            
+
 ```
 
 where *select\_statement* is any SELECT statement without an `ORDER             BY`, `LIMIT`, `FOR UPDATE`, or `FOR             SHARE` clause.
@@ -323,7 +325,7 @@ The `EXCEPT` clause has this general form:
 
 ``` pre
                select_statement EXCEPT [ALL] select_statement
-            
+
 ```
 
 where *select\_statement* is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause.
@@ -371,7 +373,7 @@ If `DISTINCT` is specified, all duplicate rows are removed from the result set (
 `DISTINCT             ON ( expression [, ...] )` keeps only the first row of each set of rows where the given expressions evaluate to equal. The `DISTINCT             ON` expressions are interpreted using the same rules as for `ORDER             BY`. Note that the 'first row' of each set is unpredictable unless `ORDER             BY` is used to ensure that the desired row appears first. For example:
 
 ``` pre
-SELECT DISTINCT ON (location) location, time, report FROM 
+SELECT DISTINCT ON (location) location, time, report FROM
 weather_reports ORDER BY location, time DESC;
 ```
 
@@ -385,7 +387,7 @@ The `LIMIT` clause consists of two independent sub-clauses:
 ``` pre
 LIMIT {count | ALL}
 OFFSET start
-            
+
 ```
 
 where *count* specifies the maximum number of rows to return, while *start* specifies the number of rows to skip before starting to return rows. When both are specified, start rows are skipped before starting to count the count rows to be returned.
@@ -399,7 +401,7 @@ The query planner takes `LIMIT` into account when generating a query plan, so yo
 To join the table `films` with the table `distributors`:
 
 ``` pre
-SELECT f.title, f.did, d.name, f.date_prod, f.kind FROM 
+SELECT f.title, f.did, d.name, f.date_prod, f.kind FROM
 distributors d, films f WHERE f.did = d.did
 ```
 
@@ -412,7 +414,7 @@ SELECT kind, sum(length) AS total FROM films GROUP BY kind;
 To sum the column `length` of all films, group the results by `kind` and show those group totals that are less than 5 hours:
 
 ``` pre
-SELECT kind, sum(length) AS total FROM films GROUP BY kind 
+SELECT kind, sum(length) AS total FROM films GROUP BY kind
 HAVING sum(length) < interval '5 hours';
 ```
 
@@ -427,8 +429,8 @@ ORDER BY 1,2,3;
 Calculate the rank of movie distributors based on total sales:
 
 ``` pre
-SELECT distributor, sum(prc*qty), 
-       rank() OVER (ORDER BY sum(prc*qty) DESC) 
+SELECT distributor, sum(prc*qty),
+       rank() OVER (ORDER BY sum(prc*qty) DESC)
 FROM sale
 GROUP BY distributor ORDER BY 2 DESC;
 ```
@@ -443,23 +445,23 @@ SELECT * FROM distributors ORDER BY 2;
 The next example shows how to obtain the union of the tables `distributors` and `actors`, restricting the results to those that begin with the letter `W` in each table. Only distinct rows are wanted, so the key word `ALL` is omitted:
 
 ``` pre
-SELECT distributors.name FROM distributors WHERE 
-distributors.name LIKE 'W%' UNION SELECT actors.name FROM 
+SELECT distributors.name FROM distributors WHERE
+distributors.name LIKE 'W%' UNION SELECT actors.name FROM
 actors WHERE actors.name LIKE 'W%';
 ```
 
 This example shows how to use a function in the `FROM` clause, both with and without a column definition list:
 
 ``` pre
-CREATE FUNCTION distributors(int) RETURNS SETOF distributors 
-AS $$ SELECT * FROM distributors WHERE did = $1; $$ LANGUAGE 
+CREATE FUNCTION distributors(int) RETURNS SETOF distributors
+AS $$ SELECT * FROM distributors WHERE did = $1; $$ LANGUAGE
 SQL;
 SELECT * FROM distributors(111);
 
-CREATE FUNCTION distributors_2(int) RETURNS SETOF record AS 
-$$ SELECT * FROM distributors WHERE did = $1; $$ LANGUAGE 
+CREATE FUNCTION distributors_2(int) RETURNS SETOF record AS
+$$ SELECT * FROM distributors WHERE did = $1; $$ LANGUAGE
 SQL;
-SELECT * FROM distributors_2(111) AS (dist_id int, dist_name 
+SELECT * FROM distributors_2(111) AS (dist_id int, dist_name
 text);
 ```
 

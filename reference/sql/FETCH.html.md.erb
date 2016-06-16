@@ -8,7 +8,7 @@ Retrieves rows from a query using a cursor.
 
 ``` pre
 FETCH [ forward_direction { FROM | IN } ] cursorname
-         
+
 ```
 
 where *forward\_direction* can be empty or one of:
@@ -39,51 +39,52 @@ The forms using `FORWARD` retrieve the indicated number of rows moving in the fo
 `RELATIVE 0` and `FORWARD 0` request fetching the current row without moving the cursor, that is, re-fetching the most recently fetched row. This will succeed unless the cursor is positioned before the first row or after the last row, in which case no row is returned.
 
 **Outputs**
+
 On successful completion, a `FETCH` command returns a command tag of the form
 
 ``` pre
 FETCH count
-            
+
 ```
 
 The count is the number of rows fetched (possibly zero). Note that in `psql`, the command tag will not actually be displayed, since `psql` displays the fetched rows instead.
 
 ## Parameters<a id="topic1__section5"></a>
 
- *forward\_direction*   
+ *forward\_direction*
 Defines the fetch direction and number of rows to fetch. Only forward fetches are allowed in HAWQ. It can be one of the following:
 
-NEXT  
+NEXT
 Fetch the next row. This is the default if direction is omitted.
 
-FIRST  
+FIRST
 Fetch the first row of the query (same as `ABSOLUTE 1`). Only allowed if it is the first `FETCH` operation using this cursor.
 
-LAST  
+LAST
 Fetch the last row of the query (same as `ABSOLUTE -1`).
 
-ABSOLUTE *count*   
+ABSOLUTE *count*
 Fetch the specified row of the query. Position after last row if count is out of range. Only allowed if the row specified by *count* moves the cursor position forward.
 
-RELATIVE *count*   
+RELATIVE *count*
 Fetch the specified row of the query *count* rows ahead of the current cursor position. `RELATIVE 0` re-fetches the current row, if any. Only allowed if *count* moves the cursor position forward.
 
- *count*   
+ *count*
 Fetch the next *count* number of rows (same as `FORWARD                 count                   `).
 
-ALL  
+ALL
 Fetch all remaining rows (same as `FORWARD ALL`).
 
-FORWARD  
+FORWARD
 Fetch the next row (same as `NEXT`).
 
-FORWARD *count*   
+FORWARD *count*
 Fetch the next *count* number of rows. `FORWARD 0` re-fetches the current row.
 
-FORWARD ALL  
+FORWARD ALL
 Fetch all remaining rows.
 
- *cursorname*   
+ *cursorname*
 The name of an open cursor.
 
 ## Notes<a id="topic1__section6"></a>

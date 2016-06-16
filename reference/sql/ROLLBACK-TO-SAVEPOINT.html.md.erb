@@ -8,7 +8,7 @@ Rolls back the current transaction to a savepoint.
 
 ``` pre
 ROLLBACK [WORK | TRANSACTION] TO [SAVEPOINT] savepoint_name
-         
+
 ```
 
 ## Description<a id="topic1__section3"></a>
@@ -19,11 +19,11 @@ This command will roll back all commands that were executed after the savepoint 
 
 ## Parameters<a id="topic1__section4"></a>
 
-WORK
-TRANSACTION  
+WORK<br/>
+TRANSACTION
 Optional key words. They have no effect.
 
- *savepoint\_name*   
+ *savepoint\_name*
 The name of a savepoint to roll back to.
 
 ## Notes<a id="topic1__section5"></a>
@@ -49,12 +49,12 @@ BEGIN;
 DECLARE foo CURSOR FOR SELECT 1 UNION SELECT 2;
 SAVEPOINT foo;
 FETCH 1 FROM foo;
-column 
+column
 ----------
         1
 ROLLBACK TO SAVEPOINT foo;
 FETCH 1 FROM foo;
-column 
+column
 ----------
         2
 COMMIT;

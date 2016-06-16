@@ -20,7 +20,7 @@ where *option* can be:
     | INHERIT | NOINHERIT
     | LOGIN | NOLOGIN
     | [ ENCRYPTED | UNENCRYPTED ] PASSWORD 'password'
-    | VALID UNTIL 'timestamp' 
+    | VALID UNTIL 'timestamp'
     | IN ROLE rolename [, ...]
     | IN GROUP rolename [, ...]
     | ROLE rolename [, ...]
@@ -28,7 +28,7 @@ where *option* can be:
     | USER rolename [, ...]
     | SYSID uid
     | RESOURCE QUEUE queue_name
-         
+
 ```
 
 ## Description<a id="topic1__section3"></a>
@@ -41,6 +41,6 @@ The only difference between `CREATE ROLE` and `CREATE                     USER` 
 
 There is no `CREATE USER` statement in the SQL standard.
 
-## See<a id="topic1__section5"></a>
+## See Also<a id="topic1__section5"></a>
 
 [CREATE ROLE](CREATE-ROLE.html)

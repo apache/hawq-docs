@@ -7,8 +7,8 @@ Defines a cursor.
 ## Synopsis<a id="topic1__section2"></a>
 
 ``` pre
-DECLARE name [BINARY] [INSENSITIVE] [NO SCROLL] CURSOR 
-     [{WITH | WITHOUT} HOLD] 
+DECLARE name [BINARY] [INSENSITIVE] [NO SCROLL] CURSOR
+     [{WITH | WITHOUT} HOLD]
      FOR query [FOR READ ONLY]
 ```
 
@@ -27,28 +27,28 @@ When the client application uses the 'extended query' protocol to issue a `FETCH
 
 ## Parameters<a id="topic1__section4"></a>
 
- *name*   
+ *name*
 The name of the cursor to be created.
 
-BINARY  
+BINARY
 Causes the cursor to return data in binary rather than in text format.
 
-INSENSITIVE  
+INSENSITIVE
 Indicates that data retrieved from the cursor should be unaffected by updates to the tables underlying the cursor while the cursor exists. In HAWQ, all cursors are insensitive. This key word currently has no effect and is present for compatibility with the SQL standard.
 
-NO SCROLL  
+NO SCROLL
 A cursor cannot be used to retrieve rows in a nonsequential fashion. This is the default behavior in HAWQ, since scrollable cursors (`SCROLL`) are not supported.
 
-WITH HOLD
-WITHOUT HOLD  
+WITH HOLD<br/>
+WITHOUT HOLD
 `WITH HOLD` specifies that the cursor may continue to be used after the transaction that created it successfully commits. `WITHOUT HOLD` specifies that the cursor cannot be used outside of the transaction that created it. `WITHOUT HOLD` is the default.
 
- *query*   
+ *query*
 A [SELECT](SELECT.html) command which will provide the rows to be returned by the cursor.
 
 <!-- -->
 
-FOR READ ONLY  
+FOR READ ONLY
 `FOR READ ONLY` indicates that the cursor is used in a read-only mode. Cursors can only be used in a read-only mode in HAWQ. HAWQ does not support updatable cursors (FOR UPDATE), so this is the default behavior.
 
 ## Notes<a id="topic1__section5"></a>
