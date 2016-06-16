@@ -28,7 +28,11 @@ The following data types are specified by SQL:
 
 Each data type has an external representation determined by its input and output functions. Many of the built-in types have obvious external formats. However, several types are unique to HAWQ, such as geometric paths, or have several possibilities for formats, such as the date and time types. Some of the input and output functions are not invertible. That is, the result of an output function may lose accuracy when compared to the original input.
 
+<<<<<<< HEAD
+ <span class="tablecap">Table 1. HAWQ Built-in Data Types</span>
+=======
 <span class="tablecap">Table 1. HAWQ Built-in Data Types</span>
+>>>>>>> e614d10bf3dd730d79e0ede0d296d6517767c12c
 
 | Name                                       | Alias               | Size                  | Range                                       | Description                                                                       |
 |--------------------------------------------|---------------------|-----------------------|---------------------------------------------|-----------------------------------------------------------------------------------|
@@ -65,6 +69,11 @@ Each data type has an external representation determined by its input and output
 | timestamp \[ (p) \] with time zone         | timestamptz         | 8 bytes               | 4713 BC - 294,277 AD                        | both date and time, with time zone                                                |
 | xml                                        |                     | 1 byte + xml size     | xml of any length                           | variable unlimited length                                                         |
 
+<<<<<<< HEAD
+
+ 
+=======
+>>>>>>> e614d10bf3dd730d79e0ede0d296d6517767c12c
 For variable length data types (such as char, varchar, text, xml, etc.) if the data is greater than or equal to 127 bytes, the storage overhead is 4 bytes instead of 1.
 
 ## Time Zones<a id="timezones"></a>
@@ -82,9 +91,9 @@ All timezone-aware dates and times are stored internally in UTC. They are conve
 
 HAWQ allows you to specify time zones in three different forms:
 
--   A full time zone name, for example America/New\_York. HAWQ /&gt; uses the widely-used zoneinfo time zone data for this purpose, so the same names are also recognized by much other software.
+-   A full time zone name, for example America/New\_York. HAWQ uses the widely-used zoneinfo time zone data for this purpose, so the same names are also recognized by much other software.
 -   A time zone abbreviation, for example PST. Such a specification merely defines a particular offset from UTC, in contrast to full time zone names which can imply a set of daylight savings transition-date rules as well. You cannot set the configuration parameters timezone or log\_timezone to a time zone abbreviation, but you can use abbreviations in date/time input values and with the AT TIME ZONE operator.
--   In addition to the timezone names and abbreviations, HAWQ /&gt; accepts POSIX-style time zone specifications of the form STDoffset or STDoffsetDST, whereSTD is a zone abbreviation, offset is a numeric offset in hours west from UTC, and DST is an optional daylight-savings zone abbreviation, assumed to stand for one hour ahead of the given offset. For example, if EST5EDT were not already a recognized zone name, it would be accepted and would be functionally equivalent to United States East Coast time. When a daylight-savings zone name is present, it is assumed to be used according to the same daylight-savings transition rules used in the zoneinfo time zone database's posixrules entry. In a standard HAWQ installation, posixrules is the same as US/Eastern, so that POSIX-style time zone specifications follow USA daylight-savings rules. If needed, you can adjust this behavior by replacing the posixrules file.
+-   In addition to the timezone names and abbreviations, HAWQ /&gt; accepts POSIX-style time zone specifications of the form STDoffset or STDoffsetDST, where STD is a zone abbreviation, offset is a numeric offset in hours west from UTC, and DST is an optional daylight-savings zone abbreviation, assumed to stand for one hour ahead of the given offset. For example, if EST5EDT were not already a recognized zone name, it would be accepted and would be functionally equivalent to United States East Coast time. When a daylight-savings zone name is present, it is assumed to be used according to the same daylight-savings transition rules used in the zoneinfo time zone database's posixrules entry. In a standard HAWQ installation, posixrules is the same as US/Eastern, so that POSIX-style time zone specifications follow USA daylight-savings rules. If needed, you can adjust this behavior by replacing the posixrules file.
 
 In short, this is the difference between abbreviations and full names: abbreviations always represent a fixed offset from UTC, whereas most of the full names imply a local daylight-savings time rule, and so have two possible UTC offsets.
 
