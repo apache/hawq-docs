@@ -27,6 +27,7 @@ FORMAT 'custom' (formatter='pxfwritable_import|pxfwritable_export');
    ?FRAGMENTER=fragmenter_class&ACCESSOR=accessor_class&RESOLVER=resolver_class]
  | ?PROFILE=profile-name
 ```
+<caption><span class="tablecap">Table 1. Parameter values and description</span></caption>
 
 <a id="creatinganexternaltable__table_pfy_htz_4p"></a>
 
@@ -39,8 +40,6 @@ FORMAT 'custom' (formatter='pxfwritable_import|pxfwritable_export');
 | ACCESSOR                | The plugin (Java class) to use for accessing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                                                  |
 | RESOLVER                | The plugin (Java class) to use for serializing and deserializing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                              |
 | *custom-option*=*value* | Additional values to pass to the plugin class. The parameters are passed at runtime to the plugins indicated above. The plugins can lookup custom options with `org.apache.hawq.pxf.api.utilities.InputData`.                                                                  |
-
-: <span class="tablecap">Table 1. Parameter values and description</span>
 
 **Note:** When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
 
@@ -227,6 +226,7 @@ When a PXF table is analyzed and `pxf_enable_stat_collection` is set to off, or 
 For a detailed explanation about HAWQ statistical data gathering, see `ANALYZE` in the SQL Commands Reference.
 
 **Note:**
+
 -   Depending on external table size, the time required to complete an ANALYZE operation can be lengthy. The boolean parameter `pxf_enable_stat_collection` enables statistics collection for PXF. The default value is `on`. Turning this parameter off (disabling PXF statistics collection) can help decrease the time needed for the ANALYZE operation.
 -   You can also use *pxf\_stat\_max\_fragments* to limit the number of fragments to be sampled by decreasing it from the default (100). However, if the number is too low, the sample might not be uniform and the statistics might be skewed.
 -   You can also implement getFragmentsStats to return an error. This will cause ANALYZE on a table with this Fragmenter to fail immediately, and default statistics values will be used for that table.
@@ -266,8 +266,6 @@ The following table lists the Fragmenter plugin implementations included with th
 </tr>
 </tbody>
 </table>
-
-: <span class="tablecap">Table 2. Fragmenter base classes </span>
 
 A Fragmenter class extends `org.apache.hawq.pxf.api.Fragmenter`:
 
@@ -458,8 +456,6 @@ The Accessor retrieves specific fragments and passes records back to the Resolve
 </tbody>
 </table>
 
-: <span class="tablecap">Table 3. Accessor base classes </span>
-
 The class must extend the `org.apache.hawq.pxf.Plugin`  class, and implement one or both interfaces:
 
 -   `org.apache.hawq.pxf.api.ReadAccessor`
@@ -615,8 +611,6 @@ DataType.TIMESTAMP</code></pre></td>
 </tbody>
 </table>
 
-: <span class="tablecap">Table 4. Resolver base classes</span>
-
 The class needs to extend the `org.apache.hawq.pxf.resolvers.Plugin class                `, and implement one or both interfaces:
 
 -   `org.apache.hawq.pxf.api.ReadResolver`
@@ -648,6 +642,7 @@ public interface WriteResolver {
 ```
 
 **Note:**
+
 -   getFields should return a List&lt;OneField&gt;, each OneField representing a single field.
 -   `setFields `should return a single `OneRow `object, given a List&lt;OneField&gt;.
 
@@ -743,8 +738,6 @@ The value of t`ype` should follow the org.apache.hawq.pxf.api.io.DataType `enum
 </tr>
 </tbody>
 </table>
-
-: <span class="tablecap">Table 5. Resolver supported types</span>
 
 ### Analyzer<a id="analyzer"></a>
 
