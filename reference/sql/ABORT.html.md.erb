@@ -4,7 +4,7 @@ title: ABORT
 
 Aborts the current transaction.
 
-## Synopsis
+## Synopsis<a id="synop"></a>
 
 ``` pre
 ABORT [WORK | TRANSACTION]
@@ -16,8 +16,7 @@ ABORT [WORK | TRANSACTION]
 
 ## Parameters<a id="abort__section4"></a>
 
-WORK
-TRANSACTION  
+WORK, TRANSACTION  
 Optional key words. They have no effect.
 
 ## Notes<a id="abort__section5"></a>
@@ -26,11 +25,11 @@ Use `COMMIT` to successfully terminate a transaction.
 
 Issuing `ABORT` when not inside a transaction does no harm, but it will provoke a warning message.
 
-## Compatibility
+## Compatibility<a id="compat"></a>
 
 This command is a HAWQ extension present for historical reasons. ROLLBACK is the equivalent standard SQL command.
 
-## See Also
+## See Also<a id="see"></a>
 
 [BEGIN](BEGIN.html), [COMMIT](COMMIT.html), [ROLLBACK](ROLLBACK.html)
 

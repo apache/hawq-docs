@@ -29,7 +29,7 @@ where *action* is one of:
 {[EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER}
 ```
 
-## Description
+## Description<a id="desc"></a>
 
 `ALTER FUNCTION` changes the definition of a function. 
 
@@ -58,24 +58,24 @@ The new owner of the function. Note that if the function is marked `SECURITY DEF
  *new\_schema*   
 The new schema for the function.
 
-CALLED ON NULL INPUT
-RETURNS NULL ON NULL INPUT
+CALLED ON NULL INPUT, 
+RETURNS NULL ON NULL INPUT, 
 STRICT  
 `CALLED ON NULL INPUT` changes the function so that it will be invoked when some or all of its arguments are null. `RETURNS NULL ON NULL                      INPUT` or `STRICT` changes the function so that it is not invoked if any of its arguments are null; instead, a null result is assumed automatically. See `CREATE FUNCTION` for more information.
 
-IMMUTABLE
-STABLE
-VOLATILE  
+IMMUTABLE, 
+STABLE, 
+VOLATILE,   
 Change the volatility of the function to the specified setting. See `CREATE FUNCTION` for details.
 
-\[ EXTERNAL \] SECURITY INVOKER
+\[ EXTERNAL \] SECURITY INVOKER, 
 \[ EXTERNAL \] SECURITY DEFINER  
 Change whether the function is a security definer or not. The key word `EXTERNAL` is ignored for SQL conformance. See `CREATE                      FUNCTION` for more information about this capability.
 
 RESTRICT  
 Ignored for conformance with the SQL standard.
 
-## Notes
+## Notes<a id="notes"></a>
 
 HAWQ has limitations on the use of functions defined as `STABLE` or `VOLATILE`. See [CREATE FUNCTION](CREATE-FUNCTION.html) for more information.
 
@@ -99,11 +99,11 @@ To change the *schema* of the function `sqrt` for type `integer` to `math`:
 ALTER FUNCTION sqrt(integer) SET SCHEMA math;
 ```
 
-## Compatibility
+## Compatibility<a id="compat"></a>
 
 This statement is partially compatible with the `ALTER FUNCTION` statement in the SQL standard. The standard allows more properties of a function to be modified, but does not provide the ability to rename a function, make a function a security definer, or change the owner, schema, or volatility of a function. The standard also requires the `RESTRICT` key word, which is optional in HAWQ.
 
-## See Also
+## See Also<a id="see"></a>
 
 [CREATE AGGREGATE](CREATE-AGGREGATE.html), [DROP AGGREGATE](DROP-AGGREGATE.html)
 

@@ -4,7 +4,7 @@ title: ALTER AGGREGATE
 
 Changes the definition of an aggregate function.
 
-## Synopsis
+## Synopsis<a id="synop"></a>
 
 ``` pre
 ALTER AGGREGATE name ( type [ , ... ] ) RENAME TO new_name
@@ -15,7 +15,7 @@ ALTER AGGREGATE name ( type [ , ... ] ) SET SCHEMA new_schema
          
 ```
 
-## Description
+## Description<a id="desc"></a>
 
 `ALTER AGGREGATE` changes the definition of an aggregate function.
 
@@ -58,11 +58,11 @@ To move the aggregate function `myavg` for type `integer` into schema `myschema`
 ALTER AGGREGATE myavg(integer) SET SCHEMA myschema;
 ```
 
-## Compatibility
+## Compatibility<a id="compat"></a>
 
 There is no `ALTER AGGREGATE` statement in the SQL standard.
 
-## See Also
+## See Also<a id="see"></a>
 
 [CREATE AGGREGATE](CREATE-AGGREGATE.html), [DROP AGGREGATE](DROP-AGGREGATE.html)
 

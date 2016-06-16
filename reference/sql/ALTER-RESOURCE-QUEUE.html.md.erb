@@ -61,11 +61,9 @@ Required. Defines how much memory a resource queue can consume from its parent r
 **Note:** If you want to increase the percentage, you may need to decrease the percentage of any resource queue(s) that share the same parent resource queue first. The total cannot exceed 100%.
 
 CORE\_LIMIT\_CLUSTER *percentage*   
-Required. The percentage of consumable CPU (virtual core) resources that the resource queue can take from its parent resource queue. The valid values are 1% to 100%. The value of CORE\_ LIMIT\_CLUSTER must be identical to the value of MEMORY\_LIMIT\_CLUSTER. The sum of values for CORE\_LIMIT\_CLUSTER of this queue and queues that share the same parent cannot exceed 100%
+Required. The percentage of consumable CPU (virtual core) resources that the resource queue can take from its parent resource queue. The valid values are 1% to 100%. The value of CORE\_ LIMIT\_CLUSTER must be identical to the value of MEMORY\_LIMIT\_CLUSTER. The sum of values for CORE\_LIMIT\_CLUSTER of this queue and queues that share the same parent cannot exceed 100%.
 
 **Note:** If you want to increase the percentage, you may need to decrease the percentage of any resource queue(s) that share the same parent resource queue first. The total cannot exceed 100%.
-
-.
 
 ALLOCATION\_POLICY *string*  
 Optional. Defines the resource allocation policy for parallel statement execution. The default value is `even`.

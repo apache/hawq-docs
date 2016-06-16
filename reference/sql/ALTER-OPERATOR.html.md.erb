@@ -4,7 +4,7 @@ title: ALTER OPERATOR
 
 Changes the definition of an operator.
 
-## Synopsis
+## Synopsis<a id="synop"></a>
 
 ``` pre
 ALTER OPERATOR name ( {lefttype | NONE} , {righttype | NONE} ) 
@@ -12,7 +12,7 @@ ALTER OPERATOR name ( {lefttype | NONE} , {righttype | NONE} )
          
 ```
 
-## Description
+## Description<a id="desc"></a>
 
 `ALTER OPERATOR` changes the definition of an operator. The only currently available functionality is to change the owner of the operator. 
 
@@ -32,7 +32,7 @@ The data type of the operator's right operand; write `NONE` if the operator has 
  *newowner*   
 The new owner of the operator.
 
-## Example
+## Example<a id="example"></a>
 
 Change the owner of a custom operator `a @@ b` for type `text`:
 
@@ -40,11 +40,11 @@ Change the owner of a custom operator `a @@ b` for type `text`:
 ALTER OPERATOR @@ (text, text) OWNER TO joe;
 ```
 
-## Compatibility
+## Compatibility<a id="compat"></a>
 
 There is no `ALTER OPERATOR` statement in the SQL standard.
 
-## See Also
+## See Also<a id="see"></a>
 
 [CREATE OPERATOR](CREATE-OPERATOR.html), [DROP OPERATOR](DROP-OPERATOR.html)
 
