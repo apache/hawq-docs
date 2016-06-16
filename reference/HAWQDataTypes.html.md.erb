@@ -28,6 +28,8 @@ The following data types are specified by SQL:
 
 Each data type has an external representation determined by its input and output functions. Many of the built-in types have obvious external formats. However, several types are unique to HAWQ, such as geometric paths, or have several possibilities for formats, such as the date and time types. Some of the input and output functions are not invertible. That is, the result of an output function may lose accuracy when compared to the original input.
 
+<span class="tablecap">Table 1. HAWQ Built-in Data Types</span>
+
 | Name                                       | Alias               | Size                  | Range                                       | Description                                                                       |
 |--------------------------------------------|---------------------|-----------------------|---------------------------------------------|-----------------------------------------------------------------------------------|
 | bigint                                     | int8                | 8 bytes               | -9223372036854775808 to 9223372036854775807 | large range integer                                                               |
@@ -62,8 +64,6 @@ Each data type has an external representation determined by its input and output
 | timestamp \[ (p) \] \[without time zone \] |                     | 8 bytes               | 4713 BC - 294,277 AD                        | both date and time                                                                |
 | timestamp \[ (p) \] with time zone         | timestamptz         | 8 bytes               | 4713 BC - 294,277 AD                        | both date and time, with time zone                                                |
 | xml                                        |                     | 1 byte + xml size     | xml of any length                           | variable unlimited length                                                         |
-
-: <span class="tablecap">Table 1. HAWQ Built-in Data Types</span>
 
 For variable length data types (such as char, varchar, text, xml, etc.) if the data is greater than or equal to 127 bytes, the storage overhead is 4 bytes instead of 1.
 
