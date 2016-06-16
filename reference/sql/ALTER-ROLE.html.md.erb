@@ -38,7 +38,7 @@ where *option* can be:
     | [ DROP DENY FOR deny_point ]
 ```
 
-## Description<a href="desc"></a>
+## Description<a id="desc"></a>
 
 `ALTER ROLE` changes the attributes of a HAWQ role. There are several variants of this command:
 
@@ -172,11 +172,11 @@ Alter a role to remove the constraint that does not allow login access on Sunday
 ALTER ROLE user3 DROP DENY FOR DAY 'Sunday';
 ```
 
-## Compatibility<a href="compat"></a>
+## Compatibility<a id="compat"></a>
 
 The `ALTER ROLE` statement is a HAWQ extension.
 
-## See Also<a href="see"></a>
+## See Also<a id="see"></a>
 
 [CREATE ROLE](CREATE-ROLE.html), [DROP ROLE](DROP-ROLE.html), [SET](SET.html), [CREATE RESOURCE QUEUE](CREATE-RESOURCE-QUEUE.html), [GRANT](GRANT.html), [REVOKE](REVOKE.html) 
 
