@@ -24,7 +24,7 @@ The SQL script will be written to the standard output. Shell operators should be
 
 ## Options<a id="topic1__section4"></a>
 
-**Dump Options**
+**Dump Options**  
 -a | --data-only  
 Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
@@ -83,7 +83,7 @@ Output SQL-standard `SET SESSION AUTHORIZATION` commands instead of `ALTER OWNER
 --gp-syntax  
 Output HAWQ syntax in the `CREATE                                 TABLE` statements. This allows the distribution policy (`DISTRIBUTED BY` or `DISTRIBUTED                                 RANDOMLY` clauses) of a HAWQ table to be dumped, which is useful for restoring into other HAWQ systems.
 
-**Connection Options**
+**Connection Options**  
 -h *host* | --host *host*  
 The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to `localhost`.
 

@@ -23,7 +23,7 @@ pg_restore [connection_option ...] [restore_option ...] filename
  *filename*   
 Specifies the location of the archive file to be restored. If not specified, the standard input is used.
 
-**Restore Options**
+**Restore Options**  
 -a | --data-only  
 Restore only the data, not the schema (data definitions).
 
@@ -96,7 +96,7 @@ This option is only relevant when performing a data-only restore. It instructs `
 --no-data-for-failed-tables  
 By default, table data is restored even if the creation command for the table failed (e.g., because it already exists). With this option, data for such a table is skipped. This behavior is useful when the target database may already contain the desired table contents. Specifying this option prevents duplicate or obsolete data from being loaded. This option is effective only when restoring directly into a database, not when producing SQL script output.
 
-**Connection Options**
+**Connection Options**  
 -h *host* | --host *host*  
 The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
 
@@ -196,7 +196,7 @@ Semicolons start a comment, and the numbers at the start of lines refer to the i
 
 Could be used as input to `pg_restore` and would only restore items 10 and 6, in that order:
 
-pg\_restore -L db.list db.dump
+`pg_restore -L db.list db.dump`
 
 ## See Also<a id="topic1__section8"></a>
 

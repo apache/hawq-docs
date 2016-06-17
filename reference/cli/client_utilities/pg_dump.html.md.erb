@@ -30,7 +30,7 @@ When used with one of the archive file formats and combined with `pg_restore`, `
 dbname  
 Specifies the name of the database to be dumped. If this is not specified, the environment variable `PGDATABASE` is used. If that is not set, the user name specified for the connection is used.
 
-**Dump Options**
+**Dump Options**  
 -a | --data-only  
 Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).
 
@@ -125,7 +125,7 @@ Use `--gp-syntax` to dump HAWQ syntax in the `CREATE TABLE` statements. This all
 -Z 0..9 | --compress=0..9  
 Specify the compression level to use in archive formats that support compression. Currently only the *custom* archive format supports compression.
 
-**Connection Options**
+**Connection Options**  
 -h *host*| --host *host*  
 The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
 
