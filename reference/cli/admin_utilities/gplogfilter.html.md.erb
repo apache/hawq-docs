@@ -31,7 +31,7 @@ By default, the output of `gplogfilter` is sent to standard output. Use the `-o`
 
 ## Options<a id="topic1__section4"></a>
 
-**Timestamp Options**
+**Timestamp Options**  
 -b *datetime* | --begin=*datetime*  
 Specifies a starting date and time to begin searching for log entries in the format of `YYYY-MM-DD [hh:mm[:ss]]`.
 
@@ -53,7 +53,7 @@ gplogfilter -e '2016-02-13 14:23'
 -d *time* | --duration=*time*  
 Specifies a time duration to search for log entries in the format of `[hh][:mm[:ss]]`. If used without either the `-b` or `-e` option, will use the current time as a basis.
 
-**Pattern Matching Options**
+**Pattern Matching Options**  
 -c i \[gnore\] | r \[espect\] | --case=i \[gnore\] | r \[espect\]  
 Matching of alphabetic characters is case sensitive by default unless proceeded by the `--case=ignore` option.
 
@@ -75,7 +75,7 @@ Rejects log entries that match the specified Python regular expression. See [htt
 -t | --trouble  
 Finds only the log entries that have `ERROR:`, `FATAL:`, or `PANIC:` in the first line.
 
-**Output Options**
+**Output Options**  
 -n *integer* | --tail=*integer*  
 Limits the output to the last *integer* of qualifying log entries found.
 
@@ -91,7 +91,7 @@ Compresses the output file to the specified compression level using `gzip`, wher
 -a | --append  
 If the output file already exists, appends to the file instead of overwriting it.
 
-**Input Options**
+**Input Options**  
 input\_file  
 The name of the input log file(s) to search through. If an input file is not supplied, `gplogfilter` will use the `$MASTER_DATA_DIRECTORY` environment variable to locate the HAWQ master log file. To read from standard input, use a dash (`-`) as the input file name.
 
