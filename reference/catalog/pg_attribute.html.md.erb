@@ -5,6 +5,7 @@ title: pg_attribute
 The `pg_attribute` table stores information about table columns. There will be exactly one `pg_attribute` row for every column in every table in the database. (There will also be attribute entries for indexes, and all objects that have `pg_class` entries.) The term attribute is equivalent to column.
 
 <a id="topic1__ga143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_attribute</span>
 
 | column          | type     | references    | description                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |-----------------|----------|---------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -26,6 +27,6 @@ The `pg_attribute` table stores information about table columns. There will be e
 | `attislocal`    | boolean  |               | This column is defined locally in the relation. Note that a column may be locally defined and inherited simultaneously                                                                                                                                                                                                                                                                                                         |
 | `attinhcount`   | integer  |               | The number of direct ancestors this column has. A column with a nonzero number of ancestors cannot be dropped nor renamed                                                                                                                                                                                                                                                                                                      |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_attribute</span>
+
 
 

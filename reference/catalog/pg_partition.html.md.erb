@@ -5,6 +5,7 @@ title: pg_partition
 The `pg_partition` system catalog table is used to track partitioned tables and their inheritance level relationships. Each row of `pg_partition` represents either the level of a partitioned table in the partition hierarchy, or a subpartition template description. The value of the attribute `paristemplate` determines what a particular row represents.
 
 <a id="topic1__gz143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_partition</span>
 
 | column          | type       | references      | description                                                                                                                                         |
 |-----------------|------------|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -16,6 +17,6 @@ The `pg_partition` system catalog table is used to track partitioned tables and 
 | `paratts`       | int2vector |                 | An array of the attribute numbers (as in `pg_attribute.attnum`) of the attributes that participate in defining this level.                          |
 | `parclass`      | oidvector  | pg\_opclass.oid | The operator class identifier(s) of the partition columns.                                                                                          |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_partition</span>
+<span class="tablecap">Table 1. pg\_catalog.pg\_partition</span>
 
 

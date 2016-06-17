@@ -1,10 +1,11 @@
 ---
-title: pg_auth_members
+title: pg\_auth\_members
 ---
 
 The `pg_auth_members` system catalog table shows the membership relations between roles. Any non-circular set of relationships is allowed. Because roles are system-wide, `pg_auth_members` is shared across all databases of a HAWQ system.
 
 <a id="topic1__gc143898"></a>
+ <span class="tablecap">Table 1. pg\_catalog.pg\_auth\_members</span>
 
 | column         | type    | references     | description                                        |
 |----------------|---------|----------------|----------------------------------------------------|
@@ -13,6 +14,6 @@ The `pg_auth_members` system catalog table shows the membership relations betwee
 | `grantor`      | oid     | pg\_authid.oid | ID of the role that granted this membership        |
 | `admin_option` | boolean |                | True if role member may grant membership to others |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_auth\_members</span>
+
 
 

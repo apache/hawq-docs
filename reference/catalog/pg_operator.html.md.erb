@@ -5,6 +5,7 @@ title: pg_operator
 The `pg_operator` system catalog table stores information about operators, both built-in and those defined by `CREATE OPERATOR`. Unused column contain zeroes. For example, `oprleft` is zero for a prefix operator.
 
 <a id="topic1__gy150092"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_operator</span>
 
 | column         | type    | references        | description                                                                                                              |
 |----------------|---------|-------------------|--------------------------------------------------------------------------------------------------------------------------|
@@ -26,6 +27,6 @@ The `pg_operator` system catalog table stores information about operators, both 
 | `oprrest `     | regproc | pg\_proc.oid      | Restriction selectivity estimation function for this operator.                                                           |
 | `oprjoin`      | regproc | pg\_proc.oid      | Join selectivity estimation function for this operator.                                                                  |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_operator</span>
+
 
 

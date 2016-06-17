@@ -7,6 +7,7 @@ The `pg_listener` system catalog table supports the `LISTEN` and `NOTIFY` comman
 This table is not currently used in HAWQ.
 
 <a id="topic1__gu143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_listener</span>
 
 | column         | type    | references | description                                                                                                                      |
 |----------------|---------|------------|----------------------------------------------------------------------------------------------------------------------------------|
@@ -14,6 +15,6 @@ This table is not currently used in HAWQ.
 | `listenerpid`  | integer |            | PID of the server process that created this entry.                                                                               |
 | `notification` | integer |            | Zero if no event is pending for this listener. If an event is pending, the PID of the server process that sent the notification. |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_listener</span>
+
 
 

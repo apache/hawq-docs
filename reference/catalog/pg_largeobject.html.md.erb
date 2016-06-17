@@ -7,6 +7,7 @@ The `pg_largeobject` system catalog table holds the data making up 'large object
 Each row of `pg_largeobject` holds data for one page of a large object, beginning at byte offset (*pageno*` * LOBLKSIZE`) within the object. The implementation allows sparse storage: pages may be missing, and may be shorter than `LOBLKSIZE` bytes even if they are not the last page of the object. Missing regions within a large object read as zeroes.
 
 <a id="topic1__gt143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_largeobject</span>
 
 | column   | type    | references | description                                                                                             |
 |----------|---------|------------|---------------------------------------------------------------------------------------------------------|
@@ -14,6 +15,6 @@ Each row of `pg_largeobject` holds data for one page of a large object, beginnin
 | `pageno` | integer |            | Page number of this page within its large object (counting from zero).                                  |
 | `data`   | bytea   |            | Actual data stored in the large object. This will never be more than `LOBLKSIZE` bytes and may be less. |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_largeobject</span>
+<span class="tablecap">Table 1. pg\_catalog.pg\_largeobject</span>
 
 

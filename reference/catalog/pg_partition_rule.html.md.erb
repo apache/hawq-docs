@@ -5,6 +5,8 @@ title: pg_partition_rule
 The `pg_partition_rule` system catalog table is used to track partitioned tables, their check constraints, and data containment rules. Each row of `pg_partition_rule` represents either a leaf partition (the bottom level partitions that contain data), or a branch partition (a top or mid-level partition that is used to define the partition hierarchy, but does not contain any data).
 
 <a id="topic1__hc179425"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_partition\_rule</span>
+
 
 | column              | type     | references                 | description                                                                                                                                                                                                                                                                                                                                                                  |
 |---------------------|----------|----------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -22,6 +24,5 @@ The `pg_partition_rule` system catalog table is used to track partitioned tables
 | `parlistvalues`     | text     |                            | For list partitioned tables, the list of values assigned to this partition.                                                                                                                                                                                                                                                                                                  |
 | `parreloptions`     | text     |                            | An array describing the storage characteristics of the particular partition.                                                                                                                                                                                                                                                                                                 |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_partition\_rule</span>
 
 

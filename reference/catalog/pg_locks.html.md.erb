@@ -9,6 +9,7 @@ The `pg_locks` view provides access to information about the locks held by open 
 There are several distinct types of lockable objects: whole relations (such as tables), individual pages of relations, individual tuples of relations, transaction IDs, and general database objects. Also, the right to extend a relation is represented as a separate lockable object.
 
 <a id="topic1__gv141982"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_locks</span>
 
 | column           | type     | references       | description                                                                                                                                                                                           |
 |------------------|----------|------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -29,6 +30,6 @@ There are several distinct types of lockable objects: whole relations (such as t
 | `mppiswriter`    | boolean  |                  | Specifies whether the lock is held by a writer process.                                                                                                                                               |
 | `gp_segment_id`  | integer  |                  | The HAWQ segment id (`dbid`) where the lock is held.                                                                                                                                                  |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_locks</span>
+
 
 

@@ -5,6 +5,7 @@ title: pg_description
 The `pg_description` system catalog table stores optional descriptions (comments) for each database object. Descriptions can be manipulated with the `COMMENT` command and viewed with `psql`'s `\d` meta-commands. Descriptions of many built-in system objects are provided in the initial contents of `pg_description`. See also [pg\_shdescription](pg_shdescription.html#topic1), which performs a similar function for descriptions involving objects that are shared across a HAWQ system.
 
 <a id="topic1__gm143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_description</span>
 
 | column         | type    | references     | description                                                                                                  |
 |----------------|---------|----------------|--------------------------------------------------------------------------------------------------------------|
@@ -13,6 +14,6 @@ The `pg_description` system catalog table stores optional descriptions (comments
 | `objsubid `    | integer |                | For a comment on a table column, this is the column number. For all other object types, this column is zero. |
 | `description ` | text    |                | Arbitrary text that serves as the description of this object.                                                |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_description</span>
+<span class="tablecap">Table 1. pg\_catalog.pg\_description</span>
 
 

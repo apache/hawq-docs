@@ -5,6 +5,7 @@ title: pg_namespace
 The `pg_namespace` system catalog table stores namespaces. A namespace is the structure underlying SQL schemas: each namespace can have a separate collection of relations, types, etc. without name conflicts.
 
 <a id="topic1__gx143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_namespace</span>
 
 | column     | type        | references     | description                                         |
 |------------|-------------|----------------|-----------------------------------------------------|
@@ -12,6 +13,6 @@ The `pg_namespace` system catalog table stores namespaces. A namespace is the st
 | `nspowner` | oid         | pg\_authid.oid | Owner of the namespace                              |
 | `nspacl `  | aclitem\[\] |                | Access privileges as given by `GRANT` and `REVOKE`. |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_namespace</span>
+
 
 
