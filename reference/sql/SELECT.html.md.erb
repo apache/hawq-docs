@@ -141,6 +141,7 @@ NATURAL
 `NATURAL` is shorthand for a `USING` list that mentions all columns in the two tables that have the same names.
 
 **The WHERE Clause**
+
 The optional `WHERE` clause has the general form:
 
 ``` pre
@@ -151,6 +152,7 @@ WHERE condition
 where *condition* is any expression that evaluates to a result of type `boolean`. Any row that does not satisfy this condition will be eliminated from the output. A row satisfies the condition if it returns true when the actual row values are substituted for any variable references.
 
 **The GROUP BY Clause**
+
 The optional `GROUP BY` clause has the general form:
 
 ``` pre
@@ -217,6 +219,7 @@ If using the grouping extension clauses `ROLLUP`, `CUBE`, or `GROUPING SETS`, tw
 -   **group\_id()** — For grouping extension queries that contain duplicate grouping sets, the `group_id` function is used to identify duplicate rows in the output. All *unique* grouping set output rows will have a group\_id value of 0. For each duplicate grouping set detected, the `group_id` function assigns a group\_id number greater than 0. All output rows in a particular duplicate grouping set are identified by the same group\_id number.
 
 **The WINDOW Clause**
+
 The `WINDOW` clause is used to define a window that can be used in the `OVER()` expression of a window function such as `rank` or `avg`. For example:
 
 ``` pre
@@ -273,6 +276,7 @@ Use either a `ROWS` or `RANGE` clause to express the bounds of the window. The w
 If you do not specify a `ROW` or a `RANGE` clause, the window bound starts with the first row in the partition (`UNBOUNDED                 PRECEDING`) and ends with the current row (`CURRENT ROW`) if `ORDER BY` is used. If an `ORDER BY` is not specified, the window starts with the first row in the partition (`UNBOUNDED                 PRECEDING`) and ends with last row in the partition (`UNBOUNDED                 FOLLOWING`).
 
 **The HAVING Clause**
+
 The optional `HAVING` clause has the general form:
 
 ``` pre
@@ -285,6 +289,7 @@ where *condition* is the same as specified for the `WHERE` clause. `HAVING` elim
 The presence of `HAVING` turns a query into a grouped query even if there is no `GROUP BY` clause. This is the same as what happens when the query contains aggregate functions but no `GROUP BY` clause. All the selected rows are considered to form a single group, and the `SELECT` list and `HAVING` clause can only reference table columns from within aggregate functions. Such a query will emit a single row if the `HAVING` condition is true, zero rows if it is not true.
 
 **The UNION Clause**
+
 The `UNION` clause has this general form:
 
 ``` pre
@@ -303,6 +308,7 @@ Multiple `UNION` operators in the same `SELECT` statement are evaluated left to 
 Currently, `FOR UPDATE` and `FOR SHARE` may not be specified either for a `UNION` result or for any input of a `UNION`.
 
 **The INTERSECT Clause**
+
 The `INTERSECT` clause has this general form:
 
 ``` pre
@@ -321,6 +327,7 @@ Multiple `INTERSECT` operators in the same `SELECT` statement are evaluated left
 Currently, `FOR UPDATE` and `FOR SHARE` may not be specified either for an `INTERSECT` result or for any input of an `INTERSECT`.
 
 **The EXCEPT Clause**
+
 The `EXCEPT` clause has this general form:
 
 ``` pre
@@ -339,6 +346,7 @@ Multiple `EXCEPT` operators in the same `SELECT` statement are evaluated left to
 Currently, `FOR             UPDATE` and `FOR SHARE` may not be specified either for an `EXCEPT` result or for any input of an `EXCEPT`.
 
 **The ORDER BY Clause**
+
 The optional `ORDER BY` clause has this general form:
 
 ``` pre
@@ -368,6 +376,7 @@ The null value sorts higher than any other value. In other words, with ascending
 Character-string data is sorted according to the locale-specific collation order that was established when the HAWQ system was initialized.
 
 **The DISTINCT Clause**
+
 If `DISTINCT` is specified, all duplicate rows are removed from the result set (one row is kept from each group of duplicates). `ALL` specifies the opposite: all rows are kept. `ALL` is the default.
 
 `DISTINCT             ON ( expression [, ...] )` keeps only the first row of each set of rows where the given expressions evaluate to equal. The `DISTINCT             ON` expressions are interpreted using the same rules as for `ORDER             BY`. Note that the 'first row' of each set is unpredictable unless `ORDER             BY` is used to ensure that the desired row appears first. For example:
@@ -382,6 +391,7 @@ retrieves the most recent weather report for each location. But if we had not us
 The `DISTINCT             ON` expression(s) must match the left-most `ORDER BY` expression(s). The `ORDER BY` clause will normally contain additional expression(s) that determine the desired precedence of rows within each `DISTINCT             ON` group.
 
 **The LIMIT Clause**
+
 The `LIMIT` clause consists of two independent sub-clauses:
 
 ``` pre
@@ -470,6 +480,7 @@ text);
 The `SELECT` statement is compatible with the SQL standard, but there are some extensions and some missing features.
 
 **Omitted FROM Clauses**
+
 HAWQ allows you to omit the `FROM` clause. It has a straightforward use to compute the results of simple expressions. For example:
 
 ``` pre
@@ -481,17 +492,21 @@ Some other SQL databases cannot do this except by introducing a dummy one-row ta
 Note that if a `FROM` clause is not specified, the query cannot reference any database tables. For compatibility with applications that rely on this behavior the *add\_missing\_from* configuration variable can be enabled.
 
 **The AS Key Word**
+
 In the SQL standard, the optional key word `AS` is just noise and can be omitted without affecting the meaning. The HAWQ parser requires this key word when renaming output columns because the type extensibility features lead to parsing ambiguities without it. `AS` is optional in `FROM` items, however.
 
 **Namespace Available to GROUP BY and ORDER BY**
+
 In the SQL-92 standard, an `ORDER BY` clause may only use result column names or numbers, while a `GROUP BY` clause may only use expressions based on input column names. HAWQ extends each of these clauses to allow the other choice as well (but it uses the standard's interpretation if there is ambiguity). HAWQ also allows both clauses to specify arbitrary expressions. Note that names appearing in an expression will always be taken as input-column names, not as result-column names.
 
 SQL:1999 and later use a slightly different definition which is not entirely upward compatible with SQL-92. In most cases, however, HAWQ will interpret an `ORDER BY` or `GROUP             BY` expression the same way SQL:1999 does.
 
 **Nonstandard Clauses**
+
 The clauses `DISTINCT ON`, `LIMIT`, and `OFFSET` are not defined in the SQL standard.
 
 **Limited Use of STABLE and VOLATILE Functions**
+
 To prevent data from becoming out-of-sync across the segments in HAWQ, any function classified as `STABLE` or `VOLATILE` cannot be executed at the segment database level if it contains SQL or modifies the database in any way.
 
 ## See Also<a id="topic1__section25"></a>

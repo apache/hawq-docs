@@ -61,13 +61,22 @@ Set this role's session default for the specified configuration parameter to the
  *queue\_name*
 The name of the resource queue to which the user-level role is to be assigned. Only roles with `LOGIN` privilege can be assigned to a resource queue. To unassign a role from a resource queue and put it in the default resource queue, specify `NONE`. A role can only belong to one resource queue.
 
-SUPERUSER | NOSUPERUSER<br/>CREATEDB | NOCREATEDB<br/>CREATEROLE | NOCREATEROLE<br/>CREATEEXTTABLE | NOCREATEEXTTABLE \[(*attribute*='*value*')\]
+SUPERUSER | NOSUPERUSER  
+CREATEDB | NOCREATEDB  
+CREATEROLE | NOCREATEROLE  
+CREATEEXTTABLE | NOCREATEEXTTABLE \[(*attribute*='*value*')\]  
 If `CREATEEXTTABLE` is specified, the role being defined is allowed to create external tables. The default `type` is `readable` and the default `protocol` is `gpfdist` if not specified. `NOCREATEEXTTABLE` (the default) denies the role the ability to create external tables. Using the `file` protocol when creating external tables is not supported. This is because HAWQ cannot guarantee scheduling executors on a specific host. Likewise, you cannot use the `execute` command with `ON                      ALL` and `ON HOST` for the same reason. Use the `ON MASTER/number/SEGMENT segment_id` to specify which segment instances are to execute the command.
 
-INHERIT | NOINHERIT<br/>LOGIN | NOLOGIN<br/>CONNECTION LIMIT *connlimit*<br/>PASSWORD '*password*'<br/>ENCRYPTED | UNENCRYPTED<br/>VALID UNTIL '*timestamp*'
+INHERIT | NOINHERIT  
+LOGIN | NOLOGIN  
+CONNECTION LIMIT *connlimit*  
+PASSWORD '*password*'  
+ENCRYPTED | UNENCRYPTED  
+VALID UNTIL '*timestamp*'  
 These clauses alter role attributes originally set by [CREATE ROLE](CREATE-ROLE.html).
 
-DENY *deny\_point*<br/>DENY BETWEEN *deny\_point* AND *deny\_point*   
+DENY *deny\_point*  
+DENY BETWEEN *deny\_point* AND *deny\_point*   
 The `DENY` and `DENY BETWEEN` keywords set time-based constraints that are enforced at login. `DENY`sets a day or a day and time to deny access. `DENY BETWEEN` sets an interval during which access is denied. Both use the parameter *deny\_point* that has following format:
 
 ``` pre

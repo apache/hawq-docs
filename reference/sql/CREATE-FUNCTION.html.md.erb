@@ -82,7 +82,9 @@ The type of a column is referenced by writing `                             tabl
  *langname*
 The name of the language that the function is implemented in. May be `SQL`, `C`, `internal`, or the name of a user-defined procedural language. See [CREATE LANGUAGE](CREATE-LANGUAGE.html) for the procedural languages supported in HAWQ. For backward compatibility, the name may be enclosed by single quotes.
 
-IMMUTABLE<br/>STABLE<br/>VOLATILE
+IMMUTABLE  
+STABLE  
+VOLATILE  
 These attributes inform the query optimizer about the behavior of the function. At most one choice may be specified. If none of these appear, `VOLATILE` is the default assumption. Since HAWQ currently has limited use of `VOLATILE` functions, if a function is truly `IMMUTABLE`, you must declare it as so to be able to use it without restrictions.
 
 `IMMUTABLE` indicates that the function cannot modify the database and always returns the same result when given the same argument values. It does not do database lookups or otherwise use information not directly present in its argument list. If this option is given, any call of the function with all-constant arguments can be immediately replaced with the function value.
@@ -91,10 +93,13 @@ These attributes inform the query optimizer about the behavior of the function. 
 
 `VOLATILE` indicates that the function value can change even within a single table scan, so no optimizations can be made. Relatively few database functions are volatile in this sense; some examples are `random()`, `currval()`, `timeofday()`. But note that any function that has side-effects must be classified volatile, even if its result is quite predictable, to prevent calls from being optimized away; an example is `setval()`.
 
-CALLED ON NULL INPUT<br/>RETURNS NULL ON NULL INPUT<br/>STRICT
+CALLED ON NULL INPUT  
+RETURNS NULL ON NULL INPUT  
+STRICT  
 `CALLED ON NULL INPUT` (the default) indicates that the function will be called normally when some of its arguments are null. It is then the function author's responsibility to check for null values if necessary and respond appropriately. `RETURNS NULL ON NULL                             INPUT` or `STRICT` indicates that the function always returns null whenever any of its arguments are null. If this parameter is specified, the function is not executed when there are null arguments; instead a null result is assumed automatically.
 
-\[EXTERNAL\] SECURITY INVOKER<br/>\[EXTERNAL\] SECURITY DEFINER  
+\[EXTERNAL\] SECURITY INVOKER  
+\[EXTERNAL\] SECURITY DEFINER  
 `SECURITY INVOKER` (the default) indicates that the function is to be executed with the privileges of the user that calls it. `SECURITY DEFINER` specifies that the function is to be executed with the privileges of the user that created it. The key word `EXTERNAL` is allowed for SQL conformance, but it is optional since, unlike in SQL, this feature applies to all functions not just external ones.
 
  *definition*

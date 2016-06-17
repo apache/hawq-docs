@@ -58,13 +58,18 @@ The new owner of the function. Note that if the function is marked `SECURITY DEF
  *new\_schema*
 The new schema for the function.
 
-CALLED ON NULL INPUT<br/>RETURNS NULL ON NULL INPUT<br/>STRICT
+CALLED ON NULL INPUT  
+RETURNS NULL ON NULL INPUT  
+STRICT  
 `CALLED ON NULL INPUT` changes the function so that it will be invoked when some or all of its arguments are null. `RETURNS NULL ON NULL                      INPUT` or `STRICT` changes the function so that it is not invoked if any of its arguments are null; instead, a null result is assumed automatically. See `CREATE FUNCTION` for more information.
 
-IMMUTABLE<br/>STABLE<br/>VOLATILE,
+IMMUTABLE  
+STABLE  
+VOLATILE,
 Change the volatility of the function to the specified setting. See `CREATE FUNCTION` for details.
 
-\[ EXTERNAL \] SECURITY INVOKER<br/>\[ EXTERNAL \] SECURITY DEFINER  
+\[ EXTERNAL \] SECURITY INVOKER  
+\[ EXTERNAL \] SECURITY DEFINER  
 Change whether the function is a security definer or not. The key word `EXTERNAL` is ignored for SQL conformance. See `CREATE                      FUNCTION` for more information about this capability.
 
 RESTRICT

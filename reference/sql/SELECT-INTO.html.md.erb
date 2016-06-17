@@ -18,7 +18,7 @@ SELECT [ALL | DISTINCT [ON ( expression [, ...] )]]
     [ORDER BY expression [ASC | DESC | USING operator] [, ...]]
     [LIMIT {count | ALL}]
     [OFFSET start]
-    [FOR {UPDATE | SHARE} [OF table_name [, ...]] [NOWAIT] 
+    [FOR {UPDATE | SHARE} [OF table_name [, ...]] [NOWAIT]
     [...]]
 ```
 
@@ -30,11 +30,11 @@ SELECT [ALL | DISTINCT [ON ( expression [, ...] )]]
 
 The majority of parameters for `SELECT INTO` are the same as [SELECT](SELECT.html).
 
-TEMPORARY
-TEMP  
+TEMPORARY, 
+TEMP
 If specified, the table is created as a temporary table.
 
- *new\_table*   
+ *new\_table*
 The name (optionally schema-qualified) of the table to be created.
 
 ## Examples<a id="topic1__section5"></a>
@@ -42,7 +42,7 @@ The name (optionally schema-qualified) of the table to be created.
 Create a new table `films_recent` consisting of only recent entries from the table `films`:
 
 ``` pre
-SELECT * INTO films_recent FROM films WHERE date_prod >= 
+SELECT * INTO films_recent FROM films WHERE date_prod >=
 '2006-01-01';
 ```
 

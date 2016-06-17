@@ -68,10 +68,12 @@ The name (optionally schema-qualified) of the sequence to be created.
  *increment*
 Specifies which value is added to the current sequence value to create a new value. A positive value will make an ascending sequence, a negative one a descending sequence. The default value is 1.
 
- *minvalue*<br/>NO MINVALUE
+ *minvalue*  
+NO MINVALUE  
 Determines the minimum value a sequence can generate. If this clause is not supplied or `NO MINVALUE` is specified, then defaults will be used. The defaults are 1 and -263-1 for ascending and descending sequences, respectively.
 
- *maxvalue*<br/>NO MAXVALUE
+ *maxvalue*  
+NO MAXVALUE  
 Determines the maximum value for the sequence. If this clause is not supplied or `NO MAXVALUE` is specified, then default values will be used. The defaults are 263-1 and -1 for ascending and descending sequences, respectively.
 
  *start*
@@ -80,10 +82,12 @@ Allows the sequence to begin anywhere. The default starting value is *minvalue* 
  *cache*
 Specifies how many sequence numbers are to be preallocated and stored in memory for faster access. The minimum (and default) value is 1 (no cache).
 
-CYCLE<br/>NO CYCLE
+CYCLE  
+NO CYCLE  
 Allows the sequence to wrap around when the *maxvalue* (for ascending) or *minvalue* (for descending) has been reached. If the limit is reached, the next number generated will be the *minvalue* (for ascending) or *maxvalue* (for descending). If `NO CYCLE` is specified, any calls to `nextval` after the sequence has reached its maximum value will return an error. If not specified, `NO CYCLE` is the default.
 
-OWNED BY *table.column*<br/>OWNED BY NONE  
+OWNED BY *table.column*  
+OWNED BY NONE  
 Causes the sequence to be associated with a specific table column, such that if that column (or its whole table) is dropped, the sequence will be automatically dropped as well. The specified table must have the same owner and be in the same schema as the sequence. `OWNED BY NONE`, the default, specifies that there is no such association.
 
 ## Notes<a id="topic1__section5"></a>

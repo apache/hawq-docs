@@ -249,7 +249,8 @@ The behavior of temporary tables at the end of a transaction block can be contro
 TABLESPACE *tablespace*
 The name of the tablespace in which the new table is to be created. If not specified, the database's default tablespace dfs\_default is used. Creating table on tablespace `pg_default` is not allowed.
 
-DISTRIBUTED BY (*column*, \[ ... \] )<br/>DISTRIBUTED RANDOMLY  
+DISTRIBUTED BY (*column*, \[ ... \] )  
+DISTRIBUTED RANDOMLY  
 Used to declare the HAWQ distribution policy for the table. The default is RANDOM distribution. `DISTIBUTED BY` can use hash distribution with one or more columns declared as the distribution key. If hash distribution is desired, it must be specified using the first eligible column of the table as the distribution key.
 
 PARTITION BY

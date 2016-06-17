@@ -21,19 +21,19 @@ The effects of `SET LOCAL` only last till the end of the current transaction, wh
 
 ## Parameters<a id="topic1__section4"></a>
 
-SESSION  
+SESSION
 Specifies that the command takes effect for the current session. This is the default.
 
-LOCAL  
+LOCAL
 Specifies that the command takes effect for only the current transaction. After `COMMIT` or `ROLLBACK`, the session-level setting takes effect again. Note that `SET LOCAL` will appear to have no effect if it is executed outside of a transaction.
 
- *configuration\_parameter*   
+ *configuration\_parameter*
 The name of a HAWQ configuration parameter. Only parameters classified as *session* can be changed with `SET`. See [About Server Configuration Parameters](../guc/guc_config.html#topic1).
 
- *value*   
+ *value*
 New value of parameter. Values can be specified as string constants, identifiers, numbers, or comma-separated lists of these. `DEFAULT` can be used to specify resetting the parameter to its default value. If specifying memory sizing or time units, enclose the value in single quotes.
 
-TIME ZONE  
+TIME ZONE
 `SET TIME ZONE` value is an alias for `SET timezone TO                         value                   `. The syntax `SET TIME ZONE` allows special syntax for the time zone specification. Here are examples of valid values:
 
 `'PST8PDT'`
@@ -44,7 +44,7 @@ TIME ZONE
 
 `INTERVAL '-08:00' HOUR TO MINUTE` (time zone 8 hours west from UTC).
 
-LOCAL
+LOCAL,  
 DEFAULT  
 Set the time zone to your local time zone (the one that the server's operating system defaults to).
 
@@ -77,7 +77,7 @@ SET TIME ZONE 'PST8PDT';
 Set the time zone for Italy:
 
 ``` pre
-SET TIME ZONE 'Europe/Rome'; 
+SET TIME ZONE 'Europe/Rome';
 ```
 
 ## Compatibility<a id="topic1__section6"></a>
