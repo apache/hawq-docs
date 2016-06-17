@@ -5,7 +5,7 @@ title: pg_index
 The `pg_index` system catalog table contains part of the information about indexes. The rest is mostly in [pg\_class](pg_class.html#topic1).
 
 <a id="topic1__gq143898"></a>
-span class="tablecap">Table 1. pg\_catalog.pg\_index</span>
+<span class="tablecap">Table 1. pg\_catalog.pg\_index</span>
 
 | column           | type       | references           | description                                                                                                                                                                                                                                                                                                                                             |
 |------------------|------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -19,7 +19,5 @@ span class="tablecap">Table 1. pg\_catalog.pg\_index</span>
 | `indclass`       | oidvector  | pg\_opclass.oid      | For each column in the index key this contains the OID of the operator class to use.                                                                                                                                                                                                                                                                    |
 | `indexprs`       | text       |                      | Expression trees (in `nodeToString()` representation) for index attributes that are not simple column references. This is a list with one element for each zero entry in indkey. NULL if all index attributes are simple references.                                                                                                                    |
 | `indpred`        | text       |                      | Expression tree (in `nodeToString()` representation) for partial index predicate. NULL if not a partial index.                                                                                                                                                                                                                                          |
-
-<
 
 

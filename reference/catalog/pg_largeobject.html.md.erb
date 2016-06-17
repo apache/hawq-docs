@@ -15,6 +15,5 @@ Each row of `pg_largeobject` holds data for one page of a large object, beginnin
 | `pageno` | integer |            | Page number of this page within its large object (counting from zero).                                  |
 | `data`   | bytea   |            | Actual data stored in the large object. This will never be more than `LOBLKSIZE` bytes and may be less. |
 
-<span class="tablecap">Table 1. pg\_catalog.pg\_largeobject</span>
 
 
