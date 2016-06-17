@@ -5,6 +5,7 @@ title: gp_segment_configuration
 The `gp_segment_configuration` table contains information about master, standby and segment configuration.
 
 <a id="topic1__fr163962"></a>
+<span class="tablecap">Table 1. pg\_catalog.gp\_segment\_configuration</span>
 
 | column               | type    | references | description                                                                                                                                                                                                                                                                                  |
 |----------------------|---------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -17,6 +18,6 @@ The `gp_segment_configuration` table contains information about master, standby 
 | `failed_tmpdir_num`  | integer |            | The number of failed temporary directories on the segment. User- configured temporary directories may fail on segments due to disk errors. This information is reported to the master.                                                                                                       |
 | `failed_tmpdir`      | text    |            | A list of failed temporary directories on the segment. Multiple failed temporary directories are separated by commas.                                                                                                                                                                        |
 
-: <span class="tablecap">Table 1. pg\_catalog.gp\_segment\_configuration</span>
+
 
 

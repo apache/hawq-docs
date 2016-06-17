@@ -5,6 +5,7 @@ title: pg_appendonly
 The `pg_appendonly` table contains information about the storage options and other characteristics of append-only tables.
 
 <a id="topic1__fy138428"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_appendonly</span>
 
 | column          | type     | references | description                                                                                                                                        |
 |-----------------|----------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -23,6 +24,6 @@ The `pg_appendonly` table contains information about the storage options and oth
 | `pagesize`      | integer  |            | The max page size of this relation. Only valid for Parquet tables; otherwise, the value is 0.                                                      |
 | `splitsize`     | integer  |            | Size of a split. Default value is 64M, which is controlled by server configuration parameter `appendonly_split_write_size_mb`.                     |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_appendonly</span>
+
 
 

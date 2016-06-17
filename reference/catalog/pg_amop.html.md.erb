@@ -5,6 +5,7 @@ title: pg_amop
 The `pg_amop` table stores information about operators associated with index access method operator classes. There is one row for each operator that is a member of an operator class.
 
 <a id="topic1__fw143542"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_amop</span>
 
 | column         | type     | references       | description                                                                |
 |----------------|----------|------------------|----------------------------------------------------------------------------|
@@ -14,6 +15,6 @@ The `pg_amop` table stores information about operators associated with index acc
 | `amopreqcheck` | boolean  |                  | Index hit must be rechecked                                                |
 | `amopopr`      | oid      | pg\_operator.oid | OID of the operator                                                        |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_amop</span>
+<span class="tablecap">Table 1. pg\_catalog.pg\_amop</span>
 
 

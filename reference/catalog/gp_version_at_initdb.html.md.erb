@@ -5,12 +5,13 @@ title: gp_version_at_initdb
 The `gp_version_at_initdb` table is populated on the master and each segment in the HAWQ system. It identifies the version of HAWQ used when the system was first initialized. This table is defined in the `pg_global` tablespace, meaning it is globally shared across all databases in the system.
 
 <a id="topic1__ft142845"></a>
+<span class="tablecap">Table 1. pg\_catalog.gp\_version</span>
 
 | column           | type    | references | description             |
 |------------------|---------|------------|-------------------------|
 | `schemaversion`  | integer |            | Schema version number.  |
 | `productversion` | text    |            | Product version number. |
 
-: <span class="tablecap">Table 1. pg\_catalog.gp\_version</span>
+
 
 

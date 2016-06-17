@@ -5,6 +5,7 @@ title: pg_am
 The `pg_am` table stores information about index access methods. There is one row for each index access method supported by the system.
 
 <a id="topic1__fv141982"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_am</span>
 
 | column            | type     | references   | description                                                                                                                  |
 |-------------------|----------|--------------|------------------------------------------------------------------------------------------------------------------------------|
@@ -32,6 +33,6 @@ The `pg_am` table stores information about index access methods. There is one ro
 | `amcostestimate`  | regproc  | pg\_proc.oid | Function to estimate cost of an index scan                                                                                   |
 | `amoptions`       | regproc  | pg\_proc.oid | Function to parse and validate reloptions for an index                                                                       |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_am</span>
+
 
 
