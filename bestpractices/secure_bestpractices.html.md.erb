@@ -4,7 +4,7 @@ title: Best Practices for Securing HAWQ
 
 To secure your HAWQ deployment, review the recommendations listed in this topic.
 
--   Set up SSL to encrypt your client server communication channel. See [Encrypting Client/Server Connections](/20/clientaccess/client_auth.html#topic5).
+-   Set up SSL to encrypt your client server communication channel. See [Encrypting Client/Server Connections](../clientaccess/client_auth.html#topic5).
 -   Configure `pg_hba.conf` only on HAWQ master. Do not configure it on segments.
     **Note:** For a more secure system, consider removing all connections that use trust authentication from your master `pg_hba.conf`. Trust authentication means the role is granted access without any authentication, therefore bypassing all security. Replace trust entries with ident authentication if your system has an ident service available.
 

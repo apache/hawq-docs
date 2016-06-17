@@ -19,10 +19,10 @@ To obtain the best performance during data loading, observe the following best p
 
     where *filter* selects only the data in the target partition.
 
--   To alleviate the load on NameNode, you can reduce the number of virtual segment used per node. You can do this on the statement-level or on the resource queue level. See [Configuring the Maximum Number of Virtual Segments](/20/resourcemgmt/ConfigureResourceManagement.html#topic_tl5_wq1_f5) for more information.
+-   To alleviate the load on NameNode, you can reduce the number of virtual segment used per node. You can do this on the statement-level or on the resource queue level. See [Configuring the Maximum Number of Virtual Segments](../resourcemgmt/ConfigureResourceManagement.html#topic_tl5_wq1_f5) for more information.
 -   Use resource queues to limit load query and read query concurrency.
 
-The best practice for loading data into partitioned tables is to create an intermediate staging table, load it, and then exchange it into your partition design. See [Exchanging a Partition](/20/ddl/ddl-partition.html#topic83).
+The best practice for loading data into partitioned tables is to create an intermediate staging table, load it, and then exchange it into your partition design. See [Exchanging a Partition](../ddl/ddl-partition.html#topic83).
 
 ## Best Practices for Partitioning Data<a id="topic_s23_52j_1v"></a>
 
