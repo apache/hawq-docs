@@ -39,8 +39,8 @@ A query is not executing as quickly as you would expect. Here is how to investig
     Sometimes, there is not enough memory for some operators, such as Hash Join, or spill files are used. If an operator cannot perform all of its work in the memory allocated to it, it caches data on disk in *spill files*. Compared with no spill files, a query will run much slower.
 
 4.  Check data locality statistics using /3/4. Alternately you can check the logs. Data locality result for every query could also be found in the log of HAWQ. See [Data Locality Statistics](query-performance.html#topic_amk_drc_d5) for information on the statistics.
-5.  Check resource queue status. You can query view `pg_resqueue_status` to check if the target queue has already dispatched some resource to the queries, or if the target queue is lacking resources. See [Checking Existing Resource Queues](/20/resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
-6.  Analyze a dump of the resource manager's status to see more resource queue status. See [Analyzing Resource Manager Status](/20/resourcemgmt/ResourceQueues.html#topic_zrh_pkc_f5).
+5.  Check resource queue status. You can query view `pg_resqueue_status` to check if the target queue has already dispatched some resource to the queries, or if the target queue is lacking resources. See [Checking Existing Resource Queues](../resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
+6.  Analyze a dump of the resource manager's status to see more resource queue status. See [Analyzing Resource Manager Status](../resourcemgmt/ResourceQueues.html#topic_zrh_pkc_f5).
 
 ## Data Locality Statistics<a id="topic_amk_drc_d5"></a>
 
