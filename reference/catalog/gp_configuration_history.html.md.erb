@@ -9,6 +9,7 @@ The event descriptions stored in this table may be helpful for troubleshooting s
 This table is populated only on the master. This table is defined in the `pg_global` tablespace, meaning it is globally shared across all databases in the system.
 
 <a id="topic1__ev138428"></a>
+<span class="tablecap">Table 1. pg\_catalog.gp\_configuration\_history</span>
 
 | column              | type                     | references | description                                                                      |
 |---------------------|--------------------------|------------|----------------------------------------------------------------------------------|
@@ -17,6 +18,6 @@ This table is populated only on the master. This table is defined in the `pg_glo
 | registration\_order | integer                  |            | The registration order of a segment. May be changed after restarting the master. |
 | hostname            | text                     |            | The hostname of a segment                                                        |
 
-: <span class="tablecap">Table 1. pg\_catalog.gp\_configuration\_history</span>
+
 
 
