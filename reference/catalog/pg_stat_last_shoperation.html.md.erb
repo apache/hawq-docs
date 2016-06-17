@@ -5,6 +5,8 @@ title: pg_stat_last_shoperation
 The pg\_stat\_last\_shoperation table contains metadata tracking information about global objects (roles, tablespaces, etc.).
 
 <a id="topic1__hs138428"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_stat\_last\_shoperation</span>
+
 
 | column          | type                    | references     | description                                                                                                                                                                                    |
 |-----------------|-------------------------|----------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -16,6 +18,6 @@ The pg\_stat\_last\_shoperation table contains metadata tracking information abo
 | `stasubtype`    | text                    |                | The type of object operated on or the subclass of operation performed.                                                                                                                         |
 | `statime`       | timestamp with timezone |                | The timestamp of the operation. This is the same timestamp that is written to the HAWQ server log files in case you need to look up more detailed information about the operation in the logs. |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_stat\_last\_shoperation</span>
+
 
 

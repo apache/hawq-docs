@@ -5,6 +5,7 @@ title: pg_resqueue
 The `pg_resqueue` system catalog table contains information about HAWQ resource queues, which are used for managing resources. This table is populated only on the master. This table is defined in the `pg_global` tablespace, meaning it is globally shared across all databases in the system.
 
 <a id="topic1__hi141982"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_resqueue</span>
 
 | column                  | type                     | references | description                                                                                                                                                                              |
 |-------------------------|--------------------------|------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -24,6 +25,6 @@ The `pg_resqueue` system catalog table contains information about HAWQ resource 
 | `updatetime`            | timestamp with time zone |            | Time when the resource queue was last changed.                                                                                                                                           |
 | `status`                | text                     |            | Current status of the resource queue.Possible values are `branch`, which indicates a branch resource queue (has children), and `NULL`, which indicates a leaf-level queue (no children). |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_resqueue</span>
+
 
 

@@ -11,6 +11,7 @@ Since different kinds of statistics may be appropriate for different kinds of da
 `pg_statistic` should not be readable by the public, since even statistical information about a table's contents may be considered sensitive (for example: minimum and maximum values of a salary column). `pg_stats` is a publicly readable view on `pg_statistic` that only exposes information about those tables that are readable by the current user. See [pg\_stats](pg_stats.html#topic1), for more information on this view.
 
 <a id="topic1__hv156260"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_statistic</span>
 
 | column        | type     | references           | description                                                                                                                                                                                                                                                                                                                                                                                               |
 |---------------|----------|----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -24,6 +25,6 @@ Since different kinds of statistics may be appropriate for different kinds of da
 | `stanumbersN` | real\[\] |                      | Numerical statistics of the appropriate kind for the `N`th slot, or NULL if the slot kind does not involve numerical values.                                                                                                                                                                                                                                                                              |
 | `stavaluesN`  | anyarray |                      | Column data values of the appropriate kind for the `N`th slot, or NULL if the slot kind does not store any data values. Each array's element values are actually of the specific column's data type, so there is no way to define these columns' type more specifically than `anyarray`.                                                                                                                  |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_statistic</span>
+
 
 

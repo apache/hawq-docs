@@ -7,6 +7,7 @@ The `pg_stats` is a publicly readable view on `pg_statistic` that only exposes i
 All the statistical data is inherently approximate, even assuming that it is up-to-date.The `pg_stats` schema must be extended whenever new slot types are defined.
 
 <a id="topic1__table_ckx_t2w_jv"></a>
+<span class="tablecap">Table 1. pg\_stats</span>
 
 | Name                | Type     | References                                                                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 |---------------------|----------|----------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -21,6 +22,6 @@ All the statistical data is inherently approximate, even assuming that it is up-
 | histogram\_bounds   | anyarray |                                                                            | An array of values that divide the column values into groups of approximately the same size. A histogram can be defined only if there is a `max()` aggregate function for the column. The number of groups in the histogram is the same as the `most_common_vals` array size.                                                                                                                                                                                                                                                          |
 | correlation         | real     |                                                                            | HAWQ does not calculate the correlation statistic.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
-: <span class="tablecap">Table 1. pg\_stats</span>
+
 
 

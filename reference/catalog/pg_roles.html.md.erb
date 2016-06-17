@@ -5,6 +5,7 @@ title: pg_roles
 The view `pg_roles` provides access to information about database roles. This is simply a publicly readable view of [pg\_authid](pg_authid.html#topic1) that blanks out the password field. This view explicitly exposes the OID column of the underlying table, since that is needed to do joins to other catalogs.
 
 <a id="topic1__hn141982"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_roles</span>
 
 | column              | type                     | references       | description                                                                                                         |
 |---------------------|--------------------------|------------------|---------------------------------------------------------------------------------------------------------------------|
@@ -25,6 +26,6 @@ The view `pg_roles` provides access to information about database roles. This is
 | `rolcreaterexthttp` | boolean                  |                  | Role may create readable external tables that use the http protocol.                                                |
 | `rolcreatewextgpfd` | boolean                  |                  | Role may create writable external tables that use the gpfdist protocol.                                             |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_roles</span>
+
 
 

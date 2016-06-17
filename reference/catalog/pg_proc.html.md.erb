@@ -7,6 +7,7 @@ The `pg_proc` system catalog table stores information about functions (or proced
 For compiled functions, both built-in and dynamically loaded, `prosrc` contains the function's C-language name (link symbol). For all other currently-known language types, `prosrc` contains the function's source text. `probin` is unused except for dynamically-loaded C functions, for which it gives the name of the shared library file containing the function.
 
 <a id="topic1__hg150092"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_proc</span>
 
 | column           | type        | references        | description                                                                                                                                                                                                                                                                                                                                        |
 |------------------|-------------|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -30,6 +31,6 @@ For compiled functions, both built-in and dynamically loaded, `prosrc` contains 
 | `probin`         | bytea       |                   | Additional information about how to invoke the function. Again, the interpretation is language-specific.                                                                                                                                                                                                                                           |
 | `proacl`         | aclitem\[\] |                   | Access privileges for the function as given by `GRANT`/`REVOKE`.                                                                                                                                                                                                                                                                                   |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_proc</span>
+
 
 

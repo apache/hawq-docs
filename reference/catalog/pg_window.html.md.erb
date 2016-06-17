@@ -5,9 +5,9 @@ title: pg_window
 The `pg_window` table stores information about window functions. Window functions are often used to compose complex OLAP (online analytical processing) queries. Window functions are applied to partitioned result sets within the scope of a single query expression. A window partition is a subset of rows returned by a query, as defined in a special `OVER()` clause. Typical window functions are `rank`, `dense_rank`, and `row_number`. Each entry in `pg_window` is an extension of an entry in [pg\_proc](pg_proc.html#topic1). The [pg\_proc](pg_proc.html#topic1) entry carries the window function's name, input and output data types, and other information that is similar to ordinary functions.
 
 <a id="topic1__ic143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_window</span>
 
 <table>
-<caption><span class="tablecap">Table 1. pg\_catalog.pg\_window</span></caption>
 <colgroup>
 <col width="25%" />
 <col width="25%" />
@@ -92,6 +92,6 @@ The `pg_window` table stores information about window functions. Window function
 </tbody>
 </table>
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_window</span>
+
 
 
