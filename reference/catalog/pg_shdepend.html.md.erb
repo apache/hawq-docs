@@ -12,16 +12,16 @@ In all cases, a `pg_shdepend` entry indicates that the referenced object may not
 
 <span class="tablecap">Table 1. pg\_catalog.pg\_shdepend</span>
 
-    | column         | type    | references       | description                                                                                                |
-    |----------------|---------|------------------|------------------------------------------------------------------------------------------------------------|
-    | `dbid`         | oid     | pg\_database.oid | The OID of the database the dependent object is in, or zero for a shared object.                           |
-    | `classid`      | oid     | pg\_class.oid    | The OID of the system catalog the dependent object is in.                                                  |
-    | `objid`        | oid     | any OID column   | The OID of the specific dependent object.                                                                  |
-    | `objsubid `    | integer |                  | For a table column, this is the column number. For all other object types, this column is zero.            |
-    | `refclassid`   | oid     | pg\_class.oid    | The OID of the system catalog the referenced object is in (must be a shared catalog).                      |
-    | `refobjid`     | oid     | any OID column   | The OID of the specific referenced object.                                                                 |
-    | `refobjsubid ` | integer |                  | For a table column, this is the referenced column number. For all other object types, this column is zero. |
-    | `deptype`      | char    |                  | A code defining the specific semantics of this dependency relationship.                                    |
+| column         | type    | references       | description                                                                                                |
+|----------------|---------|------------------|------------------------------------------------------------------------------------------------------------|
+| `dbid`         | oid     | pg\_database.oid | The OID of the database the dependent object is in, or zero for a shared object.                           |
+| `classid`      | oid     | pg\_class.oid    | The OID of the system catalog the dependent object is in.                                                  |
+| `objid`        | oid     | any OID column   | The OID of the specific dependent object.                                                                  |
+| `objsubid `    | integer |                  | For a table column, this is the column number. For all other object types, this column is zero.            |
+| `refclassid`   | oid     | pg\_class.oid    | The OID of the system catalog the referenced object is in (must be a shared catalog).                      |
+| `refobjid`     | oid     | any OID column   | The OID of the specific referenced object.                                                                 |
+| `refobjsubid ` | integer |                  | For a table column, this is the referenced column number. For all other object types, this column is zero. |
+| `deptype`      | char    |                  | A code defining the specific semantics of this dependency relationship.                                    |
 
 
 
