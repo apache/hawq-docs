@@ -83,11 +83,12 @@ If present, the index is "lossy" for this operator, and so the rows retrieved us
  *support\_number*   
 Index methods require additional support routines in order to work. These operations are administrative routines used internally by the index methods. As with strategies, the operator class identifies which specific functions should play each of these roles for a given data type and semantic interpretation. The index method defines the set of functions it needs, and the operator class identifies the correct functions to use by assigning them to the *support function numbers* as follows: <a id="topic1__bx145974"></a>
 
+<span class="tablecap">Table 3. B-tree and Bitmap Support Functions</span>
+
 | Function                                                                                                                                                                | Support Number |
 |-------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------|
 | Compare two keys and return an integer less than zero, zero, or greater than zero, indicating whether the first key is less than, equal to, or greater than the second. | 1              |
 
-: <span class="tablecap">Table 3. B-tree and Bitmap Support Functions</span>
 
 <span class="tablecap">Table 4. GiST Support Functions</span>
 

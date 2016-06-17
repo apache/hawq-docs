@@ -30,6 +30,7 @@ Since this key word applies to foreign key references (which are not supported i
 Only the owner of a table may `TRUNCATE` it. `TRUNCATE` will not perform the following:
 
 -   Run any user-defined `ON DELETE` triggers that might exist for the tables.
+
     **Note:** HAWQ does not support user-defined triggers.
 
 -   Truncate any tables that inherit from the named table. Only the named table is truncated, not its child tables.

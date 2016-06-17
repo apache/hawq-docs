@@ -96,19 +96,19 @@ Instead of an expression, `*` can be written in the output list as a shorthand f
 
 The `FROM` clause specifies one or more source tables for the `SELECT`. If multiple sources are specified, the result is the Cartesian product (cross join) of all the sources. But usually qualification conditions are added to restrict the returned rows to a small subset of the Cartesian product. The `FROM` clause can contain the following elements:
 
- *table\_name*
+ *table\_name*  
 The name (optionally schema-qualified) of an existing table or view. If `ONLY` is specified, only that table is scanned. If `ONLY` is not specified, the table and all its descendant tables (if any) are scanned.
 
- *alias*
+ *alias*  
 A substitute name for the `FROM` item containing the alias. An alias is used for brevity or to eliminate ambiguity for self-joins (where the same table is scanned multiple times). When an alias is provided, it completely hides the actual name of the table or function; for example given `FROM foo AS f`, the remainder of the `SELECT` must refer to this `FROM` item as `f` not `foo`. If an alias is written, a column alias list can also be written to provide substitute names for one or more columns of the table.
 
- *select*
+ *select*  
 A sub-`SELECT` can appear in the `FROM` clause. This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. Note that the sub-`SELECT` must be surrounded by parentheses, and an alias must be provided for it. A `VALUES` command can also be used here. See "Non-standard Clauses" in the [Compatibility](#topic1__section19) section for limitations of using correlated sub-selects in HAWQ.
 
- *function\_name*
+ *function\_name*  
 Function calls can appear in the `FROM` clause. (This is especially useful for functions that return result sets, but any function can be used.) This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. An alias may also be used. If an alias is written, a column alias list can also be written to provide substitute names for one or more attributes of the function's composite return type. If the function has been defined as returning the record data type, then an alias or the key word `AS` must be present, followed by a column definition list in the form `(                 column_name data_type [, ... ] )`. The column definition list must match the actual number and types of columns returned by the function.
 
- *join\_type*
+ *join\_type*  
 One of:
 
 -   **\[INNER\] JOIN**
@@ -129,15 +129,13 @@ Conversely, `RIGHT OUTER JOIN` returns all the joined rows, plus one row for eac
 
 `FULL OUTER JOIN` returns all the joined rows, plus one row for each unmatched left-hand row (extended with nulls on the right), plus one row for each unmatched right-hand row (extended with nulls on the left).
 
-<!-- -->
-
-ON *join\_condition*
+ON *join\_condition*  
 *join\_condition* is an expression resulting in a value of type `boolean` (similar to a `WHERE` clause) that specifies which rows in a join are considered to match.
 
-USING (*join\_column* \[, ...\])
+USING (*join\_column* \[, ...\])  
 A clause of the form `USING ( a, b, ... )` is shorthand for `ON left_table.a = right_table.a AND left_table.b = right_table.b ...               `. Also, `USING` implies that only one of each pair of equivalent columns will be included in the join output, not both.
 
-NATURAL
+NATURAL  
 `NATURAL` is shorthand for a `USING` list that mentions all columns in the two tables that have the same names.
 
 **The WHERE Clause**
@@ -175,7 +173,7 @@ Aggregate functions, if any are used, are computed across all rows making up eac
 
 HAWQ has the following additional OLAP grouping extensions (often referred to as *supergroups*):
 
-ROLLUP
+ROLLUP  
 A `ROLLUP` grouping is an extension to the `GROUP BY` clause that creates aggregate subtotals that roll up from the most detailed level to a grand total, following a list of grouping columns (or expressions). `ROLLUP` takes an ordered list of grouping columns, calculates the standard aggregate values specified in the `GROUP BY` clause, then creates progressively higher-level subtotals, moving from right to left through the list. Finally, it creates a grand total. A `ROLLUP` grouping can be thought of as a series of grouping sets. For example:
 
 ``` pre
@@ -190,7 +188,7 @@ GROUP BY GROUPING SETS( (a,b,c), (a,b), (a), () )
 
 Notice that the *n* elements of a `ROLLUP` translate to *n*+1 grouping sets. Also, the order in which the grouping expressions are specified is significant in a `ROLLUP`.
 
-CUBE
+CUBE  
 A `CUBE` grouping is an extension to the `GROUP BY` clause that creates subtotals for all of the possible combinations of the given list of grouping columns (or expressions). In terms of multidimensional analysis, `CUBE` generates all the subtotals that could be calculated for a data cube with the specified dimensions. For example:
 
 ``` pre
@@ -206,7 +204,7 @@ GROUP BY GROUPING SETS( (a,b,c), (a,b), (a,c), (b,c), (a),
 
 Notice that *n* elements of a `CUBE` translate to 2n grouping sets. Consider using `CUBE` in any situation requiring cross-tabular reports. `CUBE` is typically most suitable in queries that use columns from multiple dimensions rather than columns representing different levels of a single dimension. For instance, a commonly requested cross-tabulation might need subtotals for all the combinations of month, state, and product.
 
-GROUPING SETS
+GROUPING SETS  
 You can selectively specify the set of groups that you want to create using a `GROUPING SETS` expression within a `GROUP BY` clause. This allows precise specification across multiple dimensions without computing a whole `ROLLUP` or `CUBE`. For example:
 
 ``` pre
@@ -253,18 +251,18 @@ where *window\_specification* can be:
                UNBOUNDED FOLLOWING
 ```
 
- *window\_name*
+ *window\_name*  
 Gives a name to the window specification.
 
-PARTITION BY
+PARTITION BY  
 The `PARTITION BY` clause organizes the result set into logical groups based on the unique values of the specified expression. When used with window functions, the functions are applied to each partition independently. For example, if you follow `PARTITION BY` with a column name, the result set is partitioned by the distinct values of that column. If omitted, the entire result set is considered one partition.
 
-ORDER BY
+ORDER BY  
 The `ORDER BY` clause defines how to sort the rows in each partition of the result set. If omitted, rows are returned in whatever order is most efficient and may vary.
 
 **Note:** Columns of data types that lack a coherent ordering, such as `time`, are not good candidates for use in the `ORDER                   BY` clause of a window specification. Time, with or without time zone, lacks a coherent ordering because addition and subtraction do not have the expected effects. For example, the following is not generally true: `x::time <                   x::time + '2 hour'::interval`
 
-ROWS | RANGE
+ROWS | RANGE  
 Use either a `ROWS` or `RANGE` clause to express the bounds of the window. The window bound can be one, many, or all rows of a partition. You can express the bound of the window either in terms of a range of data values offset from the value in the current row (`RANGE`), or in terms of the number of rows offset from the currentrow (`ROWS`). When using the `RANGE` clause, you must also use an `ORDER BY` clause. This is because the calculation performed to produce the window requires that the values be sorted. Additionally, the `ORDER BY` clause cannot contain more than one expression, and the expression must result in either a date or a numeric value. When using the `ROWS` or `RANGE` clauses, if you specify only a starting row, the current row is used as the last row in the window.
 
 **PRECEDING** — The `PRECEDING` clause defines the first row of the window using the current row as a reference point. The starting row is expressed in terms of the number of rows preceding the current row. For example, in the case of `ROWS` framing, 5 `PRECEDING` sets the window to start with the fifth row preceding the current row. In the case of `RANGE` framing, it sets the window to start with the first row whose ordering column value precedes that of the current row by 5 in the given order. If the specified order is ascending by date, this will be the first row within 5 days before the current row. `UNBOUNDED PRECEDING` sets the first row in the window to be the first row in the partition.

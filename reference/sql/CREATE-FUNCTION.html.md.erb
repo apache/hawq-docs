@@ -54,23 +54,23 @@ One exception to this rule are functions that return a table reference (`rangeFu
 
 ## Parameters<a id="topic1__section5"></a>
 
- *name*
+ *name*  
 The name (optionally schema-qualified) of the function to create.
 
- *argmode*
+ *argmode*  
 The mode of an argument: either `IN`, `OUT`, or `INOUT`. If omitted, the default is `IN`.
 
- *argname*
+ *argname*  
 The name of an argument. Some languages (currently only PL/pgSQL) let you use the name in the function body. For other languages the name of an input argument is just extra documentation. But the name of an output argument is significant, since it defines the column name in the result row type. (If you omit the name for an output argument, the system will choose a default column name.)
 
- *argtype*
+ *argtype*  
 The data type(s) of the function's arguments (optionally schema-qualified), if any. The argument types may be base, composite, or domain types, or may reference the type of a table column.
 
 Depending on the implementation language it may also be allowed to specify pseudotypes such as `cstring`. Pseudotypes indicate that the actual argument type is either incompletely specified, or outside the set of ordinary SQL data types.
 
 The type of a column is referenced by writing `                             tablename.columnname%TYPE`. Using this feature can sometimes help make a function independent of changes to the definition of a table.
 
- *rettype*
+ *rettype*  
 The return data type (optionally schema-qualified). The return type can be a base, composite, or domain type, or may reference the type of a table column. Depending on the implementation language it may also be allowed to specify pseudotypes such as `cstring`. If the function is not supposed to return a value, specify `void` as the return type.
 
 When there are `OUT` or `INOUT` parameters, the `RETURNS` clause may be omitted. If present, it must agree with the result type implied by the output parameters: `RECORD` if there are multiple output parameters, or the same type as the single output parameter.
@@ -79,7 +79,7 @@ The `SETOF` modifier indicates that the function will return a set of items, rat
 
 The type of a column is referenced by writing `                             tablename.columnname%TYPE`.
 
- *langname*
+ *langname*  
 The name of the language that the function is implemented in. May be `SQL`, `C`, `internal`, or the name of a user-defined procedural language. See [CREATE LANGUAGE](CREATE-LANGUAGE.html) for the procedural languages supported in HAWQ. For backward compatibility, the name may be enclosed by single quotes.
 
 IMMUTABLE  
@@ -102,13 +102,13 @@ STRICT
 \[EXTERNAL\] SECURITY DEFINER  
 `SECURITY INVOKER` (the default) indicates that the function is to be executed with the privileges of the user that calls it. `SECURITY DEFINER` specifies that the function is to be executed with the privileges of the user that created it. The key word `EXTERNAL` is allowed for SQL conformance, but it is optional since, unlike in SQL, this feature applies to all functions not just external ones.
 
- *definition*
+ *definition*  
 A string constant defining the function; the meaning depends on the language. It may be an internal function name, the path to an object file, an SQL command, or text in a procedural language.
 
- *obj\_file, link\_symbol*
+ *obj\_file, link\_symbol*  
 This form of the `AS` clause is used for dynamically loadable C language functions when the function name in the C language source code is not the same as the name of the SQL function. The string *obj\_file* is the name of the file containing the dynamically loadable object, and *link\_symbol* is the name of the function in the C language source code. If the link symbol is omitted, it is assumed to be the same as the name of the SQL function being defined. A good practice is to locate shared libraries either relative to `$libdir` (which is located at `$GPHOME/lib`) or through the dynamic library path (set by the `dynamic_library_path` server configuration parameter). This simplifies version upgrades if the new installation is at a different location.
 
- *describe\_function*
+ *describe\_function*  
 The name of a callback function to execute when a query that calls this function is parsed. The callback function returns a tuple descriptor that indicates the result type.
 
 ## Notes<a id="topic1__section6"></a>
