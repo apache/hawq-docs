@@ -9,6 +9,7 @@ It is legitimate to create a `pg_cast` entry in which the source and target type
 When a `pg_cast` entry has different source and target types and a function that takes more than one argument, it represents converting from one type to another and applying a length coercion in a single step. When no such entry is available, coercion to a type that uses a type modifier involves two steps, one to convert between data types and a second to apply the modifier.
 
 <a id="topic1__ge143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_cast</span>
 
 | column        | type | references   | description                                                                                                                                                                                                                                                            |
 |---------------|------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -17,6 +18,6 @@ When a `pg_cast` entry has different source and target types and a function that
 | `castfunc`    | oid  | pg\_proc.oid | The OID of the function to use to perform this cast. Zero is stored if the data types are binary compatible (that is, no run-time operation is needed to perform the cast).                                                                                            |
 | `castcontext` | char |              | Indicates what contexts the cast may be invoked in. `e` means only as an explicit cast (using `CAST` or `::` syntax). `a` means implicitly in assignment to a target column, as well as explicitly. `i` means implicitly in expressions, as well as the other cases*.* |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_cast</span>
+
 
 

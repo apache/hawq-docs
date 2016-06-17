@@ -9,6 +9,7 @@ Since this catalog contains passwords, it must not be publicly readable. [pg\_ro
 Because user identities are system-wide, `pg_authid` is shared across all databases in a HAWQ system: there is only one copy of `pg_authid` per system, not one per database.
 
 <a id="topic1__gd143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_authid</span>
 
 | column              | type        | references | description                                                                                                           |
 |---------------------|-------------|------------|-----------------------------------------------------------------------------------------------------------------------|
@@ -30,6 +31,6 @@ Because user identities are system-wide, `pg_authid` is shared across all databa
 | `rolcreaterexthdfs` | boolean     |            | Privilege to create read external tables with the `gphdfs` protocol. (`gphdfs` is deprecated.)                        |
 | `rolcreatewexthdfs` | boolean     |            | Privilege to create write external tables with the `gphdfs` protocol. (`gphdfs` is deprecated.)                       |
 
-: <span class="tablecap">Table 1. pg\_catalog.pg\_authid</span>
+
 
 
