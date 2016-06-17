@@ -105,7 +105,8 @@ If the script itself uses `BEGIN`, `COMMIT`, or `ROLLBACK`, this option will not
 -? | --help  
 Show help about `psql` command line arguments, and exit.
 
-**Connection Options**  
+**Connection Options**
+
 -h *host* | --host *host*  
 The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
 
@@ -129,7 +130,8 @@ Never issue a password prompt. If the server requires password authentication an
 
 ## Usage<a id="topic1__section7"></a>
 
-**Connecting to a Database**  
+**Connecting to a Database**
+
 `psql` is a client application for HAWQ. In order to connect to a database you need to know the name of your target database, the host name and port number of the HAWQ master server and what database user name you want to connect as. `psql` can be told about those parameters via command line options, namely `-d`, `-h`, `-p`, and `-U` respectively. If an argument is found that does not belong to any option it will be interpreted as the database name (or the user name, if the database name is already given). Not all these options are required; there are useful defaults. If you omit the host name, `psql` will connect via a UNIX-domain socket to a master server on the local host, or via TCP/IP to `localhost` on machines that do not have UNIX-domain sockets. The default master port number is 5432. If you use a different port for the master, you must specify the port. The default database user name is your UNIX user name, as is the default database name. Note that you cannot just connect to any database under any user name. Your database administrator should have informed you about your access rights.
 
 When the defaults are not right, you can save yourself some typing by setting any or all of the environment variables `PGAPPNAME`, `PGDATABASE`, `PGHOST`, `PGPORT`, and `PGUSER` to appropriate values.
@@ -145,6 +147,7 @@ The permissions on `.pgpass` must disallow any access to world or group (for exa
 If the connection could not be made for any reason (insufficient privileges, server is not running, etc.), `psql` will return an error and terminate.
 
 **Entering SQL Commands**
+
 In normal operation, `psql` provides a prompt with the name of the database to which `psql` is currently connected, followed by the string **=&gt;** for a regular user or **=\#** for a superuser. For example:
 
 ``` pre
@@ -411,7 +414,8 @@ Whenever the pattern parameter is omitted completely, the `\d` commands display 
 
 ## Advanced Features<a id="topic1__section12"></a>
 
-**Variables**  
+**Variables**
+
 `psql` provides variable substitution features similar to common UNIX command shells. Variables are simply name/value pairs, where the value can be any string of any length. To set variables, use the `psql` meta-command `\set`:
 
 ``` pre
@@ -543,7 +547,8 @@ Note the use of different shell quoting conventions so that neither the single q
 
 Since colons may legally appear in SQL commands, the following rule applies: the character sequence `":name"` is not changed unless `"name"` is the name of a variable that is currently set. In any case you can escape a colon with a backslash to protect it from substitution. (The colon syntax for variables is standard SQL for embedded query languages, such as ECPG. The colon syntax for array slices and type casts are HAWQ extensions, hence the conflict.)
 
-**Prompting**  
+**Prompting**
+
 The prompts `psql` issues can be customized to your preference. The three variables `PROMPT1`, `PROMPT2`, and `PROMPT3` contain strings and special escape sequences that describe the appearance of the prompt. Prompt 1 is the normal prompt that is issued when `psql` requests a new command. Prompt 2 is issued when more input is expected during command input because the command was not terminated with a semicolon or a quote was not closed. Prompt 3 is issued when you run an SQL `COPY` command and you are expected to type in the row values on the terminal.
 
 The value of the selected prompt variable is printed literally, except where a percent sign (`%`) is encountered. Depending on the next character, certain other text is substituted instead. Defined substitutions are:
@@ -593,7 +598,8 @@ testdb=> \set PROMPT1 '%[%033[1;33;40m%]%n@%/%R%[%033[0m%]%#'
 
 results in a boldfaced (`1;`) yellow-on-black (`33;40`) prompt on VT100-compatible, color-capable terminals. To insert a percent sign into your prompt, write `%%`. The default prompts are `'%/%R%# '` for prompts 1 and 2, and `'>> '` for prompt 3.
 
-**Command-Line Editing**  
+**Command-Line Editing**
+
 `psql` supports the NetBSD libedit library for convenient line editing and retrieval. The command history is automatically saved when `psql` exits and is reloaded when `psql` starts up. Tab-completion is also supported, although the completion logic makes no claim to be an SQL parser. If for some reason you do not like the tab completion, you can turn it off by putting this in a file named `.inputrc` in your home directory:
 
 ``` pre
