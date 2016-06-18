@@ -138,27 +138,37 @@ GPLOAD:
 ```
 
 **Control File Schema Elements**  
-VERSION  
+
+The control file contains the schema elements for:
+
+-   Version
+-   Database
+-   User
+-   Host
+-   Port
+-   GPLOAD file
+
+**VERSION**  
 Optional. The version of the `hawq load` control file schema, for example: 1.0.0.1.
 
-DATABASE  
+**DATABASE**  
 Optional. Specifies which database in HAWQ to connect to. If not specified, defaults to `$PGDATABASE` if set or the current system user name. You can also specify the database on the command line using the `-d` option.
 
-USER  
+**USER**  
 Optional. Specifies which database role to use to connect. If not specified, defaults to the current user or `$PGUSER` if set. You can also specify the database role on the command line using the `-U` option.
 
 If the user running `hawq load` is not a HAWQ superuser, then the server configuration parameter `gp_external_grant_privileges` must be set to `on` for the load to be processed.
 
-HOST  
+**HOST**  
 Optional. Specifies HAWQ master host name. If not specified, defaults to localhost or `$PGHOST` if set. You can also specify the master host name on the command line using the `-h` option.
 
-PORT  
+**PORT**  
 Optional. Specifies HAWQ master port. If not specified, defaults to 5432 or `$PGPORT` if set. You can also specify the master port on the command line using the `-p` option.
 
-GPLOAD  
+**GPLOAD**  
 Required. Begins the load specification section. A `GPLOAD` specification must have an `INPUT` and an `OUTPUT` section defined.
 
-INPUT  
+INPUT -
 Required. Defines the location and the format of the input data to be loaded. `hawq load` will start one or more instances of the [gpfdist](gpfdist.html#topic1) file distribution program on the current host and create the required external table definition(s) in HAWQ that point to the source data. Note that the host from which you run `hawq load` must be accessible over the network by all HAWQ hosts (master and segments).
 
 SOURCE  
@@ -242,7 +252,7 @@ Optional when `ERROR_LIMIT` is declared. Specifies an error table where rows wit
 
 For more information about handling load errors, see "[Loading and Unloading Data](../../../datamgmt/load/g-loading-and-unloading-data.html#topic1)".
 
-OUTPUT  
+OUTPUT - 
 Required. Defines the target table and final data column values that are to be loaded into the database.
 
 TABLE  
