@@ -25,7 +25,7 @@ SET default_statement_mem TO '200MB';
 
 Many of the configuration parameters have limitations on who can change them and where or when they can be set. For example, to change certain parameters, you must be a HAWQ superuser. Other parameters require a restart of the system for the changes to take effect. A parameter that is classified as *session* can be set at the system level (in the `hawq-site.xml` file), at the database-level (using `ALTER DATABASE`), at the role-level (using `ALTER ROLE`), or at the session-level (using `SET`). System parameters can only be set by using the `hawq config` utility or by directly modifying a `hawq-site.xml` file.
 
-By design, all HAWQ instances (including master and segments) host identical `hawq-site.xml` files. Using a common `hawq-site.xml` file across all HAWQ instances simplifies configuration of the cluster. Within each `hawq-site.xml` configuration file, some parameters are considered *segment* parameters, meaning that each segment instance looks to its own `hawq-site.xml` file to get the value of that parameter. By convention, these parameter names begin with the string '`hawq_segment`'. Others parameters are considered *master* parameters. By convention, these parameter names begin with the string '`hawq_master`'. Master parameters are only applied at the master instance and ignored by segments.
+By design, all HAWQ instances (including master and segments) host identical `hawq-site.xml` files. Using a common `hawq-site.xml` file across all HAWQ instances simplifies configuration of the cluster. Within each `hawq-site.xml` configuration file, some parameters are considered *segment* parameters, meaning that each segment instance looks to its own `hawq-site.xml` file to get the value of that parameter. By convention, these parameter names begin with the string `hawq_segment`. Others parameters are considered *master* parameters. By convention, these parameter names begin with the string `hawq_master`. Master parameters are only applied at the master instance and ignored by segments.
 
 **Note:** If you use the `hawq config` utility to set configuration parameter values in `hawq-site.xml`, the utility synchronizes all configuration files. Any manual modifications that you made to individual `hawq-site.xml` files may be lost.
 
@@ -73,6 +73,5 @@ This table describes the values in the Set Classifications column of the table i
 </tbody>
 </table>
 
-: <span class="tablecap">Table 1. Set Classifications</span>
 
 
