@@ -2,37 +2,8 @@
 title: Configuration Parameter Categories
 ---
 
-Configuration parameters affect categories of server behaviors, such as resource consumption, query tuning, and authentication. The following topics describe HAWQ configuration parameter categories.
+Configuration parameters affect categories of server behaviors, such as resource consumption, query tuning, and authentication. The following sections describe HAWQ configuration parameter categories.
 
--   **[Append-Only Table Parameters](../../reference/guc/guc_category-list.html#topic_hfd_1tl_zp)**
-
--   **[Client Connection Default Parameters](../../reference/guc/guc_category-list.html#topic39)**
-
--   **[Connection and Authentication Parameters](../../reference/guc/guc_category-list.html#topic12)**
-
--   **[Database and Tablespace/Filespace Parameters](../../reference/guc/guc_category-list.html#topic47)**
-
--   **[Error Reporting and Logging Parameters](../../reference/guc/guc_category-list.html#topic29)**
-
--   **[External Table Parameters](../../reference/guc/guc_category-list.html#topic45)**
-
--   **[GPORCA Parameters](../../reference/guc/guc_category-list.html#topic57)**
-
--   **[HAWQ Array Configuration Parameters](../../reference/guc/guc_category-list.html#topic49)**
-
--   **[HAWQ PL/Java Extension Parameters](../../reference/guc/guc_category-list.html#topic56)**
-
--   **[HAWQ Resource Management Parameters](../../reference/guc/guc_category-list.html#hawq_resource_management)**
-
--   **[Lock Management Parameters](../../reference/guc/guc_category-list.html#topic43)**
-
--   **[Past PostgreSQL Version Compatibility Parameters](../../reference/guc/guc_category-list.html#topic48)**
-
--   **[Query Tuning Parameters](../../reference/guc/guc_category-list.html#topic21)**
-
--   **[Statistics Collection Parameters](../../reference/guc/guc_category-list.html#statistics_collection)**
-
--   **[System Resource Consumption Parameters](../../reference/guc/guc_category-list.html#topic15)**
 
 ## Append-Only Table Parameters<a id="topic_hfd_1tl_zp"></a>
 
@@ -330,7 +301,7 @@ The following parameters control the types of plan operations the legacy query o
 
 ### Database Statistics Sampling Parameters<a id="topic24"></a>
 
-These parameters adjust the amount of data sampled by an `ANALYZE` operation. Adjusting these parameters affects statistics collection system-wide. You can configure statistics collection on particular tables and columns by using the `ALTER TABLE``SET                                                 STATISTICS` clause.
+These parameters adjust the amount of data sampled by an `ANALYZE` operation. Adjusting these parameters affects statistics collection system-wide. You can configure statistics collection on particular tables and columns by using the `ALTER TABLE` `SET STATISTICS` clause. See [About Database Statistics](../../datamgmt/about_statistics.html).
 
 -   [default\_statistics\_target](parameter_definitions.html#default_statistics_target)
 -   [gp\_analyze\_relative\_error](parameter_definitions.html#gp_analyze_relative_error)
@@ -369,7 +340,7 @@ These parameters adjust the amount of data sampled by an `ANALYZE` operation. Ad
 
 ### Automatic Statistics Collection<a id="topic_qvz_nz3_yv"></a>
 
-When automatic statistics collection is enabled, you can run `ANALYZE` automatically in the same transaction as an `INSERT`, `UPDATE`, `DELETE`, `COPY` or `CREATE TABLE...AS                                                 SELECT` statement when a certain threshold of rows is affected (`on_change`), or when a newly generated table has no statistics (`on_no_stats`). To enable this feature, set the following server configuration parameters in your HAWQ `hawq-site.xml` file by using the `hawq config` utility and restart HAWQ:
+When automatic statistics collection is enabled, you can run `ANALYZE` automatically in the same transaction as an `INSERT`, `UPDATE`, `DELETE`, `COPY` or `CREATE TABLE...AS SELECT` statement when a certain threshold of rows is affected (`on_change`), or when a newly generated table has no statistics (`on_no_stats`). To enable this feature, set the following server configuration parameters in your HAWQ `hawq-site.xml` file by using the `hawq config` utility and restart HAWQ:
 
 -   [gp\_autostats\_mode](parameter_definitions.html#gp_autostats_mode)
 -   [log\_autostats](parameter_definitions.html#log_autostats)
@@ -388,7 +359,7 @@ These parameters set the limits for system resources consumed by HAWQ.
 
 ### Memory Consumption Parameters<a id="topic16"></a>
 
-These parameters control system memory usage. You can adjust `hawq_re_memory_overcommit_max` to avoid running out of memory at the segment hosts during query processing. See also [#topic44](#topic44).
+These parameters control system memory usage. You can adjust `hawq_re_memory_overcommit_max` to avoid running out of memory at the segment hosts during query processing. See also [HAWQ Resource Management](#hawq_resource_management).
 
 -   [hawq\_re\_memory\_overcommit\_max](parameter_definitions.html#hawq_re_memory_overcommit_max)
 -   [gp\_vmem\_protect\_segworker\_cache\_limit](parameter_definitions.html#gp_vmem_protect_segworker_cache_limit)
