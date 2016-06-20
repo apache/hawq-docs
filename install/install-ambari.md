@@ -23,8 +23,8 @@ title: Install Apache HAWQ using Ambari
 
     |**Stack Name**|**Filename**|**Description**|
     |--------------|------------|---------------|
-    |HDB-2.0.0.0|hdb-2.0.0.0-<build>.tar.gz|Pivotal HDB is a parallel SQL query engine that includes features from Apache HAWQ \(Incubating\) such as PXF.|
-    |HDB-AMBARI-PLUGIN-2.0.0|hdb-ambari-plugin-2.0.0-hdp-<build>.tar.gz|The HAWQ plug-in provides Ambari installation and monitoring functionality for Apache HAWQ \(Incubating\).|
+    |HDB-2.0.0.0|hdb-2.0.0.0-\<build\>.tar.gz|Pivotal HDB is a parallel SQL query engine that includes features from Apache HAWQ \(Incubating\) such as PXF.|
+    |HDB-AMBARI-PLUGIN-2.0.0|hdb-ambari-plugin-2.0.0-hdp-\<build\>.tar.gz|The HAWQ plug-in provides Ambari installation and monitoring functionality for Apache HAWQ \(Incubating\).|
 
 4.  Extract each tarball file into the staging directory:
 
