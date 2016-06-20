@@ -367,12 +367,12 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
 2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps:
     1. Click **HAWQ** in the list of installed services.
     2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script.
-    2. Click **Save** to save the updated configuration.
-    3. Restart HAWQ service to propagate the configuration change to all Ambari agents.
+    3. Click **Save** to save the updated configuration.
+    4. Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
     This will synchronize the password on the host machines with the password that you specified in Ambari.
 
-## Setting Up Alerts
+## Setting Up Alerts<a id="gpadmin-setup-alert"></a>
  
 Alerts advise you of when a HAWQ process is down or not responding, or when certain conditions occur.n.
 Alerts can be created for the Master, Standby Master, Segments, and PXF services. You can also set up custom alert groups to monitor these conditions and send email notifications when they occur.
@@ -432,7 +432,8 @@ This Alert monitors the percentage of HAWQ segments available versus total segme
    Alerts for **OK**, **WARN**, and **CRITICAL** will be displayed when the number of unresponsive HAWQ segments in the cluster is greater than  the specified threshhold. 
 
 * PXF Alerts
-   PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network.To change the settings for PXF alerts: 
+
+ PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network.To change the settings for PXF alerts: 
 
    1.  Go to the **Groups** dropdown button at the top right of the Alerts page. Select **PXF Default**. 
    2.  Click on **PXF Process** to set the time interval for checking the network.**
