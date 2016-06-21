@@ -374,8 +374,8 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
 
 ## Setting Up Alerts<a id="gpadmin-setup-alert"></a>
  
-Alerts advise you of when a HAWQ process is down or not responding, or when certain conditions occur.n.
-Alerts can be created for the Master, Standby Master, Segments, and PXF services. You can also set up custom alert groups to monitor these conditions and send email notifications when they occur.
+Alerts advise you of when a HAWQ process is down or not responding, or when certain conditions requiring attention occur.
+Alerts can be created for the Master, Standby Master, Segments, and PXF components. You can also set up custom alert groups to monitor these conditions and send email notifications when they occur.
 
 ### Prerequisites
 HAWQ service on the cluster must be already installed and managed through Ambari.
@@ -383,19 +383,12 @@ HAWQ service on the cluster must be already installed and managed through Ambari
 ### When to Perform
 Alerts are enabled by default. However, you might want to disable alert functions when performing system operations in maintenance mode and re-enable them when returning to normal operation.
 
-Alerts can be configured to display messages for all system status, on only conditions of interest, such as warnings or critical conditions. Alerts can advise you of the following conditions: 
-* The HAWQ Master process is down or not responding.
-* The HAWQ Standby Master process is down or not responding.
-* A HAWQ Segment on a node is down or not listening on the network.
-* The HAWQ Standby Master is not synchronized with HAWQ Master.
-* When any of the HAWQ segments fail to register with the HAWQ Master. 
-* If the number of available  HAWQ Segments falls below the specified alert threshhold.
-* The PXF process on a node is down or not responding. 
+Alerts can be configured to display messages for all system status, on only conditions of interest, such as warnings or critical conditions. Alerts can advise you if the HAWQ Master, Segment, Standby Master, or PXF is down or not responding, as well as communication issues with the Master and Segments. 
 
 You can set Ambari to check for alerts at specified intervals, on a particular service or host, and what level of criticality you want to trigger an alert (OK, WARNING, CRITICAL) or if the system goes into an unknown status.
 
 ### Procedure
-To view the alert information, click on the **Alert** button at the top of the Ambari console. Ambati will display a list of all available alert functions and their current status. To view current Alert settings, click on the name of the alert.
+To view the current alert information for HAWQ, select **HAWQ Default** in the **Groups** drop-down menu, then click on the **Alert** button at the top of the Ambari console. Ambari will display a list of all available alert functions and their current status. To view current Alert settings, click on the name of the alert.
 You can customize how often you wish the system to check for certain conditions. The default interval for checking the functionality of the HAWQ system is 1 minute. To customize the interval, perform the following steps:
 
 1.  Click on the name of the Alert you want to edit. 
@@ -405,24 +398,24 @@ You can customize how often you wish the system to check for certain conditions.
 ### Configuring Alerts
 The Alerts you can configure are as follows:
 
-* HAWQ Master Process
+* HAWQ Master Process:
 This alert is triggered when the HAWQ Master process is down or not responding. To customize the Alert, follow the procedure above. 
 
-* HAWQ Segment Process
+* HAWQ Segment Process:
 This alert is triggered when a HAWQ Segment on a node is down or not responding. To customize the Alert, follow the procedure above. 
 
-* HAWQ Standby Master Process
+* HAWQ Standby Master Process:
 This alert is triggered when the HAWQ Standby Master process is down or not responding. If no standby is present, the Alert shows as **NONE**. 
 
-* HAWQ Standby Master Sync Status
+* HAWQ Standby Master Sync Status:
 This alert is triggered when the HAWQ Standby Master is not synchronized with the HAWQ Master. Using this Alert eliminates the need to check the gp\_master\_mirroring catalog table to determine if the Standby Master is fully synchronized. 
 If no standby Master is present, the status will show as **UNKNOWN**..
    If this Alert is triggered, go to the HAWQ **Services** tab and click on the **Service Action** button to re-sync the HAWQ Standby Master with the HAWQ Master.
 
-* HAWQ Segment Registration Status
+* HAWQ Segment Registration Status:
 This alert is triggered when any of the HAWQ Segments fail to register with HAWQ Master. This indicates that the HAWQ segments having up status in the gp\_segment\_configuration table do not match the HAWQ Segments listed in /usr/local/hawq/etc/slaves file on HAWQ Master. 
 
-* Percent HAWQ Segment Status Available
+* Percent HAWQ Segment Status Available:
 This Alert monitors the percentage of HAWQ segments available versus total segments. To change the threshhold for the number of unresponsive segments that will trigger an alert, use the following procedure:
 
    1.  Click on **Percent HAWQ Segments Available**. 
@@ -436,6 +429,6 @@ This Alert monitors the percentage of HAWQ segments available versus total segme
  PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network.To change the settings for PXF alerts: 
 
    1.  Go to the **Groups** dropdown button at the top right of the Alerts page. Select **PXF Default**. 
-   2.  Click on **PXF Process** to set the time interval for checking the network.**
+   2.  Click on **PXF Process** to set the time interval for checking the status.**
 
-  If PFX Alerts are enabled, the PXF Status page displays the status of the Alert.
+  If PXF Alerts are enabled, the PXF Status page displays the status of the Alert.
