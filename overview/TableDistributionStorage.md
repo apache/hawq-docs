@@ -37,5 +37,5 @@ and External Data](/20/pxf/PivotalExtensionFrameworkPXF.html) for more
 details.
 
 Users can create custom PXF connectors to access other parallel data stores or
-processing engines. Connectors are Java plugins that use the PXF API. For more
+processing engines. Connectors are Java plug-ins that use the PXF API. For more
 information see [PXF External Tables and API](/20/pxf/PXFExternalTableandAPIReference.html).

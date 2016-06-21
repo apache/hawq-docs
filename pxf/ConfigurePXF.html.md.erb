@@ -10,8 +10,8 @@ This topic describes how to configure the PXF service.
 
 The classpath for the PXF service is set during the plug-in installation process. Administrators should only modify it when adding new PXF connectors. The classpath is defined in two files:
 
-1.  `/etc/pxf/conf/pxf-private.classpath` – contains all the required resources to run the service, including pxf-hdfs, pxf-hbase, and pxf-hive plugins. This file must not be edited or removed.
-2.  `/etc/pxf/conf/pxf-public.classpath` – user defined resources (such as custom profiles) can be added here. For example, specify resources for running a user-defined plugin. The classpath resources should be defined one per line. Wildcard characters can be used in the name of the resource, but not in the full path. See [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on adding custom profiles.
+1.  `/etc/pxf/conf/pxf-private.classpath` – contains all the required resources to run the service, including pxf-hdfs, pxf-hbase, and pxf-hive plug-ins. This file must not be edited or removed.
+2.  `/etc/pxf/conf/pxf-public.classpath` – user defined resources (such as custom profiles) can be added here. For example, specify resources for running a user-defined plug-in. The classpath resources should be defined one per line. Wildcard characters can be used in the name of the resource, but not in the full path. See [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on adding custom profiles.
 
 After changing the classpath files, the PXF service must be restarted. 
 
@@ -40,7 +40,7 @@ Please refer to [Troubleshooting PXF](TroubleshootingPXF.html) for common errors
 
 ## Credentials for Remote Services<a id="credentialsforremoteservices"></a>
 
-Credentials for remote services allows a PXF plugin to access a remote service that requires credentials.
+Credentials for remote services allows a PXF plug-in to access a remote service that requires credentials.
 
 ### In HAWQ<a id="inhawq"></a>
 
@@ -53,9 +53,9 @@ Currently, the contents of the two parameters are stored in memory, without any 
 
 **Important:** These parameters are temporary and could soon be deprecated, in favor of a complete solution for managing credentials for remote services in PXF.
 
-### In a PXF Plugin<a id="inapxfplugin"></a>
+### In a PXF Plug-in<a id="inapxfplugin"></a>
 
-In a PXF plugin, the contents of the two credentials parameters is available through the following InputData API functions:
+In a PXF plug-in, the contents of the two credentials parameters is available through the following InputData API functions:
 
 ``` pre
 string getLogin()
