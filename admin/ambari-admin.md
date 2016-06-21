@@ -427,6 +427,6 @@ This Alert monitors the percentage of HAWQ segments available versus total segme
   PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network.To change the settings for PXF alerts: 
 
    1.  Go to the **Groups** dropdown button at the top right of the Alerts page. Select **PXF Default**. 
-   2.  Click on **PXF Process** to set the time interval for checking the status.**
+   2.  Click on **PXF Process** to set the time interval for checking the status.
 
   If PXF Alerts are enabled, the PXF Status page displays the status of the Alert.
