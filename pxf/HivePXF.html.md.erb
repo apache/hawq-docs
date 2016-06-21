@@ -8,8 +8,8 @@ This topic describes how to access Hive data using PXF. You have several options
 
 Check the following before using PXF to access Hive:
 
--   The PXF HDFS plugin is installed on all cluster nodes.
--   The PXF Hive plugin is installed on all cluster nodes.
+-   The PXF HDFS plug-in is installed on all cluster nodes.
+-   The PXF Hive plug-in is installed on all cluster nodes.
 -   The Hive JAR files and conf directory are installed on all cluster nodes.
 -   Test PXF on HDFS before connecting to Hive or HBase.
 -   You are running the Hive Metastore service on a machine in your cluster. 
@@ -32,7 +32,7 @@ Hive> LOAD DATA local inpath '/local/path/data.txt' into table test;
 
 ## Using PXF Tables to Query Hive<a id="topic_p2s_lvl_25"></a>
 
-Hive tables are defined in a specific way in PXF, regardless of the underlying file storage format. The PXF Hive plugins automatically detect source tables in the following formats:
+Hive tables are defined in a specific way in PXF, regardless of the underlying file storage format. The PXF Hive plug-ins automatically detect source tables in the following formats:
 
 -   Text based
 -   SequenceFile
@@ -41,7 +41,7 @@ Hive tables are defined in a specific way in PXF, regardless of the underlying f
 -   Parquet
 -   Avro
 
-The source table can also be a combination of these types. The PXF Hive plugin uses this information to query the data in runtime.
+The source table can also be a combination of these types. The PXF Hive plug-in uses this information to query the data in runtime.
 
 -   **[Syntax Example](../pxf/HivePXF.html#syntax2)**
 
@@ -129,7 +129,7 @@ The following diagram depicts how HAWQ integrates with HCatalog to query Hive ta
 To enable HCatalog query integration in HAWQ, perform the following steps:
 
 1.  Make sure your deployment meets the requirements listed in [Prerequisites](#installingthepxfhiveplugin).
-2.  If necessary, set the `pxf_service_address` global configuration property to a hostname or IP address and port where you have installed the PXF Hive plugin. By default, the value is set to `localhost:51200`.
+2.  If necessary, set the `pxf_service_address` global configuration property to a hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
 
     ``` pre
     SET pxf_service_address TO "hivenode:51200"
@@ -268,11 +268,11 @@ HCatalog integration has the following limitations:
 
 ## Partition Filtering<a id="partitionfiltering"></a>
 
-The PXF Hive plugin uses the Hive partitioning feature and directory structure. This enables partition exclusion on HDFS files that contain the Hive table. To use the partition filtering feature to reduce network traffic and I/O, run a PXF query using a WHERE clause that refers to a specific partition in the partitioned Hive table.
+The PXF Hive plug-in uses the Hive partitioning feature and directory structure. This enables partition exclusion on HDFS files that contain the Hive table. To use the partition filtering feature to reduce network traffic and I/O, run a PXF query using a WHERE clause that refers to a specific partition in the partitioned Hive table.
 
 To take advantage of PXF partition filtering push-down, name the partition fields in the external table. These names must be the same as the names stored in the Hive table. Otherwise, PXF ignores Partition filtering and the filtering is performed on the HAWQ side, impacting performance.
 
-**Note:** The Hive plugin only filters on partition columns, not on other table attributes.
+**Note:** The Hive plug-in only filters on partition columns, not on other table attributes.
 
 ### Example<a id="example2"></a>
 

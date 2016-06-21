@@ -8,7 +8,7 @@ The PXF Java API lets you extend PXF functionality and add new services and form
 
 The Fragmenter produces a list of data fragments that can be read in parallel from the data source. The Accessor produces a list of records from a single fragment, and the Resolver both deserializes and serializes records.
 
-Together, the Fragmenter, Accessor, and Resolver classes implement a connector. PXF includes plugins for tables in HDFS, HBase, and Hive.
+Together, the Fragmenter, Accessor, and Resolver classes implement a connector. PXF includes plug-ins for tables in HDFS, HBase, and Hive.
 
 ## Creating an External Table<a id="creatinganexternaltable"></a>
 
@@ -36,10 +36,10 @@ FORMAT 'custom' (formatter='pxfwritable_import|pxfwritable_export');
 | host                    | The current host of the PXF service.                                                                                                                                                                                                                                           |
 | port                    | Connection port for the PXF service. If the port is omitted, PXF assumes that High Availability (HA) is enabled and connects to the HA name service port, 51200 by default. The HA name service port can be changed by setting the `pxf_service_port` configuration parameter. |
 | *path\_to\_data*        | A directory, file name, wildcard pattern, table name, etc.                                                                                                                                                                                                                     |
-| FRAGMENTER              | The plugin (Java class) to use for fragmenting data. Used for READABLE external tables only.                                                                                                                                                                                   |
-| ACCESSOR                | The plugin (Java class) to use for accessing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                                                  |
-| RESOLVER                | The plugin (Java class) to use for serializing and deserializing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                              |
-| *custom-option*=*value* | Additional values to pass to the plugin class. The parameters are passed at runtime to the plugins indicated above. The plugins can lookup custom options with `org.apache.hawq.pxf.api.utilities.InputData`.                                                                  |
+| FRAGMENTER              | The plug-in (Java class) to use for fragmenting data. Used for READABLE external tables only.                                                                                                                                                                                   |
+| ACCESSOR                | The plug-in (Java class) to use for accessing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                                                  |
+| RESOLVER                | The plug-in (Java class) to use for serializing and deserializing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                              |
+| *custom-option*=*value* | Additional values to pass to the plug-in class. The parameters are passed at runtime to the plug-ins indicated above. The plug-ins can lookup custom options with `org.apache.hawq.pxf.api.utilities.InputData`.                                                                  |
 
 **Note:** When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
 
@@ -47,9 +47,9 @@ For more information about this example, see [About the Java Class Services and 
 
 ## About the Java Class Services and Formats<a id="aboutthejavaclassservicesandformats"></a>
 
-The `LOCATION` string in a PXF `CREATE EXTERNAL TABLE` statement is a URI that specifies the host and port of an external data source and the path to the data in the external data source. The query portion of the URI, introduced by the question mark (?), must include the required parameters `FRAGMENTER` (readable tables only), `ACCESSOR`, and `RESOLVER`, which specify Java class names that extend the base PXF API plugin classes. Alternatively, the required parameters can be replaced with a `PROFILE` parameter with the name of a profile defined in the `/etc/conf/pxf-profiles.xml` that defines the required classes.
+The `LOCATION` string in a PXF `CREATE EXTERNAL TABLE` statement is a URI that specifies the host and port of an external data source and the path to the data in the external data source. The query portion of the URI, introduced by the question mark (?), must include the required parameters `FRAGMENTER` (readable tables only), `ACCESSOR`, and `RESOLVER`, which specify Java class names that extend the base PXF API plug-in classes. Alternatively, the required parameters can be replaced with a `PROFILE` parameter with the name of a profile defined in the `/etc/conf/pxf-profiles.xml` that defines the required classes.
 
-The parameters in the PXF URI are passed from HAWQ as headers to the PXF Java service. You can pass custom information to user-implemented PXF plugins by adding optional parameters to the LOCATION string.
+The parameters in the PXF URI are passed from HAWQ as headers to the PXF Java service. You can pass custom information to user-implemented PXF plug-ins by adding optional parameters to the LOCATION string.
 
 The Java PXF service retrieves the source data from the external data source and converts it to a HAWQ-readable table format.
 
@@ -58,13 +58,13 @@ The Accessor, Resolver, and Fragmenter Java classes extend the `org.apache.hawq.
 ``` pre
 package org.apache.hawq.pxf.api.utilities;
 /**
- * Base class for all plugin types (Accessor, Resolver, Fragmenter, ...).
+ * Base class for all plug-in types (Accessor, Resolver, Fragmenter, ...).
  * Manages the meta data.
  */
 public class Plugin {
     protected InputData inputData;
     /**
-     * Constructs a plugin.
+     * Constructs a plug-in.
      *
      * @param input the input data
      */
@@ -72,9 +72,9 @@ public class Plugin {
         this.inputData = input;
     }
     /**
-     * Checks if the plugin is thread safe or not, based on inputData.
+     * Checks if the plug-in is thread safe or not, based on inputData.
      *
-     * @return true if plugin is thread safe
+     * @return true if plug-in is thread safe
      */
     public boolean isThreadSafe() {
         return true;
@@ -82,11 +82,11 @@ public class Plugin {
 }
 ```
 
-The parameters in the `LOCATION` string are available to the plugins through methods in the `org.apache.hawq.pxf.api.utilities.InputData` class. Custom parameters added to the location string can be looked up with the `getUserProperty()` method.
+The parameters in the `LOCATION` string are available to the plug-ins through methods in the `org.apache.hawq.pxf.api.utilities.InputData` class. Custom parameters added to the location string can be looked up with the `getUserProperty()` method.
 
 ``` pre
 /**
- * Common configuration available to all PXF plugins. Represents input data
+ * Common configuration available to all PXF plug-ins. Represents input data
  * coming from client applications, such as HAWQ.
  */
 public class InputData {
@@ -123,7 +123,7 @@ public class InputData {
     public byte[] getFragmentUserData();
 
     /**
-     * Sets any custom user data that needs to be shared across plugins.
+     * Sets any custom user data that needs to be shared across plug-ins.
      * Will mostly be set by the fragmenter.
      */
     public void setFragmentUserData(byte[] userData);
@@ -192,7 +192,7 @@ public class InputData {
 
     /**
      * Returns true if the request is thread safe. Default true. Should be set
-     * by a user to false if the request contains non thread-safe plugins or
+     * by a user to false if the request contains non thread-safe plug-ins or
      * components, such as BZip2 codec.
      */
     public boolean isThreadSafe();
@@ -231,7 +231,7 @@ For a detailed explanation about HAWQ statistical data gathering, see `ANALYZE
 -   You can also use *pxf\_stat\_max\_fragments* to limit the number of fragments to be sampled by decreasing it from the default (100). However, if the number is too low, the sample might not be uniform and the statistics might be skewed.
 -   You can also implement getFragmentsStats to return an error. This will cause ANALYZE on a table with this Fragmenter to fail immediately, and default statistics values will be used for that table.
 
-The following table lists the Fragmenter plugin implementations included with the PXF API.
+The following table lists the Fragmenter plug-in implementations included with the PXF API.
 
 <a id="fragmenter__table_cgs_svp_3s"></a>
 
@@ -396,7 +396,7 @@ public class FragmentsStats {
 
 ### Accessor<a id="accessor"></a>
 
-The Accessor retrieves specific fragments and passes records back to the Resolver. For example, the HDFS plugins create a `org.apache.hadoop.mapred.FileInputFormat` and a `org.apache.hadoop.mapred.RecordReader` for an HDFS file and sends this to the Resolver. In the case of HBase or Hive files, the Accessor returns single rows from an HBase or Hive table. PXF 1.x or higher contains the following Accessor implementations:
+The Accessor retrieves specific fragments and passes records back to the Resolver. For example, the HDFS plug-ins create a `org.apache.hadoop.mapred.FileInputFormat` and a `org.apache.hadoop.mapred.RecordReader` for an HDFS file and sends this to the Resolver. In the case of HBase or Hive files, the Accessor returns single rows from an HBase or Hive table. PXF 1.x or higher contains the following Accessor implementations:
 
 <a id="accessor__table_ewm_ttz_4p"></a>
 
@@ -1038,11 +1038,11 @@ String colName = filterColumn.columnName();
 This section contains the following information:
 
 -   [External Table Examples](#externaltableexamples)
--   [Plugin Examples](#pluginexamples)
+-   [Plug-in Examples](#pluginexamples)
 
 -   **[External Table Examples](../pxf/PXFExternalTableandAPIReference.html#externaltableexamples)**
 
--   **[Plugin Examples](../pxf/PXFExternalTableandAPIReference.html#pluginexamples)**
+-   **[Plug-in Examples](../pxf/PXFExternalTableandAPIReference.html#pluginexamples)**
 
 ### External Table Examples<a id="externaltableexamples"></a>
 
@@ -1112,9 +1112,9 @@ LOCATION ('pxf://10.76.72.26:51200/sales/2012/max'
 FORMAT 'custom' (formatter='pxfwritable_export');
 ```
 
-### Plugin Examples<a id="pluginexamples"></a>
+### Plug-in Examples<a id="pluginexamples"></a>
 
-This section contains sample dummy implementations of all three plugins. It also contains a usage example.
+This section contains sample dummy implementations of all three plug-ins. It also contains a usage example.
 
 #### Dummy Fragmenter<a id="dummyfragmenter"></a>
 
@@ -1310,7 +1310,7 @@ INSERT 0 2
 
 Package names have been renamed to reflect the move of PXF to Apache HAWQ.
 
-If you have any customized PXF plugins, you must recompile your plugin to use the new package names for PXF APIs. If you have defined any PXF tables with built-in plugins, you must recreate the tables with the new package names. Using the PXF `PROFILE` option eases this task.
+If you have any customized PXF plug-ins, you must recompile your plug-in to use the new package names for PXF APIs. If you have defined any PXF tables with built-in plug-ins, you must recreate the tables with the new package names. Using the PXF `PROFILE` option eases this task.
 
 | Old Name                                               | New Name                                                   |
 |--------------------------------------------------------|------------------------------------------------------------|

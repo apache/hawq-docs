@@ -14,7 +14,7 @@ Before trying to access HBase data with PXF, verify the following:
 
     **Note:** You must restart HBase after making any changes to the HBase configuration.
 
--   PXF HBase plugin is installed on all cluster nodes.
+-   PXF HBase plug-in is installed on all cluster nodes.
 -   HBase and ZooKeeper jars are installed on all cluster nodes.
 
 ## Syntax<a id="syntax3"></a>
@@ -36,7 +36,7 @@ The HBase profile is equivalent to the following PXF parameters:
 
 ## Column Mapping<a id="columnmapping"></a>
 
-Most HAWQ external tables (PXF or others) require that the HAWQ table attributes match the source data record layout, and include all the available attributes. With HAWQ, however, you use the PXF HBase plugin to specify the subset of HBase qualifiers that define the HAWQ PXF table. To set up a clear mapping between each attribute in the PXF table and a specific qualifier in the HBase table, you can use either direct mapping or indirect mapping. In addition, the HBase row key is handled in a special way.
+Most HAWQ external tables (PXF or others) require that the HAWQ table attributes match the source data record layout, and include all the available attributes. With HAWQ, however, you use the PXF HBase plug-in to specify the subset of HBase qualifiers that define the HAWQ PXF table. To set up a clear mapping between each attribute in the PXF table and a specific qualifier in the HBase table, you can use either direct mapping or indirect mapping. In addition, the HBase row key is handled in a special way.
 
 ### Row Key<a id="rowkey"></a>
 
@@ -68,7 +68,7 @@ CREATE EXTERNAL TABLE hbase_sales (
 ) ...
 ```
 
-The PXF HBase plugin uses these attribute names as-is and returns the values of these HBase qualifiers.
+The PXF HBase plug-in uses these attribute names as-is and returns the values of these HBase qualifiers.
 
 ### Indirect Mapping (via Lookup Table)<a id="indirectmappingvialookuptable"></a>
 

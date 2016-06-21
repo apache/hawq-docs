@@ -674,10 +674,10 @@ Perform these basic commands to ensure that the new  cluster is functional.
     ```
 
 
-## Install PXF Plugins <a id="topic_pnk_4cv_25"></a>
+## Install PXF Plug-ins <a id="topic_pnk_4cv_25"></a>
 
 If you plan on accessing data in external systems such as HDFS files, Hive or HBase:
 
 1.  Follow the instructions in [Post-Install Procedure for Hive and HBase on HDP](/20/install/install-ambari.html#post-install-pxf) to complete the PXF configuration.
 
-2.  Install the appropriate PXF plugin for the external system. We recommend installing the PXF plugin for the desired external system on all nodes in your cluster. See [Installing PXF Plugins](/20/pxf/InstallPXFPlugins.html).
+2.  Install the appropriate PXF plug-in for the external system. We recommend installing the PXF plug-in for the desired external system on all nodes in your cluster. See [Installing PXF Plug-ins](/20/pxf/InstallPXFPlugins.html).

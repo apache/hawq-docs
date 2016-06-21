@@ -10,7 +10,7 @@ Use one of the following protocols to access external table data sources. You ca
 
 -   `gpfdist://` points to a directory on the file host and serves external data files to all HAWQ segments in parallel. See [gpfdist Protocol](g-gpfdist-protocol.html#topic_sny_yph_kr).
 -   `gpfdists://` is the secure version of `gpfdist`. See [gpfdists Protocol](g-gpfdists-protocol.html#topic_sny_yph_kr).
--   `pxf://` specifies data accessed through the HAWQ Extensions Framework (PXF). PXF is a service that uses plugin Java classes to read and write data in external data sources. PXF includes plugins to access data in HDFS, HBase, and Hive. Custom plugins can be written to access other external data sources.
+-   `pxf://` specifies data accessed through the HAWQ Extensions Framework (PXF). PXF is a service that uses plug-in Java classes to read and write data in external data sources. PXF includes plug-ins to access data in HDFS, HBase, and Hive. Custom plug-ins can be written to access other external data sources.
 
 External tables allow you to access external files from within the database as if they are regular database tables. Used with `gpfdist`, the HAWQ parallel file distribution program, or HAWQ Extensions Framework (PXF), external tables provide full parallelism by using the resources of all HAWQ segments to load or unload data.
 
