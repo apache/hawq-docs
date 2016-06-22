@@ -217,7 +217,7 @@ title: Install Apache HAWQ using Ambari
         Time: 7.266 ms
         ```
 
-## Post-Install Procedure for Hive and HBase on HDP<a id="post-install-pxf"></a>
+## Post-Install Procedure for Hive and HBase<a id="post-install-pxf"></a>
 
 In order to use the installed PXF service with HBase on a HDP cluster, you must manually add the path to the `pxf-hbase.jar` file to the `HBASE_CLASSPATH` environment variable and restart HBase.
 

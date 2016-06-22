@@ -6,10 +6,10 @@ title: Accessing HBase Data
 
 Before trying to access HBase data with PXF, verify the following:
 
--   The `/etc/hbase/hbase-env.sh` configuration file must reference the `pxf-hbase.jar`. For example, `/etc/hbase/hbase-env.sh` should include the line:
+-   The `/etc/hbase/conf/hbase-env.sh` configuration file must reference the `pxf-hbase.jar`. For example, `/etc/hbase/conf/hbase-env.sh` should include the line:
 
-    ``` pre
-    export HBASE_CLASSPATH=/usr/lib/pxf/pxf-hbase.jar
+    ```
+    export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
     ```
 
     **Note:** You must restart HBase after making any changes to the HBase configuration.
@@ -21,8 +21,8 @@ Before trying to access HBase data with PXF, verify the following:
 
 To create an external HBase table, use the following syntax:
 
-``` pre
-CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name      
+``` sql
+CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name 
     ( column_name data_type [, ...] | LIKE other_table )
 LOCATION ('pxf://namenode[:port]/hbase-table-name?Profile=HBase')
 FORMAT 'CUSTOM' (Formatter='pxfwritable_import');
@@ -44,7 +44,7 @@ You can use the HBase table row key in several ways. For example, you can see t
 
 **Note:** Because HBase is byte and not character-based, you should define the recordkey as type bytea. This may result in better ability to filter data and increase performance.
 
-``` pre
+``` sql
 CREATE EXTERNAL TABLE <tname> (recordkey bytea, ... ) LOCATION ('pxf:// ...')
 ```
 
@@ -60,7 +60,7 @@ For example, you have defined an HBase table called `hbase_sales` with multiple
 
 use the following `CREATE EXTERNAL TABLE` syntax:
 
-``` pre
+``` sql
 CREATE EXTERNAL TABLE hbase_sales (
   recordkey bytea,
   "cf1:saleid" int,
@@ -92,7 +92,7 @@ This example maps the `saleid` qualifier in the `cf1` column family to the HAWQ 
 
 The mapping assigned new names for each qualifier. You can use these names in your HAWQ table definition:
 
-``` pre
+``` sql
 CREATE EXTERNAL TABLE hbase_sales (
   recordkey bytea
   id int,
