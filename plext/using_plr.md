@@ -42,7 +42,11 @@ Create a TYPE in a HAWQ with the same dimensions as your R `data.frame`:
 
 ```sql
 CREATE TYPE t1 AS ...
-Use this TYPE when defining your PL/R function
+```
+
+Use this TYPE when defining your PL/R function:
+
+```sql
 ... RETURNS SET OF t1 AS ...
 ```
 
