@@ -101,7 +101,7 @@ To install PXF support for HBase, perform the following steps on *each* node in 
 
 3.  Add the PXF HBase plug-in JAR file to the HBase `CLASSPATH` by updating the `HBASE_CLASSPATH` environment variable setting in the HBase environment file `/etc/hbase/conf/hbase-env.sh`:
 
-    ```
+    ```shell
     export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
     ```
 
