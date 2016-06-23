@@ -146,10 +146,10 @@ For additional information about EC2 instance store, see [Amazon EC2 Instance St
   
 - To allow access from a source external to a VPC, include and open the following ports in the appropriate security group.  ??TODO any additional ports in a HAWQ environment??
 
-| Port  | Used by this Application |
-|-------|-------------------------------------|
-| 22    | ssh - connect to host with ssh |
-| ??    | ?? |  
+    | Port  | Used by this Application |
+    |-------|-------------------------------------|
+    | 22    | ssh - connect to host with ssh |
+    | ??    | ?? |  
 
 - You can configure a non-default VPC with an internet gateway and allocate an Elastic IP address for the VPC. AWS will automatically configure the Elastic IP for internet access. For information about EC2 internet gateways, see the Amazon [Internet Gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Internet_Gateway.html) documentation.
  
