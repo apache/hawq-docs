@@ -15,7 +15,6 @@ As a HAWQ administrator, you must monitor the system for problem events such as 
 -   [Checking System State](#topic12)
 -   [Checking Disk Space Usage](#topic15)
 -   [Viewing Metadata Information about Database Objects](#topic24)
--   [Viewing Query Workfile Usage Information](#topic27)
 
 ### Checking System State <a id="topic12"></a>
 
