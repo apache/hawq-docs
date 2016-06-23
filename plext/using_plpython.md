@@ -231,6 +231,7 @@ $ hawq ssh -f hawq-hosts
 The `setuptools` package installs the `easy_install` utility that lets you install Python packages from the Python Package Index repository. For example, this command installs Python PIP utility from the Python Package Index site.
 
 ```shell
+$ cd setuptools-18.4
 $ easy_install pip
 ```
 
