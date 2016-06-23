@@ -102,18 +102,6 @@ To see the definition of an object, such as a table or view, you can use the `\d
 <pre><code>=> \d+ <i>mytable</i></code></pre>
 
 
-### Viewing Query Workfile Usage Information <a id="topic27"></a>
-
-The HAWQ administrative schema *hawq\_toolkit* contains views that display information about HAWQ workfiles. HAWQ creates workfiles on disk if it does not have sufficient memory to execute the query in memory. This information can be used for troubleshooting and tuning queries. The information in the views can also be used to specify the values for the HAWQ configuration parameters `hawq_workfile_limit_per_query` and `hawq_workfile_limit_per_segment`.
-
-These are the views in the schema *hawq\_toolkit*:
-
--   The hawq\_workfile\_entries view contains one row for each operator using disk space for workfiles on a segment at the current time.
--   The hawq\_workfile\_usage\_per\_query view contains one row for each query using disk space for workfiles on a segment at the current time.
--   The hawq\_workfile\_usage\_per\_segment view contains one row for each segment. Each row displays the total amount of disk space used for workfiles on the segment at the current time.
-
-For information about using *hawq\_toolkit*, see [Using hawq\_toolkit](#topic31).
-
 ## Viewing the Database Server Log Files <a id="topic28"></a>
 
 Every database instance in HAWQ \(master and segments\) runs a PostgreSQL database server with its own server log file. Daily log files are created in the `pg_log` directory of the master and each segment data directory \(`$GPHOME/masterdd/pg_log` and `$GPHOME/segmentdd/pg_log`\).
@@ -180,6 +168,8 @@ Use HAWQ's administrative schema *hawq\_toolkit* to query the system catalogs, l
 ```
 => ALTER ROLE myrole SET search_path TO myschema,hawq_toolkit;
 ```
+
+See [The hawq_toolkit Administrative Schema](../reference/toolkit/hawq_toolkit.html) for more information on the schema.
 
 ## HAWQ Error Codes <a id="topic_jx2_rqg_kp"></a>
 
