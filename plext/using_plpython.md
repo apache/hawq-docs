@@ -195,7 +195,7 @@ $ wget --no-check-certificate https://pypi.python.org/packages/source/s/setuptoo
 Extract the files from the tar.gz file.
 
 ```bash
-$ tar -xzvf distribute-0.6.21.tar.gz
+$ tar -xzvf setuptools-18.4.tar.gz
 ```
 
 Go to the directory that contains the package files, and run the Python scripts to build and install the Python package.
@@ -221,7 +221,7 @@ Run the commands to build, install, and test the package with `hawq ssh` utility
 
 ```bash
 $ hawq ssh -f hawq-hosts
->>> tar -xzvf distribute-0.6.21.tar.gz
+>>> tar -xzvf setuptools-18.4.tar.gz
 >>> cd setuptools-18.4
 >>> python setup.py build && python setup.py install
 >>> python -c "import setuptools"
