@@ -4,6 +4,8 @@ title: gp_segment_configuration
 
 The `gp_segment_configuration` table contains information about master, standby and segment configuration.
 
+The HAWQ fault tolerance service (FTS) automatically detects the status of individual segments and marks the status of each segment in this table. If a segment is marked as DOWN, the corresponding reason is recorded in the [gp_configuration_history](gp_configuration_history.html) table. See [Understanding the Fault Tolerance Service](../../admin/FaultTolerance.html) for a description of the fault tolerance service.
+
 <a id="topic1__fr163962"></a>
 <span class="tablecap">Table 1. pg\_catalog.gp\_segment\_configuration</span>
 
