@@ -15,6 +15,7 @@ As a HAWQ administrator, you must monitor the system for problem events such as 
 -   [Checking System State](#topic12)
 -   [Checking Disk Space Usage](#topic15)
 -   [Viewing Metadata Information about Database Objects](#topic24)
+-   [Viewing Query Workfile Usage Information](#topic27)
 
 ### Checking System State <a id="topic12"></a>
 
@@ -24,13 +25,13 @@ A HAWQ system is comprised of multiple PostgreSQL instances \(the master and seg
 
 The default `hawq state` action is to check segment instances and show a brief status of the valid and failed segments. For example, to see a quick status of your HAWQ system, type:
 
-```
+```shell
 $ hawq state -b
 ```
 
 You can also display information about the HAWQ master data directory by using `hawq state` with the `-d` option:
 
-```
+```shell
 $ hawq state -d MASTER_DIR
 ```
 
@@ -44,31 +45,31 @@ The `hawq_toolkit` administrative schema contains several views that you can use
 
 To see the total size of a database \(in bytes\), use the *hawq\_size\_of\_database* view in the *hawq\_toolkit* administrative schema. For example:
 
-```
+```sql
 => SELECT * FROM hawq_toolkit.hawq_size_of_database
-   ORDER BY sodddatname;
+ORDER BY sodddatname;
 ```
 
 ##### Viewing Disk Space Usage for a Table <a id="topic18"></a>
 
 The *hawq\_toolkit* administrative schema contains several views for checking the size of a table. The table sizing views list the table by object ID \(not by name\). To check the size of a table by name, you must look up the relation name \(`relname`\) in the *pg\_class* table. For example:
 
-```
+```sql
 => SELECT relname AS name, sotdsize AS size, sotdtoastsize
-   AS toast, sotdadditionalsize AS other
-   FROM hawq_size_of_table_disk as sotd, pg_class
-   WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
+AS toast, sotdadditionalsize AS other
+FROM hawq_size_of_table_disk as sotd, pg_class
+WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
 ```
 
 ##### Viewing Disk Space Usage for Indexes <a id="topic19"></a>
 
 The *hawq\_toolkit* administrative schema contains a number of views for checking index sizes. To see the total size of all index\(es\) on a table, use the *hawq\_size\_of\_all\_table\_indexes* view. To see the size of a particular index, use the *hawq\_size\_of\_index* view. The index sizing views list tables and indexes by object ID \(not by name\). To check the size of an index by name, you must look up the relation name \(`relname`\) in the *pg\_class* table. For example:
 
-```
+```sql
 => SELECT soisize, relname as indexname
-   FROM pg_class, hawq_size_of_index
-   WHERE pg_class.oid=hawq_size_of_index.soioid
-   AND pg_class.relkind='i';
+FROM pg_class, hawq_size_of_index
+WHERE pg_class.oid=hawq_size_of_index.soioid
+AND pg_class.relkind='i';
 ```
 
 ### Viewing Metadata Information about Database Objects <a id="topic24"></a>
@@ -79,12 +80,15 @@ HAWQ tracks various metadata information in its system catalogs about the object
 
 You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last vacuumed and analyzed:
 
-```
+```sql
 => SELECT schemaname as schema, objname as table,
-   usename as role, actionname as action,
-   subtype as type, statime as time
-   FROM pg_stat_operations
-   WHERE objname='cust';
+usename as role, actionname as action,
+subtype as type, statime as time
+FROM pg_stat_operations
+WHERE objname='cust';
+```
+
+```
  schema | table | role | action  | type  | time
 --------+-------+------+---------+-------+--------------------------
   sales | cust  | main | CREATE  | TABLE | 2010-02-09 18:10:07.867977-08
@@ -100,6 +104,18 @@ To see the definition of an object, such as a table or view, you can use the `\d
 
 <pre><code>=> \d+ <i>mytable</i></code></pre>
 
+
+### Viewing Query Workfile Usage Information <a id="topic27"></a>
+
+The HAWQ administrative schema *hawq\_toolkit* contains views that display information about HAWQ workfiles. HAWQ creates workfiles on disk if it does not have sufficient memory to execute the query in memory. This information can be used for troubleshooting and tuning queries. The information in the views can also be used to specify the values for the HAWQ configuration parameters `hawq_workfile_limit_per_query` and `hawq_workfile_limit_per_segment`.
+
+These are the views in the schema *hawq\_toolkit*:
+
+-   The hawq\_workfile\_entries view contains one row for each operator using disk space for workfiles on a segment at the current time.
+-   The hawq\_workfile\_usage\_per\_query view contains one row for each query using disk space for workfiles on a segment at the current time.
+-   The hawq\_workfile\_usage\_per\_segment view contains one row for each segment. Each row displays the total amount of disk space used for workfiles on the segment at the current time.
+
+For information about using *hawq\_toolkit*, see [Using hawq\_toolkit](#topic31).
 
 ## Viewing the Database Server Log Files <a id="topic28"></a>
 
@@ -148,13 +164,13 @@ The following fields are written to the log:
 
 HAWQ provides a utility called `gplogfilter` can search through a HAWQ log file for entries matching the specified criteria. By default, this utility searches through the HAWQ master log file in the default logging location. For example, to display the entries to the master log file starting after 2 pm on a certain date:
 
-```
+```shell
 $ gplogfilter -b '2016-01-18 14:00'
 ```
 
 To search through all segment log files simultaneously, run `gplogfilter` through the `hawq ssh` utility. For example, specify the seg\_host\_log\_file that contains hosts to participate in the session, then use `gplogfilter` to display the last three lines of each segment log file:
 
-```
+```shell
 $ hawq ssh -f seg_host_log_file
 => source ~/greenplum_path.sh
 => gplogfilter -n 3 /data/hawq-install-path/segmentdd/pg_log/hawq*.csv
@@ -164,11 +180,9 @@ $ hawq ssh -f seg_host_log_file
 
 Use HAWQ's administrative schema *hawq\_toolkit* to query the system catalogs, log files, and operating environment for system status information. The `hawq_toolkit` schema contains several views you can access using SQL commands. The *hawq\_toolkit* schema is accessible to all database users. Some objects require superuser permissions. Use a command similar to the following to add the *hawq\_toolkit* schema to your schema search path:
 
-```
+```sql
 => ALTER ROLE myrole SET search_path TO myschema,hawq_toolkit;
 ```
-
-See [The hawq_toolkit Administrative Schema](../reference/toolkit/hawq_toolkit.html) for more information on the schema.
 
 ## HAWQ Error Codes <a id="topic_jx2_rqg_kp"></a>
 

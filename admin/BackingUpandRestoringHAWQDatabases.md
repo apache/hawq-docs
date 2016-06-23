@@ -53,19 +53,19 @@ HAWQ supports the PostgreSQL backup and restore utilities, `pg_dump` and `pg_res
 
 To create a backup archive for database `mydb`:
 
-```
+```shell
 $ pg_dump -Ft -f mydb.tar mydb
 ```
 
 To create a compressed backup using custom format and compression level 3:
 
-```
+```shell
 $ pg_dump -Fc -Z3 -f mydb.dump mydb
 ```
 
 To restore from an archive using `pg_restore`:
 
-```
+```shell
 $ pg_restore -d new_db mydb.dump
 ```
 
@@ -170,7 +170,7 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
     In this example, issuing the first command creates two folders on two different disks with the same postfix `backup/tpch_20140627`. These folders are labeled as backups of the `tpch` database on 2014-06-27. In the next two commands, the example shows two `gpfdist` instances, one using port 8080, and another using port 8081:
 
-    ```
+    ```shell
     sdw1$ mkdir -p /data1/gpadmin/backup/tpch_20140627 /data2/gpadmin/backup/tpch_20140627
     sdw1$ gpfdist -d /data1/gpadmin/backup/tpch_20140627 -p 8080 &
     sdw1$ gpfdist -d /data2/gpadmin/backup/tpch_20140627 -p 8081 &
@@ -178,7 +178,7 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
 2.  Save the schema for the database:
 
-    ```
+    ```shell
     master_host$ pg_dump --schema-only -f tpch.schema tpch
     master_host$ scp tpch.schema sdw1:/data1/gpadmin/backup/tpch_20140627
     ```
@@ -187,19 +187,21 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
 3.  Create a writable external table for each table in the database:
 
-    ```
+    ```shell
     master_host$ psql tpch
+    ```
+    ```sql
     tpch=# create writable external table wext_orders (like orders)
-    tpch-# location ('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
+    tpch-# location('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
     tpch=# create writable external table wext_lineitem (like lineitem)
-    tpch-# location ('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
+    tpch-# location('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
     ```
 
     The sample shows two tables in the `tpch` database: `orders` and `line item`. The sample shows that two corresponding external tables are created. Specify a location or each `gpfdist` instance in the `LOCATION` clause. This sample uses the CSV text format here, but you can also choose other delimited text formats. For more information, see the `CREATE EXTERNAL TABLE` SQL command.
 
 4.  Unload data to the external tables:
 
-    ```
+    ```sql
     tpch=# begin;
     tpch=# insert into wext_orders select * from orders;
     tpch=# insert into wext_lineitem select * from lineitem;
@@ -210,7 +212,7 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
     Find the progress ID and kill the process:
 
-    ```
+    ```shell
     sdw1$ ps -ef | grep gpfdist
     sdw1$ kill 612368; kill 612369
     ```
@@ -220,14 +222,14 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
 1.  Restart `gpfdist` instances if they aren’t running:
 
-    ```
+    ```shell
     sdw1$ gpfdist -d /data1/gpadmin/backup/tpch_20140627 -p 8080 &
     sdw1$ gpfdist -d /data2/gpadmin/backup/tpch_20140627 -p 8081 &
     ```
 
 2.  Create a new database and restore the schema:
 
-    ```
+    ```shell
     master_host$ createdb tpch2
     master_host$ scp sdw1:/data1/gpadmin/backup/tpch_20140627/tpch.schema .
     master_host$ psql -f tpch.schema -d tpch2
@@ -235,25 +237,27 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
 3.  Create a readable external table for each table:
 
-    ```
+    ```shell
     master_host$ psql tpch2
-
-    tpch2=# create external table rext_orders (like orders) location ('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
-    tpch2=# create external table rext_lineitem (like lineitem) location ('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
+    ```
+    
+    ```sql
+    tpch2=# create external table rext_orders (like orders) location('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
+    tpch2=# create external table rext_lineitem (like lineitem) location('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
     ```
 
     **Note:** The location clause is the same as the writable external table above.
 
 4.  Load data back from external tables:
 
-    ```
+    ```sql
     tpch2=# insert into orders select * from rext_orders;
     tpch2=# insert into lineitem select * from rext_lineitem;
     ```
 
 5.  Run the `ANALYZE` command after data loading:
 
-    ```
+    ```sql
     tpch2=# analyze;
     ```
 
@@ -262,7 +266,7 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 
 Keep in mind that `gpfdist` is accessed at runtime by the segment instances. Therefore, you must ensure that the HAWQ segment hosts have network access to gpfdist. Since the `gpfdist` program is a  web server, to test connectivity you can run the following command from each host in your HAWQ array \(segments and master\):
 
-```
+```shell
 $ wget http://gpfdist_hostname:port/filename
 ```
 
@@ -276,31 +280,33 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
 1.  Create a folder on HDFS for this backup:
 
-    ```
+    ```shell
     master_host$ hdfs dfs -mkdir -p /backup/tpch-2014-06-27
     ```
 
 2.  Dump the database schema using `pg_dump` and store the schema file in a backup folder:
 
-    ```
+    ```shell
     master_host$ pg_dump --schema-only -f tpch.schema tpch
     master_host$ hdfs dfs -copyFromLocal tpch.schema /backup/tpch-2014-06-27
     ```
 
 3.  Create a writable external table for each table in the database:
 
-    ```
+    ```shell
     master_host$ psql tpch
-
+    ```
+    
+    ```sql
     tpch=# CREATE WRITABLE EXTERNAL TABLE wext_orders (LIKE orders)
-    tpch-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders'
+    tpch-# LOCATION('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders'
     tpch-#           '?Profile=HdfsTextSimple'
     tpch-#           '&COMPRESSION_CODEC=org.apache.hadoop.io.compress.SnappyCodec'
     tpch-#          )
     tpch-# FORMAT 'TEXT';
 
     tpch=# CREATE WRITABLE EXTERNAL TABLE wext_lineitem (LIKE lineitem)
-    tpch-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem'
+    tpch-# LOCATION('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem'
     tpch-#           '?Profile=HdfsTextSimple'
     tpch-#           '&COMPRESSION_CODEC=org.apache.hadoop.io.compress.SnappyCodec')
     tpch-# FORMAT 'TEXT';
@@ -310,7 +316,7 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
 4.  Unload the data to external tables:
 
-    ```
+    ```sql
     tpch=# BEGIN;
     tpch=# INSERT INTO wext_orders SELECT * FROM orders;
     tpch=# INSERT INTO wext_lineitem SELECT * FROM lineitem;
@@ -319,7 +325,7 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
 5.  **\(Optional\)** Change the HDFS file replication factor for the backup folder. HDFS replicates each block into three blocks by default for reliability. You can decrease this number for your backup files if you need to:
 
-    ```
+    ```shell
     master_host$ hdfs dfs -setrep 2 /backup/tpch-2014-06-27
     ```
 
@@ -330,7 +336,7 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
 1.  Create a new database and restore the schema:
 
-    ```
+    ```shell
     master_host$ createdb tpch2
     master_host$ hdfs dfs -copyToLocal /backup/tpch-2014-06-27/tpch.schema .
     master_host$ psql -f tpch.schema -d tpch2
@@ -338,13 +344,16 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
 2.  Create a readable external table for each table to restore:
 
-    ```
+    ```shell
     master_host$ psql tpch2
+    ```
+    
+    ```sql
     tpch2=# CREATE EXTERNAL TABLE rext_orders (LIKE orders)
-    tpch2-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders?Profile=HdfsTextSimple')
+    tpch2-# LOCATION('pxf://namenode_host:51200/backup/tpch-2014-06-27/orders?Profile=HdfsTextSimple')
     tpch2-# FORMAT 'TEXT';
     tpch2=# CREATE EXTERNAL TABLE rext_lineitem (LIKE lineitem)
-    tpch2-# LOCATION ('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem?Profile=HdfsTextSimple')
+    tpch2-# LOCATION('pxf://namenode_host:51200/backup/tpch-2014-06-27/lineitem?Profile=HdfsTextSimple')
     tpch2-# FORMAT 'TEXT';
     ```
 
@@ -352,13 +361,13 @@ Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ 
 
 3.  Load data back from external tables:
 
-    ```
+    ```sql
     tpch2=# INSERT INTO ORDERS SELECT * FROM rext_orders;
     tpch2=# INSERT INTO LINEITEM SELECT * FROM rext_lineitem;
     ```
 
 4.  Run `ANALYZE` after data loading:
 
-    ```
+    ```sql
     tpch2=# ANALYZE;
     ```

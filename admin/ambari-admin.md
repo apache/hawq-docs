@@ -209,32 +209,32 @@ If you need to expand your HAWQ cluster without restarting the HAWQ service, fol
 
     1. SSH into the HAWQ master host as the `gpadmin` user:
 
-    ```
+    ```shell
     $ ssh gpadmin@<HAWQ_MASTER_HOST>
     ```
     2. Source the `greenplum_path.sh` file to update the shell environment:
 
-    ```
+    ```shell
     $ source /usr/local/hawq/greenplum_path.sh
     ```
     3. Verify the current value of `default_hash_table_bucket_number`:
 
-    ```
+    ```shell
     $ hawq config -s default_hash_table_bucket_number
     ```
     4. Update `default_hash_table_bucket_number` to the new value that you calculated:
 
-    ```
-    $ config -c default_hash_table_bucket_number -v <new_value>
+    ```shell
+    $ hawq config -c default_hash_table_bucket_number -v <new_value>
     ```
     5. Reload the configuration without restarting the cluster:
 
-    ```
+    ```shell
     $ hawq stop cluster -u
     ```
     6. Verify that the `default_hash_table_bucket_number` value was updated:
 
-    ```
+    ```shell
     $ hawq config -s default_hash_table_bucket_number
     ```
 2.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Separate multiple hosts with new lines. For example, after adding host4 and host5 to a cluster already contains hosts 1-3, the updated file contents would be:
@@ -280,12 +280,14 @@ The HAWQ Standby Master serves as a backup of the HAWQ Master host, and is an im
 ### Procedure
 
 1.  Select an existing host in the cluster to run the HAWQ standby master. You cannot run the standby master on the same host that runs the HAWQ master. Also, do not run a standby master on the node where you deployed the Ambari server; if the Ambari postgres instance is running on the same port as the HAWQ master posgres instance, initialization fails and will leave the cluster in an inconsistent state.
-1. Login to the HAWQ host that you chose to run the standby master and determine if there is an existing HAWQ master directory (for example, /data/hawq/master) on the machine. If the directory exists, rename the directory. For example:
-     ```
-     $ mv /data/hawq/master /data/hawq/master-old
-     ```
+1. Login to the HAWQ host that you chose to run the standby master and determine if there is an existing HAWQ master directory (for example, `/data/hawq/master`) on the machine. If the directory exists, rename the directory. For example:
 
-     **Note:**  If a HAWQ master directory exists on the host when you configure the HAWQ standby master, then the standby master may be initialized with stale data. Rename any existing master directory before you proceed.
+   ```shell
+   $ mv /data/hawq/master /data/hawq/master-old
+   ```
+
+   **Note:**  If a HAWQ master directory exists on the host when you configure the HAWQ standby master, then the standby master may be initialized with stale data. Rename any existing master directory before you proceed.
+   
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Click **HAWQ** in the list of installed services.
 3.  Select **Service Actions > Add HAWQ Standby Master** to start the Add HAWQ Standby Master Wizard.
@@ -360,11 +362,11 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
 
     You can then use a command similar to the following to change the password on all hosts that are listed in the file:
 
-    ```
-    hawq ssh -f hawq_hosts 'echo "gpadmin:newpassword" | /usr/sbin/chpasswd'
+    ```shell
+    $ hawq ssh -f hawq_hosts 'echo "gpadmin:newpassword" | /usr/sbin/chpasswd'
     ```    
 
-2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps:
+2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) Then perform the following steps:
     1. Click **HAWQ** in the list of installed services.
     2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script.
     3. Click **Save** to save the updated configuration.

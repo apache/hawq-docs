@@ -27,7 +27,7 @@ When using the template for initializing a new cluster configuration, replace th
 -   Before initializing HAWQ, set the `$GPHOME` environment variable to point to the location of your HAWQ installation on the master host and exchange SSH keys between all host addresses in the array, using `hawq ssh-exkeys`.
 -   To initialize and start a HAWQ cluster, enter the following command on the master host:
 
-    ```
+    ```shell
     $ hawq init cluster
     ```
 
@@ -42,7 +42,7 @@ You can also use the `hawq start master` command to start only the HAWQ master, 
 
 -   Run `hawq start cluster` on the master host to start a HAWQ system:
 
-    ```
+    ```shell
     $ hawq start cluster
     ```
 
@@ -59,7 +59,7 @@ The `hawq restart` command with the appropriate cluster or node command can stop
 
 -   To restart a HAWQ cluster, enter the following command on the master host:
 
-    ```
+    ```shell
     $ hawq restart cluster
     ```
 
@@ -72,7 +72,7 @@ The `hawq stop` command can reload changes to the pg\_hba.conf configuration fil
 
 -   Reload configuration file changes without shutting down the system using the `hawq stop` command:
 
-    ```
+    ```shell
     $ hawq stop --reload
     ```
 
@@ -85,18 +85,18 @@ Maintenance mode is a superuser-only mode that should only be used when required
 
 1.  Run `hawq start` using the master -m option:
 
-    ```
+    ```shell
     $ hawq start master -m
     ```
 
 2.  Connect to the master in maintenance mode to do catalog maintenance. For example:
 
-    ```
+    ```shell
     $ PGOPTIONS='-c gp_session_role=utility' psql template1
     ```
 3.  After completing your administrative tasks, restart the master in production mode. 
 
-    ```
+    ```shell
     $ hawq restart master 
     ```
 
@@ -111,13 +111,13 @@ The `hawq stop cluster` command stops or restarts your HAWQ system and always ru
 
 -   To stop HAWQ:
 
-    ```
+    ```shell
     $ hawq stop cluster
     ```
 
 -   To stop HAWQ in fast mode:
 
-    ```
+    ```shell
     $ hawq stop cluster -M fast
     ```
 
@@ -130,26 +130,27 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
 
 -   Stop the entire HAWQ system by stopping the cluster on the master host. 
 
-    ```
+    ```shell
     $ hawq stop cluster
     ```
 
 -   To stop segments and kill any running queries without causing data loss or inconsistency issues, use `fast` or `immediate` mode on the cluster:
 
-    ```
+    ```shell
     $ hawq stop cluster -M fast
     $ hawq stop cluster -M immediate
     ```
 
 -   Use `hawq stop master` to stop the master only. If you cannot stop the master due to running transactions, try using fast shutdown. If fast shutdown does not work, use immediate shutdown. Use immediate shutdown with caution, as it will result in a crash-recovery run when the system is restarted.
-	```
+
+	```shell
     $ hawq stop master -M fast
     $ hawq stop master -M immediate
     ```
 
 -   When stopping a segment or all segments, you can use the default mode of smart mode. Using fast or immediate mode on segments will have no effect since segments are stateless.
 
-    ```
+    ```shell
     $ hawq stop segment
     $ hawq stop allsegments
     ```
