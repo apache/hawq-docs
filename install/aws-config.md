@@ -118,7 +118,7 @@ For more detailed information about EC2 Elastic IP addresses and how to use them
   
 - Virtual devices for instance store volumes for HAWQ EC2 instance store instances are named `ephemeralN` (where *N* is between 0 and 23). CentOS instance store block device names appear as `/dev/xvdletter` (where *letter* is a lower case letter of the alphabet).
   
-   Two EC2 instance types configured with instance store showed acceptable performance.  These include the `d2.8xlarge` instance type configured with four `raid0` volumes of 6 disks each, and the `i2.8xlarge`  instance type configured with two `raid0` volumes of 4 disks.  
+    Two EC2 instance types configured with instance store showed acceptable performance.  These include the `d2.8xlarge` instance type configured with four `raid0` volumes of 6 disks each, and the `i2.8xlarge`  instance type configured with two `raid0` volumes of 4 disks.  
   
 - To allow access to/from a source external to a VPC, include and open the following ports in the appropriate security group.
 
@@ -131,13 +131,13 @@ For more detailed information about EC2 Elastic IP addresses and how to use them
  
 - A *placement group* is a logical grouping of instances within a single Availability Zone. Using placement groups enables applications to participate in a low-latency, 10 Gbps network. Placement groups are recommended for applications that benefit from low network latency, high network throughput, or both. 
  
-   Placement Groups could be used to separate EC2 instances from other instances. While configuring instances in different placement groups can improve performance, it may create a configuration where an instance in a placement group cannot be replaced.  
+    Placement Groups could be used to separate EC2 instances from other instances. While configuring instances in different placement groups can improve performance, it may create a configuration where an instance in a placement group cannot be replaced.  
    
-   See [Amazon Placement Group](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html) for additional information.
+    See [Amazon Placement Group](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html) for additional information.
 
 - Amazon EC2 provides enhanced networking capabilities on some instance types by using single root I/O virtualization (SR-IOV). Enabling enhanced networking on your instance results in higher performance (packets per second), lower latency, and lower jitter.
-  
-   To enable enhanced networking on your Red Hat and CentOS RHEL/CentOS instance, you must ensure that the kernel has the `ixgbevf` module version 2.14.2 or higher installed and that the `sriovNetSupport` attribute is set.  
+
+    To enable enhanced networking on your Red Hat and CentOS RHEL/CentOS instance, you must ensure that the kernel has the `ixgbevf` module version 2.14.2 or higher installed and that the `sriovNetSupport` attribute is set.  
   
 ##Additional References<a id="topic_hgz_zwy_bv"></a>
 
