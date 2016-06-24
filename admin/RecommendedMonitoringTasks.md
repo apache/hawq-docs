@@ -20,8 +20,7 @@ It is not necessary to implement all of these suggestions in every cluster; use 
     <td><p>List segments that are currently down. If any rows are returned, this should generate a warning or alert.</p>
     <p>Recommended frequency: run every 5 to 10 minutes</p><p>Severity: IMPORTANT</p></td>
     <td>Run the following query in the `postgres` database:
-    <pre>code>
-SELECT * FROM gp_segment_configuration
+    <pre><code>SELECT * FROM gp_segment_configuration
 WHERE status <> 'u';
 </code></pre>
   </td>
