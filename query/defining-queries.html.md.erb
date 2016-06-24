@@ -43,7 +43,7 @@ SQL constructs such as functions and operators are expressions but do not follow
 
 A column reference has the form:
 
-``` pre
+```
 correlation.columnname
 ```
 
@@ -53,7 +53,7 @@ Here, `correlation` is the name of a table (possibly qualified with a schema nam
 
 Positional parameters are arguments to SQL statements or functions that you reference by their positions in a series of arguments. For example, `$1` refers to the first argument, `$2` to the second argument, and so on. The values of positional parameters are set from arguments external to the SQL statement or supplied when SQL functions are invoked. Some client libraries support specifying data values separately from the SQL command, in which case parameters refer to the out-of-line data values. A parameter reference has the form:
 
-``` pre
+```
 $number
 ```
 
@@ -105,7 +105,7 @@ $1[10:42]
 
 If an expression yields a value of a composite type (row type), you can extract a specific field of the row as follows:
 
-``` pre
+```
 expression.fieldname
 ```
 
@@ -178,7 +178,7 @@ For example, `count(*)` yields the total number of input rows, `count(f1)` yield
 
 You can specify a condition with the `FILTER` clause to limit the input rows to the aggregate function. For example:
 
-``` pre
+``` sql
 SELECT count(*) FILTER (WHERE gender='F') FROM employee;
 ```
 
@@ -188,11 +188,11 @@ For predefined aggregate functions, see [Built-in Functions and Operators](funct
 
 HAWQ provides the `MEDIAN` aggregate function, which returns the fiftieth percentile of the `PERCENTILE_CONT` result and special aggregate expressions for inverse distribution functions as follows:
 
-``` pre
+``` sql
 PERCENTILE_CONT(_percentage_) WITHIN GROUP (ORDER BY _expression_)
 ```
 
-``` pre
+``` sql
 PERCENTILE_DISC(_percentage_) WITHIN GROUP (ORDER BY _expression_)
 ```
 
@@ -221,7 +221,7 @@ window_function ( [expression [, ...]] ) OVER ( window_specification )
 
 Where *`window_function`* is one of the functions listed in [Window functions](functions-operators.html#topic30__in164369), *`expression`* is any value expression that does not contain a window expression, and *`window_specification`* is:
 
-``` pre
+```
 [window_name]
 [PARTITION BY expression [, ...]]
 [[ORDER BY expression [ASC | DESC | USING operator] [, ...]
@@ -234,7 +234,7 @@ Where *`window_function`* is one of the functions listed in [Window functions](f
 
 and where `window_frame_bound` can be one of:
 
-``` pre
+``` 
     UNBOUNDED PRECEDING
     expression PRECEDING
     CURRENT ROW
@@ -244,7 +244,7 @@ and where `window_frame_bound` can be one of:
 
 A window expression can appear only in the select list of a `SELECT` command. For example:
 
-``` pre
+``` sql
 SELECT count(*) OVER(PARTITION BY customer_id), * FROM sales;
 ```
 
@@ -261,7 +261,7 @@ The `OVER` clause differentiates window functions from other aggregate or report
 
 A type cast specifies a conversion from one data type to another. HAWQ accepts two equivalent syntaxes for type casts:
 
-``` pre
+``` sql
 CAST ( expression AS type )
 expression::type
 ```
@@ -284,14 +284,14 @@ A correlated subquery (CSQ) is a `SELECT` query with a `WHERE` clause or target 
 
 #### Example 1 – Scalar correlated subquery<a id="topic18"></a>
 
-``` pre
+``` sql
 SELECT * FROM t1 WHERE t1.x 
-            > (SELECT MAX(t2.x) FROM t2 WHERE t2.y = t1.y);
+> (SELECT MAX(t2.x) FROM t2 WHERE t2.y = t1.y);
 ```
 
 #### Example 2 – Correlated EXISTS subquery<a id="topic19"></a>
 
-``` pre
+``` sql
 SELECT * FROM t1 WHERE 
 EXISTS (SELECT 1 FROM t2 WHERE t2.x = t1.x);
 ```
@@ -307,9 +307,9 @@ The following examples illustrate how to rewrite some of these types of queries 
 
 *Original Query*
 
-``` pre
+``` sql
 SELECT T1.a,
-      (SELECT COUNT(DISTINCT T2.z) FROM t2 WHERE t1.x = t2.y) dt2 
+(SELECT COUNT(DISTINCT T2.z) FROM t2 WHERE t1.x = t2.y) dt2 
 FROM t1;
 ```
 
@@ -317,20 +317,20 @@ Rewrite this query to perform an inner join with `t1` first and then perform a l
 
 *Rewritten Query*
 
-``` pre
+``` sql
 SELECT t1.a, dt2 FROM t1 
-       LEFT JOIN 
-        (SELECT t2.y AS csq_y, COUNT(DISTINCT t2.z) AS dt2 
-              FROM t1, t2 WHERE t1.x = t2.y 
-              GROUP BY t1.x) 
-       ON (t1.x = csq_y);
+LEFT JOIN 
+(SELECT t2.y AS csq_y, COUNT(DISTINCT t2.z) AS dt2 
+FROM t1, t2 WHERE t1.x = t2.y 
+GROUP BY t1.x) 
+ON (t1.x = csq_y);
 ```
 
 ### Example 4 - CSQs connected by OR Clauses<a id="topic21"></a>
 
 *Original Query*
 
-``` pre
+``` sql
 SELECT * FROM t1 
 WHERE 
 x > (SELECT COUNT(*) FROM t2 WHERE t1.x = t2.x) 
@@ -341,7 +341,7 @@ Rewrite this query to separate it into two parts with a union on the `OR` condit
 
 *Rewritten Query*
 
-``` pre
+``` sql
 SELECT * FROM t1 
 WHERE x > (SELECT count(*) FROM t2 WHERE t1.x = t2.x) 
 UNION 
@@ -362,8 +362,11 @@ Based on the distribution of data, HAWQ automatically parallelizes table functio
 
 An array constructor is an expression that builds an array value from values for its member elements. A simple array constructor consists of the key word `ARRAY`, a left square bracket `[`, one or more expressions separated by commas for the array element values, and a right square bracket `]`. For example,
 
-``` pre
+``` sql
 SELECT ARRAY[1,2,3+4];
+```
+
+```
   array
 ---------
  {1,2,7}
@@ -373,9 +376,12 @@ The array element type is the common type of its member expressions, determined 
 
 You can build multidimensional array values by nesting array constructors. In the inner constructors, you can omit the keyword `ARRAY`. For example, the following two `SELECT` statements produce the same result:
 
-``` pre
+``` sql
 SELECT ARRAY[ARRAY[1,2], ARRAY[3,4]];
 SELECT ARRAY[[1,2],[3,4]];
+```
+
+```
      array
 ---------------
  {{1,2},{3,4}}
@@ -385,11 +391,14 @@ Since multidimensional arrays must be rectangular, inner constructors at the sam
 
 Multidimensional array constructor elements are not limited to a sub-`ARRAY` construct; they are anything that produces an array of the proper kind. For example:
 
-``` pre
+``` sql
 CREATE TABLE arr(f1 int[], f2 int[]);
 INSERT INTO arr VALUES (ARRAY[[1,2],[3,4]], 
 ARRAY[[5,6],[7,8]]);
 SELECT ARRAY[f1, f2, '{{9,10},{11,12}}'::int[]] FROM arr;
+```
+
+```
                      array
 ------------------------------------------------
  {{{1,2},{3,4}},{{5,6},{7,8}},{{9,10},{11,12}}}
@@ -397,8 +406,11 @@ SELECT ARRAY[f1, f2, '{{9,10},{11,12}}'::int[]] FROM arr;
 
 You can construct an array from the results of a subquery. Write the array constructor with the keyword `ARRAY` followed by a subquery in parentheses. For example:
 
-``` pre
+``` sql
 SELECT ARRAY(SELECT oid FROM pg_proc WHERE proname LIKE 'bytea%');
+```
+
+```
                           ?column?
 -----------------------------------------------------------
  {2011,1954,1948,1952,1951,1244,1950,2005,1949,1953,2006,31}
@@ -410,20 +422,20 @@ The subquery must return a single column. The resulting one-dimensional array ha
 
 A row constructor is an expression that builds a row value (also called a composite value) from values for its member fields. For example,
 
-``` pre
+``` sql
 SELECT ROW(1,2.5,'this is a test');
 ```
 
 Row constructors have the syntax `rowvalue.*`, which expands to a list of the elements of the row value, as when you use the syntax `.*` at the top level of a `SELECT` list. For example, if table `t` has columns `f1` and `f2`, the following queries are the same:
 
-``` pre
+``` sql
 SELECT ROW(t.*, 42) FROM t;
 SELECT ROW(t.f1, t.f2, 42) FROM t;
 ```
 
 By default, the value created by a `ROW` expression has an anonymous record type. If necessary, it can be cast to a named composite type — either the row type of a table, or a composite type created with `CREATE TYPE AS`. To avoid ambiguity, you can explicitly cast the value if necessary. For example:
 
-``` pre
+``` sql
 CREATE TABLE mytable(f1 int, f2 float, f3 text);
 CREATE FUNCTION getf1(mytable) RETURNS int AS 'SELECT $1.f1' 
 LANGUAGE SQL;
@@ -431,11 +443,17 @@ LANGUAGE SQL;
 
 In the following query, you do not need to cast the value because there is only one `getf1()` function and therefore no ambiguity:
 
-``` pre
+``` sql
 SELECT getf1(ROW(1,2.5,'this is a test'));
+```
+
+```
  getf1
 -------
      1
+```
+
+``` sql
 CREATE TYPE myrowtype AS (f1 int, f2 text, f3 numeric);
 CREATE FUNCTION getf1(myrowtype) RETURNS int AS 'SELECT 
 $1.f1' LANGUAGE SQL;
@@ -443,18 +461,28 @@ $1.f1' LANGUAGE SQL;
 
 Now we need a cast to indicate which function to call:
 
-``` pre
+``` sql
 SELECT getf1(ROW(1,2.5,'this is a test'));
+```
+```
 ERROR:  function getf1(record) is not unique
 ```
 
-``` pre
+``` sql
 SELECT getf1(ROW(1,2.5,'this is a test')::mytable);
+```
+
+```
  getf1
 -------
      1
-SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS 
-myrowtype));
+```
+
+``` sql
+SELECT getf1(CAST(ROW(11,'this is a test',2.5) AS myrowtype));
+```
+
+```
  getf1
 -------
     11
@@ -468,13 +496,13 @@ The order of evaluation of subexpressions is undefined. The inputs of an operato
 
 If you can determine the result of an expression by evaluating only some parts of the expression, then other subexpressions might not be evaluated at all. For example, in the following expression:
 
-``` pre
+``` sql
 SELECT true OR somefunc();
 ```
 
 `somefunc()` would probably not be called at all. The same is true in the following expression:
 
-``` pre
+``` sql
 SELECT somefunc() OR true;
 ```
 
@@ -484,13 +512,13 @@ Do not use functions with side effects as part of complex expressions, especiall
 
 Use a `CASE` construct to force evaluation order. The following example is an untrustworthy way to avoid division by zero in a `WHERE` clause:
 
-``` pre
+``` sql
 SELECT ... WHERE x <> 0 AND y/x > 1.5;
 ```
 
 The following example shows a trustworthy evaluation order:
 
-``` pre
+``` sql
 SELECT ... WHERE CASE WHEN x <> 0 THEN y/x > 1.5 ELSE false 
 END;
 ```

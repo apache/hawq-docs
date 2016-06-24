@@ -48,7 +48,7 @@ This example shows the differences for a query that is run against partitioned t
 
 This `CREATE TABLE` statement creates a table with single level partitions:
 
-``` pre
+``` sql
 CREATE TABLE sales (trans_id int, date date, 
     amount decimal(9,2), region text)
    DISTRIBUTED BY (trans_id)
@@ -56,25 +56,25 @@ CREATE TABLE sales (trans_id int, date date,
       (START (date '2011­01­01') 
        INCLUSIVE END (date '2012­01­01') 
        EXCLUSIVE EVERY (INTERVAL '1 month'),
-   DEFAULT PARTITION outlying_dates );
+   DEFAULT PARTITION outlying_dates);
 ```
 
 This query against the table is supported by GPORCA and does not generate errors in the log file:
 
-``` pre
+``` sql
 select * from sales;
 ```
 
 The `EXPLAIN` plan output lists only the number of selected partitions.
 
-``` pre
+``` 
  ->  Partition Selector for sales (dynamic scan id: 1)  (cost=10.00..100.00 rows=50 width=4)
        Partitions selected:  13 (out of 13)
 ```
 
 Output from the log file indicates that GPORCA attempted to optimize the query:
 
-``` pre
+``` 
 2015-05-06 15:00:53.293451 PDT,"gpadmin","test",p2809,th297883424,"[local]",
   ,2015-05-06 14:59:21 PDT,1120,con6,cmd1,seg-1,,dx3,x1120,sx1,"LOG","00000"
   ,"statement: explain select * from sales
@@ -89,14 +89,16 @@ Output from the log file indicates that GPORCA attempted to optimize the query:
 
 The following cube query is not supported by GPORCA.
 
-``` pre
+``` sql
 select count(*) from foo group by cube(a,b);
 ```
 
 The following EXPLAIN plan output includes the message "Feature not supported by GPORCA."
 
-``` pre
+``` sql
 postgres=# explain select count(*) from foo group by cube(a,b);
+```
+```
 LOG:  statement: explain select count(*) from foo group by cube(a,b);
 LOG:  2016-04-14 16:26:15:487935 PDT,THD000,NOTICE,"Feature not supported by the GPORCA: Cube",
 LOG:  Planner produced plan :0

@@ -21,7 +21,7 @@ For information about the minidump file, see the server configuration parameter 
 
 When the `EXPLAIN ANALYZE` command uses GPORCA, the `EXPLAIN` plan shows only the number of partitions that are being eliminated. The scanned partitions are not shown. To show name of the scanned partitions in the segment logs set the server configuration parameter `gp_log_dynamic_partition_pruning` to `on`. This example `SET` command enables the parameter.
 
-``` pre
+``` sql
 SET gp_log_dynamic_partition_pruning = on;
 ```
 
