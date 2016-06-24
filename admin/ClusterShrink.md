@@ -19,20 +19,20 @@ The following is a typical procedure to remove a node from a running HAWQ cluste
 
 1.  Login as gpadmin to the node that you wish to remove and source `greenplum_path.sh`.
 
-    ```
+    ```shell
     $ su - gpadmin
     $ source /usr/local/hawq/greenplum_path.sh
     ```
 
 2.  Make sure that there are no running QEs on the segment. Execute the following command to check for running QE processes:
 
-    ```
-    $ ps -ef | grep postres
+    ```shell
+    $ ps -ef | grep postgres
     ```
 
     In the output, look for processes that contain SQL commands such as INSERT or SELECT. For example:
 
-    ```
+    ```shell
     [gpadmin@rhel64-3 ~]$ ps -ef | grep postgres
     gpadmin 3000 2999 0 Mar21 ? 00:00:08 postgres: port 40000, logger process
     gpadmin 3003 2999 0 Mar21 ? 00:00:03 postgres: port 40000, stats collector process
@@ -44,12 +44,12 @@ The following is a typical procedure to remove a node from a running HAWQ cluste
 
 3.  Stop hawq on this segment by executing the following command:
 
-    ```
+    ```shell
     $ hawq stop segment
     ```
 
 4.  On HAWQ master, remove the hostname of the segment from the `slaves` file. Then sync the `slaves` file to all nodes in the cluster by executing the following command:
 
-    ```
+    ```shell
     $ hawq scp -f hostfile slaves =:  $GPHOME/etc/slaves
     ```

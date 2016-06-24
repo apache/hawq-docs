@@ -5,6 +5,7 @@ title: Troubleshooting
 This chapter describes how to resolve common problems and errors that occur in a HAWQ system.
 
 
+
 ## Query Performance Issues<a id="topic_dwd_rnx_15"></a>
 
 **Problem:** Query performance is slow.
@@ -78,6 +79,14 @@ Check `pg_log` files for more memory usage details on session and QE processes. 
 Some software and projects have virtualized network interfaces that use auto-configured IP addresses. This may cause some HAWQ segments to obtain identical IP addresses. The resource manager's fault tolerance service component will only recognize one of the segments with an identical IP address.
 
 **Solution:** Change your network's configuration to disallow identical IP addresses before starting up the HAWQ cluster.
+
+## Investigating Segments Marked As Down <a id="investigatedownsegment"></a>
+
+**Problem:** The [HAWQ fault tolerance service (FTS)](../admin/FaultTolerance.html) has marked a segment as down in the [gp_segment_configuration](../reference/catalog/gp_segment_configuration.html) catalog table.
+
+**Cause:**  FTS marks a segment as down when a segment encounters a critical error. For example, a temporary directory on the segment fails due to a hardware error. Other causes might include network or communication errors, resource manager errors, or simply a heartbeat timeout. The segment reports critical failures to the HAWQ master through a heartbeat report.
+
+**Solution:** The actions required for recovering a segment varies depending upon the reason. In some cases, the segment is only marked as down temporarily until the heartbeat interval can recheck the segment's status. To investigate the reason why the segment was marked down, check the gp_configuration_history catalog table for a corresponding reason. See [Viewing the Current Status of a Segment](../admin/FaultTolerance.html#view_segment_status) for a description of various reasons that the fault tolerance service may mark a segment as down.
 
 ## Handling Segment Resource Fragmentation<a id="topic_mdz_q2y_15"></a>
 

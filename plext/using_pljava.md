@@ -4,8 +4,6 @@ title: Using PL/Java
 
 This section contains an overview of the HAWQ PL/Java language. 
 
-<p class="note"><b>Note:</b> For details on how to install PL/Java, see <a href="/hdb/install/install_pljava.html">Installing PL/Java</a>.</p>
-
 
 ## About PL/Java <a id="aboutpljava"></a>
 

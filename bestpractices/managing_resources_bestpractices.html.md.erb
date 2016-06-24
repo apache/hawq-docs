@@ -26,7 +26,7 @@ Design and configure your resource queues depending on the operational needs of 
 
 A high number of concurrent HAWQ queries can cause HDFS to overload, especially when querying partitioned tables. Use the `ACTIVE_STATEMENTS` attribute to restrict statement concurrency in a resource queue. For example, if an external application is executing more than 100 concurrent queries, then limiting the number of active statements in your resource queues will instruct the HAWQ resource manager to restrict actual statement concurrency within HAWQ. You might want to modify an existing resource queue as follows:
 
-``` pre
+```sql
 ALTER RESOURCE QUEUE sampleque1 WITH (ACTIVE_STATEMENTS=20);
 ```
 
@@ -38,7 +38,7 @@ Another best practice is using resource queues to isolate your workloads. Worklo
 
 In this scenario, let us assign `role1` for the production workload and `role2` for production software verification. We can define the following resource queues under the same parent queue `dept1que`, which is the resource queue defined for the entire department.
 
-``` pre
+```sql
 CREATE RESOURCE QUEUE dept1product
    WITH (PARENT='dept1que', MEMORY_LIMIT_CLUSTER=90%, CORE_LIMIT_CLUSTER=90%, RESOURCE_OVERCOMMIT_FACTOR=2);
 
@@ -60,7 +60,7 @@ Even when the resource queues are busy, you can alter the resource queue's memor
 
 In addition, you can use resource queues to isolate workloads for different departments or different applications. For example, we can use the following DDL statements to define 3 departments, and an administrator can arbitrarily redistribute resource allocations among the departments according to usage requirements.
 
-``` pre
+```sql
 ALTER RESOURCE QUEUE pg_default 
    WITH (MEMORY_LIMIT_CLUSTER=10%, CORE_LIMIT_CLUSTER=10%);
 
@@ -84,13 +84,13 @@ CREATE RESOURCE QUEUE dept12
 
 You can use resource queues to improve query performance on Parquet tables with a large page size. This type of query requires a large memory quota for virtual segments. Therefore, if one role mostly queries Parquet tables with a large page size, alter the resource queue associated with the role to increase its virtual segment resource quota. For example:
 
-``` pre
+```sql
 ALTER RESOURCE queue1 WITH (VSEG_RESOURCE_QUOTA='mem:2gb');
 ```
 
 If there are only occasional queries on Parquet tables with a large page size, use a statement level specification instead of altering the resource queue. For example:
 
-``` pre
+```sql
 SET HAWQ_RM_STMT_NVSEG=10;
 SET HAWQ_RM_STMT_VSEG_MEMORY='2gb';
 query1;
@@ -101,13 +101,13 @@ SET HAWQ_RM_STMT_NVSEG=0;
 
 In general, the HAWQ resource manager attempts to provide as much resources as possible to the current query to achieve high query performance. When a query is complex and large, however, the associated resource queue can use up many virtual segments causing other resource queues (and queries) to starve. Under these circumstances,you should enable nvseg limits on the resource queue associated with the large query. For example, you can specify that all queries can use no more than 200 virtual segments. To achieve this limit, alter the resource queue as follows
 
-``` pre
+``` sql
 ALTER RESOURCE QUEUE queue1 WITH (NVSEG_UPPER_LIMIT=200);
 ```
 
 If we hope to make this limit vary according to the dynamic cluster size, we can use the following statement.
 
-``` pre
+```sql
 ALTER RESOURCE QUEUE queue1 WITH (NVSEG_UPPER_LIMIT_PERSEG=10);
 ```
 
@@ -121,7 +121,7 @@ In order to raise the minimum number of virtual segments available for a query s
 
 -   *Option 1*: Alter the resource queue to reduce concurrency. This is the recommended way to achieve the goal. For example:
 
-    ``` pre
+    ```sql
     ALTER RESOURCE QUEUE queue1 WITH (ACTIVE_STATEMENTS=10);
     ```
 
@@ -129,13 +129,13 @@ In order to raise the minimum number of virtual segments available for a query s
 
 -   *Option 2*: Alter the nvseg limits of the resource queue. For example:
 
-    ``` pre
+    ```sql
     ALTER RESOURCE QUEUE queue1 WITH (NVSEG_LOWER_LIMIT=50);
     ```
 
     or, alternately:
 
-    ``` pre
+    ```sql
     ALTER RESOURCE QUEUE queue1 WITH (NVSEG_LOWER_LIMIT_PERSEG=5);
     ```
 

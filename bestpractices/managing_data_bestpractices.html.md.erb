@@ -13,7 +13,7 @@ To obtain the best performance during data loading, observe the following best p
 -   Typically the number of concurrent connections to a NameNode should not exceed 50,000, and the number of open files per DataNode should not exceed 10,000. If you exceed these limits, NameNode and DataNode may become overloaded and slow.
 -   If the number of partitions in a table is large, the recommended way to load data into the partitioned table is to load the data partition by partition. For example, you can use query such as the following to load data into only one partition:
 
-    ``` pre
+    ```sql
     insert into target_partitioned_table_part1 select * from source_table where filter
     ```
 

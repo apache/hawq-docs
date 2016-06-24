@@ -30,7 +30,7 @@ To move the filespace location to a HA-enabled HDFS location, you must move the 
 
 1.  Use the following SQL query to gather information about the filespace located on HDFS:
 
-    ```
+    ```sql
     SELECT
         fsname, fsedbid, fselocation
     FROM
@@ -78,13 +78,13 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
 
 1. If you defined a custom port for HAWQ master, export the PGPORT environment variable. For example:
 
-	```
+	```shell
 	export PGPORT=9000
 	```
 
 1. If you have not configured it already, export the MASTER\_DATA\_DIRECTORY environment variable.
  
-	```
+	```bash
 	export MASTER_DATA_DIRECTORY=/path/to/master/catalog
 	```
 
@@ -92,28 +92,28 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
 
 1.  Disconnect all workload connections. Check the active connection with:
 
-    ```
-    psql -p ${PGPORT} -c "select * from pg_catalog.pg_stat_activity" -d template1
+    ```shell
+    $ psql -p ${PGPORT} -c "select * from pg_catalog.pg_stat_activity" -d template1
     ```
     where $\{PGPORT\} corresponds to the port number you optionally customized for HAWQ master. 
     
 
 2.  Issue a checkpoint: 
 
-    ```
-    psql -p ${PGPORT} -c "checkpoint" -d template1
+    ```shell
+    $ psql -p ${PGPORT} -c "checkpoint" -d template1
     ```
 
 3.  Shut down the HAWQ cluster: 
 
-    ```
-    hawq stop cluster -a -M fast
+    ```shell
+    $ hawq stop cluster -a -M fast
     ```
 
 4.  Copy the master data directory to a backup location:
 
-    ```
-    $cp -r ${MASTER_DATA_DIRECTORY} /catalog/backup/location
+    ```shell
+    $ cp -r ${MASTER_DATA_DIRECTORY} /catalog/backup/location
     ```
 	The master data directory contains the catalog. Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. Make sure you back this directory up.
 
@@ -125,13 +125,13 @@ HAWQ provides the command line tool, `hawq filespace`, to move the location of t
 
 1. If you defined a custom port for HAWQ master, export the PGPORT environment variable. For example:
 
-	```
+	```shell
 	export PGPORT=9000
 	```
 1. Run the following command to move a file space location:
 
-	```
-	hawq filespace --movefilespace default --location=hdfs://hdfs-cluster/hawq_new_filespace
+	```shell
+	$ hawq filespace --movefilespace default --location=hdfs://hdfs-cluster/hawq_new_filespace
 	```
 
 	If the target original filespace is not the default filespace, replace `default` in command line with the actual filespace name. Replace `hdfs://hdfs-cluster/hawq_new_filespace` with new filespace location.
@@ -152,7 +152,7 @@ For command-line administrators:
 
 1. Edit the ` ${GPHOME}/etc/hdfs-client.xml` file on each segment and add the following NameNode properties:
 
-    ```
+    ```xml
     <property>
      <name>dfs.ha.namenodes.hdpcluster</name>
      <value>nn1,nn2</value>
@@ -192,7 +192,7 @@ For command-line administrators:
 
 2.  Change the following parameter in the `$GPHOME/etc/hawq-site.xml` file:
 
-    ```
+    ```xml
     <property>
         <name>hawq_dfs_url</name>
         <value>hdpcluster/hawq_default</value>
@@ -206,7 +206,7 @@ For command-line administrators:
 
 3. Copy the updated configuration files to all nodes in the cluster (as listed in `hawq_hosts`).
 
-	```
+	```shell
 	$ hawq scp -f hawq_hosts hdfs-client.xml hawq-site.xml =:$GPHOME/etc/
 	```
 
@@ -214,13 +214,13 @@ For command-line administrators:
 
 1. Restart the HAWQ cluster:
 
-	```
+	```shell
 	$ hawq start cluster -a
 	```
 
 1. Moving the filespace to a new location renders the standby master catalog invalid. To update the standby, resync the standby master.  On the active master, run the following command to ensure that the standby master's catalog is resynced with the active master.
 
-	```
+	```shell
 	$ hawq init standby -n -M fast
 
 	```
