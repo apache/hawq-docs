@@ -2,13 +2,13 @@
 title: Amazon EC2 Configuration
 ---
 
-Amazon Elastic Compute Cloud (EC2) is a service provided by Amazon Web Services (AWS).  You can install and configure HAWQ on virtual servers provided by the Amazon EC2 web service. The following overview information describes some considerations when installing HAWQ in an Amazon EC2 environment.
+Amazon Elastic Compute Cloud (EC2) is a service provided by Amazon Web Services (AWS).  You can install and configure HAWQ on virtual servers provided by Amazon EC2. The following overview information describes some considerations when installing HAWQ in an Amazon EC2 environment.
 
 ## About Amazon EC2 <a id="topic_wqv_yfx_y5"></a>
 
 Amazon EC2 can be used to launch as many virtual servers as you need, configure security and networking, and manage storage. An EC2 *instance* is a virtual server in the AWS cloud virtual computing environment.
 
-EC2 instances are managed by AWS. AWS isolates your EC2 instances from other users in a virtual private cloud (VPC) and lets you control access to the instances. You can configure instance features such as operating system, network connectivity (network ports and protocols, IP address access), access to the Internet, and size and type of disk storage.
+EC2 instances are managed by AWS. AWS isolates your EC2 instances from other users in a virtual private cloud (VPC) and lets you control access to the instances. You can configure instance features such as operating system, network connectivity (network ports and protocols, IP addresses), access to the Internet, and size and type of disk storage.
 
 When you launch an instance, you use a preconfigured template known as an Amazon Machine Image (AMI). The AMI packages the bits you need for your server, including the operating system and additional software components. Amazon provides several AMIs from which to choose, or you can create and customize your own. 
 
@@ -16,7 +16,7 @@ You launch instances in an Availability Zone of an AWS region. An *Availability 
 
 For information about Amazon EC2, see the [EC2 User Guide](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html).
 
-### Launching Instances<a id="topic_nhk_df4_2v"></a>
+## Launching Instances<a id="topic_nhk_df4_2v"></a>
 
 Use the *Amazon EC2 Console* to launch instances and configure, start, stop, and terminate (delete) virtual servers. When you launch an instance, you select, configure, and view the following features in the EC2 Console.
 
@@ -25,14 +25,13 @@ Use the *Amazon EC2 Console* to launch instances and configure, start, stop, and
 | Amazon Machine Image (AMI) | A template that contains a software configuration including the operating system, application server, and applications that best suit your purpose.  |
 | Instance Type | Varying combinations of CPU, memory, default storage, and networking capacity. |
 | Instance Details | Information about starting, running, and stopping EC2 instances, including number of instances of the same AMI, network information, and EC2 VPC and subnet membership.|
-| Storage Configuration | Tools to adjust and add storage. For example, you can change the size of root volume or add volumes.|
+| Storage Configuration | Tools to adjust and add storage. For example, you can change the size of the root volume or add volumes.|
 | Tagging | An optional (set of) case-sensitive key-value pairs  used for managing or organizing a large number of EC2 resources.|
 | Security Groups | A set of firewall rules that control the network traffic for instances. For external access to an instance with `ssh`, you will create a rule that enables `ssh` for inbound network traffic. |
 
 
-
 ### Select AMI Type
-When Configuring a HAWQ virtual instance, select an AMI that runs a supported operating system. Refer to the Release Notes for the HAWQ version that you are installing for a list of supported OS platforms. 
+When Configuring a HAWQ virtual instance, select an AMI that runs an operating system supported by HAWQ. Refer to the Release Notes for the HAWQ version that you are installing for a list of supported OS platforms. 
 
 **Note**: To create and launch a customized AMI, see [About Amazon Machine Images](#topic_n3y_4gx_y5)
 
@@ -46,69 +45,47 @@ The HAWQ cluster instances should be in a single VPC and subnet. Instances are a
 
 The internal IP address is used for HAWQ communication between hosts. You can also use the internal IP address to access an instance from another instance within the EC2 VPC. For information about configuring launched instances to communicate with each other, see [Working with EC2 Instances](#topic_mj4_524_2v).
 
-Both a public IP address for the instance and an Internet gateway configured for the EC2 VPC are required to access the instance from an external source and for the instance to access the Internet. (Internet access is required when installing Linux packages.) When you launch a set of instances, you can enable or disable the automatic assignment of public IP addresses when the instances are started.
+Both a public IP address for the instance and an Internet gateway configured for the EC2 VPC are required to access the instance from an external source and for the instance to access the Internet. (Internet access is required when installing Linux packages.) 
 
-If automatic assignment of public IP addresses is enabled, instances are always assigned a public IP address when started. If automatic assignment of public IP addresses is disabled, you can temporarily associate an [EC2 Elastic IP Address](#task_yd3_sd4_2v) with the instance.
+When you launch a set of instances, you can enable or disable the automatic assignment of public IP addresses when the instances are started.  If automatic assignment of public IP addresses is enabled, instances are always assigned a public IP address when started. If automatic assignment of public IP addresses is disabled, you can temporarily associate an [EC2 Elastic IP Address](#task_yd3_sd4_2v) with the instance.
 
 To control whether a public IP address is assigned when launching an instance, see the Amazon documentation on [Subnet Public IP Addressing](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-ip-addressing.html#subnet-public-ip).
 
 
 ###Configure Storage<a id="hawq_storage"></a>
-**HAWQ** supports either EC2 instance store or Amazon EBS storage in production environments.
+**HAWQ** supports either EC2 instance store or Amazon EBS in production environments.
 
- - EC2 *instance store* provides temporary block-level storage. This storage is located on disks that are physically attached to the host computer. Powering off the instance causes data loss when using instance store storage. Soft reboots preserve instance store data. EC2 instance store storage can provide higher and more consistent I/O performance.
- - *EBS* provides block level storage volumes with long-term persistence. HAWQ supported configurations using EBS storage must be a RAID of Amazon EBS volumes mounted with the XFS file system. All other file systems are explicitly not supported.  
+ - EC2 *instance store* provides temporary block-level storage. This storage is located on disks that are physically attached to the host computer. Powering off the instance causes data loss when using instance store storage. Soft reboots preserve instance store data. EC2 instance store can provide higher and more consistent I/O performance.
+ 
+    For additional information about EC2 instance store, see [Amazon EC2 Instance Store](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html).
+ - *EBS* provides block level storage volumes with long-term persistence. HAWQ supported configurations using EBS must be a RAID of Amazon EBS volumes mounted with the XFS file system. All other file systems are explicitly not supported.  
 There are several classes of EBS. For HAWQ, select an EBS volume type of `gp2` or `io1`. See the Amazon [Block Device Mapping](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/block-device-mapping-concepts.html) documentation for more information.
 
-For more information about HAWQ requirements on the Amazon storage types, see the [Notes](#topic_kwk_ygx_y5).
+For additional information about HAWQ requirements on the Amazon storage types, see the [Notes](#topic_kwk_ygx_y5).
 
 
 
 ##Working with EC2 Instances <a id="topic_mj4_524_2v"></a>
 
-After launching an EC2 instance, connect to and configure the instance. The  *Instances* page of the EC2 Console lists the running instances and network access information. If the instance does not have a public IP address, you can create an Elastic IP and associate it with the instance. See [About Elastic IP Addresses](#task_yd3_sd4_2v) below.
+After launching an EC2 instance, connect to and configure the instance. The  *Instances* page of the EC2 Console lists the running instances and their associated network access information. If the instance does not have a public IP address, you can create an Elastic IP address and associate it with the instance. See [About Elastic IP Addresses](#task_yd3_sd4_2v) below.
 
-To access EC2 instances, AWS uses public-key cryptography to secure the login information for your instance. A Linux instance has no password; you use a key pair to log in to your instance securely. You identify the name of the key pair when you launch your instance, then provide the private key when you log in using SSH. See the Amazon [EC2 Key Pairs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) documentation for additional information.
+To access EC2 instances, AWS uses public-key cryptography to secure the login information for your instance. A Linux instance has no password; you use a key pair to log in to your instance securely. You identify the name of the key pair when you launch your instance, and then provide the private key when you log in using SSH. See the Amazon [EC2 Key Pairs](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html) documentation for more detailed information.
 
-A key pair consists of a *public key* that AWS stores, and a *private key file* that you maintain. Together, they allow you to connect to your instance securely.  The private keyfile name typically has a `.pem` suffix.
+A key pair for an EC2 instance consists of a *public key* that AWS stores, and a *private key file* that you maintain. Together, they allow you to connect to your instance securely.  The private key file name typically has a `.pem` suffix.
 
-This example logs into an into EC2 instance from an external location with the private key file `my-test.pem` as user `ec2-user`. (`ec2-user` is the default user for some Linux AMI templates.) This example assumes that the instance is configured with the public IP address `52.36.113.82` and that the `pem` file resides in the current directory and is the private key file associated with the EC2 instance.
+This example logs into an into EC2 instance from an external location with the private key file `my-test.pem` as user `ec2-user`. (`ec2-user` is the default user for some Linux AMI templates.) In this example, the instance is configured with the public IP address `52.36.113.82` and the private key file resides in the current directory.
 
 ```shell
 $ ssh -i my-test.pem ec2-user@52.36.113.82
 ```
-XXVERIFY_START - not complete, and possibly incorrect 
-
-You can also copy the `pem` file to your EC2 instances. After the key file is installed on all HAWQ hosts you can use database utilities such as `??` and `??` that access multiple HAWQ Database hosts.
-
-This `scp` command copies the file to the `.ssh` directory of the `ec2-user`.
-
-```shell
-$ scp ~/.ssh/id_rsa ec2-user@52.8.142.86:~/.ssh/id_rsa
-```
-
-This example logs into an EC2 instance using the `id_rsa` file.
-
-```shell
-$ ssh ec2-user@52.36.113.82
-```
-
-XXVERIFY_END
 
 Before installing HAWQ, set up the EC2 instances as you would local host server machines. Configure the host operating system, configure host network information (for example, update the `/etc/hosts` file), set operating system parameters, and install operating system packages. For information about how to prepare your operating system environment for HAWQ, see [Select HAWQ Host Machines](../install/select-hosts.html).
 
-These example commands use `yum` to install the Linux packages `ed`, `unzip`, and `vim`.
+These example commands log in to an EC2 instance and use `yum` to install the `ed`, `unzip`, and `vim` Linux packages on the instance.
 
 ```shell
-$ sudo yum install -y ed
-$ sudo yum install -y unzip
-$ sudo yum install -y vim
-```
-
-This example uploads a product tar file to the `ec2-user` home directory of the EC2 instance at IP address 52.36.113.82.
-
-```shell
-$ scp -i my-test.pem product.tar.gz ec2-user@52.36.113.82:~/.
+$ ssh -i my-test.pem ec2-user@52.36.113.82
+ec2inst$ sudo yum install -y ed unzip vim
 ```
 
 ##About Amazon Machine Images (AMIs)   <a id="topic_n3y_4gx_y5"></a>
@@ -124,7 +101,7 @@ For information about AMIs, see the Amazon [AMI User Guide](http://docs.aws.amaz
 
 ## About Amazon Elastic IP Addresses<a id="task_yd3_sd4_2v"></a>
 
-An EC2 Elastic IP address is a public IP address that you can allocate (create) for your account. You can associate it to and disassociate it from instances as you require; it's allocated to your account until you choose to release it.
+An EC2 Elastic IP address is a public IP address that you can create for your account. You can associate it to and disassociate it from instances as you require; it's allocated to your account until you choose to release it.
 
 Your default VPC is configured with an Internet gateway. When you allocate an EC2 Elastic IP address, AWS configures the VPC to allow internet access to the IP address using the gateway.
 
@@ -132,34 +109,35 @@ To enable an instance in your VPC to communicate with the Internet, it must have
 
 To ensure that your instances can communicate with the Internet, you must also attach an Internet gateway to your EC2 VPC. For information about VPC Internet Gateways, see the Amazon [Internet Gateways] (http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Internet_Gateway.html) documentation.
 
-For additional information about EC2 Elastic IP addresses and how to use them, see the [Amazon Elastic IP Address](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
+For more detailed information about EC2 Elastic IP addresses and how to use them, see the [Amazon Elastic IP Address](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html).
 
 
 ##Notes<a id="topic_kwk_ygx_y5"></a>
 
-- When you use Amazon EBS for HAWQ storage, supported storage configurations include a RAID of Amazon EBS volumes mounted with the XFS file system.  
-For information about EBS storage, see the Amazon [EBS](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html) documentation. The Amazon EC2 documentation for configuring the Amazon EBS volumes and managing storage and file systems used with EC2 instances may also be helpful.
+- Supported HAWQ storage configurations with Amazon EBS include a RAID of Amazon EBS volumes mounted with the XFS file system.  
   
-- For an EC2 instance with instance store storage, the virtual devices for instance store volumes are `ephemeralN` (where *N* is between 0 and 23). On an instance running CentOS, the instance store block device names appear as `/dev/xvdletter` (where *letter* is a lower case letter of the alphabet).  
-Two EC2 instance types configured with instance store showed acceptable performance.  These include the `d2.8xlarge` instance type configured with four `raid0` volumes of 6 disks each, and the `i2.8xlarge`  instance type configured with two `raid0` volumes of 4 disks.  
-For additional information about EC2 instance store, see [Amazon EC2 Instance Store](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html).
+- Virtual devices for instance store volumes for HAWQ EC2 instance store instances are named `ephemeralN` (where *N* is between 0 and 23). CentOS instance store block device names appear as `/dev/xvdletter` (where *letter* is a lower case letter of the alphabet).
   
-- To allow access from a source external to a VPC, include and open the following ports in the appropriate security group.  ??TODO any additional ports in a HAWQ environment??
+   Two EC2 instance types configured with instance store showed acceptable performance.  These include the `d2.8xlarge` instance type configured with four `raid0` volumes of 6 disks each, and the `i2.8xlarge`  instance type configured with two `raid0` volumes of 4 disks.  
+  
+- To allow access to/from a source external to a VPC, include and open the following ports in the appropriate security group.
 
-    | Port  | Used by this Application |
+    | Port  | Application |
     |-------|-------------------------------------|
-    | 22    | ssh - connect to host with ssh |
-    | ??    | ?? |  
+    | 22    | ssh - secure connect to other hosts |
+    | 8080  | Ambari - HAWQ admin/config web console |  
 
-- You can configure a non-default VPC with an internet gateway and allocate an Elastic IP address for the VPC. AWS will automatically configure the Elastic IP for internet access. For information about EC2 internet gateways, see the Amazon [Internet Gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Internet_Gateway.html) documentation.
+- You can configure a non-default VPC with an internet gateway and allocate an Elastic IP address for the VPC. AWS will automatically configure the Elastic IP for internet access.
  
-- A *placement group* is a logical grouping of instances within a single Availability Zone. Using placement groups enables applications to participate in a low-latency, 10 Gbps network. Placement groups are recommended for applications that benefit from low network latency, high network throughput, or both.  
-Placement Groups could be used to separate EC2 instances from other instances. While configuring instances in different placement groups can improve performance, it may create a configuration where an instance in a placement group cannot be replaced.  
-See [Amazon Placement Group](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html) for additional information.
+- A *placement group* is a logical grouping of instances within a single Availability Zone. Using placement groups enables applications to participate in a low-latency, 10 Gbps network. Placement groups are recommended for applications that benefit from low network latency, high network throughput, or both. 
+ 
+   Placement Groups could be used to separate EC2 instances from other instances. While configuring instances in different placement groups can improve performance, it may create a configuration where an instance in a placement group cannot be replaced.  
+   
+   See [Amazon Placement Group](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/placement-groups.html) for additional information.
 
-- Amazon EC2 provides enhanced networking capabilities on some instance types by using single root I/O virtualization (SR-IOV). Enabling enhanced networking on your instance results in higher performance (packets per second), lower latency, and lower jitter.  
-To enable enhanced networking on your Red Hat and CentOS RHEL/CentOS instance, you must ensure that the kernel has the `ixgbevf` module version 2.14.2 or higher installed and that the `sriovNetSupport` attribute is set.  
-For information about EC2 enhanced networking, see [Amazon Enhanced Networking on Linux](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html).
+- Amazon EC2 provides enhanced networking capabilities on some instance types by using single root I/O virtualization (SR-IOV). Enabling enhanced networking on your instance results in higher performance (packets per second), lower latency, and lower jitter.
+  
+   To enable enhanced networking on your Red Hat and CentOS RHEL/CentOS instance, you must ensure that the kernel has the `ixgbevf` module version 2.14.2 or higher installed and that the `sriovNetSupport` attribute is set.  
   
 ##Additional References<a id="topic_hgz_zwy_bv"></a>
 
