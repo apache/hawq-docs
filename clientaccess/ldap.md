@@ -18,29 +18,29 @@ To use LDAP authentication, the HAWQ master host must be configured as an LDAP c
 To enable STARTTLS with the TLS protocol, specify the `ldaptls` parameter with the value 1. The default port is 389. In this example, the authentication method parameters include the `ldaptls` parameter.
 
 ```
-ldap ldapserver=myldap.com ldaptls=1 ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
+ldap ldapserver=ldap.example.com ldaptls=1 ldapprefix="uid=" ldapsuffix=",ou=People,dc=example,dc=com"
 ```
 
 Specify a non-default port, with the `ldapport` parameter. In this example, the authentication method includes the `ldaptls` parameter and the `ldapport` parameter to specify the port 550.
 
 ```
-ldap ldapserver=myldap.com ldaptls=1 ldapport=500 ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
+ldap ldapserver=ldap.example.com ldaptls=1 ldapport=500 ldapprefix="uid=" ldapsuffix=",ou=People,dc=example,dc=com"
 ```
 
 ## Enabling LDAP Authentication with a Secure Connection and TLS/SSL
 
 To enable a secure connection with TLS/SSL, add `ldaps://` as the prefix to the LDAP server name specified in the `ldapserver` parameter. The default port is 636.
 
-This example `ldapserver` parameter specifies a secure connection and the TLS/SSL protocol for the LDAP server `myldap.com`.
+This example `ldapserver` parameter specifies a secure connection and the TLS/SSL protocol for the LDAP server `ldap.example.com`.
 
 ```
-ldapserver=ldaps://myldap.com
+ldapserver=ldaps://ldap.example.com
 ```
 
 To specify a non-default port, add a colon \(:\) and the port number after the LDAP server name. This example `ldapserver` parameter includes the `ldaps://` prefix and the non-default port 550.
 
 ```
-ldapserver=ldaps://myldap.com:550
+ldapserver=ldaps://ldap.example.com:550
 ```
 
 ### Notes
@@ -56,7 +56,7 @@ Enabling encrypted communication for LDAP authentication only encrypts the commu
 
 If you have a system-wide OpenLDAP system and logins are configured to use LDAP with TLS or SSL in the pg_hba.conf file, logins may fail with the following message:
 
-```
+```shell
 could not start LDAP TLS session: error code '-11'
 ```
 
@@ -79,8 +79,8 @@ the HAWQ master and standby master hosts. This example uses the directory `/etc/
 
     ```
     SASL_NOCANON on
-    URI ldaps://ldapA.pivotal.priv ldaps://ldapB.pivotal.priv ldaps://ldapC.pivotal.priv
-    BASE dc=pivotal,dc=priv
+    URI ldaps://ldapA.example.priv ldaps://ldapB.example.priv ldaps://ldapC.example.priv
+    BASE dc=example,dc=priv
     TLS_CACERTDIR /etc/pki/tls/certs
     TLS_CACERT /etc/pki/tls/certs/<ca-certificate-file>
     ```
@@ -89,7 +89,7 @@ the HAWQ master and standby master hosts. This example uses the directory `/etc/
 
 4. As the gpadmin user, edit `/usr/local/hawq/greenplum_path.sh` and add the following line.
 
-    ```
+    ```bash
     export LDAPCONF=/etc/openldap/ldap.conf
     ```
 
@@ -100,17 +100,17 @@ These are example entries from an pg\_hba.conf file.
 This example specifies LDAP authentication with no encryption between HAWQ and the LDAP server.
 
 ```
-host all plainuser 0.0.0.0/0 ldap ldapserver=myldap.com ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
+host all plainuser 0.0.0.0/0 ldap ldapserver=ldap.example.com ldapprefix="uid=" ldapsuffix=",ou=People,dc=example,dc=com"
 ```
 
 This example specifies LDAP authentication with the STARTTLS and TLS protocol between HAWQ and the LDAP server.
 
 ```
-host all tlsuser 0.0.0.0/0 ldap ldapserver=myldap.com ldaptls=1 ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
+host all tlsuser 0.0.0.0/0 ldap ldapserver=ldap.example.com ldaptls=1 ldapprefix="uid=" ldapsuffix=",ou=People,dc=example,dc=com"
 ```
 
 This example specifies LDAP authentication with a secure connection and TLS/SSL protocol between HAWQ and the LDAP server.
 
 ```
-host all ldapsuser 0.0.0.0/0 ldap ldapserver=ldaps://myldap.com ldapprefix="uid=" ldapsuffix=",ou=People,dc=pivotal,dc=com"
+host all ldapsuser 0.0.0.0/0 ldap ldapserver=ldaps://ldap.example.com ldapprefix="uid=" ldapsuffix=",ou=People,dc=example,dc=com"
 ```
