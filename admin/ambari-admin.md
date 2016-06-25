@@ -39,7 +39,7 @@ If you are using YARN to manage HAWQ resources and need to move a YARN resource 
 
 Use one of the following procedures to move YARN resource manager component from one node to another when HAWQ is configured to use YARN as the global resource manager (`hawq_global_rm_type` is `yarn`). The exact procedure you should use depends on whether you have enabled high availability in YARN.
 
-<p class="note"><b>Note:</b> In a Kerberos-secured environment, you must update <code>hadoop.proxyuser.yarn.hosts</code> property in HDFS <code>core-site.xml</code> before running a service check. The values should be set to the current YARN Resource Managers.</p>
+**Note:** In a Kerberos-secured environment, you must update <code>hadoop.proxyuser.yarn.hosts</code> property in HDFS <code>core-site.xml</code> before running a service check. The values should be set to the current YARN Resource Managers.</p>
 
 ### Procedure (Single YARN Resource Manager)
 
@@ -191,10 +191,10 @@ There are several recommendations to keep in mind when modifying the size of you
     |\> 170 and <= 256|2 \* \#nodes|
     |\> 256 and <= 512|1 \* \#nodes|
     |\> 512|512|
-18.  **Note:** Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
+18.  Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
     <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, and applies the new configuration.
     >**Note:** Do not use the **Restart All** service action to complete this step.
-19.  **Note:** Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
+19.  Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
     <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 20.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
 21.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
@@ -206,34 +206,27 @@ There are several recommendations to keep in mind when modifying the size of you
 If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
 
 1.  Update your configuration to use the new `default_hash_table_bucket_number` value that you calculated:
-
-    1. SSH into the HAWQ master host as the `gpadmin` user:
-
+  1. SSH into the HAWQ master host as the `gpadmin` user:
     ```shell
     $ ssh gpadmin@<HAWQ_MASTER_HOST>
     ```
-    2. Source the `greenplum_path.sh` file to update the shell environment:
-
+   2. Source the `greenplum_path.sh` file to update the shell environment:
     ```shell
     $ source /usr/local/hawq/greenplum_path.sh
     ```
-    3. Verify the current value of `default_hash_table_bucket_number`:
-
+   3. Verify the current value of `default_hash_table_bucket_number`:
     ```shell
     $ hawq config -s default_hash_table_bucket_number
     ```
-    4. Update `default_hash_table_bucket_number` to the new value that you calculated:
-
+   4. Update `default_hash_table_bucket_number` to the new value that you calculated:
     ```shell
     $ hawq config -c default_hash_table_bucket_number -v <new_value>
     ```
-    5. Reload the configuration without restarting the cluster:
-
+   5. Reload the configuration without restarting the cluster:
     ```shell
     $ hawq stop cluster -u
     ```
-    6. Verify that the `default_hash_table_bucket_number` value was updated:
-
+   6. Verify that the `default_hash_table_bucket_number` value was updated:
     ```shell
     $ hawq config -s default_hash_table_bucket_number
     ```
@@ -282,9 +275,9 @@ The HAWQ Standby Master serves as a backup of the HAWQ Master host, and is an im
 1.  Select an existing host in the cluster to run the HAWQ standby master. You cannot run the standby master on the same host that runs the HAWQ master. Also, do not run a standby master on the node where you deployed the Ambari server; if the Ambari postgres instance is running on the same port as the HAWQ master posgres instance, initialization fails and will leave the cluster in an inconsistent state.
 1. Login to the HAWQ host that you chose to run the standby master and determine if there is an existing HAWQ master directory (for example, `/data/hawq/master`) on the machine. If the directory exists, rename the directory. For example:
 
-   ```shell
-   $ mv /data/hawq/master /data/hawq/master-old
-   ```
+    ```shell
+    $ mv /data/hawq/master /data/hawq/master-old
+    ```
 
    **Note:**  If a HAWQ master directory exists on the host when you configure the HAWQ standby master, then the standby master may be initialized with stale data. Rename any existing master directory before you proceed.
    
