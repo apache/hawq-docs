@@ -32,7 +32,7 @@ GPORCA includes these enhancements for queries against partitioned tables:
 
 This example `CREATE TABLE` command creates a range partitioned table.
 
-``` pre
+``` sql
 CREATE TABLE sales(order_id int, item_id int, amount numeric(15,2), 
       date date, yr_qtr int)
    range partitioned by yr_qtr;
@@ -42,25 +42,25 @@ GPORCA improves on these types of queries against partitioned tables:
 
 -   Full table scan. Partitions are not enumerated in plans.
 
-    ``` pre
+    ``` sql
     SELECT * FROM sales;
     ```
 
 -   Query with a constant filter predicate. Partition elimination is performed.
 
-    ``` pre
+    ``` sql
     SELECT * FROM sales WHERE yr_qtr = 201201;
     ```
 
 -   Range selection. Partition elimination is performed.
 
-    ``` pre
+    ``` sql
     SELECT * FROM sales WHERE yr_qtr BETWEEN 201301 AND 201404 ;
     ```
 
 -   Joins involving partitioned tables. In this example, the partitioned dimension table *date\_dim* is joined with fact table *catalog\_sales*:
 
-    ``` pre
+    ``` sql
     SELECT * FROM catalog_sales
        WHERE date_id IN (SELECT id FROM date_dim WHERE month=12);
     ```
@@ -69,14 +69,14 @@ GPORCA improves on these types of queries against partitioned tables:
 
 GPORCA handles subqueries more efficiently. A subquery is query that is nested inside an outer query block. In the following query, the `SELECT` in the `WHERE` clause is a subquery.
 
-``` pre
+``` sql
 SELECT * FROM part
   WHERE price > (SELECT avg(price) FROM part);
 ```
 
 GPORCA also handles queries that contain a correlated subquery (CSQ) more efficiently. A correlated subquery is a subquery that uses values from the outer query. In the following query, the `price` column is used in both the outer query and the subquery.
 
-``` pre
+``` sql
 SELECT * FROM part p1
   WHERE price > (SELECT avg(price) FROM part p2 
   WHERE  p2.brand = p1.brand);
@@ -86,7 +86,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 
 -   CSQ in the `SELECT` list.
 
-    ``` pre
+    ``` sql
     SELECT *,
      (SELECT min(price) FROM part p2 WHERE p1.brand = p2.brand)
      AS foo
@@ -95,7 +95,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 
 -   CSQ in disjunctive (`OR`) filters.
 
-    ``` pre
+    ``` sql
     SELECT FROM part p1 WHERE p_size > 40 OR 
           p_retailprice > 
           (SELECT avg(p_retailprice) 
@@ -105,7 +105,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 
 -   Nested CSQ with skip level correlations
 
-    ``` pre
+    ``` sql
     SELECT * FROM part p1 WHERE p1.p_partkey 
     IN (SELECT p_partkey FROM part p2 WHERE p2.p_retailprice = 
          (SELECT min(p_retailprice)
@@ -118,7 +118,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 
 -   CSQ with aggregate and inequality. This example contains a CSQ with an inequality.
 
-    ``` pre
+    ``` sql
     SELECT * FROM part p1 WHERE p1.p_retailprice =
      (SELECT min(p_retailprice) FROM part p2 WHERE p2.p_brand <> p1.p_brand);
     ```
@@ -127,7 +127,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 
 -   CSQ that must return one row.
 
-    ``` pre
+    ``` sql
     SELECT p_partkey, 
       (SELECT p_retailprice FROM part p2 WHERE p2.p_brand = p1.p_brand )
     FROM part p1;
@@ -137,7 +137,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 
 GPORCA handles queries that contain the `WITH` clause. The `WITH` clause, also known as a common table expression (CTE), generates temporary tables that exist only for the query. This example query contains a CTE.
 
-``` pre
+``` sql
 WITH v AS (SELECT a, sum(b) as s FROM T where c < 10 GROUP BY a)
   SELECT *FROM  v AS v1 ,  v AS v2
   WHERE v1.a <> v2.a AND v1.s < v2.s;
@@ -145,7 +145,7 @@ WITH v AS (SELECT a, sum(b) as s FROM T where c < 10 GROUP BY a)
 
 As part of query optimization, GPORCA can push down predicates into a CTE. For example query, GPORCA pushes the equality predicates to the CTE.
 
-``` pre
+``` sql
 WITH v AS (SELECT a, sum(b) as s FROM T GROUP BY a)
   SELECT *
   FROM v as v1, v as v2, v as v3
@@ -160,7 +160,7 @@ GPORCA can handle these types of CTEs:
 
 -   CTE that defines one or multiple tables. In this query, the CTE defines two tables.
 
-    ``` pre
+    ``` sql
     WITH cte1 AS (SELECT a, sum(b) as s FROM T 
                    where c < 10 GROUP BY a),
           cte2 AS (SELECT a, s FROM cte1 where s > 1000)
@@ -171,7 +171,7 @@ GPORCA can handle these types of CTEs:
 
 -   Nested CTEs.
 
-    ``` pre
+    ``` sql
     WITH v AS (WITH w AS (SELECT a, b FROM foo 
                           WHERE b < 5) 
                SELECT w1.a, w2.b 
@@ -193,7 +193,7 @@ GPORCA contains enhancements for DML operations such as `INSERT`.
 
     This example plan shows the `Assert` operator.
 
-    ``` pre
+    ```
     QUERY PLAN
     ------------------------------------------------------------
      Insert  (cost=0.00..4.61 rows=3 width=8)

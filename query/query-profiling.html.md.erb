@@ -10,13 +10,13 @@ The query optimizer uses data statistics maintained by the database to choose a 
 
 View the plan for a given query with the `EXPLAIN` command. `EXPLAIN` shows the query optimizer's estimated cost for the query plan. For example:
 
-``` pre
+``` sql
 EXPLAIN SELECT * FROM names WHERE id=22;
 ```
 
 `EXPLAIN ANALYZE` runs the statement in addition to displaying its plan. This is useful for determining how close the optimizer's estimates are to reality. For example:
 
-``` pre
+``` sql
 EXPLAIN ANALYZE SELECT * FROM names WHERE id=22;
 ```
 
@@ -24,7 +24,7 @@ EXPLAIN ANALYZE SELECT * FROM names WHERE id=22;
 
 When the `EXPLAIN ANALYZE` command uses GPORCA, the `EXPLAIN` plan shows only the number of partitions that are being eliminated. The scanned partitions are not shown. To show name of the scanned partitions in the segment logs set the server configuration parameter `gp_log_dynamic_partition_pruning` to `on`. This example `SET` command enables the parameter.
 
-``` pre
+``` sql
 SET gp_log_dynamic_partition_pruning = on;
 ```
 
@@ -51,8 +51,11 @@ Note the following:
 
 The following example describes how to read an `EXPLAIN` query plan for a query:
 
-``` pre
+``` sql
 EXPLAIN SELECT * FROM names WHERE name = 'Joelle';
+```
+
+```
                                  QUERY PLAN
 -----------------------------------------------------------------------------
  Gather Motion 2:1  (slice1; segments: 2)  (cost=0.00..1.01 rows=1 width=11)
@@ -92,8 +95,11 @@ The estimated startup cost for this plan is `00.00` (no cost) and a total cost o
 
 This example describes how to read an `EXPLAIN ANALYZE` query plan using the same query. The `bold` parts of the plan show actual timing and rows returned for each plan node, as well as memory and time statistics for the whole query.
 
-``` pre
+``` sql
 EXPLAIN ANALYZE SELECT * FROM names WHERE name = 'Joelle';
+```
+
+```
                                  QUERY PLAN
 ------------------------------------------------------------------------
  Gather Motion 1:1  (slice1; segments: 1)  (cost=0.00..1.01 rows=1 width=7)

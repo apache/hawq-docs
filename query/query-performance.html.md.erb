@@ -46,10 +46,12 @@ A query is not executing as quickly as you would expect. Here is how to investig
 
 For visibility into query performance, use the EXPLAIN ANALYZE to obtain data locality statistics. For example:
 
-``` pre
+``` sql
 postgres=# create table test (i int);
 postgres=# insert into test values(2);
 postgres=# explain analyze select * from test;
+```
+```
 QUERY PLAN
 .......
 Data locality statistics:

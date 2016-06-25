@@ -73,13 +73,13 @@ Optionally, a user-defined type can provide binary input and output routines. Bi
 
 Once we have written the I/O functions and compiled them into a shared library, we can define the complex type in SQL. First we declare it as a shell type:
 
-``` pre
+``` sql
 CREATE TYPE complex;
 ```
 
 This serves as a placeholder that allows us to reference the type while defining its I/O functions. Now we can define the I/O functions:
 
-``` pre
+``` sql
 CREATE FUNCTION complex_in(cstring)
     RETURNS complex
     AS 'filename'
@@ -103,7 +103,7 @@ CREATE FUNCTION complex_send(complex)
 
 Finally, we can provide the full definition of the data type:
 
-``` pre
+``` sql
 CREATE TYPE complex (
    internallength = 16, 
    input = complex_in,
@@ -128,7 +128,7 @@ HAWQ supports left unary, right unary, and binary operators. Operators can be o
 
 Here is an example of creating an operator for adding two complex numbers. We assume we've already created the definition of type complex. First we need a function that does the work, then we can define the operator:
 
-``` pre
+``` sql
 CREATE FUNCTION complex_add(complex, complex)
     RETURNS complex
     AS 'filename', 'complex_add'
@@ -144,9 +144,11 @@ CREATE OPERATOR + (
 
 Now we could execute a query like this:
 
-``` pre
+``` sql
 SELECT (a + b) AS c FROM test_complex;
+```
 
+```
         c
 -----------------
  (5.2,6.05)

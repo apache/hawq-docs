@@ -26,7 +26,7 @@ To achieve maximum parallelism during query execution, HAWQ divides the work of 
 
 For example, consider the following simple query involving a join between two tables:
 
-``` pre
+``` sql
 SELECT customer, amount
 FROM sales JOIN customer USING (cust_id)
 WHERE dateCol = '04-30-2008';
