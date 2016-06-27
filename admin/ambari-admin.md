@@ -384,11 +384,6 @@ Ambari can show Alerts and also configure certain status conditions.
 
 2. To view the current Alert settings, click on the name of the alert.
 
-
- To check PXF alerts, click the **Groups** dropdown button at the top left of the Alerts page. Select **PXF Default** in the dropdown menu. Alerts are displayed on the PXF Status page.
-
-2. To view the current Alert settings, click on the name of the alert.
-
 The Alerts you can view are as follows:
 
 * **HAWQ Master Process**:
