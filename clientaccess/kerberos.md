@@ -229,7 +229,7 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
 3.  Modify the HAWQ file `pg_hba.conf` to enable Kerberos support. Then restart HAWQ \(`hawq restart -a`\). For example, adding the following line to `pg_hba.conf` adds GSSAPI and Kerberos support. The value for `krb_realm` is the Kerberos realm that is used for authentication to HAWQ.
 
     ```
-    host all all 0.0.0.0/0 gss include_realm=0 krb_realm=KRB.PIVOTAL.COM
+    host all all 0.0.0.0/0 gss include_realm=0 krb_realm=KRB.EXAMPLE.COM
     ```
 
     For information about the `pg_hba.conf` file, see [The pg\_hba.conf file](http://www.postgresql.org/docs/8.4/static/auth-pg-hba-conf.html) in the Postgres documentation.
