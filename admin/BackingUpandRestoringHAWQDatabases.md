@@ -274,7 +274,7 @@ Also, make sure that your `CREATE EXTERNAL TABLE` definition has the correct hos
 
 ## Using PXF <a id="usingpxf"></a>
 
-Pivotal Extension Framework \(PXF\) is an extensible framework that allows HAWQ to query external system data. The details of how to install and use PXF can be found in *PXF Installation and Administration*.
+HAWQ Extension Framework \(PXF\) is an extensible framework that allows HAWQ to query external system data. The details of how to install and use PXF can be found in [Working with PXF and External Data](../pxf/PivotalExtensionFrameworkPXF.html).
 
 ### Using PXF to Back Up the tpch Database <a id="usingpxftobackupthetpchdatabase"></a>
 
