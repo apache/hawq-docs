@@ -65,7 +65,7 @@ A date range partitioned table uses a single `date` or `timestamp` column as the
 
 You can have HAWQ automatically generate partitions by giving a `START` value, an `END` value, and an `EVERY` clause that defines the partition increment value. By default, `START` values are always inclusive and `END` values are always exclusive. For example:
 
-```
+``` sql
 CREATE TABLE sales (id int, date date, amt decimal(10,2))
 DISTRIBUTED BY (id)
 PARTITION BY RANGE (date)
@@ -76,23 +76,23 @@ PARTITION BY RANGE (date)
 
 You can also declare and name each partition individually. For example:
 
-```
+``` sql
 CREATE TABLE sales (id int, date date, amt decimal(10,2))
 DISTRIBUTED BY (id)
 PARTITION BY RANGE (date)
 ( PARTITION Jan08 START (date '2008-01-01') INCLUSIVE ,
-  PARTITION Feb08 START (date '2008-02-01') INCLUSIVE ,
-  PARTITION Mar08 START (date '2008-03-01') INCLUSIVE ,
-  PARTITION Apr08 START (date '2008-04-01') INCLUSIVE ,
-  PARTITION May08 START (date '2008-05-01') INCLUSIVE ,
-  PARTITION Jun08 START (date '2008-06-01') INCLUSIVE ,
-  PARTITION Jul08 START (date '2008-07-01') INCLUSIVE ,
-  PARTITION Aug08 START (date '2008-08-01') INCLUSIVE ,
-  PARTITION Sep08 START (date '2008-09-01') INCLUSIVE ,
-  PARTITION Oct08 START (date '2008-10-01') INCLUSIVE ,
-  PARTITION Nov08 START (date '2008-11-01') INCLUSIVE ,
-  PARTITION Dec08 START (date '2008-12-01') INCLUSIVE
-                  END (date '2009-01-01') EXCLUSIVE );
+  PARTITION Feb08 START (date '2008-02-01') INCLUSIVE ,
+  PARTITION Mar08 START (date '2008-03-01') INCLUSIVE ,
+  PARTITION Apr08 START (date '2008-04-01') INCLUSIVE ,
+  PARTITION May08 START (date '2008-05-01') INCLUSIVE ,
+  PARTITION Jun08 START (date '2008-06-01') INCLUSIVE ,
+  PARTITION Jul08 START (date '2008-07-01') INCLUSIVE ,
+  PARTITION Aug08 START (date '2008-08-01') INCLUSIVE ,
+  PARTITION Sep08 START (date '2008-09-01') INCLUSIVE ,
+  PARTITION Oct08 START (date '2008-10-01') INCLUSIVE ,
+  PARTITION Nov08 START (date '2008-11-01') INCLUSIVE ,
+  PARTITION Dec08 START (date '2008-12-01') INCLUSIVE
+                  END (date '2009-01-01') EXCLUSIVE );
 ```
 
 You do not have to declare an `END` value for each partition, only the last one. In this example, `Jan08` ends where `Feb08` starts.
@@ -101,13 +101,13 @@ You do not have to declare an `END` value for each partition, only the last one.
 
 A numeric range partitioned table uses a single numeric data type column as the partition key column. For example:
 
-```
+``` sql
 CREATE TABLE rank (id int, rank int, year int, gender
 char(1), count int)
 DISTRIBUTED BY (id)
 PARTITION BY RANGE (year)
 ( START (2001) END (2008) EVERY (1),
-  DEFAULT PARTITION extra );
+  DEFAULT PARTITION extra );
 ```
 
 For more information about default partitions, see [Adding a Default Partition](#topic80).
@@ -116,14 +116,14 @@ For more information about default partitions, see [Adding a Default Partition](
 
 A list partitioned table can use any data type column that allows equality comparisons as its partition key column. A list partition can also have a multi-column \(composite\) partition key, whereas a range partition only allows a single column as the partition key. For list partitions, you must declare a partition specification for every partition \(list value\) you want to create. For example:
 
-```
+``` sql
 CREATE TABLE rank (id int, rank int, year int, gender
 char(1), count int )
 DISTRIBUTED BY (id)
 PARTITION BY LIST (gender)
 ( PARTITION girls VALUES ('F'),
   PARTITION boys VALUES ('M'),
-  DEFAULT PARTITION other );
+  DEFAULT PARTITION other );
 ```
 
 **Note:** The HAWQ legacy optimizer allows list partitions with multi-column \(composite\) partition keys. A range partition only allows a single column as the partition key. GPORCA does not support composite keys.
@@ -134,7 +134,7 @@ For more information about default partitions, see [Adding a Default Partition](
 
 You can create a multi-level partition design with subpartitions of partitions. Using a *subpartition template* ensures that every partition has the same subpartition design, including partitions that you add later. For example, the following SQL creates the two-level partition design shown in [Figure 1](#im207241):
 
-```
+``` sql
 CREATE TABLE sales (trans_id int, date date, amount
 decimal(9,2), region text)
 DISTRIBUTED BY (trans_id)
@@ -142,34 +142,34 @@ PARTITION BY RANGE (date)
 SUBPARTITION BY LIST (region)
 SUBPARTITION TEMPLATE
 ( SUBPARTITION usa VALUES ('usa'),
-  SUBPARTITION asia VALUES ('asia'),
-  SUBPARTITION europe VALUES ('europe'),
-  DEFAULT SUBPARTITION other_regions)
-  (START (date '2011-01-01') INCLUSIVE
-   END (date '2012-01-01') EXCLUSIVE
-   EVERY (INTERVAL '1 month'),
-   DEFAULT PARTITION outlying_dates );
+  SUBPARTITION asia VALUES ('asia'),
+  SUBPARTITION europe VALUES ('europe'),
+  DEFAULT SUBPARTITION other_regions)
+  (START (date '2011-01-01') INCLUSIVE
+   END (date '2012-01-01') EXCLUSIVE
+   EVERY (INTERVAL '1 month'),
+   DEFAULT PARTITION outlying_dates );
 ```
 
 The following example shows a three-level partition design where the `sales` table is partitioned by `year`, then `month`, then `region`. The `SUBPARTITION TEMPLATE` clauses ensure that each yearly partition has the same subpartition structure. The example declares a `DEFAULT` partition at each level of the hierarchy.
 
-```
+``` sql
 CREATE TABLE p3_sales (id int, year int, month int, day int,
 region text)
 DISTRIBUTED BY (id)
 PARTITION BY RANGE (year)
-    SUBPARTITION BY RANGE (month)
-       SUBPARTITION TEMPLATE (
-        START (1) END (13) EVERY (1),
-        DEFAULT SUBPARTITION other_months )
-           SUBPARTITION BY LIST (region)
-             SUBPARTITION TEMPLATE (
-               SUBPARTITION usa VALUES ('usa'),
-               SUBPARTITION europe VALUES ('europe'),
-               SUBPARTITION asia VALUES ('asia'),
-               DEFAULT SUBPARTITION other_regions )
+    SUBPARTITION BY RANGE (month)
+      SUBPARTITION TEMPLATE (
+        START (1) END (13) EVERY (1),
+        DEFAULT SUBPARTITION other_months )
+           SUBPARTITION BY LIST (region)
+             SUBPARTITION TEMPLATE (
+               SUBPARTITION usa VALUES ('usa'),
+               SUBPARTITION europe VALUES ('europe'),
+               SUBPARTITION asia VALUES ('asia'),
+               DEFAULT SUBPARTITION other_regions )
 ( START (2002) END (2012) EVERY (1),
-  DEFAULT PARTITION outlying_years );
+  DEFAULT PARTITION outlying_years );
 ```
 
 **CAUTION**:
@@ -180,7 +180,7 @@ When you create multi-level partitions on ranges, it is easy to create a large n
 
 Tables can be partitioned only at creation. If you have a table that you want to partition, you must create a partitioned table, load the data from the original table into the new table, drop the original table, and rename the partitioned table with the original table's name. You must also re-grant any table permissions. For example:
 
-```
+``` sql
 CREATE TABLE sales2 (LIKE sales)
 PARTITION BY RANGE (date)
 ( START (date '2008-01-01') INCLUSIVE
@@ -211,7 +211,7 @@ When a table is partitioned based on the query predicate, you can use `EXPLAIN` 
 
 For example, suppose a *sales* table is date-range partitioned by month and subpartitioned by region as shown in [Figure 1](#im207241). For the following query:
 
-```
+``` sql
 EXPLAIN SELECT * FROM sales WHERE date='01-07-12' AND
 region='usa';
 ```
@@ -224,7 +224,7 @@ The query plan for this query should show a table scan of only the following tab
 
 The following example shows the relevant portion of the query plan.
 
-```
+``` pre
 ->  `Seq Scan on``sales_1_prt_1` sales (cost=0.00..0.00 `rows=0`
      width=0)
 Filter: "date"=01-07-08::date AND region='USA'::text
@@ -249,7 +249,7 @@ The following limitations can result in a query plan that shows a non-selective 
 
 You can look up information about your partition design using the *pg\_partitions* view. For example, to see the partition design of the *sales* table:
 
-```
+``` sql
 SELECT partitionboundary, partitiontablename, partitionname,
 partitionlevel, partitionrank
 FROM pg_partitions
@@ -292,28 +292,28 @@ Partitions are not required to have names. If a partition does not have a name, 
 
 You can add a partition to a partition design with the `ALTER TABLE` command. If the original partition design included subpartitions defined by a *subpartition template*, the newly added partition is subpartitioned according to that template. For example:
 
-```
+``` sql
 ALTER TABLE sales ADD PARTITION
-            START (date '2009-02-01') INCLUSIVE
-            END (date '2009-03-01') EXCLUSIVE;
+    START (date '2009-02-01') INCLUSIVE
+    END (date '2009-03-01') EXCLUSIVE;
 ```
 
 If you did not use a subpartition template when you created the table, you define subpartitions when adding a partition:
 
-```
+``` sql
 ALTER TABLE sales ADD PARTITION
-            START (date '2009-02-01') INCLUSIVE
-            END (date '2009-03-01') EXCLUSIVE
-      ( SUBPARTITION usa VALUES ('usa'),
-        SUBPARTITION asia VALUES ('asia'),
-        SUBPARTITION europe VALUES ('europe') );
+    START (date '2009-02-01') INCLUSIVE
+    END (date '2009-03-01') EXCLUSIVE
+     ( SUBPARTITION usa VALUES ('usa'),
+       SUBPARTITION asia VALUES ('asia'),
+       SUBPARTITION europe VALUES ('europe') );
 ```
 
 When you add a subpartition to an existing partition, you can specify the partition to alter. For example:
 
-```
+``` sql
 ALTER TABLE sales ALTER PARTITION FOR (RANK(12))
-      ADD PARTITION africa VALUES ('africa');
+      ADD PARTITION africa VALUES ('africa');
 ```
 
 **Note:** You cannot add a partition to a partition design that has a default partition. You must split the default partition to add a partition. See [Splitting a Partition](#topic84).
@@ -338,7 +338,7 @@ sales_1_prt_1
 
 To rename a partitioned child table, rename the top-level parent table. The *&lt;parentname&gt;* changes in the table names of all associated child table partitions. For example, the following command:
 
-```
+``` sql
 ALTER TABLE sales RENAME TO globalsales;
 ```
 
@@ -350,7 +350,7 @@ globalsales_1_prt_1
 
 You can change the name of a partition to make it easier to identify. For example:
 
-```
+``` sql
 ALTER TABLE sales RENAME PARTITION FOR ('2008-01-01') TO jan08;
 ```
 
@@ -368,7 +368,7 @@ When altering partitioned tables with the `ALTER TABLE` command, always refer to
 
 You can add a default partition to a partition design with the `ALTER TABLE` command.
 
-```
+``` sql
 ALTER TABLE sales ADD DEFAULT PARTITION other;
 ```
 
@@ -378,7 +378,7 @@ If incoming data does not match a partition's `CHECK` constraint and there is no
 
 You can drop a partition from your partition design using the `ALTER TABLE` command. When you drop a partition that has subpartitions, the subpartitions \(and all data in them\) are automatically dropped as well. For range partitions, it is common to drop the older partitions from the range as old data is rolled out of the data warehouse. For example:
 
-```
+``` sql
 ALTER TABLE sales DROP PARTITION FOR (RANK(1));
 ```
 
@@ -392,7 +392,7 @@ The user-tunable parameter `optimizer_parts_to_force_sort_on_insert` can force t
 
 You can truncate a partition using the `ALTER TABLE` command. When you truncate a partition that has subpartitions, the subpartitions are automatically truncated as well.
 
-```
+``` sql
 ALTER TABLE sales TRUNCATE PARTITION FOR (RANK(1));
 ```
 
@@ -402,7 +402,7 @@ You can exchange a partition using the `ALTER TABLE` command. Exchanging a parti
 
 Partition exchange can be useful for data loading. For example, load a staging table and swap the loaded table into your partition design. You can use partition exchange to change the storage type of older partitions to append-only tables. For example:
 
-```
+``` sql
 CREATE TABLE jan12 (LIKE sales) WITH (appendonly=true);
 INSERT INTO jan12 SELECT * FROM sales_1_prt_1 ;
 ALTER TABLE sales EXCHANGE PARTITION FOR (DATE '2012-01-01')
@@ -417,7 +417,7 @@ Splitting a partition divides a partition into two partitions. You can split a p
 
 For example, to split a monthly partition into two with the first partition containing dates January 1-15 and the second partition containing dates January 16-31:
 
-```
+``` sql
 ALTER TABLE sales SPLIT PARTITION FOR ('2008-01-01')
 AT ('2008-01-16')
 INTO (PARTITION jan081to15, PARTITION jan0816to31);
@@ -427,7 +427,7 @@ If your partition design has a default partition, you must split the default par
 
 When using the `INTO` clause, specify the current default partition as the second partition name. For example, to split a default range partition to add a new monthly partition for January 2009:
 
-```
+``` sql
 ALTER TABLE sales SPLIT DEFAULT PARTITION
 START ('2009-01-01') INCLUSIVE
 END ('2009-02-01') EXCLUSIVE
@@ -440,7 +440,7 @@ Use `ALTER TABLE` SET SUBPARTITION TEMPLATE to modify the subpartition template 
 
 The following example alters the subpartition template of this partitioned table:
 
-```
+``` sql
 CREATE TABLE sales (trans_id int, date date, amount decimal(9,2), region text)
   DISTRIBUTED BY (trans_id)
   PARTITION BY RANGE (date)
@@ -457,27 +457,27 @@ CREATE TABLE sales (trans_id int, date date, amount decimal(9,2), region text)
 
 This `ALTER TABLE` command, modifies the subpartition template.
 
-```
+``` sql
 ALTER TABLE sales SET SUBPARTITION TEMPLATE
 ( SUBPARTITION usa VALUES ('usa'),
-  SUBPARTITION asia VALUES ('asia'),
-  SUBPARTITION europe VALUES ('europe'),
-  SUBPARTITION africa VALUES ('africa'),
-  DEFAULT SUBPARTITION regions );
+  SUBPARTITION asia VALUES ('asia'),
+  SUBPARTITION europe VALUES ('europe'),
+  SUBPARTITION africa VALUES ('africa'),
+  DEFAULT SUBPARTITION regions );
 ```
 
 When you add a date-range partition of the table sales, it includes the new regional list subpartition for Africa. For example, the following command creates the subpartitions `usa`, `asia`, `europe`, `africa`, and a default partition named `other`:
 
-```
+``` sql
 ALTER TABLE sales ADD PARTITION "4"
-  START ('2014-04-01') INCLUSIVE
-  END ('2014-05-01') EXCLUSIVE ;
+  START ('2014-04-01') INCLUSIVE
+  END ('2014-05-01') EXCLUSIVE ;
 ```
 
 To view the tables created for the partitioned table `sales`, you can use the command `\dt sales*` from the psql command line.
 
 To remove a subpartition template, use `SET SUBPARTITION TEMPLATE` with empty parentheses. For example, to clear the sales table subpartition template:
 
-```
+``` sql
 ALTER TABLE sales SET SUBPARTITION TEMPLATE ();
 ```

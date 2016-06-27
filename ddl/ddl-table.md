@@ -38,22 +38,22 @@ You can define constraints to restrict the data in your tables. HAWQ support for
 
 Check constraints allow you to specify that the value in a certain column must satisfy a Boolean \(truth-value\) expression. For example, to require positive product prices:
 
-```
+``` sql
 => CREATE TABLE products
-            ( product_no integer,
-              name text,
-              price numeric CHECK (price > 0) );
+     ( product_no integer,
+       name text,
+       price numeric CHECK (price > 0) );
 ```
 
 #### Not-Null Constraints <a id="topic30"></a>
 
 Not-null constraints specify that a column must not assume the null value. A not-null constraint is always written as a column constraint. For example:
 
-```
+``` sql
 => CREATE TABLE products
-       ( product_no integer NOT NULL,
-         name text NOT NULL,
-         price numeric );
+     ( product_no integer NOT NULL,
+       name text NOT NULL,
+       price numeric );
 ```
 
 #### Foreign Keys <a id="topic33"></a>
@@ -99,7 +99,7 @@ When initializing a cluster, you can use the `hawq init --bucket_number` paramet
 
 The following statement creates a table “sales” with 8 buckets, which would be similar to a hash-distributed table on 8 segments.
 
-```
+``` sql
 create table sales(id int, profit float)  with (bucketnum=8) distributed by (id);
 ```
 
