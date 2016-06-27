@@ -30,7 +30,7 @@ To integrate YARN with HAWQ, you must define one YARN application resource queue
 
 The following example demonstrates how to configure CapacityScheduler as the YARN resource scheduler. In `yarn-site.xml`, use the following configuration to enable CapacityScheduler.
 
-```
+``` xml
 <property>
    <name>yarn.resourcemanager.scheduler.class</name>
    <value>org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler</value>
@@ -39,7 +39,7 @@ The following example demonstrates how to configure CapacityScheduler as the YAR
 
 Then, define the queues in CapacityScheduler's configuration. In `capacity-scheduler.xml`, you could define the queues as follows:
 
-```
+``` xml
 <property>
    <name>yarn.scheduler.capacity.root.queues</name>
    <value>mrque1,mrque2,hawqque</value>
@@ -51,7 +51,7 @@ In the above example configuration, CapacityScheduler has two MapReduce queues \
 
 In the following configuration within `capacity-scheduler.xml,` we configure the additional properties for the queues to control the capacity of each queue. The HAWQ resource queue can utilize 20% to a maximum of 80% resources of the whole cluster.
 
-```
+``` xml
 <property>
    <name>yarn.scheduler.capacity.hawqque.maximum-applications</name>
    <value>1</value>
@@ -106,7 +106,7 @@ Similar to how you can set segment resource capacity in HAWQ's standalone mode, 
 
 In HAWQ standalone mode, you can configure the resource capacity of individual segments as described in [Configuring Segment Resource Capacity](ConfigureResourceManagement.html). If you are using YARN to manage HAWQ resources, then you configure the resource capacity of segments by configuring YARN. We recommend that you configure all segments with identical resource capacity. In `yarn-site.xml`, set the following properties:
 
-```
+``` xml
 <property>
   <name>yarn.nodemanager.resource.memory-mb</name>
   <value>4GB</value>
@@ -151,7 +151,7 @@ After you have properly configured YARN, you can enable YARN as HAWQ's global re
 
 To configure YARN as the global resource manager in a HAWQ cluster, add the following property configuration to your `hawq-site.xml` file:
 
-```
+``` xml
 <property>
       <name>hawq_global_rm_type</name>
       <value>yarn</value>
@@ -164,7 +164,7 @@ When enabled, the HAWQ resource manager only uses resources allocated from YARN.
 
 If you set the global resource manager to YARN, you must also configure the following properties in `hawq-site.xml`:
 
-```
+``` xml
 <property>
       <name>hawq_rm_yarn_address</name>
       <value>localhost:8032</value>
@@ -221,7 +221,7 @@ If you have enabled high-availability for your YARN resource managers, then spec
 
 **Note:** When you use high availability in YARN, HAWQ ignores the values specified for `hawq_rm_yarn_address` and `hawq_rm_yarn_scheduler_address` in `hawq-site.xml` and uses the values specified in `yarn-client.xml` instead.
 
-```
+``` xml
     <property>
       <name>yarn.resourcemanager.ha</name>
       <value>{0}:8032,{1}:8032</value>

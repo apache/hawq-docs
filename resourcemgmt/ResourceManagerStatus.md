@@ -11,8 +11,11 @@ Any query execution requiring resource allocation from HAWQ resource manager has
 
 The following is an example query to obtain connection track status:
 
-```
+``` sql
 postgres=# select * from dump_resource_manager_status(1);
+```
+
+``` pre
                               dump_resource_manager_status
 ----------------------------------------------------------------------------------------
  Dump resource manager connection track status to /tmp/resource_manager_conntrack_status
@@ -21,7 +24,7 @@ postgres=# select * from dump_resource_manager_status(1);
 
 The following output is an example of resource context \(connection track\) status.
 
-```
+``` pre
 Number of free connection ids : 65535
 Number of connection tracks having requests to handle : 0
 Number of connection tracks having responses to send : 0SOCK(client=192.168.2.100:37396:time=2015-11-15-20:54:35.379006),
@@ -55,8 +58,11 @@ Besides the information provided in pg\_resqueue\_status, you can also get YARN 
 
 The following is a query to obtain resource queue status:
 
-```
+``` sql
 postgres=# select * from dump_resource_manager_status(2);
+```
+
+``` pre
                             dump_resource_manager_status
 -------------------------------------------------------------------------------------
  Dump resource manager resource queue status to /tmp/resource_manager_resqueue_status
@@ -65,7 +71,7 @@ postgres=# select * from dump_resource_manager_status(2);
 
 The possible output of resource queue status is shown as below.
 
-```
+``` pre
 Maximum capacity of queue in global resource manager cluster 1.000000
 
 Number of resource queues : 4
@@ -97,8 +103,11 @@ QUEUSE(alloc=(0 MB,0.000000 CORE):request=(0 MB,0.000000 CORE):inuse=(0 MB,0.000
 
 Use the following query to obtain the status of a HAWQ segment.
 
-```
+``` sql
 postgres=# select * from dump_resource_manager_status(3);
+```
+
+``` pre
                            dump_resource_manager_status
 -----------------------------------------------------------------------------------
  Dump resource manager resource pool status to /tmp/resource_manager_respool_status
@@ -107,7 +116,7 @@ postgres=# select * from dump_resource_manager_status(3);
 
 The following output shows the status of a HAWQ segment status. This example describes a host named `sdw1` having resource capacity 64GB memory and 16 vcore. It now has 64GB available resource ready for use and 16 containers are held.
 
-```
+``` pre
 HOST_ID(id=0:hostname:sdw1)
 HOST_INFO(FTSTotalMemoryMB=65536:FTSTotalCore=16:GRMTotalMemoryMB=0:GRMTotalCore=0)
 HOST_AVAILABLITY(HAWQAvailable=true:GLOBAvailable=false)
