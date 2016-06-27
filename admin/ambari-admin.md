@@ -380,11 +380,11 @@ You can configure Ambari to check for alerts at specified intervals, on a partic
 Ambari can show Alerts and also configure certain status conditions. 
 
 #### Viewing Alerts
-To view the current alert information for HAWQ, click the **Groups** button at the top left of the Alerts page, then select **HAWQ Default** in the drop-down menu, then click on the **Alert** button at the top of the Ambari console. Ambari will display a list of all available alert functions and their current status. 
+1. To view the current alert information for HAWQ, click the **Groups** button at the top left of the Alerts page, then select **HAWQ Default** in the drop-down menu, then click on the **Alert** button at the top of the Ambari console. Ambari will display a list of all available alert functions and their current status. 
 
-To check PXF alerts, click the **Groups** dropdown button at the top left of the Alerts page. Select **PXF Default** in the dropdown menu. Alerts are displayed on the PXF Status page.
+ To check PXF alerts, click the **Groups** dropdown button at the top left of the Alerts page. Select **PXF Default** in the dropdown menu. Alerts are displayed on the PXF Status page.
 
-To view the current Alert settings, click on the name of the alert.
+2. To view the current Alert settings, click on the name of the alert.
 
 The Alerts you can view are as follows:
 
