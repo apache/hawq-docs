@@ -4,9 +4,8 @@ title: Troubleshooting gpfdist
 
 The segments access `gpfdist` at runtime. Ensure that the HAWQ segment hosts have network access to `gpfdist`. `gpfdist` is a web server: test connectivity by running the following command from each host in the HAWQ array (segments and master):
 
-``` pre
-$ wget http://gpfdist_hostname:port/filename
-         
+``` shell
+$ wget http://gpfdist_hostname:port/filename      
 ```
 
 The `CREATE EXTERNAL TABLE` definition must have the correct host name, port, and file names for `gpfdist`. Specify file names and paths relative to the directory from which `gpfdist` serves files (the directory path specified when `gpfdist` started). See [Creating External Tables - Examples](creating-external-tables-examples.html#topic44).

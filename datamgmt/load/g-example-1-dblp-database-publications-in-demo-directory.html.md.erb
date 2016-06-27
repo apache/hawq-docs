@@ -8,22 +8,22 @@ By default, the command is run on segment hosts when active segments have output
 
 The command that you specify in the external table definition executes from the database and cannot access environment variables from `.bashrc` or `.profile`. Set environment variables in the `EXECUTE` clause. For example:
 
-``` pre
+``` sql
 =# CREATE EXTERNAL WEB TABLE output (output text)
-    EXECUTE 'PATH=/home/gpadmin/programs; export PATH; myprogram.sh'
+EXECUTE 'PATH=/home/gpadmin/programs; export PATH; myprogram.sh'
     ON MASTER
-    FORMAT 'TEXT';
+FORMAT 'TEXT';
 ```
 
 Scripts must be executable by the `gpadmin` user and reside in the same location on the master or segment hosts.
 
 The following command defines a web table that runs a script. The script runs on five virtual segments selected by the resource manager at runtime.
 
-``` pre
+``` sql
 =# CREATE EXTERNAL WEB TABLE log_output
-    (linenum int, message text)
-    EXECUTE '/var/load_scripts/get_log_data.sh' ON 5
-    FORMAT 'TEXT' (DELIMITER '|');
+(linenum int, message text)
+EXECUTE '/var/load_scripts/get_log_data.sh' ON 5
+FORMAT 'TEXT' (DELIMITER '|');
 ```
 
 

@@ -6,7 +6,7 @@ You can define writable external web tables to send output rows to an applicatio
 
 Use `CREATE WRITABLE EXTERNAL WEB TABLE` to define the external table and specify the application or script to run on the segment hosts. Commands execute from within the database and cannot access environment variables (such as `$PATH`). Set environment variables in the `EXECUTE` clause of your writable external table definition. For example:
 
-``` pre
+``` sql
 =# CREATE WRITABLE EXTERNAL WEB TABLE output (output text) 
     EXECUTE 'export PATH=$PATH:/home/gpadmin/programs; myprogram.sh' 
     ON 6

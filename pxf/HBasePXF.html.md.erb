@@ -8,7 +8,7 @@ Before trying to access HBase data with PXF, verify the following:
 
 -   The `/etc/hbase/conf/hbase-env.sh` configuration file must reference the `pxf-hbase.jar`. For example, `/etc/hbase/conf/hbase-env.sh` should include the line:
 
-    ```
+    ``` bash
     export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
     ```
 

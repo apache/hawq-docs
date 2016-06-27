@@ -6,20 +6,19 @@ The output of a shell command or script defines command-based web table data. Sp
 
 The command that you specify in the external table definition executes from the database and cannot access environment variables from `.bashrc` or `.profile`. Set environment variables in the `EXECUTE` clause. The following external web table, for example, runs a command on the HAWQ master host:
 
-``` pre
+``` sql
 CREATE EXTERNAL WEB TABLE output (output text)
-    EXECUTE 'PATH=/home/gpadmin/programs; export PATH; myprogram.sh'
+EXECUTE 'PATH=/home/gpadmin/programs; export PATH; myprogram.sh'
     ON MASTER 
-    FORMAT 'TEXT';
+FORMAT 'TEXT';
 ```
 
 The following command defines a web table that runs a script on five virtual segments.
 
-``` pre
-CREATE EXTERNAL WEB TABLE log_output 
-    (linenum int, message text) 
-    EXECUTE '/var/load_scripts/get_log_data.sh' ON 5 
-    FORMAT 'TEXT' (DELIMITER '|');
+``` sql
+CREATE EXTERNAL WEB TABLE log_output (linenum int, message text) 
+EXECUTE '/var/load_scripts/get_log_data.sh' ON 5 
+FORMAT 'TEXT' (DELIMITER '|');
 ```
 
 The virtual segments are selected by the resource manager at runtime.

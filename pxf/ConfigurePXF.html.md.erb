@@ -21,7 +21,7 @@ The PXF service JVM command line options can be added or modified for each pxf-s
 
 Currently the `JVM_OPTS` parameter is set with the following values for maximum Java heap size and thread stack size:
 
-``` pre
+``` shell
 JVM_OPTS="-Xmx512M -Xss256K"
 ```
 
@@ -57,7 +57,7 @@ Currently, the contents of the two parameters are stored in memory, without any 
 
 In a PXF plug-in, the contents of the two credentials parameters is available through the following InputData API functions:
 
-``` pre
+``` java
 string getLogin()
 string getSecret()
 ```
