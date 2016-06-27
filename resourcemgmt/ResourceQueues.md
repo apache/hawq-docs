@@ -30,7 +30,7 @@ The HAWQ resource manager follows several principles when allocating resources t
 
 **Enforcing Limits on Resources**
 
-You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html). For some best practices on designing and using resource queues in HAWQ, see [Best Practices for Managing Resources](/200/hawq/bestpractices/managing_resources_bestpractices.html).
+You can configure HAWQ to enforce limits on resource usage by setting memory and CPU usage limits on both segments and resource queues. See [Configuring Segment Resource Capacity](ConfigureResourceManagement.html) and [Creating Resource Queues](ResourceQueues.html). For some best practices on designing and using resource queues in HAWQ, see [Best Practices for Managing Resources](/20/bestpractices/managing_resources_bestpractices.html).
 
 For a high-level overview of how resource management works in HAWQ, see [Managing Resources](HAWQResourceManagement.html).
 
@@ -42,7 +42,7 @@ By default, the maximum number of resource queues that you can create in HAWQ is
 
 You can configure this property in `hawq-site.xml`. The new maximum takes effect when HAWQ restarts. For example, the configuration below sets this value to 50.
 
-```
+``` xml
 <property>
    <name>hawq_rm_nresqueue_limit</name>
    <value>50</value>
@@ -53,9 +53,11 @@ The minimum value that can be configured is 3, and the maximum is 1024.
 
 To check the currently configured limit, you can execute the following command:
 
-```
+``` sql
 postgres=# show hawq_rm_nresqueue_limit;
+```
 
+``` pre
  hawq_rm_nresqueue_limit
 ----------------------------------------------
 128
@@ -66,7 +68,7 @@ postgres=# show hawq_rm_nresqueue_limit;
 
 Use CREATE RESOURCE QUEUE to create a new resource queue. Only a superuser can run this DDL statement.
 
-Creating a resource queue involves giving it a name, a parent, setting the CPU and memory limits for the queue, and optionally a limit to the number of active statements on the resource queue. See [CREATE RESOURCE QUEUE](/200/hawq/reference/sql/CREATE-RESOURCE-QUEUE.html).
+Creating a resource queue involves giving it a name, a parent, setting the CPU and memory limits for the queue, and optionally a limit to the number of active statements on the resource queue. See [CREATE RESOURCE QUEUE](/20/reference/sql/CREATE-RESOURCE-QUEUE.html).
 
 **Note:** You can only associate roles and queries with leaf-level resource queues. Leaf-level resource queues are resource queues that do not have any children.
 
@@ -74,14 +76,14 @@ Creating a resource queue involves giving it a name, a parent, setting the CPU a
 
 Create a resource queue as a child of `pg_root` with an active query limit of 20 and memory and core limits of 50%:
 
-```
+``` sql
 CREATE RESOURCE QUEUE myqueue WITH (PARENT='pg_root', ACTIVE_STATEMENTS=20,
 MEMORY_LIMIT_CLUSTER=50%, CORE_LIMIT_CLUSTER=50%);
 ```
 
 Create a resource queue as a child of pg\_root with memory and CPU limits and a resource overcommit factor:
 
-```
+``` sql
 CREATE RESOURCE QUEUE test_queue_1 WITH (PARENT='pg_root',
 MEMORY_LIMIT_CLUSTER=50%, CORE_LIMIT_CLUSTER=50%, RESOURCE_OVERCOMMIT_FACTOR=2);
 ```
@@ -98,7 +100,7 @@ However, when you alter a resource queue, queued resource requests may encounter
 
 To prevent conflicts, HAWQ cancels by default all resource requests that are in conflict with the new resource queue definition. This behavior is controlled by the `hawq_rm_force_alterqueue_cancel_queued_request` server configuration parameter, which is by default set to true \(`on`\). If you set the server configuration parameter `hawq_rm_force_alterqueue_cancel_queued_request` to false, the actions specified in ALTER RESOURCE QUEUE are canceled if the resource manager finds at least one resource request that is in conflict with the new resource definitions supplied in the altering command.
 
-For more information, see [ALTER RESOURCE QUEUE](/200/hawq/reference/sql/ALTER-RESOURCE-QUEUE.html).
+For more information, see [ALTER RESOURCE QUEUE](/20/reference/sql/ALTER-RESOURCE-QUEUE.html).
 
 **Note:** To change the roles \(users\) assigned to a resource queue, use the ALTER ROLE command.
 
@@ -106,14 +108,14 @@ For more information, see [ALTER RESOURCE QUEUE](/200/hawq/reference/sql/ALTER-R
 
 Change the memory and core limit of a resource queue:
 
-```
+``` sql
 ALTER RESOURCE QUEUE test_queue_1 WITH (MEMORY_LIMIT_CLUSTER=40%,
 CORE_LIMIT_CLUSTER=40%);
 ```
 
 Change the active statements maximum for the resource queue:
 
-```
+``` sql
 ALTER RESOURCE QUEUE test_queue_1 WITH (ACTIVE_STATEMENTS=50);
 ```
 
@@ -129,13 +131,13 @@ The default resource queues `pg_root` and `pg_default` cannot be dropped.
 
 Remove a role from a resource queue \(and move the role to the default resource queue, `pg_default`\):
 
-```
+``` sql
 ALTER ROLE bob RESOURCE QUEUE NONE;
 ```
 
 Remove the resource queue named `adhoc`:
 
-```
+``` sql
 DROP RESOURCE QUEUE adhoc;
 ```
 
@@ -145,23 +147,28 @@ The HAWQ catalog table `pg_resqueue` saves all existing resource queues.
 
 The following example shows the data selected from `pg_resqueue`.
 
-```
+``` sql
 postgres=# SELECT rsqname,parentoid,activestats,memorylimit,corelimit,resovercommit,
 allocpolicy,vsegresourcequota,nvsegupperlimit,nvseglowerlimit,nvsegupperlimitperseg,nvseglowerlimitperseg
 FROM pg_resqueue WHERE rsqname='test_queue_1';
+```
 
+``` pre
    rsqname    | parentoid | activestats | memorylimit | corelimit | resovercommit | allocpolicy | vsegresourcequota | nvsegupperlimit | nvseglowerlimit |nvsegupperlimitperseg  | nvseglowerlimitperseg
 --------------+-----------+-------------+-------------+-----------+---------------+-------------+-------------------+-----------------+-----------------+-----------------------+-----------------------
  test_queue_1 |      9800 |         100 | 50%         | 50%       |             2 | even        | mem:128mb         | 0               | 0               | 0                     |1
 ```
 
-The query displays all the attributes and their values of the selected resource queue. See [CREATE RESOURCE QUEUE](/200/hawq/reference/sql/CREATE-RESOURCE-QUEUE.html) for a description of these attributes.
+The query displays all the attributes and their values of the selected resource queue. See [CREATE RESOURCE QUEUE](/20/reference/sql/CREATE-RESOURCE-QUEUE.html) for a description of these attributes.
 
 You can also check the runtime status of existing resource queues by querying the `pg_resqueue_status` view:
 
-```
+``` sql
 postgres=# select * from pg_resqueue_status;
+```
 
+
+``` pre
   rsqname   | segmem | segcore  | segsize | segsizemax | inusemem | inusecore | rsqholders | rsqwaiters | paused
 ------------+--------+----------+---------+------------+----------+-----------+------------+------------+--------
  pg_root    | 128    | 0.125000 | 64      | 64         | 0        | 0.000000  | 0          | 0          | F
@@ -189,7 +196,7 @@ By default, a role is assigned to `pg_default` resource queue. Assigning a role 
 
 The following are some examples of creating and assigning a role to a resource queue:
 
-```
+``` sql
 CREATE ROLE rmtest1 WITH LOGIN RESOURCE QUEUE pg_default;
 
 ALTER ROLE rmtest1 RESOURCE QUEUE test_queue_1;

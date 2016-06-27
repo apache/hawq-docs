@@ -1,0 +1,507 @@
+---
+title: Accessing HDFS File Data
+---
+
+## Prerequisites<a id="installingthepxfhdfsplugin"></a>
+
+Before working with HDFS file data using HAWQ and PXF, you should perform the following operations:
+
+-   Test PXF on HDFS before connecting to Hive or HBase.
+-   Ensure that all HDFS users have read permissions to HDFS services and that write permissions have been limited to specific users.
+
+## Syntax<a id="syntax1"></a>
+
+The syntax for creating an external HDFS file is as follows: 
+
+``` sql
+CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name 
+    ( column_name data_type [, ...] | LIKE other_table )
+LOCATION ('pxf://host[:port]/path-to-data?<pxf parameters>[&custom-option=value...]')
+      FORMAT '[TEXT | CSV | CUSTOM]' (<formatting_properties>);
+```
+
+where `<pxf parameters>` is:
+
+``` pre
+   FRAGMENTER=fragmenter_class&ACCESSOR=accessor_class&RESOLVER=resolver_class]
+ | PROFILE=profile-name
+```
+
+**Note:** Omit the `FRAGMENTER` parameter for `READABLE` external tables.
+
+Use an SQL `SELECT` statement to read from an HDFS READABLE table:
+
+``` sql
+SELECT ... FROM table_name;
+```
+
+Use an SQL `INSERT` statement to add data to an HDFS WRITABLE table:
+
+``` sql
+INSERT INTO table_name ...;
+```
+
+To read the data in the files or to write based on the existing format, use `FORMAT`, `PROFILE`, or one of the classes.
+
+This topic describes the following:
+
+-   FORMAT clause
+-   Profile
+-   Accessor
+-   Resolver
+-   Avro
+
+**Note:** For more details about the API and classes, see [PXF External Tables and API](PXFExternalTableandAPIReference.html#pxfexternaltableandapireference).
+
+### FORMAT clause<a id="formatclause"></a>
+
+Use one of the following formats to read data with any PXF connector:
+
+-   `FORMAT 'TEXT'`: Use with plain delimited text files on HDFS.
+-   `FORMAT 'CSV'`: Use with comma-separated value files on HDFS.
+-   `FORMAT 'CUSTOM'`: Use with all other files, including Avro format and binary formats. Must always be used with the built-in formatter '`pxfwritable_import`' (for read) or '`pxfwritable_export`' (for write).
+
+**Note:** When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
+
+### Profile<a id="topic_ab2_sxy_bv"></a>
+
+For plain or comma-separated text files in HDFS use either the `HdfsTextSimple` or `HdfsTextMulti` Profile, or the classname org.apache.hawq.pxf.plugins.hdfs.*HdfsDataFragmenter*. Use the `Avro` profile for Avro files. See [Using Profiles to Read and Write Data](ReadWritePXF.html#readingandwritingdatawithpxf) for more information.
+
+**Note:** For read tables, you must include a Profile or a Fragmenter in the table definition.
+
+### Accessor<a id="accessor"></a>
+
+The choice of an Accessor depends on the HDFS data file type. 
+
+**Note:** You must include either a Profile or an Accessor in the table definition.
+
+<table>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>File Type</th>
+<th>Accessor</th>
+<th>FORMAT clause</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Plain Text delimited</td>
+<td>org.apache.hawq.pxf.plugins. hdfs.LineBreakAccessor</td>
+<td>FORMAT 'TEXT' (<em>format param list</em>)</td>
+<td> Read + Write
+<p>You cannot use the <code class="ph codeph">HEADER</code> option.</p></td>
+</tr>
+<tr class="even">
+<td>Plain Text CSV </td>
+<td>org.apache.hawq.pxf.plugins. hdfs.LineBreakAccessor</td>
+<td>FORMAT 'CSV' (<em>format param list</em>) </td>
+<td><p>LineBreakAccessor is parallel and faster.</p>
+<p>Use if each logical data row is a physical data line.</p>
+<p>Read + Write </p>
+<p>You cannot use the <code class="ph codeph">HEADER</code> option.</p></td>
+</tr>
+<tr class="odd">
+<td>Plain Text CSV </td>
+<td>org.apache.hawq.pxf.plugins. hdfs.QuotedLineBreakAccessor</td>
+<td>FORMAT 'CSV' (<em>format param list</em>) </td>
+<td><p>QuotedLineBreakAccessor is slower and non-parallel.</p>
+<p>Use if the data includes embedded (quoted) linefeed characters.</p>
+<p>Read Only </p>
+<p>You cannot use the <code class="ph codeph">HEADER</code> option.</p></td>
+</tr>
+<tr class="even">
+<td>SequenceFile</td>
+<td>org.apache.hawq.pxf.plugins. hdfs.SequenceFileAccessor</td>
+<td>FORMAT 'CUSTOM' (formatter='pxfwritable_import')</td>
+<td> Read + Write (use formatter='pxfwritable_export' for write)</td>
+</tr>
+<tr class="odd">
+<td>AvroFile</td>
+<td>org.apache.hawq.pxf.plugins. hdfs.AvroFileAccessor</td>
+<td>FORMAT 'CUSTOM' (formatter='pxfwritable_import')</td>
+<td> Read Only</td>
+</tr>
+</tbody>
+</table>
+
+### Resolver<a id="resolver"></a>
+
+Choose the Resolver format if data records are serialized in the HDFS file. 
+
+**Note:** You must include a Profile or a Resolver in the table definition.
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Record Serialization</th>
+<th>Resolver</th>
+<th>Comments</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Avro</td>
+<td>org.apache.hawq.pxf.plugins. hdfs.AvroResolver</td>
+<td><ul>
+<li>Avro files include the record schema, Avro serialization can be used in other file types (e.g, Sequence File). </li>
+<li>For Avro serialized records outside of an Avro file, include a schema file name (.avsc) in the url under the optional <code class="ph codeph">Schema-Data </code>option.</li>
+<li>Deserialize Only (Read) .</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>Java Writable</td>
+<td>org.apache.hawq.pxf.plugins. hdfs.WritableResolver</td>
+<td><ul>
+<li>Include the name of the Java class that uses Writable serialization in the URL under the optional <code class="ph codeph">Schema-Data.</code></li>
+<li>The class file must exist in the public stage directory (or in Hadoop's class path).</li>
+<li>Deserialize and Serialize (Read + Write). </li>
+<li>See <a href="#customizedwritableschemafileguidelines">Customized Writable Schema File Guidelines</a>.</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>None (plain text)</td>
+<td>org.apache.hawq.pxf.plugins. hdfs.StringPassResolver</td>
+<td><ul>
+<li>Does not serialize plain text records. The database parses plain records. Passes records as they are.</li>
+<li>Deserialize and Serialize (Read + Write).</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+
+#### Schema File Guidelines for WritableResolver<a id="customizedwritableschemafileguidelines"></a>
+
+When using a WritableResolver, a schema file needs to be defined. The file needs to be a Java class file and must be on the class path of PXF.
+
+The class file must follow the following requirements:
+
+1.  Must implement org.apache.hadoop.io.Writable interface.
+2.  WritableResolver uses reflection to recreate the schema and populate its fields (for both read and write). Then it uses the Writable interface functions to read/write. Therefore, fields must be public, to enable access to them. Private fields will be ignored.
+3.  Fields are accessed and populated in the order in which they are declared in the class file.
+4.  Supported field types:
+    -   boolean
+    -   byte array
+    -   double
+    -   float
+    -   int
+    -   long
+    -   short
+    -   string
+
+    Arrays of any of the above types are supported, but the constructor must define the array size so the reflection will work.
+
+### Additional Options<a id="additionaloptions"></a>
+
+<a id="additionaloptions__table_skq_kpz_4p"></a>
+
+<table>
+<caption><span class="tablecap">Table 1. Additional PXF Options</span></caption>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Option Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>COLLECTION_DELIM</td>
+<td>(Avro or Hive profiles only.) The delimiter character(s) to place between entries in a top-level array, map, or record field when PXF maps a Hive or Avro complex data type to a text column. The default is a &quot;,&quot; character.</td>
+</tr>
+<tr class="even">
+<td>COMPRESSION_CODEC</td>
+<td><ul>
+<li>Useful for WRITABLE PXF tables.</li>
+<li>Specifies the compression codec class name for compressing the written data. The class must implement the org.apache.hadoop.io.compress.CompressionCodec interface.</li>
+<li> Some valid values are org.apache.hadoop.io.compress.DefaultCodec org.apache.hadoop.io.compress.GzipCodec org.apache.hadoop.io.compress.BZip2Codec.</li>
+<li>Note: org.apache.hadoop.io.compress.BZip2Codec runs in a single thread and can be slow.</li>
+<li>This option has no default value. </li>
+<li>When the option is not defined, no compression will be done.</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>COMPRESSION_TYPE</td>
+<td><ul>
+<li>Useful WRITABLE PXF tables with SequenceFileAccessor.</li>
+<li>Ignored when COMPRESSION_CODEC is not defined.</li>
+<li>Specifies the compression type for sequence file.</li>
+<li>Valid options are: 
+<ul>
+<li>RECORD - only the value part of each row is compressed.</li>
+<li>BLOCK - both keys and values are collected in 'blocks' separately and compressed.</li>
+</ul></li>
+<li>Default value: RECORD.</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>MAPKEY_DELIM</td>
+<td>(Avro or Hive profiles only.) The delimiter character(s) to place between the key and value of a map entry when PXF maps a Hive or Avro complex data type to a text colum. The default is a &quot;:&quot; character.</td>
+</tr>
+<tr class="odd">
+<td>RECORDKEY_DELIM</td>
+<td>(Avro profile only.) The delimiter character(s) to place between the field name and value of a record entry when PXF maps an Avro complex data type to a text colum. The default is a &quot;:&quot; character.</td>
+</tr>
+<tr class="even">
+<td>SCHEMA-DATA</td>
+<td>The data schema file used to create and read the HDFS file. For example, you could create an avsc (for Avro), or a Java class (for Writable Serialization) file. Make sure that you have added any JAR files containing the schema to <code class="ph codeph">pxf-public.classpath</code>.
+<p>This option has no default value.</p></td>
+</tr>
+<tr class="odd">
+<td>THREAD-SAFE</td>
+<td>Determines if the table query can run in multithread mode or not. When set to FALSE, requests will be handled in a single thread.
+<p>Should be set when a plug-in or other elements that are not thread safe are used (e.g. compression codec).</p>
+<p>Allowed values: TRUE, FALSE. Default value is TRUE - requests can run in multithread mode.</p></td>
+</tr>
+<tr class="even">
+<td> &lt;custom&gt;</td>
+<td>Any option added to the pxf URI string will be accepted and passed, along with its value, to the Fragmenter, Accessor, and Resolver implementations.</td>
+</tr>
+</tbody>
+</table>
+
+## Accessing Data on a High Availability HDFS Cluster<a id="accessingdataonahighavailabilityhdfscluster"></a>
+
+To access data on a High Availability HDFS cluster, change the authority in the URI in the LOCATION. Use *HA\_nameservice* instead of *name\_node\_host:51200*.
+
+``` sql
+CREATE [READABLE|WRITABLE] EXTERNAL TABLE <tbl name> (<attr list>)
+LOCATION ('pxf://<HA nameservice>/<path to file or directory>?Profile=profile[&<additional options>=<value>]')
+FORMAT '[TEXT | CSV | CUSTOM]' (<formatting properties>);
+```
+
+The opposite is true when a highly available HDFS cluster is reverted to a single namenode configuration. In that case, any table definition that has the nameservice specified should use the &lt;NN host&gt;:&lt;NN rest port&gt; syntax. 
+
+## Using a Record Key with Key-Value File Formats<a id="recordkeyinkey-valuefileformats"></a>
+
+For sequence file and other file formats that store rows in a key-value format, the key value can be accessed through HAWQ by using the saved keyword '`recordkey`' as a field name.
+
+The field type must correspond to the key type, much as the other fields must match the HDFS data. 
+
+WritableResolver supports read and write of recordkey, which can be of the following Writable Hadoop types:
+
+-   BooleanWritable
+-   ByteWritable
+-   DoubleWritable
+-   FloatWritable
+-   IntWritable
+-   LongWritable
+-   Text
+
+If the `recordkey` field is not defined, the key is ignored in read, and a default value (segment id as LongWritable) is written in write.
+
+### Example<a id="example1"></a>
+
+A data schema `Babies.class` contains three fields: (name text, birthday text, weight float). An external table must include these three fields, and can either include or ignore the recordkey.
+
+``` sql
+-- writable table with recordkey
+CREATE WRITABLE EXTERNAL TABLE babies_registry (recordkey int, name text, birthday text, weight float)
+  LOCATION ('pxf://namenode_host:51200/babies_1940s'
+            '?ACCESSOR=org.apache.hawq.pxf.plugins.hdfs.SequenceFileAccessor'
+            '&RESOLVER=org.apache.hawq.pxf.plugins.hdfs.WritableResolver'
+            '&DATA-SCHEMA=Babies')
+  FORMAT 'CUSTOM' (formatter='pxfwritable_export');
+INSERT INTO babies_registry VALUES (123456, "James Paul McCartney", "June 18, 1942", 3.800);
+
+-- writable table without recordkey
+CREATE WRITABLE EXTERNAL TABLE babies_registry2 (name text, birthday text, weight float)
+  LOCATION ('pxf://namenode_host:51200/babies_1940s'
+            '?ACCESSOR=org.apache.hawq.pxf.plugins.SequenceFileAccessor'
+            '&RESOLVER=org.apache.hawq.pxf.plugins.WritableResolver'
+            '&DATA-SCHEMA=Babies')
+  FORMAT 'CUSTOM' (formatter='pxfwritable_export');
+
+-- this record's key will have some default value
+INSERT INTO babies_registry VALUES ("Richard Starkey", "July 7, 1940", 4.0);
+```
+
+The same goes for reading data from an existing file with a key-value format, e.g. a Sequence file.
+
+``` sql
+-- readable table with recordkey
+CREATE EXTERNAL TABLE babies_1940 (recordkey int, name text, birthday text, weight float)
+  LOCATION ('pxf://namenode_host:51200/babies_1940s'
+            '?FRAGMENTER=org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter'
+            '&ACCESSOR=org.apache.hawq.pxf.plugins.hdfs.SequenceFileAccessor'
+            '&RESOLVER=org.apache.hawq.pxf.plugins.hdfs.WritableResolver'
+            '&DATA-SCHEMA=Babies')
+  FORMAT 'CUSTOM' (formatter='pxfwritable_import');
+-- retrieve each record's key
+SELECT * FROM babies_1940;
+
+-- readable table without recordkey
+CREATE EXTERNAL TABLE babies_1940_2 (name text, birthday text, weight float)
+  LOCATION ('pxf://namenode_host:51200/babies_1940s'
+            '?FRAGMENTER=org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter'
+            '&ACCESSOR=org.apache.hawq.pxf.plugins.hdfs.SequenceFileAccessor'
+            '&RESOLVER=org.apache.hawq.pxf.plugins.hdfs.WritableResolver'
+            '&DATA-SCHEMA=Babies') 
+  FORMAT 'CUSTOM' (formatter='pxfwritable_import');
+-- ignores the records' key
+SELECT * FROM babies_1940_2; 
+```
+
+## Working with Avro Files<a id="topic_oy3_qwm_ss"></a>
+
+Avro files combine their data with a schema, and can support complex data types such as arrays, maps, records, enumerations, and fixed types. When you create a PXF external table to represent Avro data, map top-level fields in the schema that use a primitive data type to HAWQ columns of the same type. Map top-level fields that use a complex data type to a TEXT column in the external table. The PXF Avro profile automatically separates components of a complex type by inserting delimiters in the text column. You can then use functions or application code to further process components of the complex data.
+
+The following table summarizes external table mapping rules for Avro data.
+
+<caption><span class="tablecap">Table 2. Avro Data Type Mapping</span></caption>
+
+<a id="topic_oy3_qwm_ss__table_j4s_h1n_ss"></a>
+
+| Avro Data Type                                                    | PXF Type                                                                                                                                                                                            |
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Primitive type (int, double, float, long, string, bytes, boolean) | Corresponding HAWQ data type. See [Data Types](../reference/HAWQDataTypes.html). |
+| Complex type: Array, Map, Record, or Enum                         | TEXT, with default delimiters inserted between collection items, mapped key-value pairs, and record data.                                                                                           |
+| Complex type: Fixed                                               | BYTEA                                                                                                                                                                                               |
+| Union                                                             | Follows the above conventions for primitive or complex data types, depending on the union. Null values are supported in Unions.                                                                     |
+
+For complex types, the PXF Avro profile inserts default delimiters between collection items and values. You can use non-default delimiter characters by including the `COLLECTION_DELIM`, `MAPKEY_DELIM`, and/or `RECORDKEY_DELIM` optional parameters on the Avro profile. See [Additional PXF Options](#additionaloptions__table_skq_kpz_4p) for a description of the parameters.
+
+### Example<a id="topic_tr3_dpg_ts"></a>
+
+The following example uses the Avro schema shown in [Sample Avro Schema](#topic_tr3_dpg_ts__section_m2p_ztg_ts) and the associated data file shown in [Sample Avro Data (JSON)](#topic_tr3_dpg_ts__section_spk_15g_ts).
+
+#### Sample Avro Schema<a id="topic_tr3_dpg_ts__section_m2p_ztg_ts"></a>
+
+``` json
+{
+  "type" : "record",
+  "name" : "example_schema",
+  "namespace" : "com.example",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "long",
+    "doc" : "Id of the user account"
+  }, {
+    "name" : "username",
+    "type" : "string",
+    "doc" : "Name of the user account"
+  }, {
+    "name" : "followers",
+    "type" : {"type": "array", "items": "string"},
+    "doc" : "Users followers"
+  }, {
+    "name": "rank",
+    "type": ["null", "int"],
+    "default": null
+  }, {
+    "name": "fmap",
+    "type": {"type": "map", "values": "long"}
+  }, {
+    "name": "address",
+    "type": {
+        "type": "record",
+        "name": "addressRecord",
+        "fields": [
+            {"name":"number", "type":"int"},
+            {"name":"street", "type":"string"},
+            {"name":"city", "type":"string"}]
+    }
+  }, {
+   "name": "relationship",
+    "type": {
+        "type": "enum",
+        "name": "relationshipEnum",
+        "symbols": ["MARRIED","LOVE","FRIEND","COLLEAGUE","STRANGER","ENEMY"]
+    }
+  }, {
+    "name" : "md5",
+    "type": {
+        "type" : "fixed",
+        "name" : "md5Fixed",
+        "size" : 4
+    }
+  } ],
+  "doc:" : "A basic schema for storing messages"
+}
+```
+
+#### Sample Avro Data (JSON)<a id="topic_tr3_dpg_ts__section_spk_15g_ts"></a>
+
+``` pre
+{"id":1, "username":"john","followers":["kate", "santosh"], "rank":null, "relationship": "FRIEND", "fmap": {"kate":10,"santosh":4},
+"address":{"street":"renaissance drive", "number":1,"city":"san jose"}, "md5":\u3F00\u007A\u0073\u0074}
+
+{"id":2, "username":"jim","followers":["john", "pam"], "rank":3, "relationship": "COLLEAGUE", "fmap": {"john":3,"pam":3}, 
+"address":{"street":"deer creek", "number":9,"city":"palo alto"}, "md5":\u0010\u0021\u0003\u0004}
+```
+
+To map this Avro file to an external table, the top-level primitive fields ("id" of type long and "username" of type string) are mapped to their equivalent HAWQ types (bigint and text). The remaining complex fields are mapped to text columns:
+
+``` sql
+gpadmin=# CREATE EXTERNAL TABLE avro_complex 
+  (id bigint, 
+  username text, 
+  followers text, 
+  rank int, 
+  fmap text, 
+  address text, 
+  relationship text,
+  md5 bytea) 
+LOCATION ('pxf://namehost:51200/tmp/avro_complex?PROFILE=Avro')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+```
+
+The above command uses default delimiters for separating components of the complex types. This command is equivalent to the one above, but it explicitly sets the delimiters using the Avro profile parameters:
+
+``` sql
+gpadmin=# CREATE EXTERNAL TABLE avro_complex 
+  (id bigint, 
+  username text, 
+  followers text, 
+  rank int, 
+  fmap text, 
+  address text, 
+  relationship text,
+  md5 bytea) 
+LOCATION ('pxf://localhost:51200/tmp/avro_complex?PROFILE=Avro&COLLECTION_DELIM=,&MAPKEY_DELIM=:&RECORDKEY_DELIM=:')
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+```
+
+A simple query of the external table shows the components of the complex type data separated with delimiters:
+
+``` sql
+gpadmin=# select * from avro_complex;
+```
+
+``` pre
+id | username |  followers  |    rank     |  fmap   |    address  |  relationship  |  md5
+1| john | [kate,santosh] |   | {kate:10,santosh:4} | {number:1,street:renaissance drive,city:san jose} | FRIEND | ?zst
+2| jim | [john,pam] | 3 | {john:3,pam:3} | {number:9,street:deer creek,city:palo alto} | COLLEAGUE | \020!\003\004
+```
+
+You can process the delimited components in the text columns as necessary for your application. For example, the following command uses the `string_to_array` function to convert entries in the "followers" field to a text array column in a new view. The view is then queried to filter rows based on whether a particular follower appears in the array:
+
+``` sql
+gpadmin=# create view followers_view as 
+  select username, address, string_to_array(substring(followers from 2 for (char_length(followers) - 2)), ',')::text[] 
+    as followers 
+  from avro_complex;
+
+gpadmin=# select username, address 
+from followers_view 
+where john = ANY(followers);
+```
+
+``` pre
+username | address
+jim | {number:9,street:deer creek,city:palo alto}
+```

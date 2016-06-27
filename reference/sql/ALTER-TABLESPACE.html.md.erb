@@ -1,0 +1,55 @@
+---
+title: ALTER TABLESPACE
+---
+
+Changes the definition of a tablespace.
+
+## Synopsis<a id="synopsis"></a>
+
+``` pre
+ALTER TABLESPACE name RENAME TO newname
+
+ALTER TABLESPACE name OWNER TO newowner
+         
+```
+
+## Description<a id="desc"></a>
+
+`ALTER TABLESPACE` changes the definition of a tablespace.
+
+You must own the tablespace to use `ALTER TABLESPACE`. To alter the owner, you must also be a direct or indirect member of the new owning role. (Note that superusers have these privileges automatically.)
+
+## Parameters<a id="altertablespace__section4"></a>
+
+ *name*   
+The name of an existing tablespace.
+
+ *newname*   
+The new name of the tablespace. The new name cannot begin with *pg\_* (reserved for system tablespaces).
+
+ *newowner*   
+The new owner of the tablespace.
+
+## Examples<a id="altertablespace__section5"></a>
+
+Rename tablespace `index_space` to `fast_raid`:
+
+``` pre
+ALTER TABLESPACE index_space RENAME TO fast_raid;
+```
+
+Change the owner of tablespace `index_space`:
+
+``` pre
+ALTER TABLESPACE index_space OWNER TO mary;
+```
+
+## Compatibility<a id="altertablespace__section6"></a>
+
+There is no `ALTER TABLESPACE` statement in the SQL standard.
+
+##  See Also<a id="see"></a>
+
+[CREATE TABLESPACE](CREATE-TABLESPACE.html), [DROP TABLESPACE](DROP-TABLESPACE.html)
+
+

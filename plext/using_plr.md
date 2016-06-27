@@ -40,7 +40,11 @@ Create a TYPE in a HAWQ with the same dimensions as your R `data.frame`:
 
 ```sql
 CREATE TYPE t1 AS ...
-Use this TYPE when defining your PL/R function
+```
+
+Use this TYPE when defining your PL/R function:
+
+```sql
 ... RETURNS SET OF t1 AS ...
 ```
 
@@ -193,7 +197,7 @@ $ R -e 'help("MASS")'
 
 [http://www.r-project.org/](http://www.r-project.org/) - The R Project home page
 
-[https://github.com/pivotalsoftware/gp-r](https://github.com/pivotalsoftware/gp-r) - GitHub repository that contains information about using R with Pivotal software including Pivotal HDB.
+[https://github.com/pivotalsoftware/gp-r](https://github.com/pivotalsoftware/gp-r) - GitHub repository that contains information about using R.
 
 [https://github.com/pivotalsoftware/PivotalR](https://github.com/pivotalsoftware/PivotalR) - GitHub repository for PivotalR, a package that provides an R interface to operate on HAWQ tables and views that is similar to the R `data.frame`. PivotalR also supports using the machine learning package MADlib directly from R.
 

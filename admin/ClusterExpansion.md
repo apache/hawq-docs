@@ -15,7 +15,7 @@ There are several recommendations to keep in mind when modifying the size of you
 -   When you add a new node, install both a DataNode and a physical segment on the new node.
 -   After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -   Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, execute **`select gp_metadata_cache_clear();`**.
--   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
+-   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command.
 -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
 ## Adding a New Node to an Existing HAWQ Cluster <a id="task_hawq_expand"></a>
@@ -27,7 +27,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 1.  Prepare the target machine by checking operating system configurations and passwordless ssh. HAWQ requires passwordless ssh access to all cluster nodes. To set up passwordless ssh on the new node, perform the following steps:
     1.  Login to the master HAWQ node as gpadmin. If you are logged in as a different user, switch to the gpadmin user and source the `greenplum_path.sh` file.
 
-        ```
+        ```shell
         $ su - gpadmin
         $ source /usr/local/hawq/greenplum_path.sh
         ```
@@ -40,40 +40,40 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
     3.  Login to the master HAWQ node as root and source the `greenplum_path.sh` file.
 
-        ```
+        ```shell
         $ su - root
         $ source /usr/local/hawq/greenplum_path.sh
         ```
 
     4.  Execute the following hawq command to set up passwordless ssh for root on the new host machine:
 
-        ```
+        ```shell
         $ hawq ssh-exkeys -e hawq_hosts -x new_hosts
         ```
 
     5.  Create the gpadmin user on the new host\(s\).
 
-        ```
-        $ hawq ssh -f new_hosts -e '/usr/sbin/useradd gpadmin’
+        ```shell
+        $ hawq ssh -f new_hosts -e '/usr/sbin/useradd gpadmin'
         $ hawq ssh –f new_hosts -e 'echo -e "changeme\changeme" | passwd gpadmin'
         ```
 
     6.  Switch to the gpadmin user and source the `greenplum_path.sh` file again.
 
-        ```
+        ```shell
         $ su - gpadmin
         $ source /usr/local/hawq/greenplum_path.sh
         ```
 
     7.  Execute the following hawq command a second time to set up passwordless ssh for the gpadmin user:
 
-        ```
+        ```shell
         $ hawq ssh-exkeys -e hawq_hosts -x new_hosts
         ```
 
     8.  After setting up passwordless ssh, you can execute the following hawq command to check the target machine's configuration.
 
-        ```
+        ```shell
         $ hawq check -f new_hosts
         ```
 
@@ -81,7 +81,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
 2.  Login to the target host machine `sdw4` as the root user. If you are logged in as a different user, switch to the root account:
 
-    ```
+    ```shell
     $ su - root
     ```
 
@@ -90,9 +90,15 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 4.  Download and install HAWQ on the target machine \(`sdw4`\) as described in the [software build instructions](https://cwiki.apache.org/confluence/display/HAWQ/Build+and+Install) or in the distribution installation documentation.
 5.  On the HAWQ master node, check current cluster and host information using `psql`.
 
+    ```shell
+    $ psql -d postgres
     ```
-    #psql -d postgres
-    postgres=#select * from gp_segment_configuration;
+    
+    ```sql
+    postgres=# select * from gp_segment_configuration;
+    ```
+    
+    ```
      registration_order | role | status | port  | hostname |    address    
     --------------------+------+--------+-------+----------+---------------
                      -1 | s    | u      |  5432 | sdw1     | 192.168.2.202
@@ -106,7 +112,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
 6.  Execute the following command to confirm that HAWQ was installed on the new host:
 
-    ```
+    ```shell
     $ hawq ssh -f new_hosts -e "ls -l $GPHOME"
     ```
 
@@ -132,7 +138,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
 9.  Sync the `hawq-site.xml` and `slaves` configuration files to all nodes in the cluster \(as listed in hawq\_hosts\).
 
-    ```
+    ```shell
     $ hawq scp -f hawq_hosts hawq-site.xml slaves =:$GPHOME/etc/
     ```
 
@@ -144,16 +150,22 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 
 12. On `sdw4`, switch to the database user \(for example, `gpadmin`\), and initalize the segment.
 
-    ```
+    ```shell
     $ su - gpadmin
     $ hawq init segment
     ```
 
 13. On the master node, check current cluster and host information using `psql` to verify that the new `sdw4` node has initialized successfully.
 
+    ```shell
+    $ psql -d postgres
     ```
-    #psql -d postgres
+    
+    ```sql
     postgres=# select * from gp_segment_configuration ;
+    ```
+    
+    ```
      registration_order | role | status | port  | hostname |    address    
     --------------------+------+--------+-------+----------+---------------
                      -1 | s    | u      |  5432 | sdw1     | 192.168.2.202
@@ -165,22 +177,31 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
 
 14. To maintain optimal cluster performance, rebalance HDFS data by running the following command:
-    <pre><code>$ sudo -u hdfs hdfs balancer -threshold <i>threshhold_value</i>
-    </code></pre>
-
+15. 
+    ```shell
+    $ sudo -u hdfs hdfs balancer -threshold threshhold_value
+    ```
+    
     where *threshhold\_value* represents how much a DataNode's disk usage, in percentage, can differ from overall disk usage in the cluster. Adjust the threshold value according to the needs of your production data and disk. The smaller the value, the longer the rebalance time.
 >
     **Note:** If you do not specify a threshold, then a default value of 20 is used. If the balancer detects that a DataNode is using less than a 20% difference of the cluster's overall disk usage, then data on that node will not be rebalanced. For example, if disk usage across all DataNodes in the cluster is 40% of the cluster's total disk-storage capacity, then the balancer script ensures that a DataNode's disk usage is between 20% and 60% of that DataNode's disk-storage capacity. DataNodes whose disk usage falls within that percentage range will not be rebalanced.
 
     Rebalance time is also affected by network bandwidth. You can adjust network bandwidth used by the balancer by using the following command:
-    <pre><code>$ sudo -u hdfs hdfs dfsadmin -setBalancerBandwidth <i>network_bandwith</i></code></pre>
+    
+    ```shell
+    $ sudo -u hdfs hdfs dfsadmin -setBalancerBandwidth network_bandwith
+    ```
+    
     The default value is 1MB/s. Adjust the value according to your network.
 
 15. Speed up the clearing of the metadata cache by using the following command:
 
+    ```shell
+    $ psql -d postgres
     ```
-    #psql -d postgres
-    postgres=#select gp_metadata_cache_clear();
+    
+    ```sql
+    postgres=# select gp_metadata_cache_clear();
     ```
 
 16. After expansion, if the new size of your cluster is greater than or equal \(#nodes >=4\) to 4, change the value of the `output.replace-datanode-on-failure` HDFS parameter in `hdfs-client.xml` to `false`.
@@ -197,7 +218,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 	|\> 256 and <= 512|1 \* \#nodes|
 	|\> 512|512| 
    
-18. If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter. 
+18. If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter. 
 
 
 	**Note:** The redistribution of table data can take a significant amount of time.

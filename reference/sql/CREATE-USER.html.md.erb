@@ -1,0 +1,46 @@
+---
+title: CREATE USER
+---
+
+Defines a new database role with the `LOGIN` privilege by default.
+
+## Synopsis<a id="topic1__section2"></a>
+
+``` pre
+CREATE USER name [ [WITH] option [ ... ] ]
+```
+
+where *option* can be:
+
+``` pre
+      SUPERUSER | NOSUPERUSER
+    | CREATEDB | NOCREATEDB
+    | CREATEROLE | NOCREATEROLE
+    | CREATEUSER | NOCREATEUSER
+    | INHERIT | NOINHERIT
+    | LOGIN | NOLOGIN
+    | [ ENCRYPTED | UNENCRYPTED ] PASSWORD 'password'
+    | VALID UNTIL 'timestamp'
+    | IN ROLE rolename [, ...]
+    | IN GROUP rolename [, ...]
+    | ROLE rolename [, ...]
+    | ADMIN rolename [, ...]
+    | USER rolename [, ...]
+    | SYSID uid
+    | RESOURCE QUEUE queue_name
+
+```
+
+## Description<a id="topic1__section3"></a>
+
+HAWQ does not support `CREATE USER`. This command has been replaced by [CREATE ROLE](CREATE-ROLE.html).
+
+The only difference between `CREATE ROLE` and `CREATE                     USER` is that `LOGIN` is assumed by default with `CREATE USER`, whereas `NOLOGIN` is assumed by default with `CREATE ROLE`.
+
+## Compatibility<a id="topic1__section4"></a>
+
+There is no `CREATE USER` statement in the SQL standard.
+
+## See Also<a id="topic1__section5"></a>
+
+[CREATE ROLE](CREATE-ROLE.html)

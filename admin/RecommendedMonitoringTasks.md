@@ -20,8 +20,7 @@ It is not necessary to implement all of these suggestions in every cluster; use 
     <td><p>List segments that are currently down. If any rows are returned, this should generate a warning or alert.</p>
     <p>Recommended frequency: run every 5 to 10 minutes</p><p>Severity: IMPORTANT</p></td>
     <td>Run the following query in the `postgres` database:
-    <pre>code>
-SELECT * FROM gp_segment_configuration
+    <pre><code>SELECT * FROM gp_segment_configuration
 WHERE status <> 'u';
 </code></pre>
   </td>
@@ -189,7 +188,7 @@ GROUP BY 1;
   </tr>
   <tr>
     <td>
-    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="/200/hawq/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
+    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="/20/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
     <p>Recommended frequency: daily</p>
     <p>Severity: CRITICAL</p>
     </td>
@@ -197,7 +196,7 @@ GROUP BY 1;
       <p><p>Vacuum an individual table:</p>
       <pre><code>VACUUM &lt;<i>table</i>&gt;;</code></pre>
     </td>
-    <td>After the <a href="/200/hawq/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
+    <td>After the <a href="/20/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
   </tr>
     <td>
       <p>Update table statistics.</p>

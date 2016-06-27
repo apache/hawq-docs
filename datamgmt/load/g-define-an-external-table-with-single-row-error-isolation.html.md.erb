@@ -1,0 +1,24 @@
+---
+title: Define an External Table with Single Row Error Isolation
+---
+
+The following example logs errors internally in HAWQ and sets an error threshold of 10 errors.
+
+``` sql
+=# CREATE EXTERNAL TABLE ext_expenses ( name text, date date, amount float4, category text, desc1 text )
+   LOCATION ('gpfdist://etlhost-1:8081/*', 'gpfdist://etlhost-2:8082/*')
+   FORMAT 'TEXT' (DELIMITER '|')
+   LOG ERRORS INTO errortable SEGMENT REJECT LIMIT 10 ROWS;
+```
+
+The following example creates an external table, *ext\_expenses*, sets an error threshold of 10 errors, and writes error rows to the table *err\_expenses*.
+
+``` sql
+=# CREATE EXTERNAL TABLE ext_expenses
+     ( name text, date date, amount float4, category text, desc1 text )
+   LOCATION ('gpfdist://etlhost-1:8081/*', 'gpfdist://etlhost-2:8082/*')
+   FORMAT 'TEXT' (DELIMITER '|')
+   LOG ERRORS INTO err_expenses SEGMENT REJECT LIMIT 10 ROWS;
+```
+
+

@@ -39,7 +39,7 @@ If you are using YARN to manage HAWQ resources and need to move a YARN resource 
 
 Use one of the following procedures to move YARN resource manager component from one node to another when HAWQ is configured to use YARN as the global resource manager (`hawq_global_rm_type` is `yarn`). The exact procedure you should use depends on whether you have enabled high availability in YARN.
 
-<p class="note"><b>Note:</b> In a Kerberos-secured environment, you must update <code>hadoop.proxyuser.yarn.hosts</code> property in HDFS <code>core-site.xml</code> before running a service check. The values should be set to the current YARN Resource Managers.</p>
+**Note:** In a Kerberos-secured environment, you must update <code>hadoop.proxyuser.yarn.hosts</code> property in HDFS <code>core-site.xml</code> before running a service check. The values should be set to the current YARN Resource Managers.</p>
 
 ### Procedure (Single YARN Resource Manager)
 
@@ -156,7 +156,7 @@ There are several recommendations to keep in mind when modifying the size of you
 -  When you add a new node, install both a DataNode and a HAWQ segment on the new node.
 -  After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -  Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
--  Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command.
+-  Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command.
 -  If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
 ### Procedure
@@ -191,13 +191,13 @@ There are several recommendations to keep in mind when modifying the size of you
     |\> 170 and <= 256|2 \* \#nodes|
     |\> 256 and <= 512|1 \* \#nodes|
     |\> 512|512|
-18.  **Note:** Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
+18.  Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
     <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, and applies the new configuration.
     >**Note:** Do not use the **Restart All** service action to complete this step.
-19.  **Note:** Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
+19.  Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
     <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 20.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
-21.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/200/hawq/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/200/hawq/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
+21.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
 
     **Note:** The redistribution of table data can take a significant amount of time.
 22.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
@@ -206,35 +206,28 @@ There are several recommendations to keep in mind when modifying the size of you
 If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
 
 1.  Update your configuration to use the new `default_hash_table_bucket_number` value that you calculated:
-
-    1. SSH into the HAWQ master host as the `gpadmin` user:
-
-    ```
+  1. SSH into the HAWQ master host as the `gpadmin` user:
+    ```shell
     $ ssh gpadmin@<HAWQ_MASTER_HOST>
     ```
-    2. Source the `greenplum_path.sh` file to update the shell environment:
-
-    ```
+   2. Source the `greenplum_path.sh` file to update the shell environment:
+    ```shell
     $ source /usr/local/hawq/greenplum_path.sh
     ```
-    3. Verify the current value of `default_hash_table_bucket_number`:
-
-    ```
+   3. Verify the current value of `default_hash_table_bucket_number`:
+    ```shell
     $ hawq config -s default_hash_table_bucket_number
     ```
-    4. Update `default_hash_table_bucket_number` to the new value that you calculated:
-
+   4. Update `default_hash_table_bucket_number` to the new value that you calculated:
+    ```shell
+    $ hawq config -c default_hash_table_bucket_number -v <new_value>
     ```
-    $ config -c default_hash_table_bucket_number -v <new_value>
-    ```
-    5. Reload the configuration without restarting the cluster:
-
-    ```
+   5. Reload the configuration without restarting the cluster:
+    ```shell
     $ hawq stop cluster -u
     ```
-    6. Verify that the `default_hash_table_bucket_number` value was updated:
-
-    ```
+   6. Verify that the `default_hash_table_bucket_number` value was updated:
+    ```shell
     $ hawq config -s default_hash_table_bucket_number
     ```
 2.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Separate multiple hosts with new lines. For example, after adding host4 and host5 to a cluster already contains hosts 1-3, the updated file contents would be:
@@ -280,12 +273,14 @@ The HAWQ Standby Master serves as a backup of the HAWQ Master host, and is an im
 ### Procedure
 
 1.  Select an existing host in the cluster to run the HAWQ standby master. You cannot run the standby master on the same host that runs the HAWQ master. Also, do not run a standby master on the node where you deployed the Ambari server; if the Ambari postgres instance is running on the same port as the HAWQ master posgres instance, initialization fails and will leave the cluster in an inconsistent state.
-1. Login to the HAWQ host that you chose to run the standby master and determine if there is an existing HAWQ master directory (for example, /data/hawq/master) on the machine. If the directory exists, rename the directory. For example:
-     ```
-     $ mv /data/hawq/master /data/hawq/master-old
-     ```
+1. Login to the HAWQ host that you chose to run the standby master and determine if there is an existing HAWQ master directory (for example, `/data/hawq/master`) on the machine. If the directory exists, rename the directory. For example:
 
-     **Note:**  If a HAWQ master directory exists on the host when you configure the HAWQ standby master, then the standby master may be initialized with stale data. Rename any existing master directory before you proceed.
+    ```shell
+    $ mv /data/hawq/master /data/hawq/master-old
+    ```
+
+   **Note:**  If a HAWQ master directory exists on the host when you configure the HAWQ standby master, then the standby master may be initialized with stale data. Rename any existing master directory before you proceed.
+   
 1.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 2.  Click **HAWQ** in the list of installed services.
 3.  Select **Service Actions > Add HAWQ Standby Master** to start the Add HAWQ Standby Master Wizard.
@@ -335,9 +330,6 @@ Ambari stores and uses its own copy of the gpadmin password, independently of th
 
 If passwordless ssh has not been set up, `hawq ssh-exkeys` attempts to exchange the key by using the password provided by the Ambari web console. If the password on the host machine differs from the HAWQ System User password recognized on Ambari, exchanging the key with the HAWQ Master fails. Components without passwordless ssh might not be registered with the HAWQ cluster.
 
-### Prerequisites
-HAWQ service on the cluster must be already installed and managed through Ambari.
-
 ### When to Perform
 You should change the gpadmin password when:
 
@@ -360,73 +352,83 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
 
     You can then use a command similar to the following to change the password on all hosts that are listed in the file:
 
-    ```
-    hawq ssh -f hawq_hosts 'echo "gpadmin:newpassword" | /usr/sbin/chpasswd'
+    ```shell
+    $ hawq ssh -f hawq_hosts 'echo "gpadmin:newpassword" | /usr/sbin/chpasswd'
     ```    
 
-2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) The perform the following steps:
+2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) Then perform the following steps:
     1. Click **HAWQ** in the list of installed services.
     2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script.
-    2. Click **Save** to save the updated configuration.
-    3. Restart HAWQ service to propagate the configuration change to all Ambari agents.
+    3. Click **Save** to save the updated configuration.
+    4. Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
     This will synchronize the password on the host machines with the password that you specified in Ambari.
-##Setting Up Alerts 
-When you want to be advised of when a HAWQ process is down or not responding.
-Alerts can be created for the Master, Standby Master, Segments, and PXF services.
 
-### Prerequisites
-HAWQ service on the cluster must be already installed and managed through Ambari.
+## Setting Up Alerts<a id="gpadmin-setup-alert"></a>
+ 
+Alerts advise you of when a HAWQ process is down or not responding, or when certain conditions requiring attention occur.
+Alerts can be created for the Master, Standby Master, Segments, and PXF components. You can also set up custom alert groups to monitor these conditions and send email notifications when they occur.
 
 ### When to Perform
-Alerts are enabled by default. However, yoou might want to disable them alert function when performing system operations in maintenance mode and re-enable them when returning to normal operation.
+Alerts are enabled by default. You might want to disable alert functions when performing system operations in maintenance mode and then re-enable them after returning to normal operation.
 
-Alerts can be configured to display messages for all system status, on only conditions of interest, such as warnings or critical conditions. Alerts can advise you of the following conditions: 
-* The HAWQ Master process is down or not responding.
-* The HAWQ Standby Master process is down or not responding.
-* A HAWQ Segment on a node is down or not listening on the network.
-* The HAWQ Standby Master is not synchronized with HAWQ Master.
-* When any of the HAWQ segments fail to register with the HAWQ Master. 
-* If the number of available  HAWQ Segments falls below the specified alert threshhold.
-* The PXF process on a node is down or not responding. 
+You can configure alerts to display messages for all system status changes or only for conditions of interest, such as warnings or critical conditions. Alerts can advise you if there are communication issues between the HAWQ Master and HAWQ segments, or if the HAWQ Master, Standby Master, a segment, or the PXF service is down or not responding. 
 
-You can set Ambari to check for alerts at specified intervals, on a particular service or host, and what level of criticality you want to trigger an alert (OK, WARNING, CRITICAL) or if the system goes into an unknown status.
+You can configure Ambari to check for alerts at specified intervals, on a particular service or host, and what level of criticality you want to trigger an alert (OK, WARNING, or CRITICAL).
 
 ### Procedure
-To view the alert information, click on the Alert button at the top of the Ambari console. The default interval for checking the functionality of the HAWQ system is 1 minute. To customize the alert, perform the following steps:
-1.  Click on the name of the Alert you want to edit. 
-2.  When the Configuration screen appears, click **Edit**. 
-3.  Change the setting for the interval for the instance you want to configure and click **Save**.
+Ambari can show Alerts and also configure certain status conditions. 
 
-### Configuring Alerts
-The Alerts you can configure are as follows:
+#### Viewing HAWQ Alerts
+1. To view the current alert information for HAWQ, click the **Groups** button at the top left of the Alerts page, then select **HAWQ Default** in the drop-down menu, then click on the **Alert** button at the top of the Ambari console. Ambari will display a list of all available alert functions and their current status. 
 
-* HAWQ Master Process
-This alert is triggered when the HAWQ Master process is down or not responding.
+2. To view the current Alert settings, click on the name of the alert.
 
-* HAWQ Segment Process
-This alert is triggered when a HAWQ Segment on a node is down or not responding.
+The Alerts you can view are as follows:
 
-* HAWQ Standby Master Process
-This alert is triggered when the HAWQ Standby Master process is down or not responding.
+* **HAWQ Master Process**:
+This alert is triggered when the HAWQ Master process is down or not responding. 
 
-* HAWQ Standby Master Sync Status
-This alert is triggered when the HAWQ Standby Master is not synchronized with the HAWQ Master. Using this Alert eliminates the need to check the gp_master_mirroring catalog table to determine if the Standby Master is fully synchronized. 
-If this Alert is triggered, use the service action  Re-Sync HAWQ Standby Master on the HAWQ service page to re-synchronize HAWQ Standby Master with HAWQ Master.
+* **HAWQ Segment Process**:
+This alert is triggered when a HAWQ Segment on a node is down or not responding.  
 
-* HAWQ Segment Registration Status
-This alert is triggered when any of the HAWQ Segments fail to register with HAWQ Master. This indicates that the HAWQ segments having up status  in the gp_segment_configuration table do not match the HAWQ Segments listed in /usr/local/hawq/etc/slaves file on HAWQ Master. 
+* **HAWQ Standby Master Process**:
+This alert is triggered when the HAWQ Standby Master process is down or not responding. If no standby is present, the Alert shows as **NONE**. 
 
-* Percent HAWQ Segment Status Available
-Tp change the threshhold for the number of unresponsive segments that will trigger an alert, use the following procedure:
-1.  Click on **Percent HAWQ Segments Available**. 
-2.  Click **Edit** to change the percentage of total segments that will create a Warning alert (default is 10 percent of total) or Critical Alert (default is 25 percent of total segments).
-3.  Click **Save** when done.
+* **HAWQ Standby Master Sync Status**:
+This alert is triggered when the HAWQ Standby Master is not synchronized with the HAWQ Master. Using this Alert eliminates the need to check the gp\_master\_mirroring catalog table to determine if the Standby Master is fully synchronized. 
+If no standby Master is present, the status will show as **UNKNOWN**.
+   If this Alert is triggered, go to the HAWQ **Services** tab and click on the **Service Action** button to re-sync the HAWQ Standby Master with the HAWQ Master.
+   
+* **HAWQ Segment Registration Status**:
+This alert is triggered when any of the HAWQ Segments fail to register with the HAWQ Master. This indicates that the HAWQ segments having an up status in the gp\_segment\_configuration table do not match the HAWQ Segments listed in the /usr/local/hawq/etc/slaves file on the HAWQ Master. 
 
-Alerts for **OK**, **WARN**, and **CRITICAL** will be displayed when the number of unresponsive HAWQ segments in the cluster is greater than  the specified threshhold. 
+* **Percent HAWQ Segment Status Available**:
+This Alert monitors the percentage of HAWQ segments available versus total segments. 
+   Alerts for **WARN**, and **CRITICAL** are displayed when the number of unresponsive HAWQ segments in the cluster is greater than the specified threshhold. Otherwise, the status will show as **OK**.
 
-* PXF Alerts
+#### Viewing PXF Alerts
 PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network. 
 
-1.  Go to the Groups dropdown button at the top right of the Alerts page. Select PXF Default. 
-1.  1.  Click on PXF Process to set the time interval for checking the network.
+To check PXF alerts, click the **Groups** dropdown button at the top left of the Alerts page and select **PXF Default** in the dropdown menu. If PXF Alerts are enabled, the Alert status is shown on the **PXF Status** page as **PXF Process Alerts**.
+
+#### Setting the Monitoring Inteval
+You can customize how often you wish the system to check for certain conditions. The default interval for checking the HAWQ system is 1 minute. 
+
+To customize the interval, perform the following steps:
+
+1.  Click on the name of the Alert you want to edit. 
+2.  When the Configuration screen appears, click **Edit**. 
+3.  Enter a number for how often to check status for the selected Alert, then click **Save**. The interval must be specified in whole minutes.
+
+
+#### Setting the Available HAWQ Segment Threshhold
+HAWQ monitors the percentage of available HAWQ segments and can send an alert when a specified percent of unresponsive segments is reached. 
+
+To set the threshhold for the unresponsive segments that will trigger an alert:
+
+   1.  Click on **Percent HAWQ Segments Available**. 
+   2.  Click **Edit**. Enter the percentage of total segments to create a **Warning** alert (default is 10 percent of the total segments) or **Critical** alert (default is 25 percent of total segments).
+   3.  Click **Save** when done.
+   Alerts for **WARN**, and **CRITICAL** will be displayed when the number of unresponsive HAWQ segments in the cluster is greater than the specified percentage. 
+

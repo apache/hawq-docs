@@ -1,0 +1,42 @@
+---
+title: DROP FILESPACE
+---
+
+Removes a filespace.
+
+## Synopsis<a id="topic1__section2"></a>
+
+``` pre
+DROP FILESPACE [IF EXISTS] filespacename
+         
+```
+
+## Description<a id="topic1__section3"></a>
+
+`DROP FILESPACE` removes a filespace definition and its system-generated data directories from the system.
+
+A filespace can only be dropped by its owner or a superuser. The filespace must be empty of all tablespace objects before it can be dropped. It is possible that tablespaces in other databases may still be using a filespace even if no tablespaces in the current database are using the filespace.
+
+## Parameters<a id="topic1__section4"></a>
+
+IF EXISTS  
+Do not throw an error if the filespace does not exist. A notice is issued in this case.
+
+ *tablespacename*   
+The name of the filespace to remove.
+
+## Examples<a id="topic1__section5"></a>
+
+Remove the tablespace `myfs`:
+
+``` pre
+DROP FILESPACE myfs;
+```
+
+## Compatibility<a id="topic1__section6"></a>
+
+There is no `DROP FILESPACE` statement in the SQL standard or in PostgreSQL.
+
+## See Also<a id="topic1__section7"></a>
+
+[DROP TABLESPACE](DROP-TABLESPACE.html), [hawq filespace](../cli/admin_utilities/hawqfilespace.html#topic1)

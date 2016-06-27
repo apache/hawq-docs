@@ -1,0 +1,19 @@
+---
+title: Server Configuration Parameter Reference
+---
+
+This section describes all server configuration guc/parameters that are available in HAWQ.
+
+Configuration guc/parameters are located in `$GPHOME/etc/hawq-site.xml`. This configuration file resides on all HAWQ instances and can be modified by using the `hawq config` utility. You can use the same configuration file cluster-wide across both master and segments.
+
+**Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster.
+
+-   **[About Server Configuration Parameters](../reference/guc/guc_config.html)**
+
+-   **[Configuration Parameter Categories](../reference/guc/guc_category-list.html)**
+
+-   **[Configuration Parameters](../reference/guc/parameter_definitions.html)**
+
+-   **[Sample hawq-site.xml Configuration File](../reference/HAWQSampleSiteConfig.html)**
+
+

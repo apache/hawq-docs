@@ -37,7 +37,7 @@ You can configure a new HAWQ system with a standby master during HAWQ’s instal
     * Data directory created
 1. Run the `hawq init standby` utility on the host of the currently active primary master to add a standby master host to your HAWQ system. For example:
 
-	```
+	```shell
 	$ hawq init standby -s new_standby_master_hostname
 	```
 
@@ -59,21 +59,21 @@ Upon activation of the standby master, HAWQ reconstructs the state of the master
 
 1. Run the hawq activate standby utility from the standby master host you are activating. For example:
 
-	```
+	```shell
 	$ hawq activate standby
  	```
  	
 1. After you activate the standby master, it becomes the active or primary master for the HAWQ cluster.
 1. (Optional, but recommended.) Configure a new standby master. Run the following command:
 
-	```
+	```shell
 	$ hawq init standby -s new_standby_master_hostname
 	```
 	where `-s` specifies the hostname of the standby master.
 	
 1. Run hawq state to check the status of the cluster:
 
-	```
+	```shell
 	$ hawq state
 	```
 	
@@ -83,9 +83,7 @@ Upon activation of the standby master, HAWQ reconstructs the state of the master
 
 1. Query the `gp_segment_configuration` table to verify that segments have registered themselves to the new master.
 
-	```
 	$ psql dbname -c 'SELECT * FROM gp_segment_configuration;'
-	```
 	
 1. Then, check on the status of master mirroring by querying the `gp_master_mirroring` system view. See [Checking on the State of Master Mirroring](#standby_check) for instructions.
 
@@ -94,9 +92,9 @@ Upon activation of the standby master, HAWQ reconstructs the state of the master
 
 To check on the status of master mirroring, query the `gp_master_mirroring` system view. The view provides information about the walsender process used for HAWQ master mirroring. 
 
-
-	$ psql dbname -c 'SELECT * FROM gp_master_mirroring;'
-	
+```shell
+$ psql dbname -c 'SELECT * FROM gp_master_mirroring;'
+```
 
 If a standby master has not been set up for the cluster, you will see the following output:
 
@@ -130,6 +128,8 @@ If the the log synchronization process between the master and standby has stoppe
 
 To resynchronize the standby with the master, execute the following command on the master.
 
-	$ hawq init standby -n
+```shell
+$ hawq init standby -n
+```
 
 This command stops and restarts the master and then synchronizes the standby.

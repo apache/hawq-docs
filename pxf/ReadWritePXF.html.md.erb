@@ -1,0 +1,132 @@
+---
+title: Using Profiles to Read and Write Data
+---
+
+PXF profiles are collections of common metadata attributes that can be used to simplify the reading and writing of data. You can use any of the built-in profiles that come with PXF or you can create your own.
+
+For example, if you are writing single line records to text files on HDFS, you could use the built-in HdfsTextSimple profile. You specify this profile when you create the PXF external table used to write the data to HDFS.
+
+## Built-In Profiles<a id="built-inprofiles"></a>
+
+PXF comes with a number of built-in profiles that group together a collection of metadata attributes. PXF built-in profiles simplify access to the following types of data storage systems:
+
+-   HDFS File Data (Read + Write)
+-   Hive (Read only)
+-   HBase (Read only)
+
+You can specify a built-in profile when you want to read data that exists inside HDFS files, Hive tables, HBase tables, and for writing data into HDFS files.
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Profile</th>
+<th>Description</th>
+<th>Fragmenter/Accessor/Resolver</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>HdfsTextSimple</td>
+<td>Read or write delimited single line records from or to plain text files on HDFS.</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hdfs.LineBreakAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hdfs.StringPassResolver</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>HdfsTextMulti</td>
+<td>Read delimited single or multi-line records (with quoted linefeeds) from plain text files on HDFS. This profile is not splittable (non parallel); therefore reading is slower than reading with HdfsTextSimple.</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hdfs.QuotedLineBreakAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hdfs.StringPassResolver</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>Hive</td>
+<td>Use this when connecting to Hive. The Hive table can use any of the available storage formats: text, RC, ORC, Sequence, or Parquet.</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hive.HiveDataFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveResolver</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>HiveRC</td>
+<td>Use this when connecting to a Hive table where each partition is stored as an RCFile. This profile is optimized for it.
+<div class="note note">
+Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
+</div></td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveRCFileAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveColumnarSerdeResolver</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>HiveText</td>
+<td>Use this profile when connecting to a Hive table where each partition is stored as a text file. This profile is optimized for it.
+<div class="note note">
+Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
+</div></td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveLineBreakAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveStringPassResolver</li>
+</ul></td>
+</tr>
+<tr class="even">
+<td>HBase</td>
+<td>Use this profile when connected to an HBase data store engine.</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hbase.HBaseDataFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hbase.HBaseAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hbase.HBaseResolver</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>Avro</td>
+<td>Use this profile for reading Avro files (fileName.avro).</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hdfs.AvroFileAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hdfs.AvroResolver</li>
+</ul></td>
+</tr>
+</tbody>
+</table>
+
+## Adding and Updating Profiles<a id="addingandupdatingprofiles"></a>
+
+Administrators can add new profiles or edit the built-in profiles inside `/etc/conf/pxf-profiles.xml`. You can use all the profiles in `/etc/conf/pxf-profiles.xml`.
+
+**Note:** Add any JAR files that contain custom profile plug-ins to the `/etc/pxf/conf/pxf-public.classpath` configuration file.
+
+Each profile has a mandatory unique name and an optional description.
+
+In addition, each profile contains a set of plug-ins that are an extensible set of metadata attributes.
+
+After you make changes in `pxf-profiles.xml` (or any other PXF configuration file), propagate the changes to all nodes with PXF installed, and then restart the PXF service on all nodes.
+
+## Custom Profile Example<a id="customprofileexample"></a>
+
+``` xml
+<profile> 
+ <name>MyCustomProfile</name>
+ <description>A Custom Profile Example</description>
+ <plugins>
+    <fragmenter>package.name.CustomProfileFragmenter</fragmenter>
+    <accessor>package.name.CustomProfileAccessor</accessor>
+    <customPlugin1>package.name.MyCustomPluginValue1</customPlugin1>
+    <customPlugin2>package.name.MyCustomPluginValue2</customPlugin2>
+ </plugins>
+</profile>
+```
+
+

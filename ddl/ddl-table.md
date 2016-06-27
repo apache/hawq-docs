@@ -126,7 +126,7 @@ For hash tables, the `SELECT INTO` function always uses random distribution.
 
 `CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `default_hash_table_bucket_number` parameter.
 
-Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments in the next section and in [Query Performance](/200/hawq/query/query-performance.html#topic38).
+Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments in the next section and in [Query Performance](/20/query/query-performance.html#topic38).
 
 #### Performance Tuning <a id="topic_wff_mqm_gv"></a>
 

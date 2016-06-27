@@ -19,7 +19,7 @@ Standalone mode means that the HAWQ resource manager assumes it can use all reso
 
 To configure HAWQ to run without a global resource manager, add the following property configuration to your `hawq-site.xml` file:
 
-```
+``` xml
 <property>
       <name>hawq_global_rm_type</name>
       <value>none</value>
@@ -40,7 +40,7 @@ When you run the HAWQ resource manager in standalone mode \(`hawq_global_rm_type
 
 In `hawq-site.xml`, add the following parameters:
 
-```
+``` xml
 <property>
    <name>hawq_rm_memory_limit_perseg</name>
    <value>8GB</value>
@@ -81,14 +81,14 @@ In some cases, you may want to specify additional resource quotas on the query s
 
 The following configuration properties allow a user to control resource quotas without altering corresponding resource queues.
 
--   [hawq\_rm\_stmt\_vseg\_memory](/200/hawq/reference/guc/parameter_definitions.html)
--   [hawq\_rm\_stmt\_nvseg](/200/hawq/reference/guc/parameter_definitions.html)
+-   [hawq\_rm\_stmt\_vseg\_memory](/20/reference/guc/parameter_definitions.html)
+-   [hawq\_rm\_stmt\_nvseg](/20/reference/guc/parameter_definitions.html)
 
 However, the changed resource quota for the virtual segment cannot exceed the resource queue’s maximum capacity in HAWQ.
 
 In the following example, when executing the next query statement, the HAWQ resource manager will attempt to allocate 10 virtual segments and each segment has a 256MB memory quota.
 
-```
+``` sql
 postgres=# set hawq_rm_stmt_vseg_memory='256mb';
 SET
 postgres=# set hawq_rm_stmt_nvseg=10;
@@ -117,4 +117,4 @@ To alleviate the load on NameNode, you can limit V, the number of virtual segmen
 -   `hawq_rm_nvseg_perquery_limit` limits the maximum number of virtual segments that can be used for one statement execution on a cluster-wide level.  The hash buckets defined in `default_hash_table_bucket_number` cannot exceed this number. The default value is 512.
 -   `default_hash_table_bucket_number` defines the number of buckets used by default when you create a hash table. When you query a hash table, the query's virtual segment resources are fixed and allocated based on the bucket number defined for the table. A best practice is to tune this configuration parameter after you expand the cluster.
 
-You can also limit the number of virtual segments used by queries when configuring your resource queues. \(See [CREATE RESOURCE QUEUE](/200/hawq/reference/sql/CREATE-RESOURCE-QUEUE.html).\) The global configuration parameters are a hard limit, however, and any limits set on the resource queue or on the statement-level cannot be larger than these limits set on the cluster-wide level.
+You can also limit the number of virtual segments used by queries when configuring your resource queues. \(See [CREATE RESOURCE QUEUE](/20/reference/sql/CREATE-RESOURCE-QUEUE.html).\) The global configuration parameters are a hard limit, however, and any limits set on the resource queue or on the statement-level cannot be larger than these limits set on the cluster-wide level.
