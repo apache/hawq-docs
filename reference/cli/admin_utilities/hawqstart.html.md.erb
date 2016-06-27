@@ -65,8 +65,8 @@ Displays detailed status, progress and error messages output by the utility.
 -m --masteronly  
 Optional. Starts the HAWQ master instance only, in utility mode, which may be useful for maintenance tasks. This mode only allows connections to the master in utility mode. For example:
 
-``` pre
-PGOPTIONS='-c gp_role=utility' psql
+``` shell
+$ PGOPTIONS='-c gp_role=utility' psql
 ```
 
 -R --restrict (restricted mode)  
@@ -91,26 +91,26 @@ Displays the version of this utility.
 
 Start a HAWQ system:
 
-``` pre
-hawq start cluster
+``` shell
+$ hawq start cluster
 ```
 
 Start a HAWQ master in maintenance mode:
 
-``` pre
-hawq start master -m
+``` shell
+$ hawq start master -m
 ```
 
 Start a HAWQ system in restricted mode (only allow superuser connections):
 
-``` pre
-hawq start cluster -R
+``` shell
+$ hawq start cluster -R
 ```
 
 Start the HAWQ master instance only and connect in utility mode:
 
-``` pre
-hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
+``` shell
+$ hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
 ```
 
 ## See Also<a id="topic1__section6"></a>

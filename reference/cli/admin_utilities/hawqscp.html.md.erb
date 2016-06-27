@@ -22,8 +22,8 @@ The `hawq scp` utility allows you to copy one or more files from the specified h
 
 To specify the hosts involved in the SCP session, use the `-f` option to specify a file containing a list of host names, or use the `-h` option to name single host names on the command-line. At least one host name (`-h`) or a host file (`-f`) is required. The `-J` option allows you to specify a single character to substitute for the *hostname* in the `copy from` and `copy to` destination strings. If `-J` is not specified, the default substitution character is an equal sign (`=`). For example, the following command will copy `.bashrc` from the local host to `/home/gpadmin` on all hosts named in `hostfile_gpssh`:
 
-``` pre
-hawq scp -f hostfile_hawqssh .bashrc =:/home/gpadmin
+``` shell
+$ hawq scp -f hostfile_hawqssh .bashrc =:/home/gpadmin
 ```
 
 If a user name is not specified in the host list or with *user*`@` in the file path, `hawq scp` will copy files as the currently logged in user. To determine the currently logged in user, do a `whoami` command. By default, `hawq scp` goes to `$HOME` of the session user on the remote hosts after login. To ensure the file is copied to the correct location on the remote hosts, i use absolute paths.
@@ -64,14 +64,14 @@ Displays the version of this utility.
 
 Copy the file named `installer.tar` to `/` on all the hosts in the file `hostfile_hawqssh`.
 
-``` pre
-hawq scp -f hostfile_hawqssh installer.tar =:/
+``` shell
+$ hawq scp -f hostfile_hawqssh installer.tar =:/
 ```
 
 Copy the file named *myfuncs.so* to the specified location on the hosts named `sdw1` and `sdw2`:
 
-``` pre
-hawq scp -h sdw1 -h sdw2 myfuncs.so =:/usr/local/-db/lib
+``` shell
+$ hawq scp -h sdw1 -h sdw2 myfuncs.so =:/usr/local/-db/lib
 ```
 
 ## See Also

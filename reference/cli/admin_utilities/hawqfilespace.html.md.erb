@@ -79,8 +79,11 @@ Force a password prompt.
 
 Create a filespace configuration file. Depending on your system setup, you may need to specify the host and port. You will be prompted to enter a name for the filespace and a replica number. You will then be asked for the DFS location. The file system locations must exist on all hosts in your system prior to running the `hawq filespace` command:
 
-``` pre
+``` shell
 $ hawq filespace -o .
+```
+
+``` pre
 Enter a name for this filespace
 > fastdisk
 Enter replica num for filespace. If 0, default replica num is used (default=3)
@@ -114,7 +117,7 @@ sdw2:3:/hawq_pri_filespc/gp1
 
 Execute the configuration file to create the filespace:
 
-``` pre
+``` shell
 $ hawq filespace --config hawq_filespace_config_1
 ```
 
@@ -122,7 +125,7 @@ $ hawq filespace --config hawq_filespace_config_1
 
 Create the filespace at `cdbfast_fs_a` and move an hdfs filesystem to it:
 
-``` pre
+``` shell
 $ hawq filespace --movefilespace=cdbfast_fs_a
       --location=hdfs://gphd-cluster/cdbfast_fs_a/
 ```

@@ -16,7 +16,7 @@ createuser --version
 
 ## Description<a id="topic1__section3"></a>
 
-`createuser` creates a new HAWQ /&gt; role. You must be a superuser or have the `CREATEROLE` privilege to create new roles. You must connect to the database as a superuser to create new superusers.
+`createuser` creates a new HAWQ role. You must be a superuser or have the `CREATEROLE` privilege to create new roles. You must connect to the database as a superuser to create new superusers.
 
 Superusers can bypass all access permission checks within the database, so superuser privileges should not be granted lightly.
 
@@ -93,8 +93,8 @@ Force a password prompt.
 
 Create a role named `joe` using the default options:
 
-``` pre
-createuser joe
+``` shell
+$ createuser joe
 Shall the new role be a superuser? (y/n) n
 Shall the new role be allowed to create databases? (y/n) n
 Shall the new role be allowed to create more new roles? (y/n) n
@@ -103,8 +103,8 @@ CREATE ROLE
 
 To create the same role `joe` using connection options and avoiding the prompts and taking a look at the underlying command:
 
-``` pre
-createuser -h masterhost -p 54321 -S -D -R -e joe
+``` shell
+$ createuser -h masterhost -p 54321 -S -D -R -e joe
 CREATE ROLE joe NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT 
 LOGIN;
 CREATE ROLE
@@ -112,8 +112,8 @@ CREATE ROLE
 
 To create the role `joe` as a superuser, and assign password `admin123` immediately:
 
-``` pre
-createuser -P -s -e joe
+``` shell
+$ createuser -P -s -e joe
 Enter password for new role: admin123
 Enter it again: admin123
 CREATE ROLE joe PASSWORD 'admin123' SUPERUSER CREATEDB 

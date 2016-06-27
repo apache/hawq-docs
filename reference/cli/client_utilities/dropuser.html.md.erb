@@ -52,14 +52,14 @@ Force a password prompt.
 
 To remove the role `joe` using default connection options:
 
-``` pre
-dropuser joe
+``` shell
+$ dropuser joe
 ```
 
 To remove the role `joe` using connection options, with verification, and a peek at the underlying command:
 
-``` pre
-dropuser -p 54321 -h masterhost -i -e joe
+``` shell
+$ dropuser -p 54321 -h masterhost -i -e joe
 Role "joe" will be permanently removed.
 Are you sure? (y/n) y
 DROP ROLE "joe"

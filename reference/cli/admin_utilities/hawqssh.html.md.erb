@@ -58,7 +58,7 @@ Displays the online help.
 
 Start an interactive group SSH session with all hosts listed in the file `hostfile_hawqssh`:
 
-``` pre
+``` shell
 $ hawq ssh -f hostfile_hawqssh
 ```
 
@@ -77,13 +77,13 @@ Exit an interactive session:
 
 Start a non-interactive group SSH session with the hosts named `sdw1` and `sdw2` and pass a file containing several commands named `command_file` to `hawq ssh`:
 
-``` pre
+``` shell
 $ hawq ssh -h sdw1 -h sdw2 -v -e < command_file
 ```
 
 Execute single commands in non-interactive mode on hosts `sdw2` and `localhost`:
 
-``` pre
+``` shell
 $ hawq ssh -h sdw2 -h localhost -v -e 'ls -a /data/primary/*'
 $ hawq ssh -h sdw2 -h localhost -v -e 'echo $GPHOME'
 $ hawq ssh -h sdw2 -h localhost -v -e 'ls -1 | wc -l'

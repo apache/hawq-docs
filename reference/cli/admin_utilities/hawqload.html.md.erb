@@ -314,7 +314,7 @@ Optional. A SQL command to run after the load operation completes. Enclose comma
 
 If your database object names were created using a double-quoted identifier (delimited identifier), you must specify the delimited name within single quotes in the `hawq load` control file. For example, if you create a table as follows:
 
-``` pre
+``` sql
 CREATE TABLE "MyTable" ("MyColumn" text);
 ```
 
@@ -353,8 +353,8 @@ INFO|# bad rows
 
 Run a load job as defined in `my_load.yml`:
 
-``` pre
-hawq load -f my_load.yml
+``` shell
+$ hawq load -f my_load.yml
 ```
 
 Example load control file:

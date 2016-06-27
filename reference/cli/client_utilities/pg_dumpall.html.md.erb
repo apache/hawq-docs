@@ -110,20 +110,20 @@ Once restored, it is wise to run `ANALYZE` on each database so the query planner
 
 To dump all databases:
 
-``` pre
-pg_dumpall > db.out
+``` shell
+$ pg_dumpall > db.out
 ```
 
 To reload this file:
 
-``` pre
-psql template1 -f db.out
+``` shell
+$ psql template1 -f db.out
 ```
 
 To dump only global objects (including filespaces and resource queues):
 
-``` pre
-pg_dumpall -g -f -r
+``` shell
+$ pg_dumpall -g -f -r
 ```
 
 ## See Also<a id="topic1__section9"></a>

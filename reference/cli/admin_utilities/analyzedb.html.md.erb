@@ -116,26 +116,26 @@ Displays the version of this utility.
 
 An example that collects statistics only on a set of table columns. In the database `mytest`, collect statistics on the columns `shipdate` and `receiptdate` in the table `public.orders`:
 
-``` pre
-analyzedb -d mytest -t public.orders -i shipdate, receiptdate
+``` shell
+$ analyzedb -d mytest -t public.orders -i shipdate, receiptdate
 ```
 
 An example that collects statistics on a table and exclude a set of columns. In the database `mytest`, collect statistics on the table `public.foo`, and do not collect statistics on the columns `bar` and `test2`.
 
-``` pre
-analyzedb -d mytest -t public.foo -x bar, test2
+``` shell
+$ analyzedb -d mytest -t public.foo -x bar, test2
 ```
 
 An example that specifies a file that contains a list of tables. This command collect statistics on the tables listed in the file `analyze-tables` in the database named `mytest`.
 
-``` pre
-analyzedb -d mytest -f analyze-tables
+``` shell
+$ analyzedb -d mytest -f analyze-tables
 ```
 
 If you do not specify a table, set of tables, or schema, the `analyzedb` utility collects the statistics as needed on all catalog tables and user-defined tables in the specified database. This command refreshes table statistics on the system catalog tables and user-defined tables in the database `mytest`.
 
-``` pre
-analyzedb -d mytest
+``` shell
+$ analyzedb -d mytest
 ```
 
 

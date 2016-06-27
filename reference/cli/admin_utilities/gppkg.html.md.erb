@@ -54,7 +54,11 @@ Installs the given package. This includes any pre/post installation steps and in
 --migrate *GPHOME\_1* *GPHOME\_2*  
 Migrates packages from a separate `$GPHOME`. Carries over packages from one version of HAWQ to another.
 
-For example: `gppkg --migrate /usr/local/hawq-old-version /usr/local/hawq-new-version`
+For example: 
+
+``` shell
+$ gppkg --migrate /usr/local/hawq-old-version /usr/local/hawq-new-version
+```
 
 This option is automatically invoked by the installer during minor upgrades. This option is given here for cases when the user wants to migrate packages manually.
 

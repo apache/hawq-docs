@@ -72,26 +72,26 @@ Displays the online help.
 
 Set the `max_connections` setting to 100:
 
-``` pre
-hawq config -c max_connections -v 100
+``` shell
+$ hawq config -c max_connections -v 100
 ```
 
 Comment out all instances of the `default_statistics_target` property, and restore the system default:
 
-``` pre
-hawq config -r default_statistics_target
+``` shell
+$ hawq config -r default_statistics_target
 ```
 
 List all properties supported by `hawq config`:
 
-``` pre
-hawq config -l
+``` shell
+$ hawq config -l
 ```
 
 Show the values of a particular property across the system:
 
-``` pre
-hawq config -s max_connections
+``` shell
+$ hawq config -s max_connections
 ```
 
 ## See Also<a id="topic1__section6"></a>

@@ -91,20 +91,20 @@ Displays the version of this utility.
 
 Restart a HAWQ cluster:
 
-``` pre
-hawq restart cluster
+``` shell
+$ hawq restart cluster
 ```
 
 Restart a HAWQ system in restricted mode (only allow superuser connections):
 
-``` pre
-hawq restart cluster -R
+``` shell
+$ hawq restart cluster -R
 ```
 
 Start the HAWQ master instance only and connect in utility mode:
 
-``` pre
-hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
+``` shell
+$ hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
 ```
 
 ## See Also<a id="topic1__section6"></a>
