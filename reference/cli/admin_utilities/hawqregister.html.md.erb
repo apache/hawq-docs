@@ -82,26 +82,6 @@ HAWQ and parquet format tables do not use the same data types, so mapping must b
 |char/bpchar/varchar/name| Byte array |
 | text/xml/interval/timetz  | Byte array  |
 | macaddr/inet/cidr  | Byte array  |
-| point  |  `group {` `   required int x;`   `   required int y;`  `    `}   |
-| circle  | `group {` `   required int x;`   `   required int y;`   `       required int r;` `    `}    |
-| box  | `group {` `   required int x1;`   `   required int y1;`  `       required int x1;`  `       required int y2;` `    `}    |
-| iseg  | `group {` `   required int x1;`   `   required int y1;`  `       required int x1;`  `       required int y2;` `    `}  |
-| path  | `group {`    `   repeated group {`  `       required int x;`  `       required int y;` `   }` `}` |
-
-<span class="tablecap">Table 3. HAWQ to Parquet Mapping</span>
-
-|HAWQ Type   | Parquet Type  |
-| :------------| :---------------|
-| bool        | boolean       |
-| int2/int4/date        | int32       |
-| int8/money       | int64      |
-| time/timestamptz/timestamp       | int64      |
-| float4        | float       |
-|float8        | double       |
-|bit/varbit/bytea/numeric       | Byte array       |
-|char/bpchar/varchar/name| Byte array |
-| text/xml/interval/timetz  | Byte array  |
-| macaddr/inet/cidr  | Byte array  |
 
 **Additional HAWQ-to-Parquet Mapping**
 
