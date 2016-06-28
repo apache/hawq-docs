@@ -6,7 +6,7 @@ Changes the definition of a function.
 
 ## Synopsis<a id="alterfunction__section2"></a>
 
-``` pre
+``` sql
 ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
    action [, ... ] [RESTRICT]
 
@@ -23,10 +23,10 @@ ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
 
 where *action* is one of:
 
-``` pre
-{CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT}
-{IMMUTABLE | STABLE | VOLATILE}
-{[EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER}
+```pre
+{ CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT }
+{ IMMUTABLE | STABLE | VOLATILE }
+{ [EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER }
 ```
 
 ## Description<a id="desc"></a>

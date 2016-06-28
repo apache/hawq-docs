@@ -6,7 +6,7 @@ Changes a database role (user or group).
 
 ## Synopsis<a id="alterrole__section2"></a>
 
-``` pre
+```pre
 ALTER ROLE name RENAME TO newname
 
 ALTER ROLE name RESET config_parameter
@@ -18,24 +18,24 @@ ALTER ROLE name [ [WITH] option [ ... ] ]
 
 where *option* can be:
 
-``` pre
+```pre
       SUPERUSER | NOSUPERUSER
     | CREATEDB | NOCREATEDB
     | CREATEROLE | NOCREATEROLE
-    | CREATEEXTTABLE | NOCREATEEXTTABLE
-      [ ( attribute='value'[, ...] ) ]
-           where attributes and value are:
-           type='readable'|'writable'
-           protocol='gpfdist'|'http'
-
-    | INHERIT | NOINHERIT
+    | CREATEEXTTABLE | NOCREATEEXTTABLE
+    [ ( attribute='value'[, ...] ) ]
+           where attributes and value are:
+           type='readable'|'writable'
+           protocol='gpfdist'|'http'
+    
+    | INHERIT | NOINHERIT
     | LOGIN | NOLOGIN
     | CONNECTION LIMIT connlimit
     | [ENCRYPTED | UNENCRYPTED] PASSWORD 'password'
     | VALID UNTIL 'timestamp'
-    | [ DENY deny_point ]
-    | [ DENY BETWEEN deny_point AND deny_point]
-    | [ DROP DENY FOR deny_point ]
+    | [ DENY deny_point ]
+    | [ DENY BETWEEN deny_point AND deny_point]
+    | [ DROP DENY FOR deny_point ]
 ```
 
 ## Description<a id="desc"></a>
@@ -79,7 +79,7 @@ DENY *deny\_point*
 DENY BETWEEN *deny\_point* AND *deny\_point*   
 The `DENY` and `DENY BETWEEN` keywords set time-based constraints that are enforced at login. `DENY`sets a day or a day and time to deny access. `DENY BETWEEN` sets an interval during which access is denied. Both use the parameter *deny\_point* that has following format:
 
-``` pre
+```pre
 DAY day [ TIME 'time' ]
 ```
 
@@ -100,7 +100,7 @@ For *time*:
 
 The `DENY BETWEEN` clause uses two *deny\_point* parameters.
 
-``` pre
+```pre
 DENY BETWEEN deny_point AND deny_point
 
 ```
@@ -120,55 +120,55 @@ It is also possible to tie a session default to a specific database rather than 
 
 Change the password for a role:
 
-``` pre
+```pre
 ALTER ROLE daria WITH PASSWORD 'passwd123';
 ```
 
 Change a password expiration date:
 
-``` pre
+```pre
 ALTER ROLE scott VALID UNTIL 'May 4 12:00:00 2015 +1';
 ```
 
 Make a password valid forever:
 
-``` pre
+```pre
 ALTER ROLE luke VALID UNTIL 'infinity';
 ```
 
 Give a role the ability to create other roles and new databases:
 
-``` pre
+```pre
 ALTER ROLE joelle CREATEROLE CREATEDB;
 ```
 
 Give a role a non-default setting of the `maintenance_work_mem` parameter:
 
-``` pre
+```pre
 ALTER ROLE admin SET maintenance_work_mem = 100000;
 ```
 
 Assign a role to a resource queue:
 
-``` pre
+```pre
 ALTER ROLE sammy RESOURCE QUEUE poweruser;
 ```
 
 Give a role permission to create writable external tables:
 
-``` pre
+```pre
 ALTER ROLE load CREATEEXTTABLE (type='writable');
 ```
 
 Alter a role so it does not allow login access on Sundays:
 
-``` pre
+```pre
 ALTER ROLE user3 DENY DAY 'Sunday';
 ```
 
 Alter a role to remove the constraint that does not allow login access on Sundays:
 
-``` pre
+```pre
 ALTER ROLE user3 DROP DENY FOR DAY 'Sunday';
 ```
 
