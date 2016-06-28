@@ -127,6 +127,8 @@ For more detailed information about EC2 Elastic IP addresses and how to use them
     | 22    | ssh - secure connect to other hosts |
     | 8080  | Ambari - HAWQ admin/config web console |  
 
+- When running HAWQ on AWS, UDP network traffic must be permitted between each cluster node.  Enable this access by creating or modifying a security group to include rules for inbound and outbound UDP traffic.  Be sure to specify a complete range of port numbers in these rules.
+
 - You can configure a non-default VPC with an internet gateway and allocate an Elastic IP address for the VPC. AWS will automatically configure the Elastic IP for internet access.
  
 - A *placement group* is a logical grouping of instances within a single Availability Zone. Using placement groups enables applications to participate in a low-latency, 10 Gbps network. Placement groups are recommended for applications that benefit from low network latency, high network throughput, or both. 
