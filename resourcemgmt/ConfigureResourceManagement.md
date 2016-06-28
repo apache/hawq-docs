@@ -19,7 +19,7 @@ Standalone mode means that the HAWQ resource manager assumes it can use all reso
 
 To configure HAWQ to run without a global resource manager, add the following property configuration to your `hawq-site.xml` file:
 
-```
+``` xml
 <property>
       <name>hawq_global_rm_type</name>
       <value>none</value>
@@ -40,7 +40,7 @@ When you run the HAWQ resource manager in standalone mode \(`hawq_global_rm_type
 
 In `hawq-site.xml`, add the following parameters:
 
-```
+``` xml
 <property>
    <name>hawq_rm_memory_limit_perseg</name>
    <value>8GB</value>
@@ -88,7 +88,7 @@ However, the changed resource quota for the virtual segment cannot exceed the re
 
 In the following example, when executing the next query statement, the HAWQ resource manager will attempt to allocate 10 virtual segments and each segment has a 256MB memory quota.
 
-```
+``` sql
 postgres=# set hawq_rm_stmt_vseg_memory='256mb';
 SET
 postgres=# set hawq_rm_stmt_nvseg=10;

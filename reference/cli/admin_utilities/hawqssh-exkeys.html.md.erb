@@ -58,19 +58,19 @@ Displays the online help.
 
 Exchange SSH keys between all host names and addresses listed in the file `hostfile_exkeys`:
 
-``` pre
+``` shell
 $ hawq ssh-exkeys -f hostfile_exkeys
 ```
 
 Exchange SSH keys between the hosts `sdw1`, `sdw2`, and `sdw3`:
 
-``` pre
+``` shell
 $ hawq ssh-exkeys -h sdw1 -h sdw2 -h sdw3
 ```
 
 Exchange SSH keys between existing hosts `sdw1`, `sdw2`, and `sdw3`, and new hosts `sdw4` and `sdw5` as part of a system expansion operation:
 
-``` pre
+``` shell
 $ cat hostfile_exkeys
 mdw
 mdw-1

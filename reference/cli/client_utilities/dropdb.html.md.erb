@@ -52,14 +52,14 @@ Force a password prompt.
 
 To destroy the database named `demo` using default connection parameters:
 
-``` pre
-dropdb demo
+``` shell
+$ dropdb demo
 ```
 
 To destroy the database named `demo` using connection options, with verification, and a peek at the underlying command:
 
-``` pre
-dropdb -p 54321 -h masterhost -i -e demo
+``` shell
+$ dropdb -p 54321 -h masterhost -i -e demo
 Database "demo" will be permanently deleted.
 Are you sure? (y/n) y
 DROP DATABASE "demo"

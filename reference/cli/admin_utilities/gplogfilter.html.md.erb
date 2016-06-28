@@ -21,9 +21,9 @@ The `gplogfilter` utility can be used to search through a HAWQ log file for entr
 
 You can also use `gplogfilter` to search through all segment log files at once by running it through the [hawq ssh](hawqssh.html#topic1) utility. For example, to display the last three lines of each segment log file:
 
-``` pre
-hawq ssh -f seg_hostfile_hawqssh
-=> source ~/greenplum_path.sh
+``` shell
+$ hawq ssh -f seg_hostfile_hawqssh
+=> source /usr/local/hawq/greenplum_path.sh
 => gplogfilter -n 3 /data/hawq-install-path/segmentdd/pg_log/hawq*.csv
 ```
 
@@ -38,8 +38,8 @@ Specifies a starting date and time to begin searching for log entries in the for
 
 If a time is specified, the date and time must be enclosed in either single or double quotes. This example encloses the date and time in single quotes:
 
-``` pre
-gplogfilter -b '2016-02-13 14:23'
+``` shell
+$ gplogfilter -b '2016-02-13 14:23'
 ```
 
 -e *datetime* | --end=*datetime*  
@@ -47,8 +47,8 @@ Specifies an ending date and time to stop searching for log entries in the forma
 
 If a time is specified, the date and time must be enclosed in either single or double quotes. This example encloses the date and time in single quotes:
 
-``` pre
-gplogfilter -e '2016-02-13 14:23' 
+``` shell
+$ gplogfilter -e '2016-02-13 14:23' 
 ```
 
 -d *time* | --duration=*time*  
@@ -112,32 +112,32 @@ Displays the version of this utility.
 
 Display the last three error messages in the master log file:
 
-``` pre
-gplogfilter -t -n 3 
+``` shell
+$ gplogfilter -t -n 3 
 ```
 
 Display the last five error messages in a date-specified log file:
 
-``` pre
-gplogfilter -t -n 5 "/data/hawq-file-path/hawq-yyyy-mm-dd*.csv"
+``` shell
+$ gplogfilter -t -n 5 "/data/hawq-file-path/hawq-yyyy-mm-dd*.csv"
 ```
 
 Display all log messages in the master log file timestamped in the last 10 minutes:
 
-``` pre
-gplogfilter -d :10
+``` shell
+$ gplogfilter -d :10
 ```
 
 Display log messages in the master log file containing the string `|con6 cmd11|`:
 
-``` pre
-gplogfilter -f '|con6 cmd11|'
+``` shell
+$ gplogfilter -f '|con6 cmd11|'
 ```
 
 Using [hawq ssh](hawqssh.html#topic1), run `gplogfilter` on the segment hosts and search for log messages in the segment log files containing the string `con6` and save output to a file.
 
-``` pre
-hawq ssh -f /data/hawq-2.x/segmentdd/pg_hba.conf -e 'source /data/hawq-2.x/greenplum_path.sh ; 
+``` shell
+$ hawq ssh -f /data/hawq-2.x/segmentdd/pg_hba.conf -e 'source /usr/local/hawq/greenplum_path.sh ; 
 gplogfilter -f con6 /data/hawq-2.x/pg_log/hawq*.csv' > seglog.out
 ```
 

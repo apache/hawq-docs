@@ -79,40 +79,40 @@ Displays the online help.
 
 Verify and validate the HAWQ platform settings by entering a host file and specifying the hadoop location:
 
-``` pre
-# hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
+``` shell
+$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
 ```
 
 Verify and validate the HAWQ platform settings with HDFS HA enabled, YARN HA enabled and Kerberos enabled:
 
-``` pre
-# hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
+``` shell
+$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
                        --hdfs-ha --yarn-ha --kerberos
 ```
 
 Verify and validate the HAWQ platform settings with HDFS HA enabled, and Kerberos enabled:
 
-``` pre
-# hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
+``` shell
+$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
                        --hdfs-ha --kerberos
 ```
 
 Save HAWQ platform settings to a zip file, when HADOOP\_HOME environment variable is set:
 
-``` pre
-# hawq check -f hostfile_hawq_check --zipout  
+``` shell
+$ hawq check -f hostfile_hawq_check --zipout  
 ```
 
 Verify and validate the HAWQ platform settings using a zip file created with the --zipout option:
 
-``` pre
-# hawq check --zipin hawq_check_timestamp.tar.gz
+``` shell
+$ hawq check --zipin hawq_check_timestamp.tar.gz
 ```
 
 View collected HAWQ platform settings:
 
-``` pre
-# hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/ --stdout
+``` shell
+$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/ --stdout
 ```
 
 ## See Also<a id="topic1__section6"></a>

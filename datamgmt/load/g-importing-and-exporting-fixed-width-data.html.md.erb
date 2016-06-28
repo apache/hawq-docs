@@ -4,7 +4,7 @@ title: Importing and Exporting Fixed Width Data
 
 Specify custom formats for fixed-width data with the HAWQ functions `fixedwith_in` and `fixedwidth_out`. These functions already exist in the file `$GPHOME/share/postgresql/cdb_external_extensions.sql`. The following example declares a custom format, then calls the `fixedwidth_in` function to format the data.
 
-``` pre
+``` sql
 CREATE READABLE EXTERNAL TABLE students (
   name varchar(20), address varchar(30), age int)
 LOCATION ('gpfdist://mdw:8081/students.txt')

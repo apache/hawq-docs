@@ -14,7 +14,7 @@ Together, the Fragmenter, Accessor, and Resolver classes implement a connector. 
 
 The syntax for a readable `EXTERNAL TABLE` that uses the PXF protocol is as follows:
 
-``` pre
+``` sql
 CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name
         ( column_name data_type [, ...] | LIKE other_table )
 LOCATION('pxf://host[:port]/path-to-data<pxf parameters>[&custom-option=value...]')
@@ -55,7 +55,7 @@ The Java PXF service retrieves the source data from the external data source an
 
 The Accessor, Resolver, and Fragmenter Java classes extend the `org.apache.hawq.pxf.api.utilities.Plugin` class:
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api.utilities;
 /**
  * Base class for all plug-in types (Accessor, Resolver, Fragmenter, ...).
@@ -84,7 +84,7 @@ public class Plugin {
 
 The parameters in the `LOCATION` string are available to the plug-ins through methods in the `org.apache.hawq.pxf.api.utilities.InputData` class. Custom parameters added to the location string can be looked up with the `getUserProperty()` method.
 
-``` pre
+``` java
 /**
  * Common configuration available to all PXF plug-ins. Represents input data
  * coming from client applications, such as HAWQ.
@@ -271,7 +271,7 @@ A Fragmenter class extends `org.apache.hawq.pxf.api.Fragmenter`:
 
 #### org.apache.hawq.pxf.api.Fragmenter<a id="com.pivotal.pxf.api.fragmenter"></a>
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /**
  * Abstract class that defines the splitting of a data resource into fragments
@@ -322,7 +322,7 @@ public abstract class Fragmenter extends Plugin {
 
 The Fragmenter.getFragments() method returns a List&lt;Fragment&gt;;:
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
  * Fragment holds a data fragment' information.
@@ -343,7 +343,7 @@ public class Fragment
 
 The `Fragmenter.getFragmentsStats()` method returns a `FragmentsStats`:
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /**
  * FragmentsStats holds statistics for a given path.
@@ -389,7 +389,8 @@ public class FragmentsStats {
     public class SizeAndUnit {
         long size;
         SizeUnit unit;
-    ...
+    ... 
+
 ```
 
 `getFragmentsStats()` returns a string in JSON format of statistics for the data source. For example, if the input path is a HDFS directory of 3 files, each one of 1 block, the output will be the number of fragments (3), the size of the first file, and the size of all files in that directory.
@@ -461,7 +462,7 @@ The class must extend the `org.apache.hawq.pxf.Plugin`  class, and implement o
 -   `org.apache.hawq.pxf.api.ReadAccessor`
 -   `org.apache.hawq.pxf.api.WriteAccessor`
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
  * Internal interface that defines the access to data on the source
@@ -476,7 +477,7 @@ public interface ReadAccessor {
 }
 ```
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
  * An interface for writing data into a data store
@@ -500,7 +501,7 @@ The Accessor calls `openForWrite()` to write data out. After writing the data, i
 
 #### org.apache.hawq.pxf.api.OneRow<a id="com.pivotal.pxf.api.onerow"></a>
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
  * Represents one row in the external system data store. Supports
@@ -523,7 +524,7 @@ public class OneRow {
      * Setter for key
      */
     public void setKey(Object inKey);
-　
+    
     /*
      * Setter for data
      */
@@ -533,12 +534,12 @@ public class OneRow {
      * Accessor for key
      */
     public Object getKey();
-　
+
     /*
      * Accessor for data
      */
     public Object getData();
-　
+
     /*
      * Show content
      */
@@ -616,7 +617,7 @@ The class needs to extend the `org.apache.hawq.pxf.resolvers.Plugin class       
 -   `org.apache.hawq.pxf.api.ReadResolver`
 -   `org.apache.hawq.pxf.api.WriteResolver`
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
  * Interface that defines the deserialization of one record brought from
@@ -628,7 +629,7 @@ public interface ReadResolver {
 }
 ```
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
 * Interface that defines the serialization of data read from the DB
@@ -648,7 +649,7 @@ public interface WriteResolver {
 
 #### org.apache.hawq.pxf.api.OneField<a id="com.pivotal.pxf.api.onefield"></a>
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
 /*
  * Defines one field on a deserialized record.
@@ -667,7 +668,7 @@ public class OneField {
 }
 ```
 
-The value of t`ype` should follow the org.apache.hawq.pxf.api.io.DataType `enums`. `val` is the appropriate Java class. Supported types are as follows:
+The value of `type` should follow the org.apache.hawq.pxf.api.io.DataType `enums`. `val` is the appropriate Java class. Supported types are as follows:
 
 <a id="com.pivotal.pxf.api.onefield__table_f4x_35z_4p"></a>
 
@@ -780,51 +781,51 @@ FilterParser scans the pushed down filter list and uses the user's build() impl
 
 To check if a filter queried PXF, call the `InputData                   hasFilter()` function:
 
-``` pre
- /*
-  * Returns true if there is a filter string to parse
-  */
- public boolean hasFilter()
- {
-     return filterStringValid;
- }
+``` java
+/*
+ * Returns true if there is a filter string to parse
+ */
+public boolean hasFilter()
+{
+   return filterStringValid;
+}
 ```
 
 If `hasFilter()` returns `false`, there is no filter information. If it returns `true`, PXF parses the serialized filter string into a meaningful filter object to use later. To do so, create a filter builder class that implements the `FilterParser.FilterBuilder ` interface:
 
-``` pre
+``` java
 package org.apache.hawq.pxf.api;
- /*
-  * Interface a user of FilterParser should implement
-  * This is used to let the user build filter expressions in the manner she 
-  * sees fit
-  *
-  * When an operator is parsed, this function is called to let the user decide
-  * what to do with its operands.
-  */
- interface FilterBuilder {
-     public Object build(Operation operation, Object left, Object right) throws Exception;
- }
+/*
+ * Interface a user of FilterParser should implement
+ * This is used to let the user build filter expressions in the manner she 
+ * sees fit
+ *
+ * When an operator is parsed, this function is called to let the user decide
+ * what to do with its operands.
+ */
+interface FilterBuilder {
+   public Object build(Operation operation, Object left, Object right) throws Exception;
+}
 ```
 
 While PXF parses the serialized filter string from the incoming HAWQ query, it calls the `build() interface` function. PXF calls this function for each condition or filter pushed down to PXF. Implementing this function returns some Filter object or representation that the Fragmenter, Accessor, or Resolver uses in runtime to filter out records. The `build()` function accepts an Operation as input, and left and right operands.
 
 ### Filter Operations<a id="filteroperations"></a>
 
-``` pre
- /*
-  * Operations supported by the parser
-  */
- public enum Operation
- {
-     HDOP_LT, //less than
-     HDOP_GT, //greater than
-     HDOP_LE, //less than or equal
-     HDOP_GE, //greater than or equal
-     HDOP_EQ, //equal
-     HDOP_NE, //not equal
-     HDOP_AND //AND'ed conditions
- };
+``` java
+/*
+ * Operations supported by the parser
+ */
+public enum Operation
+{
+    HDOP_LT, //less than
+    HDOP_GT, //greater than
+    HDOP_LE, //less than or equal
+    HDOP_GE, //greater than or equal
+    HDOP_EQ, //equal
+    HDOP_NE, //not equal
+    HDOP_AND //AND'ed conditions
+};
 ```
 
 #### Filter Operands<a id="filteroperands"></a>
@@ -837,71 +838,71 @@ There are three types of operands:
 
 #### Column Index<a id="columnindex"></a>
 
-``` pre
- /*
-  * Represents a column index
-  */
- public class ColumnIndex
- {
-     public ColumnIndex(int idx);
- 
-     public int index();
- }
+``` java
+/*
+ * Represents a column index
+ */
+public class ColumnIndex
+{
+   public ColumnIndex(int idx);
+
+   public int index();
+}
 ```
 
 #### Constant<a id="constant"></a>
 
-``` pre
- /*
-  * The class represents a constant object (String, Long, ...)
-  */
- public class Constant
- {
-      public Constant(Object obj);
- 
-      public Object constant();
- }
+``` java
+/*
+ * The class represents a constant object (String, Long, ...)
+ */
+public class Constant
+{
+    public Constant(Object obj);
+
+    public Object constant();
+}
 ```
 
 #### Filter Object<a id="filterobject"></a>
 
 Filter Objects can be internal, such as those you define; or external, those that the remote system uses. For example, for HBase, you define the HBase `Filter` class (`org.apache.hadoop.hbase.filter.Filter`), while for Hive, you use an internal default representation created by the PXF framework, called `BasicFilter`. You can decide the filter object to use, including writing a new one. `BasicFilter` is the most common:
 
-``` pre
- /*
-  * Basic filter provided for cases where the target storage system does not provide its own filter
-  * For example: Hbase storage provides its own filter but for a Writable based record in a SequenceFile
-  * there is no filter provided and so we need to have a default
-  */
- static public class BasicFilter
- {
-     /*
-      * C'tor
-      */
-     public BasicFilter(Operation inOper, ColumnIndex inColumn, Constant inConstant);
- 
-     /*
-      * Returns oper field
-      */
-     public Operation getOperation();
- 
-     /*
-      * Returns column field
-      */
-     public ColumnIndex getColumn();
- 
-     /*
-      * Returns constant field
-      */
-     public Constant getConstant();
- }
+``` java
+/*
+ * Basic filter provided for cases where the target storage system does not provide its own filter
+ * For example: Hbase storage provides its own filter but for a Writable based record in a SequenceFile
+ * there is no filter provided and so we need to have a default
+ */
+static public class BasicFilter
+{
+   /*
+    * C'tor
+    */
+   public BasicFilter(Operation inOper, ColumnIndex inColumn, Constant inConstant);
+
+   /*
+    * Returns oper field
+    */
+   public Operation getOperation();
+
+   /*
+    * Returns column field
+    */
+   public ColumnIndex getColumn();
+
+   /*
+    * Returns constant field
+    */
+   public Constant getConstant();
+}
 ```
 
 ### Sample Implementation<a id="sampleimplementation"></a>
 
 Let's look at the following sample implementation of the filter builder class and its `build()` function that handles all 3 cases. Let's assume that BasicFilter was used to hold our filter operations.
 
-``` pre
+``` java
 import java.util.LinkedList;
 import java.util.List;
 
@@ -930,9 +931,9 @@ public class MyDemoFilterBuilder implements FilterParser.FilterBuilder
 
         return result;
     }
- 
-    public Object build(FilterParser.Operation opId, 
-                        Object leftOperand, 
+ 
+    public Object build(FilterParser.Operation opId,
+                        Object leftOperand,
                         Object rightOperand) throws Exception
     {
         if (leftOperand instanceof FilterParser.BasicFilter)
@@ -964,14 +965,14 @@ public class MyDemoFilterBuilder implements FilterParser.FilterBuilder
         return new FilterParser.BasicFilter(opId, column, constant);
     }
 
-    private  List handleCompoundOperations(List<FilterParser.BasicFilter> left, 
+    private  List handleCompoundOperations(List<FilterParser.BasicFilter> left,
                                        FilterParser.BasicFilter right)
     {
         left.add(right);
         return left;
     }
 
-    private List handleCompoundOperations(FilterParser.BasicFilter left, 
+    private List handleCompoundOperations(FilterParser.BasicFilter left,
                                           FilterParser.BasicFilter right)
     {
         List<FilterParser.BasicFilter> result = new LinkedList<FilterParser.BasicFilter>();
@@ -985,7 +986,7 @@ public class MyDemoFilterBuilder implements FilterParser.FilterBuilder
 
 Here is an example of creating a filter-builder class to implement the Filter interface, implement the `build()` function, and generate the Filter object. To do this, use either the Accessor, Resolver, or both to call the `getFilterObject` function:
 
-``` pre
+``` java
 if (inputData.hasFilter())
 {
     String filterStr = inputData.filterString();
@@ -1002,7 +1003,7 @@ Once you have built the Filter object(s), you can use them to read data and fil
 1.  Check whether you have a single or multiple filters.
 2.  Evaluate each filter and iterate over each filter in the list. Disqualify the record if filter conditions fail.
 
-``` pre
+``` java
 if (filter instanceof List)
 {
     for (Object f : (List)filter)
@@ -1016,20 +1017,20 @@ else
 
 Example of evaluating a single filter:
 
-``` pre
+``` java
 //Get our BasicFilter Object
 FilterParser.BasicFilter bFilter = (FilterParser.BasicFilter)filter;
 
- 
+ 
 //Get operation and operator values
-FilterParser.Operation op = bFilter.getOperation(); 
+FilterParser.Operation op = bFilter.getOperation();
 int colIdx = bFilter.getColumn().index();
 String val = bFilter.getConstant().constant().toString();
 
 //Get more info about the column if desired
 ColumnDescriptor col = input.getColumn(colIdx);
 String colName = filterColumn.columnName();
- 
+ 
 //Now evaluate it against the actual column value in the record...
 ```
 
@@ -1052,7 +1053,7 @@ Shows an external table that can analyze all `Sequencefiles` that are populated 
 
 **Note:** In this example, the class member names do not necessarily match the database attribute names, but the types match. `SaleItem.class` must exist in the classpath of every DataNode and NameNode.
 
-``` pre
+``` sql
 CREATE EXTERNAL TABLE jan_2012_sales (id int, total int, comments varchar)
 LOCATION ('pxf://10.76.72.26:51200/sales/2012/01/*.seq'
           '?FRAGMENTER=org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter'
@@ -1066,7 +1067,7 @@ FORMAT 'custom' (formatter='pxfwritable_import');
 
 Example 2 shows an external table that can analyze an HBase table called `sales`. It has 10 column families `(cf1 – cf10)` and many qualifier names in each family. This example focuses on the `rowkey`, the qualifier `saleid` inside column family `cf1`, and the qualifier `comments` inside column family `cf8` and uses direct mapping:
 
-``` pre
+``` sql
 CREATE EXTERNAL TABLE hbase_sales
   (hbaserowkey text, "cf1:saleid" int, "cf8:comments" varchar)
 LOCATION ('pxf://10.76.72.26:51200/sales?PROFILE=HBase')
@@ -1077,7 +1078,7 @@ FORMAT 'custom' (formatter='pxfwritable_import');
 
 This example uses indirect mapping. Note how the attribute name changes and how they correspond to the HBase lookup table. Executing `SELECT FROM                      my_hbase_sales`, the attribute names automatically convert to their HBase correspondents.
 
-``` pre
+``` sql
 CREATE EXTERNAL TABLE my_hbase_sales (hbaserowkey text, id int, cmts varchar)
 LOCATION
 ('pxf://10.76.72.26:51200/sales?PROFILE=HBase')
@@ -1088,7 +1089,7 @@ FORMAT 'custom' (formatter='pxfwritable_import');
 
 Shows an example for a writable table of compressed data. 
 
-``` pre
+``` sql
 CREATE WRITABLE EXTERNAL TABLE sales_aggregated_2012
     (id int, total int, comments varchar)
 LOCATION ('pxf://10.76.72.26:51200/sales/2012/aggregated'
@@ -1101,7 +1102,7 @@ FORMAT 'TEXT';
 
 Shows an example for a writable table into a sequence file, using a schema file. For writable tables, the formatter is `pxfwritable_export`.
 
-``` pre
+``` sql
 CREATE WRITABLE EXTERNAL TABLE sales_max_2012
     (id int, total int, comments varchar)
 LOCATION ('pxf://10.76.72.26:51200/sales/2012/max'
@@ -1118,7 +1119,7 @@ This section contains sample dummy implementations of all three plug-ins. It als
 
 #### Dummy Fragmenter<a id="dummyfragmenter"></a>
 
-``` pre
+``` java
 import org.apache.hawq.pxf.api.Fragmenter;
 import org.apache.hawq.pxf.api.Fragment;
 import org.apache.hawq.pxf.api.utilities.InputData;
@@ -1159,7 +1160,7 @@ public class DummyFragmenter extends Fragmenter {
 
 #### Dummy Accessor<a id="dummyaccessor"></a>
 
-``` pre
+``` java
 import org.apache.hawq.pxf.api.WriteAccessor;
 import org.apache.hawq.pxf.api.OneRow;
 import org.apache.hawq.pxf.api.utilities.InputData;
@@ -1227,7 +1228,7 @@ public class DummyAccessor extends Plugin implements ReadAccessor, WriteAccessor
 
 #### Dummy Resolver<a id="dummyresolver"></a>
 
-``` pre
+``` java
 import org.apache.hawq.pxf.api.OneField;
 import org.apache.hawq.pxf.api.OneRow;
 import org.apache.hawq.pxf.api.ReadResolver;
@@ -1273,7 +1274,7 @@ public class DummyResolver extends Plugin implements ReadResolver, WriteResolver
 
 #### Usage Example<a id="usageexample"></a>
 
-``` pre
+``` sql
 psql=# CREATE EXTERNAL TABLE dummy_tbl
     (int1 integer, word text, int2 integer)
 LOCATION ('pxf://localhost:51200/dummy_location'
@@ -1281,7 +1282,7 @@ LOCATION ('pxf://localhost:51200/dummy_location'
           '&ACCESSOR=DummyAccessor'
           '&RESOLVER=DummyResolver')
 FORMAT 'custom' (formatter = 'pxfwritable_import');
-　
+ 
 CREATE EXTERNAL TABLE
 psql=# SELECT * FROM dummy_tbl;
 int1 | word | int2
@@ -1300,7 +1301,7 @@ LOCATION ('pxf://localhost:51200/dummy_location'
           '?ACCESSOR=DummyAccessor'
           '&RESOLVER=DummyResolver')
 FORMAT 'custom' (formatter = 'pxfwritable_export');
-　
+ 
 CREATE EXTERNAL TABLE
 psql=# INSERT INTO dummy_tbl_write VALUES (1, 'a', 11), (2, 'b', 22);
 INSERT 0 2

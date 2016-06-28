@@ -12,7 +12,7 @@ Every database has a default schema named *public*. If you do not create any sch
 
 Use the `CREATE SCHEMA` command to create a new schema. For example:
 
-```
+``` sql
 => CREATE SCHEMA myschema;
 ```
 
@@ -26,7 +26,7 @@ See [Schema Search Paths](#topic20) for information about accessing a schema.
 
 You can create a schema owned by someone else, for example, to restrict the activities of your users to well-defined namespaces. The syntax is:
 
-```
+``` sql
 => CREATE SCHEMA schemaname AUTHORIZATION username;
 ```
 
@@ -34,7 +34,7 @@ You can create a schema owned by someone else, for example, to restrict the acti
 
 To specify an object's location in a database, use the schema-qualified name. For example:
 
-```
+``` sql
 => SELECT * FROM myschema.mytable;
 ```
 
@@ -44,14 +44,14 @@ You can set the `search_path` configuration parameter to specify the order in wh
 
 The `search_path` configuration parameter sets the schema search order. The `ALTER DATABASE` command sets the search path. For example:
 
-```
+``` sql
 => ALTER DATABASE mydatabase SET search_path TO myschema,
 public, pg_catalog;
 ```
 
 You can also set `search_path` for a particular role \(user\) using the `ALTER ROLE` command. For example:
 
-```
+``` sql
 => ALTER ROLE sally SET search_path TO myschema, public,
 pg_catalog;
 ```
@@ -60,13 +60,13 @@ pg_catalog;
 
 Use the `current_schema()` function to view the current schema. For example:
 
-```
+``` sql
 => SELECT current_schema();
 ```
 
 Use the `SHOW` command to view the current search path. For example:
 
-```
+``` sql
 => SHOW search_path;
 ```
 
@@ -74,13 +74,13 @@ Use the `SHOW` command to view the current search path. For example:
 
 Use the `DROP SCHEMA` command to drop \(delete\) a schema. For example:
 
-```
+``` sql
 => DROP SCHEMA myschema;
 ```
 
 By default, the schema must be empty before you can drop it. To drop a schema and all of its objects \(tables, data, functions, and so on\) use:
 
-```
+``` sql
 => DROP SCHEMA myschema CASCADE;
 ```
 

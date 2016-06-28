@@ -25,7 +25,7 @@ Row-oriented storage provides the best options for the following situations:
 
 The `ALTER TABLE`command changes the definition of a table. Use `ALTER TABLE` to change table attributes such as column definitions, distribution policy, storage model, and partition structure \(see also [Maintaining Partitioned Tables](ddl-partition.html)\). For example, to add a not-null constraint to a table column:
 
-```
+``` sql
 => ALTER TABLE address ALTER COLUMN street SET NOT NULL;
 ```
 
@@ -37,13 +37,13 @@ The `ALTER TABLE`command changes the definition of a table. Use `ALTER TABLE` to
 
 For partitioned tables, changes to the distribution policy apply recursively to the child partitions. This operation preserves the ownership and all other attributes of the table. For example, the following command redistributes the table sales across all segments using the customer\_id column as the distribution key:
 
-```
+``` sql
 ALTER TABLE sales SET DISTRIBUTED BY (customer_id);
 ```
 
 When you change the hash distribution of a table, table data is automatically redistributed. Changing the distribution policy to a random distribution does not cause the data to be redistributed. For example:
 
-```
+``` sql
 ALTER TABLE sales SET DISTRIBUTED RANDOMLY;
 ```
 
@@ -51,7 +51,7 @@ ALTER TABLE sales SET DISTRIBUTED RANDOMLY;
 
 To redistribute table data for tables with a random distribution policy \(or when the hash distribution policy has not changed\) use `REORGANIZE=TRUE`. Reorganizing data may be necessary to correct a data skew problem, or when segment resources are added to the system. For example, the following command redistributes table data across all segments using the current distribution policy, including random distribution.
 
-```
+``` sql
 ALTER TABLE sales SET WITH (REORGANIZE=TRUE);
 ```
 
@@ -59,13 +59,13 @@ ALTER TABLE sales SET WITH (REORGANIZE=TRUE);
 
 The`DROP TABLE`command removes tables from the database. For example:
 
-```
+``` sql
 DROP TABLE mytable;
 ```
 
 To empty a table of rows without removing the table definition, use `DELETE` or `TRUNCATE`. For example:
 
-```
+``` sql
 DELETE FROM mytable;
 
 TRUNCATE mytable;

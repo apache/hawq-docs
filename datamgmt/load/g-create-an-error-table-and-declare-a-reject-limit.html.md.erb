@@ -4,7 +4,7 @@ title: Capture Row Formatting Errors and Declare a Reject Limit
 
 The following SQL fragment captures formatting errors internally in HAWQ and declares a reject limit of 10 rows.
 
-``` pre
+``` sql
 LOG ERRORS INTO errortable SEGMENT REJECT LIMIT 10 ROWS
 ```
 

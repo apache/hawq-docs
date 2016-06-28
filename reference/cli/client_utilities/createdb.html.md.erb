@@ -65,14 +65,14 @@ Force a password prompt.
 
 ## Examples<a id="topic1__section6"></a>
 
-To create the database `test` using the default options:
+To create the database `testdb` using the default options:
 
-``` pre
-createdb test
+``` shell
+$ createdb testdb
 ```
 
 To create the database `demo` using the HAWQ master on host `gpmaster`, port `54321`, using the `LATIN1` encoding scheme:
 
-``` pre
-createdb -p 54321 -h gpmaster -E LATIN1 demo
+``` shell
+$ createdb -p 54321 -h gpmaster -E LATIN1 demo
 ```

@@ -35,8 +35,8 @@ In order to use `hawq activate standby` to activate a new primary master host, t
 
 After activating a standby master, run `ANALYZE` to update the database query statistics. For example:
 
-``` pre
-psql dbname -c 'ANALYZE;'
+``` shell
+$ psql dbname -c 'ANALYZE;'
 ```
 
 After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the [hawq init](hawqinit.html#topic1) utility.
@@ -74,8 +74,8 @@ Displays the online help.
 
 Activate the standby master host and make it the active master instance for a HAWQ system (run from backup master host you are activating):
 
-``` pre
-hawq activate standby  /gpdata
+``` shell
+$ hawq activate standby  /gpdata
 ```
 
 ## See Also<a id="topic1__section6"></a>

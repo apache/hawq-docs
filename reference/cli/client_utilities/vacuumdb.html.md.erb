@@ -77,18 +77,18 @@ Force a password prompt.
 
 To clean the database `test`:
 
-``` pre
-vacuumdb test
+``` shell
+$ vacuumdb testdb
 ```
 
 To clean and analyze a database named `bigdb`:
 
-``` pre
-vacuumdb --analyze bigdb
+``` shell
+$ vacuumdb --analyze bigdb
 ```
 
 To clean a single table `foo` in a database named `mydb`, and analyze a single column `bar` of the table. Note the quotes around the table and column names to escape the parentheses from the shell:
 
-``` pre
-vacuumdb --analyze --verbose --table 'foo(bar)' mydb
+``` shell
+$ vacuumdb --analyze --verbose --table 'foo(bar)' mydb
 ```

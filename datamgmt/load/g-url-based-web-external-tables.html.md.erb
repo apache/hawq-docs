@@ -8,17 +8,17 @@ Specify the `LOCATION` of files on a web server using `http://`. The web data fi
 
 The following sample command defines a web table that gets data from several URLs.
 
-``` pre
+``` sql
 =# CREATE EXTERNAL WEB TABLE ext_expenses (
     name text, date date, amount float4, category text, description text) 
-  LOCATION ('http://intranet.company.com/expenses/sales/file.csv',
-            'http://intranet.company.com/expenses/exec/file.csv',
-            'http://intranet.company.com/expenses/finance/file.csv',
-            'http://intranet.company.com/expenses/ops/file.csv',
-            'http://intranet.company.com/expenses/marketing/file.csv',
-            'http://intranet.company.com/expenses/eng/file.csv' 
-           )
-  FORMAT 'CSV' ( HEADER );
+LOCATION ('http://intranet.company.com/expenses/sales/file.csv',
+          'http://intranet.company.com/expenses/exec/file.csv',
+          'http://intranet.company.com/expenses/finance/file.csv',
+          'http://intranet.company.com/expenses/ops/file.csv',
+          'http://intranet.company.com/expenses/marketing/file.csv',
+          'http://intranet.company.com/expenses/eng/file.csv' 
+      )
+FORMAT 'CSV' ( HEADER );
 ```
 
 

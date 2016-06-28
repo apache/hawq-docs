@@ -13,10 +13,10 @@ Before working with HDFS file data using HAWQ and PXF, you should perform the fo
 
 The syntax for creating an external HDFS file is as follows: 
 
-``` pre
-CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name      
+``` sql
+CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name 
     ( column_name data_type [, ...] | LIKE other_table )
-      LOCATION ('pxf://host[:port]/path-to-data?<pxf parameters>[&custom-option=value...]')
+LOCATION ('pxf://host[:port]/path-to-data?<pxf parameters>[&custom-option=value...]')
       FORMAT '[TEXT | CSV | CUSTOM]' (<formatting_properties>);
 ```
 
@@ -31,13 +31,13 @@ where `<pxf parameters>` is:
 
 Use an SQL `SELECT` statement to read from an HDFS READABLE table:
 
-``` pre
+``` sql
 SELECT ... FROM table_name;
 ```
 
 Use an SQL `INSERT` statement to add data to an HDFS WRITABLE table:
 
-``` pre
+``` sql
 INSERT INTO table_name ...;
 ```
 
@@ -278,7 +278,7 @@ The class file must follow the following requirements:
 
 To access data on a High Availability HDFS cluster, change the authority in the URI in the LOCATION. Use *HA\_nameservice* instead of *name\_node\_host:51200*.
 
-``` pre
+``` sql
 CREATE [READABLE|WRITABLE] EXTERNAL TABLE <tbl name> (<attr list>)
 LOCATION ('pxf://<HA nameservice>/<path to file or directory>?Profile=profile[&<additional options>=<value>]')
 FORMAT '[TEXT | CSV | CUSTOM]' (<formatting properties>);
@@ -308,7 +308,7 @@ If the `recordkey` field is not defined, the key is ignored in read, and a defau
 
 A data schema `Babies.class` contains three fields: (name text, birthday text, weight float). An external table must include these three fields, and can either include or ignore the recordkey.
 
-``` pre
+``` sql
 -- writable table with recordkey
 CREATE WRITABLE EXTERNAL TABLE babies_registry (recordkey int, name text, birthday text, weight float)
   LOCATION ('pxf://namenode_host:51200/babies_1940s'
@@ -332,7 +332,7 @@ INSERT INTO babies_registry VALUES ("Richard Starkey", "July 7, 1940", 4.0);
 
 The same goes for reading data from an existing file with a key-value format, e.g. a Sequence file.
 
-``` pre
+``` sql
 -- readable table with recordkey
 CREATE EXTERNAL TABLE babies_1940 (recordkey int, name text, birthday text, weight float)
   LOCATION ('pxf://namenode_host:51200/babies_1940s'
@@ -381,7 +381,7 @@ The following example uses the Avro schema shown in [Sample Avro Schema](#topic_
 
 #### Sample Avro Schema<a id="topic_tr3_dpg_ts__section_m2p_ztg_ts"></a>
 
-``` pre
+``` json
 {
   "type" : "record",
   "name" : "example_schema",
@@ -428,7 +428,8 @@ The following example uses the Avro schema shown in [Sample Avro Schema](#topic_
         "type" : "fixed",
         "name" : "md5Fixed",
         "size" : 4
-    } ],
+    }
+  } ],
   "doc:" : "A basic schema for storing messages"
 }
 ```
@@ -445,7 +446,7 @@ The following example uses the Avro schema shown in [Sample Avro Schema](#topic_
 
 To map this Avro file to an external table, the top-level primitive fields ("id" of type long and "username" of type string) are mapped to their equivalent HAWQ types (bigint and text). The remaining complex fields are mapped to text columns:
 
-``` pre
+``` sql
 gpadmin=# CREATE EXTERNAL TABLE avro_complex 
   (id bigint, 
   username text, 
@@ -461,7 +462,7 @@ FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
 
 The above command uses default delimiters for separating components of the complex types. This command is equivalent to the one above, but it explicitly sets the delimiters using the Avro profile parameters:
 
-``` pre
+``` sql
 gpadmin=# CREATE EXTERNAL TABLE avro_complex 
   (id bigint, 
   username text, 
@@ -477,8 +478,11 @@ FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
 
 A simple query of the external table shows the components of the complex type data separated with delimiters:
 
-``` pre
+``` sql
 gpadmin=# select * from avro_complex;
+```
+
+``` pre
 id | username |  followers  |    rank     |  fmap   |    address  |  relationship  |  md5
 1| john | [kate,santosh] |   | {kate:10,santosh:4} | {number:1,street:renaissance drive,city:san jose} | FRIEND | ?zst
 2| jim | [john,pam] | 3 | {john:3,pam:3} | {number:9,street:deer creek,city:palo alto} | COLLEAGUE | \020!\003\004
@@ -486,7 +490,7 @@ id | username |  followers  |    rank     |  fmap   |    address  |  relationshi
 
 You can process the delimited components in the text columns as necessary for your application. For example, the following command uses the `string_to_array` function to convert entries in the "followers" field to a text array column in a new view. The view is then queried to filter rows based on whether a particular follower appears in the array:
 
-``` pre
+``` sql
 gpadmin=# create view followers_view as 
   select username, address, string_to_array(substring(followers from 2 for (char_length(followers) - 2)), ',')::text[] 
     as followers 
@@ -495,6 +499,9 @@ gpadmin=# create view followers_view as
 gpadmin=# select username, address 
 from followers_view 
 where john = ANY(followers);
+```
+
+``` pre
 username | address
 jim | {number:9,street:deer creek,city:palo alto}
 ```

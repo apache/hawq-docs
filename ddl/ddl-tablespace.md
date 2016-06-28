@@ -16,20 +16,22 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
 
 1.  Log in to the HAWQ master as the `gpadmin` user.
 
-    ```
+    ``` shell
     $ su - gpadmin
     ```
 
 2.  Create a filespace configuration file:
 
-    ```
+    ``` shell
     $ hawq filespace -o hawqfilespace_config
     ```
 
 3.  At the prompt, enter a name for the filespace, a master file system location, and the primary segment file system locations. For example:
 
+    ``` shell
+    $ hawq filespace -o hawqfilespace_config
     ```
-    [gpadmin@hawq ~]$ hawq filespace -o hawqfilespace_config
+    ``` pre
     Enter a name for this filespace
     > testfs
     Enter replica num for filespace. If 0, default replica num is used (default=3)
@@ -41,13 +43,20 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
     20160409:16:53:25:028082 hawqfilespace:gpadmin:gpadmin-[INFO]:-
     To add this filespace to the database please run the command:
        hawqfilespace --config /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
-
-    gpadmin:hawq gpadmin$ cat /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
+    ```
+       
+    ``` shell
+    $ cat /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
+    ```
+    ``` pre
     filespace:testfs
     fsreplica:3
     dfs_url::localhost:8020/fs
-
-    gpadmin:hawq gpadmin$ hawqfilespace --config /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
+    ```
+    ``` shell
+    $ hawq filespace --config /Users/gpadmin/curwork/git/hawq/hawqfilespace_config
+    ```
+    ``` pre
     Reading Configuration file: '/Users/gpadmin/curwork/git/hawq/hawqfilespace_config'
 
     CREATE FILESPACE testfs ON hdfs 
@@ -58,7 +67,7 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
     ```
 
 
-4.  hawq filespace creates a configuration file. Examine the file to verify that the hawq filespace configuration is correct. The following is a sample configuration file:
+4.  `hawq filespace` creates a configuration file. Examine the file to verify that the hawq filespace configuration is correct. The following is a sample configuration file:
 
     ```
     filespace:fastdisk
@@ -69,7 +78,7 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
 
 5.  Run hawq filespace again to create the filespace based on the configuration file:
 
-    ```
+    ``` shell
     $ hawq filespace -c hawqfilespace_config
     ```
 
@@ -78,13 +87,13 @@ A filespace sets aside storage for your HAWQ system. A filespace is a symbolic s
 
 After you create a filespace, use the `CREATE TABLESPACE` command to define a tablespace that uses that filespace. For example:
 
-```
+``` sql
 =# CREATE TABLESPACE fastspace FILESPACE fastdisk;
 ```
 
 Database superusers define tablespaces and grant access to database users with the `GRANT``CREATE`command. For example:
 
-```
+``` sql
 =# GRANT CREATE ON TABLESPACE fastspace TO admin;
 ```
 
@@ -92,19 +101,19 @@ Database superusers define tablespaces and grant access to database users with t
 
 Users with the `CREATE` privilege on a tablespace can create database objects in that tablespace, such as tables, indexes, and databases. The command is:
 
-```
+``` sql
 CREATE TABLE tablename(options) TABLESPACE spacename
 ```
 
 For example, the following command creates a table in the tablespace *space1*:
 
-```
+``` sql
 CREATE TABLE foo(i int) TABLESPACE space1;
 ```
 
 You can also use the `default_tablespace` parameter to specify the default tablespace for `CREATE TABLE` and `CREATE INDEX` commands that do not specify a tablespace:
 
-```
+``` sql
 SET default_tablespace = space1;
 CREATE TABLE foo(i int);
 ```
@@ -124,11 +133,11 @@ These tablespaces use the system default filespace, `pg_system`, the data direct
 
 To see filespace information, look in the *pg\_filespace* and *pg\_filespace\_entry* catalog tables. You can join these tables with *pg\_tablespace* to see the full definition of a tablespace. For example:
 
-```
+``` sql
 =# SELECT spcname as tblspc, fsname as filespc,
-          fsedbid as seg_dbid, fselocation as datadir
-   FROM   pg_tablespace pgts, pg_filespace pgfs,
-          pg_filespace_entry pgfse
+          fsedbid as seg_dbid, fselocation as datadir
+   FROM   pg_tablespace pgts, pg_filespace pgfs,
+          pg_filespace_entry pgfse
    WHERE  pgts.spcfsoid=pgfse.fsefsoid
           AND pgfse.fsefsoid=pgfs.oid
    ORDER BY tblspc, seg_dbid;

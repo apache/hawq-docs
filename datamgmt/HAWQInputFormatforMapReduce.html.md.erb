@@ -43,7 +43,7 @@ HAWQ InputFormat supports the following data types:
 
 The following example shows how you can use the HAWQ InputFormat to access HAWQ table data from MapReduce jobs.
 
-``` pre
+``` java
 package com.mycompany.app;
 import com.pivotal.hawq.mapreduce.HAWQException;
 import com.pivotal.hawq.mapreduce.HAWQInputFormat;
@@ -87,7 +87,7 @@ implements Tool {
        ToolRunner.printGenericCommandUsage(System.out);
        return 2;
     }
- 
+ 
     public int run(String[] args) throws Exception {
        if (args.length < 3) {
         return printUsage();
@@ -151,13 +151,13 @@ implements Tool {
 3.  Create sample table:
     1.  Log in to HAWQ:
 
-        ``` pre
-         psql -d postgres 
+        ``` shell
+         $ psql -d postgres 
         ```
 
     2.  Create the sample table:
 
-        ``` pre
+        ``` sql
         CREATE TABLE employees (
         id INTEGER NOT NULL,
         name TEXT NOT NULL);
@@ -165,19 +165,19 @@ implements Tool {
 
         Or a Parquet table:
 
-        ``` pre
+        ``` sql
         CREATE TABLE employees ( id INTEGER NOT NULL, name TEXT NOT NULL) with (appendonly=true, orientation=parquet);
         ```
 
     3.  Insert one tuple:
 
-        ``` pre
-         INSERT INTO employees VALUES (1, 'Paul'); 
+        ``` sql
+        INSERT INTO employees VALUES (1, 'Paul');
         ```
 
     4.  Use the following shell script snippet showing how to run the Mapreduce job:
 
-        ``` pre
+        ``` shell
         # Suppose all five needed jars are under ./lib
         export
         LIBJARS=lib/hawq-mapreduce-common.jar,lib/hawq-mapreduce-ao.
@@ -195,8 +195,8 @@ implements Tool {
 
     5.  Use the following command to check the result of the Mapreduce job:
 
-        ``` pre
-        hadoop fs -cat /tmp/employees/*
+        ``` shell
+        $ hadoop fs -cat /tmp/employees/*
         ```
 
 The output will appear as follows:
@@ -214,8 +214,8 @@ You can access HAWQ data using the following interfaces:
 
 ### HAWQInputFormat.setInput<a id="hawqinputformatsetinput"></a>
 
-``` pre
-/**
+``` java
+  /**
     * Initializes the map-part of the job with the appropriate input settings
     * through connecting to Database.
     *
@@ -240,14 +240,14 @@ throws Exception;
 
 Use the metadata export tool, `hawq extract`, to export the metadata of the target table into a local YAML file:
 
-``` pre
-hawq extract [-h hostname] [-p port] [-U username] [-ddatabase] [-o output_file] [-W] <tablename>
+``` shell
+$ hawq extract [-h hostname] [-p port] [-U username] [-ddatabase] [-o output_file] [-W] <tablename>
 ```
 
 Using the extracted metadata, access HAWQ data through the following interface:
 
-``` pre
-/**
+``` java
+ /**
    * Initializes the map-part of the job with the appropriate input settings through reading metadata file stored in local filesystem.
    *
    * To get metadata file, please use hawq extract first

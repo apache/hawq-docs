@@ -29,6 +29,7 @@ When the `reltuples` column differs significantly from the row count returned by
 ### The pg\_statistic System Table and pg\_stats View<a id="views"></a>
 
 The `pg_statistic` system table holds the results of the last `ANALYZE` operation on each database table. There is a row for each column of every table. It has the following columns:
+
 starelid  
 The object ID of the table or index the column belongs to.
 
@@ -145,13 +146,13 @@ The statistics target is the size of the `most_common_vals`, `most_common_freqs`
 
 Set the system default statistics target to a different value by setting the `default_statistics_target` server configuration parameter. The default value is usually sufficient, and you should only raise or lower it if your tests demonstrate that query plans improve with the new target. For example, to raise the default statistics target from 25 to 50 you can use the `hawq config` utility:
 
-``` pre
-hawq config -c default_statistics_target -v 50
+``` shell
+$ hawq config -c default_statistics_target -v 50
 ```
 
 The statististics target for individual columns can be set with the `ALTER             TABLE` command. For example, some queries can be improved by increasing the target for certain columns, especially columns that have irregular distributions. You can set the target to zero for columns that never contribute to query otpimization. When the target is 0, `ANALYZE` ignores the column. For example, the following `ALTER TABLE` command sets the statistics target for the `notes` column in the `emp` table to zero:
 
-``` pre
+``` sql
 ALTER TABLE emp ALTER COLUMN notes SET STATISTICS 0;
 ```
 
@@ -177,8 +178,8 @@ With the `on_change` mode, `ANALYZE` is triggered only if the number of rows aff
 
 To disable automatic statistics collection outside of functions, set the `gp_autostats_mode` parameter to `none`:
 
-``` pre
-hawq configure -c gp_autostats_mode -v none
+``` shell
+$ hawq configure -c gp_autostats_mode -v none
 ```
 
 Set the `log_autostats` system configuration parameter to on if you want to log automatic statistics collection operations.

@@ -30,13 +30,13 @@ Use the *Amazon EC2 Console* to launch instances and configure, start, stop, and
 | Security Groups | A set of firewall rules that control the network traffic for instances. For external access to an instance with `ssh`, you will create a rule that enables `ssh` for inbound network traffic. |
 
 
-### Select AMI Type
+### Select AMI Type<a id="topic_selamitype"></a>
 When Configuring a HAWQ virtual instance, select an AMI that runs an operating system supported by HAWQ. Refer to the Release Notes for the HAWQ version that you are installing for a list of supported OS platforms. 
 
 **Note**: To create and launch a customized AMI, see [About Amazon Machine Images](#topic_n3y_4gx_y5)
 
 
-### Select and Configure EC2 Instance Type
+### Select and Configure EC2 Instance Type<a id="topic_selcfginsttype"></a>
 When using Amazon Elastic Block Store (EBS), HAWQ supports only EBS-Optimized instance types. See [Configure Storage](#hawq_storage) for information about HAWQ storage requirements. For information about EBS-Optimized instances, see the Amazon [EBS](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EBSOptimized.html) documentation.
 
 For sufficient network performance, the instance type must also support EC2 enhanced networking. For information about this feature, see [Amazon Enhanced Networking on Linux Instances](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html).
@@ -126,6 +126,8 @@ For more detailed information about EC2 Elastic IP addresses and how to use them
     |-------|-------------------------------------|
     | 22    | ssh - secure connect to other hosts |
     | 8080  | Ambari - HAWQ admin/config web console |  
+
+- When running HAWQ on AWS, UDP network traffic must be permitted between each cluster node.  Enable this access by creating or modifying a security group to include rules for inbound and outbound UDP traffic.  Be sure to specify a complete range of port numbers in these rules.
 
 - You can configure a non-default VPC with an internet gateway and allocate an Elastic IP address for the VPC. AWS will automatically configure the Elastic IP for internet access.
  

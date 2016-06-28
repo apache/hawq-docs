@@ -10,7 +10,7 @@ data value 1|data value 2|data value 3
 
 The following command shows the use of the pipe character as a column delimiter:
 
-``` pre
+``` sql
 =# CREATE EXTERNAL TABLE ext_table (name text, date date)
 LOCATION ('gpfdist://host:port/filename.txt)
 FORMAT 'TEXT' (DELIMITER '|');

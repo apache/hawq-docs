@@ -12,9 +12,9 @@ The `LOG ERRORS` clause allows you to keep error rows for further examination. F
 
 When you set `SEGMENT REJECT LIMIT`, HAWQ scans the external data in single row error isolation mode. Single row error isolation mode applies to external data rows with format errors such as extra or missing attributes, attributes of a wrong data type, or invalid client encoding sequences. HAWQ does not check constraint errors, but you can filter constraint errors by limiting the `SELECT` from an external table at runtime. For example, to eliminate duplicate key errors:
 
-``` pre
+``` sql
 =# INSERT INTO table_with_pkeys 
-    SELECT DISTINCT * FROM external_table;
+SELECT DISTINCT * FROM external_table;
 ```
 
 -   **[Define an External Table with Single Row Error Isolation](../../datamgmt/load/g-define-an-external-table-with-single-row-error-isolation.html)**

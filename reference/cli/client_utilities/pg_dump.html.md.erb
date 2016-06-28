@@ -152,46 +152,46 @@ The dump file produced by `pg_dump` does not contain the statistics used by the 
 
 Dump a database called `mydb` into a SQL-script file:
 
-``` pre
-pg_dump mydb > db.sql
+``` shell
+$ pg_dump mydb > db.sql
 ```
 
 To reload such a script into a (freshly created) database named `newdb`:
 
-``` pre
-psql -d newdb -f db.sql
+``` shell
+$ psql -d newdb -f db.sql
 ```
 
 Dump a HAWQ in tar file format and include distribution policy information:
 
-``` pre
-pg_dump -Ft --gp-syntax mydb > db.tar
+``` shell
+$ pg_dump -Ft --gp-syntax mydb > db.tar
 ```
 
 To dump a database into a custom-format archive file:
 
-``` pre
-pg_dump -Fc mydb > db.dump
+``` shell
+$ pg_dump -Fc mydb > db.dump
 ```
 
 To reload an archive file into a (freshly created) database named `newdb`:
 
-``` pre
-pg_restore -d newdb db.dump
+``` shell
+$ pg_restore -d newdb db.dump
 ```
 
 **Note:** A warning related to the `gp_enable_column_oriented_table` parameter may appear. If it does, disregard it.
 
 To dump a single table named `mytab`:
 
-``` pre
-pg_dump -t mytab mydb > db.sql
+``` shell
+$ pg_dump -t mytab mydb > db.sql
 ```
 
 To specify an upper-case or mixed-case name in `-t` and related switches, you need to double-quote the name; else it will be folded to lower case. But double quotes are special to the shell, so in turn they must be quoted. Thus, to dump a single table with a mixed-case name, you need something like:
 
-``` pre
-pg_dump -t '"MixedCaseName"' mydb > mytab.sql
+``` shell
+$ pg_dump -t '"MixedCaseName"' mydb > mytab.sql
 ```
 
 ## See Also<a id="topic1__section9"></a>

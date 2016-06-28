@@ -27,7 +27,7 @@ Switches to unaligned output mode. (The default output mode is aligned.)
 -c '*command*' | --command '*command'*  
 Specifies that `psql` is to execute the specified command string, and then exit. This is useful in shell scripts. *command* must be either a command string that is completely parseable by the server, or a single backslash command. Thus you cannot mix SQL and `psql` meta-commands with this option. To achieve that, you could pipe the string into `psql`, like this:
 
-``` pre
+``` shell
 echo '\x \\ SELECT * FROM foo;' | psql
 ```
 
@@ -658,13 +658,13 @@ Set the console font to Lucida Console, because the raster font does not work wi
 
 Start `psql` in interactive mode:
 
-``` pre
-psql -p 54321 -U sally mydatabase
+``` shell
+$ psql -p 54321 -U sally mydatabase
 ```
 
 In `psql` interactive mode, spread a command over several lines of input. Notice the changing prompt:
 
-``` pre
+``` sql
 testdb=> CREATE TABLE my_table (
 testdb(>  first integer not null default 0,
 testdb(>  second text)
@@ -685,6 +685,6 @@ testdb=> \d my_table
 
 Run `psql` in non-interactive mode by passing in a file containing SQL commands:
 
-``` pre
-psql -f /home/gpadmin/test/myscript.sql
+``` shell
+$ psql -f /home/gpadmin/test/myscript.sql
 ```

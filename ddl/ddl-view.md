@@ -10,7 +10,7 @@ If a subquery is associated with a single query, consider using the `WITH` claus
 
 The `CREATE VIEW`command defines a view of a query. For example:
 
-```
+``` sql
 CREATE VIEW comedies AS SELECT * FROM films WHERE kind = 'comedy';
 ```
 
@@ -20,6 +20,6 @@ Views ignore `ORDER BY` and `SORT` operations stored in the view.
 
 The `DROP VIEW` command removes a view. For example:
 
-```
+``` sql
 DROP VIEW topten;
 ```

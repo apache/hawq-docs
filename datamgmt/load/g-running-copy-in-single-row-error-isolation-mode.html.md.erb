@@ -8,7 +8,7 @@ Specifying `SEGMENT REJECT LIMIT` runs the `COPY` operation in single row error 
 
 If the `COPY` operation does not reach the error limit, HAWQ loads all correctly-formatted rows and discards the error rows. The `LOG ERRORS INTO` clause allows you to keep error rows for further examination. Use `LOG ERRORS` to capture data formatting errors internally in HAWQ. For example:
 
-``` pre
+``` sql
 => COPY country FROM '/data/gpdb/country_data'
    WITH DELIMITER '|' LOG ERRORS INTO errtable
    SEGMENT REJECT LIMIT 10 ROWS;
