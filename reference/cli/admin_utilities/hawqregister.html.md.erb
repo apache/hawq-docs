@@ -31,31 +31,24 @@ Only parquet tables can be loaded using the `hawq register` command. Metadata fo
 
 ## Options<a id="topic1__section5"></a>
 
--? (show help)  
-Show help, then exit.
+<span class="tablecap">Table 1. General Options</span>
 
---version  
-Show the version of this utility, then exit.
+| Option| Description |
+| ----  | ----- |
+|-? (show help)   |Show help, then exit.|
+|--version  | Show the version of this utility, then exit.|
 
-**Connection Options**
 
--h *hostname*  
-Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `$PGHOST` or defaults to `localhost`.
+<span class="tablecap">Table 2. Connection Options</span>
 
--p *port*  
-Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `$PGPORT` or defaults to 5432.
-
--U *username*  
-The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.
-
-*databasename*  
-The database to register the hdfs data into. 
-
-*tablename*  
-The HAWQ table to be registered into. The table cannot use hash distribution. 
-
-*hdfspath*
-The path of the file or directory containing the files to be registered.
+| Option| Description |
+| ----  | ----- |
+|-h *hostname* | Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `$PGHOST` or defaults to `localhost`.|
+| -p *port*  |Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `$PGPORT` or defaults to 5432.|
+|-U *username*  |The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.|
+|*databasename*  |The database to register the hdfs data into. |
+|*tablename*  |The HAWQ table to be registered into. The table cannot use hash distribution. |
+|*hdfspath*|The path of the file or directory containing the files to be registered.|
 
 
 ## Examples<a id="topic1__section6"></a>
@@ -74,7 +67,7 @@ This command moves the file `hdfs://localhost:8020/temp/hive.paq` into the corre
 
 HAWQ and parquet format tables do not use the same data types, so mapping must be used. Users should make sure their implementation is mapped to the appropriate data type before running `hawq register`.
 
-<span class="tablecap">Table 1. HAWQ to Parquet Mapping</span>
+<span class="tablecap">Table 3. HAWQ to Parquet Mapping</span>
 
 |HAWQ Type   | Parquet Type  |
 | :------------| :---------------|
@@ -88,17 +81,82 @@ HAWQ and parquet format tables do not use the same data types, so mapping must b
 |char/bpchar/varchar/name| Byte array |
 | text/xml/interval/timetz  | Byte array  |
 | macaddr/inet/cidr  | Byte array  |
-| point  | group  |
-| circle  |  |
-| box  |  |
-| iseg  |  |
-| path  | `group {` |
-| | `   repeated group {`   `   repeated group {`  `       required int x;`  `       required int y;` `   }` `}` | 
-|  | <p> `       required int x;`</p><p> `       required int y;`</p>
-<p> `   }`</p>
-`}`  |
-    
+| point  |  `group {` `   required int x;`   `   required int y;`  `    `}   |
+| circle  | `group {` `   required int x;`   `   required int y;`   `       required int r;` `    `}    |
+| box  | `group {` `   required int x1;`   `   required int y1;`  `       required int x1;`  `       required int y2;` `    `}    |
+| iseg  | `group {` `   required int x1;`   `   required int y1;`  `       required int x1;`  `       required int y2;` `    `}  |
+| path  | `group {`    `   repeated group {`  `       required int x;`  `       required int y;` `   }` `}` |
 
-## See Also<a id="topic1__section8"></a>
+<span class="tablecap">Table 3. HAWQ to Parquet Mapping</span>
 
-[CREATE EXTERNAL TABLE](../../sql/CREATE-EXTERNAL-TABLE.html#topic1)
+|HAWQ Type   | Parquet Type  |
+| :------------| :---------------|
+| bool        | boolean       |
+| int2/int4/date        | int32       |
+| int8/money       | int64      |
+| time/timestamptz/timestamp       | int64      |
+| float4        | float       |
+|float8        | double       |
+|bit/varbit/bytea/numeric       | Byte array       |
+|char/bpchar/varchar/name| Byte array |
+| text/xml/interval/timetz  | Byte array  |
+| macaddr/inet/cidr  | Byte array  |
+
+**Additional HAWQ-to-Parquet Mapping**
+
+**point**:  
+
+``` 
+group {
+    required int x;
+    required int y;
+}
+```
+
+**circle:** 
+
+```
+group {
+    required int x;
+    required int y;
+    required int r;
+}
+```
+
+**box:**  
+
+```
+group {
+    required int x1;
+    required int y1;
+    required int x2;
+    required int y2;
+}
+```
+
+**iseg:** 
+
+
+```
+group {
+    required int x1;
+    required int y1;
+    required int x2;
+    required int y2;
+}
+``` 
+
+**path**:
+  
+```
+group {
+    repeated group {
+        required int x;
+        required int y;
+    }
+}
+```
+
+###Limitations for Registering Hive Tables to HAWQ
+The currently-supported data types for generating Hive tables into HAWQ tables are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.     
+
