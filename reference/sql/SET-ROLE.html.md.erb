@@ -45,15 +45,19 @@ In particular, when a superuser chooses to `SET ROLE` to a non-superuser role, s
 
 ## Examples<a id="topic1__section6"></a>
 
-``` pre
+``` sql
 SELECT SESSION_USER, CURRENT_USER;
+```
+``` pre
  session_user | current_user 
 --------------+--------------
  peter        | peter
-
+```
+``` sql
 SET ROLE 'paul';
-
 SELECT SESSION_USER, CURRENT_USER;
+```
+``` pre
  session_user | current_user 
 --------------+--------------
  peter        | paul

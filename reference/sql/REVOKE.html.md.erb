@@ -74,19 +74,19 @@ See [GRANT](GRANT.html).
 
 Revoke insert privilege for the public on table `films`:
 
-``` pre
+``` sql
 REVOKE INSERT ON films FROM PUBLIC;
 ```
 
 Revoke all privileges from role `sally` on view `topten`. Note that this actually means revoke all privileges that the current role granted (if not a superuser).
 
-``` pre
+``` sql
 REVOKE ALL PRIVILEGES ON topten FROM sally;
 ```
 
 Revoke membership in role `admins` from user `joe`:
 
-``` pre
+``` sql
 REVOKE admins FROM joe;
 ```
 

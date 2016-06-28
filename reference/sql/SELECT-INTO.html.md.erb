@@ -41,7 +41,7 @@ The name (optionally schema-qualified) of the table to be created.
 
 Create a new table `films_recent` consisting of only recent entries from the table `films`:
 
-``` pre
+``` sql
 SELECT * INTO films_recent FROM films WHERE date_prod >=
 '2006-01-01';
 ```
