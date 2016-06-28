@@ -12,7 +12,7 @@ In order to prevent data loss or corruption in an Apache HAWQ cluster, you must 
 **For mission critical deployments of HAWQ, perform these steps on each host machine to configure memory:**
 
 1.  Set the operating system `vm.overcommit_memory` parameter to 2. With this setting, the OOM killer process reports an error instead of killing running processes. To set this parameter:
-    1.  Open the /etc/sysctl.conf file with a text editor.
+    1.  Open the `/etc/sysctl.conf` file with a text editor.
     2.  Add or change the parameter definition so that the file includes these lines:
 
         ```
@@ -22,19 +22,19 @@ In order to prevent data loss or corruption in an Apache HAWQ cluster, you must 
 
     3.  Save and close the file, then execute this command to apply your change:
 
-        ```
+        ``` shell
         $ sysctl -p
         ```
 
     4.  To view the current `vm.overcommit_memory` setting, execute the command:
 
-        ```
+        ``` shell
         $ sysctl -a | grep overcommit_memory
         ```
 
     5.  To view the runtime overcommit settings, execute the command:
 
-        ```
+        ``` shell
         $ cat /proc/meminfo | grep Commit
         ```
 
@@ -42,7 +42,7 @@ In order to prevent data loss or corruption in an Apache HAWQ cluster, you must 
 
     To set the `vm.overcommit_ratio` parameter:
 
-    1.  Open the /etc/sysctl.conf file with a text editor.
+    1.  Open the `/etc/sysctl.conf` file with a text editor.
     2.  Add or change the parameter definition so that the file includes the line:
 
            ```
@@ -52,20 +52,20 @@ In order to prevent data loss or corruption in an Apache HAWQ cluster, you must 
            \(Use `vm.overcommit_ratio=100` for hosts with more than 64GB RAM.\)
     3.  Save and close the file, then execute this command to apply your change:
 
-           ```
-       $ sysctl -p
-       ```
+        ``` shell
+        $ sysctl -p
+        ```
 
     4.  To view the current `vm.overcommit_ratio` setting, execute the command:
 
-        ```
+        ``` shell
         $ sysctl -a | grep overcommit_ratio
         ```
         You can choose to use a dedicated swap partition, a swap file, or a combination of both. View the current swap settings using the command:
 
-         ```
-         $ cat /proc/meminfo | grep Swap
-         ```
+        ``` shell
+        $ cat /proc/meminfo | grep Swap
+        ```
 3.  Ensure that all Java services that run on the machine use the `-Xmx` switch to allocate only their required heap.
 4.  Ensure that no other services \(such as Puppet\) or automated processes attempt to reset the overcommit settings on cluster hosts.
 5.  During the installation process, configure HAWQ memory by setting YARN or HAWQ configuration parameters, as described in [HAWQ Memory Configuration](#topic_uzf_flz_g5).
