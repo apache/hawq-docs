@@ -37,25 +37,25 @@ You must own the function to use `ALTER FUNCTION`. To change a function’s sche
 
 ## Parameters<a id="alterfunction__section4"></a>
 
- *name*
+ *name*  
 The name (optionally schema-qualified) of an existing function.
 
- *argmode*
+*argmode*  
 The mode of an argument: either `IN`, `OUT`, or `INOUT`. If omitted, the default is `IN`. Note that `ALTER FUNCTION` does not actually pay any attention to `OUT` arguments, since only the input arguments are needed to determine the function's identity. So it is sufficient to list the `IN` and `INOUT` arguments.
 
- *argname*
+ *argname*  
 The name of an argument. Note that `ALTER FUNCTION` does not actually pay any attention to argument names, since only the argument data types are needed to determine the function's identity.
 
- *argtype*
+ *argtype*  
 The data type(s) of the function's arguments (optionally schema-qualified), if any.
 
- *new\_name*
+ *new\_name*  
 The new name of the function.
 
- *new\_owner*
+ *new\_owner*  
 The new owner of the function. Note that if the function is marked `SECURITY DEFINER`, it will subsequently execute as the new owner.
 
- *new\_schema*
+ *new\_schema*  
 The new schema for the function.
 
 CALLED ON NULL INPUT  
@@ -65,14 +65,14 @@ STRICT
 
 IMMUTABLE  
 STABLE  
-VOLATILE,
+VOLATILE  
 Change the volatility of the function to the specified setting. See `CREATE FUNCTION` for details.
 
 \[ EXTERNAL \] SECURITY INVOKER  
 \[ EXTERNAL \] SECURITY DEFINER  
 Change whether the function is a security definer or not. The key word `EXTERNAL` is ignored for SQL conformance. See `CREATE                      FUNCTION` for more information about this capability.
 
-RESTRICT
+RESTRICT  
 Ignored for conformance with the SQL standard.
 
 ## Notes<a id="notes"></a>
