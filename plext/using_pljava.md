@@ -9,6 +9,8 @@ This section contains an overview of the HAWQ PL/Java language.
 
 With the HAWQ PL/Java extension, you can write Java methods using your favorite Java IDE and install the JAR files that contain the methods in your HAWQ cluster.
 
+**Note**: To use PL/Java in HAWQ, you must either install the PL/Java package on top of an existing HAWQ deployment or specify PL/Java as a build option when compiling HAWQ.
+
 The HAWQ PL/Java package is based on the open source PL/Java 1.4.0. HAWQ PL/Java provides the following features.
 
 - Ability to execute PL/Java functions with Java 1.6 or higher.

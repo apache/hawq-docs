@@ -4,6 +4,7 @@ title: Using PL/R in HAWQ
 
 PL/R is a procedural language. With the HAWQ PL/R extension you can write database functions in the R programming language, and use R packages that contain R functions and data sets.
 
+**Note**: To use PL/R in HAWQ, you must either install the PL/R package on top of an existing HAWQ deployment or specify PL/R as a build option when compiling HAWQ.
 
 ## PL/R Examples <a id="plrexamples"></a>
 
