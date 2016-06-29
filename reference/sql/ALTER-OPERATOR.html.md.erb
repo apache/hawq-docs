@@ -6,10 +6,9 @@ Changes the definition of an operator.
 
 ## Synopsis<a id="synop"></a>
 
-``` pre
+```pre
 ALTER OPERATOR name ( {lefttype | NONE} , {righttype | NONE} ) 
-   OWNER TO newowner
-         
+   OWNER TO newowner        
 ```
 
 ## Description<a id="desc"></a>
@@ -36,7 +35,7 @@ The new owner of the operator.
 
 Change the owner of a custom operator `a @@ b` for type `text`:
 
-``` pre
+```pre
 ALTER OPERATOR @@ (text, text) OWNER TO joe;
 ```
 

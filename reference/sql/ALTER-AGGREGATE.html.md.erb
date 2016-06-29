@@ -6,13 +6,12 @@ Changes the definition of an aggregate function.
 
 ## Synopsis<a id="synop"></a>
 
-``` pre
+```pre
 ALTER AGGREGATE name ( type [ , ... ] ) RENAME TO new_name
 
 ALTER AGGREGATE name ( type [ , ... ] ) OWNER TO new_owner
 
 ALTER AGGREGATE name ( type [ , ... ] ) SET SCHEMA new_schema
-         
 ```
 
 ## Description<a id="desc"></a>
@@ -42,19 +41,19 @@ The new schema for the aggregate function.
 
 To rename the aggregate function `myavg` for type `integer` to `my_average`:
 
-``` pre
+```pre
 ALTER AGGREGATE myavg(integer) RENAME TO my_average;
 ```
 
 To change the owner of the aggregate function `myavg` for type `integer` to `joe`:
 
-``` pre
+```pre
 ALTER AGGREGATE myavg(integer) OWNER TO joe;
 ```
 
 To move the aggregate function `myavg` for type `integer` into schema `myschema`:
 
-``` pre
+```pre
 ALTER AGGREGATE myavg(integer) SET SCHEMA myschema;
 ```
 

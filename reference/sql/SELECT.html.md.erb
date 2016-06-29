@@ -144,7 +144,6 @@ The optional `WHERE` clause has the general form:
 
 ``` pre
 WHERE condition
-
 ```
 
 where *condition* is any expression that evaluates to a result of type `boolean`. Any row that does not satisfy this condition will be eliminated from the output. A row satisfies the condition if it returns true when the actual row values are substituted for any variable references.
@@ -279,7 +278,6 @@ The optional `HAVING` clause has the general form:
 
 ``` pre
 HAVING condition
-
 ```
 
 where *condition* is the same as specified for the `WHERE` clause. `HAVING` eliminates group rows that do not satisfy the condition. `HAVING` is different from `WHERE`: `WHERE` filters individual rows before the application of `GROUP BY`, while `HAVING` filters group rows created by `GROUP BY`. Each column referenced in *condition* must unambiguously reference a grouping column, unless the reference appears within an aggregate function.
@@ -291,8 +289,7 @@ The presence of `HAVING` turns a query into a grouped query even if there is no 
 The `UNION` clause has this general form:
 
 ``` pre
-               select_statement UNION [ALL] select_statement
-
+select_statement UNION [ALL] select_statement
 ```
 
 where *select\_statement* is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause. (`ORDER BY` and `LIMIT` can be attached to a subquery expression if it is enclosed in parentheses. Without parentheses, these clauses will be taken to apply to the result of the `UNION`, not to its right-hand input expression.)
@@ -310,8 +307,7 @@ Currently, `FOR UPDATE` and `FOR SHARE` may not be specified either for a `UNION
 The `INTERSECT` clause has this general form:
 
 ``` pre
-               select_statement INTERSECT [ALL] select_statement
-
+select_statement INTERSECT [ALL] select_statement
 ```
 
 where *select\_statement* is any SELECT statement without an `ORDER             BY`, `LIMIT`, `FOR UPDATE`, or `FOR             SHARE` clause.
@@ -329,8 +325,7 @@ Currently, `FOR UPDATE` and `FOR SHARE` may not be specified either for an `INTE
 The `EXCEPT` clause has this general form:
 
 ``` pre
-               select_statement EXCEPT [ALL] select_statement
-
+select_statement EXCEPT [ALL] select_statement
 ```
 
 where *select\_statement* is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause.
@@ -408,27 +403,27 @@ The query planner takes `LIMIT` into account when generating a query plan, so yo
 
 To join the table `films` with the table `distributors`:
 
-``` pre
+``` sql
 SELECT f.title, f.did, d.name, f.date_prod, f.kind FROM
 distributors d, films f WHERE f.did = d.did
 ```
 
 To sum the column `length` of all films and group the results by `kind`:
 
-``` pre
+``` sql
 SELECT kind, sum(length) AS total FROM films GROUP BY kind;
 ```
 
 To sum the column `length` of all films, group the results by `kind` and show those group totals that are less than 5 hours:
 
-``` pre
+``` sql
 SELECT kind, sum(length) AS total FROM films GROUP BY kind
 HAVING sum(length) < interval '5 hours';
 ```
 
 Calculate the subtotals and grand totals of all sales for movie `kind` and `distributor`.
 
-``` pre
+``` sql
 SELECT kind, distributor, sum(prc*qty) FROM sales
 GROUP BY ROLLUP(kind, distributor)
 ORDER BY 1,2,3;
@@ -436,23 +431,23 @@ ORDER BY 1,2,3;
 
 Calculate the rank of movie distributors based on total sales:
 
-``` pre
+``` sql
 SELECT distributor, sum(prc*qty),
-       rank() OVER (ORDER BY sum(prc*qty) DESC)
+       rank() OVER (ORDER BY sum(prc*qty) DESC)
 FROM sale
 GROUP BY distributor ORDER BY 2 DESC;
 ```
 
 The following two examples are identical ways of sorting the individual results according to the contents of the second column (`name`):
 
-``` pre
+``` sql
 SELECT * FROM distributors ORDER BY name;
 SELECT * FROM distributors ORDER BY 2;
 ```
 
 The next example shows how to obtain the union of the tables `distributors` and `actors`, restricting the results to those that begin with the letter `W` in each table. Only distinct rows are wanted, so the key word `ALL` is omitted:
 
-``` pre
+``` sql
 SELECT distributors.name FROM distributors WHERE
 distributors.name LIKE 'W%' UNION SELECT actors.name FROM
 actors WHERE actors.name LIKE 'W%';
@@ -481,7 +476,7 @@ The `SELECT` statement is compatible with the SQL standard, but there are some e
 
 HAWQ allows you to omit the `FROM` clause. It has a straightforward use to compute the results of simple expressions. For example:
 
-``` pre
+``` sql
 SELECT 2+2;
 ```
 

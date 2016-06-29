@@ -6,16 +6,16 @@ Modify an existing resource queue.
 
 ## Synopsis<a id="topic1__section2"></a>
 
-``` pre
+```pre
 ALTER RESOURCE QUEUE name WITH (queue_attribute=value [, ... ])
 ```
 
 where *queue\_attribute* is:
 
-``` pre
+```pre
 [ACTIVE_STATEMENTS=integer]
-        MEMORY_LIMIT_CLUSTER=percentage
-        CORE_LIMIT_CLUSTER=percentage
+        MEMORY_LIMIT_CLUSTER=percentage
+        CORE_LIMIT_CLUSTER=percentage
         [ALLOCATION_POLICY='even']
         [VSEGMENT_RESOURCE_QUOTA='mem:memory_units']
         [RESOURCE_OVERCOMMIT_FACTOR=double]
@@ -23,7 +23,8 @@ where *queue\_attribute* is:
         [NVSEG_LOWER_LIMIT=integer]
         [NVSEG_UPPER_LIMIT_PERSEG=double]
         [NVSEG_LOWER_LIMIT_PERSEG=double]
-
+```
+```
         memory_units ::= {128mb|256mb|512mb|1024mb|2048mb|4096mb|
                           8192mb|16384mb|1gb|2gb|4gb|8gb|16gb}
         percentage ::= integer %
@@ -111,14 +112,14 @@ By default, both limits are set to **-1**, which means the limits are disabled. 
 
 Change the memory and core limit of a resource queue:
 
-``` pre
+```pre
 ALTER RESOURCE QUEUE test_queue_1 WITH (MEMORY_LIMIT_CLUSTER=40%,
 CORE_LIMIT_CLUSTER=40%);
 ```
 
 Change the active statements maximum for the resource queue:
 
-``` pre
+```pre
 ALTER RESOURCE QUEUE test_queue_1 WITH (ACTIVE_STATEMENTS=50);
 ```
 

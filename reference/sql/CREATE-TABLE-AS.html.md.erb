@@ -62,7 +62,7 @@ The `WITH` clause can be used to set storage options for the table or its indexe
 
 **ORIENTATION** — Set to `row` (the default) for row-oriented storage, or `parquet`. This option is only valid if `APPENDONLY=TRUE`. Heap-storage tables can only be row-oriented.
 
-**COMPRESSTYPE** — Set to `ZLIB` (the default) to specify the type of compression used. QuickLZ has been deprecated. Zlib compression provides more compact compression ratios at lower speeds. This option is only valid if `APPENDONLY=TRUE`.
+**COMPRESSTYPE** — Set to `ZLIB` (the default) to specify the type of compression used. Zlib compression provides more compact compression ratios at lower speeds. This option is only valid if `APPENDONLY=TRUE`.
 
 **COMPRESSLEVEL** — For zlib compression of append-only tables, set to a value between 1 (fastest compression) to 9 (highest compression ratio). If not declared, the default is 1. This option is only valid if `APPENDONLY=TRUE`.
 

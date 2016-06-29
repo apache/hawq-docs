@@ -30,7 +30,7 @@ vacuumdb --version
 Vacuums all databases.
 
 \[-d\] *dbname* | \[--dbname\] *dbname*  
-The name of the database to vacuum. If this is not specified and `-all` is not used, the database name is read from the environment variable `PGDATABASE`. If that is not set, the user name specified for the connection is used.
+The name of the database to vacuum. If this is not specified and `--all` is not used, the database name is read from the environment variable `PGDATABASE`. If that is not set, the user name specified for the connection is used.
 
 -f | --full  
 Selects a full vacuum, which may reclaim more space, but takes much longer and exclusively locks the table.

@@ -23,9 +23,11 @@ $GPHOME/ext/python/
  
 ## Enabling and Removing PL/Python Support <a id="enableplpython"></a>
 
-The PL/Python language is installed with HAWQ. To create and run a PL/Python user-defined function (UDF) in a database, you must register the PL/Python language with the database.
+If enabled as an option during HAWQ build, the PL/Python language is installed with HAWQ.
 
-On every database where you want to install and enable PL/Python, connect to the database using the psql client.
+**Note**: To use PL/Python in HAWQ, you must either use a pre-compiled version of HAWQ that includes PL/Python or specify PL/Python as a build option when compiling HAWQ.
+
+To create and run a PL/Python user-defined function (UDF) in a database, you must register the PL/Python language with the database. On every database where you want to install and enable PL/Python, connect to the database using the psql client.
 
 ```shell
 $ psql -d <dbname>

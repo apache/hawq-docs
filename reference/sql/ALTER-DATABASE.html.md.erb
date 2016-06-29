@@ -6,10 +6,10 @@ Changes the attributes of a database.
 
 ## Synopsis<a id="alterrole__section2"></a>
 
-``` pre
-ALTER DATABASE name SET parameter { TO | + } { value | DEFAULT } 
+```pre
+ALTER DATABASE name SET parameter { TO | = } { value | DEFAULT } 
 
-ALTER DATABASE name RESET parameter 
+ALTER DATABASE name RESET parameter
 ```
 
 ## Description<a id="desc"></a>
@@ -36,7 +36,7 @@ It is also possible to set a configuration parameter session default for a speci
 
 To set the default schema search path for the `mydatabase` database:
 
-``` pre
+```pre
 ALTER DATABASE mydatabase SET search_path TO myschema, 
 public, pg_catalog;
 ```

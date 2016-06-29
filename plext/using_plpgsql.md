@@ -26,6 +26,7 @@ This can result in a considerable performance increase as compared to an applica
 
 PL/pgSQL supports all the data types, operators, and functions of SQL.
 
+**Note:**  PL/pgSQL is automatically installed and registered in all HAWQ databases.
 
 ## Supported Data Types for Arguments and Results <a id="supportedargumentandresultdatatypes"></a>
 

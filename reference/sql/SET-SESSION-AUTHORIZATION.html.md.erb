@@ -39,15 +39,19 @@ Reset the session and current role identifiers to be that of the role used to lo
 
 ## Examples<a id="topic1__section5"></a>
 
-``` pre
+``` sql
 SELECT SESSION_USER, CURRENT_USER;
+```
+``` pre
  session_user | current_user 
 --------------+--------------
  peter        | peter
-
+```
+``` sql
 SET SESSION AUTHORIZATION 'paul';
-
 SELECT SESSION_USER, CURRENT_USER;
+```
+``` pre
  session_user | current_user 
 --------------+--------------
  paul         | paul
