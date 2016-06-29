@@ -304,7 +304,7 @@ You can set three kinds of parameters for a parquet table.
 
 2.  Set the compression type parameter: Parquet tables can be compressed either as `SNAPPY` or `GZIP`. When setting to `SNAPPY`, setting a compression level causes it to fail. You can set the `GZIP` compression level between 1 and 9. If you specify a compression level but not a compression type when creating a parquet table, the compression type defaults to `GZIP`.
 
-    **Note:** The compress type `ZLIB` is valid for append-only tables, while `SNAPPY` and `GZIP` are valid for parquet tables.`QUICKLZ` compression has been deprecated.
+    **Note:** The compress type `ZLIB` is valid for append-only tables, while `SNAPPY` and `GZIP` are valid for parquet tables.
 
 3.  Set the data storage parameter: By default, the two parameters, `PAGESIZE` and `ROWGROUPSIZE` are set to 1MB/8MB for common and partitioned tables.
 
