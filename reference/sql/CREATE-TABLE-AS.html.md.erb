@@ -62,9 +62,9 @@ The `WITH` clause can be used to set storage options for the table or its indexe
 
 **ORIENTATION** — Set to `row` (the default) for row-oriented storage, or `parquet`. This option is only valid if `APPENDONLY=TRUE`. Heap-storage tables can only be row-oriented.
 
-**COMPRESSTYPE** — Set to `ZLIB` (the default) to specify the type of compression used. Zlib compression provides more compact compression ratios at lower speeds. This option is only valid if `APPENDONLY=TRUE`.
+**COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. ZLIB provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
 
-**COMPRESSLEVEL** — For zlib compression of append-only tables, set to a value between 1 (fastest compression) to 9 (highest compression ratio). If not declared, the default is 1. This option is only valid if `APPENDONLY=TRUE`.
+**COMPRESSLEVEL** — Set to an integer value from 1 (fastest compression) to 9 (highest compression ratio). If not declared, the default is 1. This option is valid only if `APPENDONLY=TRUE` and `COMPRESSTYPE=[ZLIB|GZIP]`.
 
 **OIDS** — Set to `OIDS=FALSE` (the default) so that rows do not have object identifiers assigned to them. Do not enable OIDS when creating a table. On large tables, such as those in a typical HAWQ system, using OIDs for table rows can cause wrap-around of the 32-bit OID counter. Once the counter wraps around, OIDs can no longer be assumed to be unique, which not only makes them useless to user applications, but can also cause problems in the HAWQ system catalog tables. In addition, excluding OIDs from a table reduces the space required to store the table on disk by 4 bytes per row, slightly improving performance.
 
