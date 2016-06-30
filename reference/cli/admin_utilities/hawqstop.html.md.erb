@@ -45,10 +45,10 @@ Stop all segments.
 
 ## Options<a id="topic1__section4"></a>
 
--a --prompt  
+-a -\\\-prompt  
 Do not prompt the user for confirmation before executing.
 
--l --logdir*logfile\_directory*  
+-l -\\\-logdir*logfile\_directory*  
 The directory to write the log file. The default is `~/hawq/Adminlogs/`.
 
 -M smart | fast | immediate  
@@ -58,25 +58,25 @@ Fast shut down interrupts and rolls back any transactions currently in progress 
 
 Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.
 
--q --quiet  
+-q -\\\-quiet  
 Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.
 
--t --timeout*timeout\_seconds*  
+-t -\\\-timeout*timeout\_seconds*  
 Specifies a timeout threshold (in seconds) to wait for a segment instance to shutdown. If a segment instance does not shut down in the specified number of seconds, `hawq stop` displays a message indicating that one or more segments are still in the process of shutting down and that you cannot restart HAWQ until the segment instance(s) are stopped. This option is useful in situations where `hawq stop` is executed and there are very large transactions that need to rollback. These large transactions can take over a minute to rollback and surpass the default timeout period of 600 seconds.
 
---ignore\_bad\_hosts cluster | allsegments  
+-\\\-ignore\_bad\_hosts cluster | allsegments  
 Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.
 
--u --reload   
+-u -\\\-reload   
 This option reloads configuration parameter values without restarting the HAWQ cluster.
 
--v --verbose  
+-v -\\\-verbose  
 Displays detailed status, progress and error messages output by the utility.
 
--? | -h | --help (help)  
+-? | -h | -\\\-help (help)  
 Displays the online help.
 
---version (show utility version)  
+-\\\-version (show utility version)  
 Displays the version of this utility.
 
 ## Examples<a id="topic1__section5"></a>

@@ -7,7 +7,7 @@ Verifies and validates HAWQ platform settings.
 ## Synopsis<a id="topic1__section2"></a>
 
 ``` pre
-hawq check -f hostfile_hawq_check [--hadoop | --hadoop hadoop_home]
+hawq check -f hostfile_hawq_check [--hadoop hadoop_home | --hadoop hadoop_home]
         [--stdout | --zipout] [--config config_file]
          [--kerberos] [--hdfs-ha] [--yarn] [--yarn-ha]
 hawq check --zipin hawq_check_zipfile
@@ -101,7 +101,7 @@ Save HAWQ platform settings to a zip file, when HADOOP\_HOME environment variabl
 $ hawq check -f hostfile_hawq_check --zipout  
 ```
 
-Verify and validate the HAWQ platform settings using a zip file created with the --zipout option:
+Verify and validate the HAWQ platform settings using a zip file created with the `--zipout` option:
 
 ``` shell
 $ hawq check --zipin hawq_check_timestamp.tar.gz
