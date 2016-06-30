@@ -233,7 +233,7 @@ The following storage options are available:
 
 **COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. ZLIB provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
 
-**COMPRESSLEVEL** — Set to an integer value from 1 (fastest compression) to 9 (highest compression ratio). If not declared, the default is 1. This option is valid only if `APPENDONLY=TRUE` and `COMPRESSTYPE=[ZLIB|GZIP]`.
+**COMPRESSLEVEL** — Set to an integer value from 1 (fastest compression) to 9 (highest compression ratio). If not specified, the default is 1. This option is valid only if `APPENDONLY=TRUE` and `COMPRESSTYPE=[ZLIB|GZIP]`.
 
 **OIDS** — Set to `OIDS=FALSE` (the default) so that rows do not have object identifiers assigned to them. Do not enable OIDS when creating a table. On large tables, such as those in a typical HAWQ system, using OIDs for table rows can cause wrap-around of the 32-bit OID counter. Once the counter wraps around, OIDs can no longer be assumed to be unique, which not only makes them useless to user applications, but can also cause problems in the HAWQ system catalog tables. In addition, excluding OIDs from a table reduces the space required to store the table on disk by 4 bytes per row, slightly improving performance. OIDS are not allowed on partitioned tables.
 
@@ -304,8 +304,6 @@ You can set three kinds of parameters for a parquet table.
 
 2.  Set the compression type parameter. Parquet tables can be compressed using either `SNAPPY` or `GZIP`. `GZIP` supports compression level values between 1 and 9. `SNAPPY` does not support compression level; providing a compression level when using `SNAPPY` will cause the create table operation to fail. Specifying a compression level but no compression type when creating a parquet table will default to `GZIP` compression.
 
-    **Note:** The compression types `ZLIB` and `SNAPPY` are valid for append-only tables, while `SNAPPY` and `GZIP` are supported for parquet tables.
-
 3.  Set the data storage parameter: By default, the two parameters, `PAGESIZE` and `ROWGROUPSIZE` are set to 1MB/8MB for common and partitioned tables.
 
     **Note:** The page size should be less than the rowgroup size. This is because rowgroup includes the metadata information of a single page even for a single column table. The parameters `PAGESIZE` and `ROWGROUPSIZE` are valid for parquet tables, while `BLOCKSIZE` is valid for append-only tables
@@ -367,7 +365,7 @@ ALTER TABLE sales ADD PARTITION
 
 ## AO Examples<a id="aoexamples"></a>
 
-The `ZLIB` and `SNAPPY` compression types are valid for append-only tables.
+Append-only tables support `ZLIB` and `SNAPPY` compression types.
 
 **AO Example 1**: Create a table named rank in the schema named baby and distribute the data using the columns rank, gender, and year:
 
