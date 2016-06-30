@@ -7,8 +7,8 @@ Shows the status of a running HAWQ system.
 ## Synopsis<a id="topic1__section2"></a>
 
 ``` pre
-hawq state [-b] [-l log_directory] [-v | -q] 
-          [-d master_data_directory] [--hawqhome]
+hawq state [-b] [-l logfile_directory] [-v | -q] 
+          [-d master_data_directory | --datadir=MASTER\_DIR] [--hawqhome]
 hawq state -? | -h | --help
 ```
 
@@ -27,11 +27,11 @@ The `hawq state` utility displays information about a running HAWQ instance. A H
 -b (brief status)  
 Optional. Display a brief summary of the state of the HAWQ system. This is the default option.
 
--d *master\_data\_directory* --datadir=MASTER\_DIR  
+-d *master\_data\_directory* | -\\\-datadir=MASTER\_DIR  
 Status of the master data directory. If not specified, the value set for `$MASTER_DATA_DIRECTORY` will be used.
 
 --hawqhome=HAWQ\_HOME  
-Display details of the designated home data directory.
+Display details of the designated home data directory (usually $GPHOME).
 
 -l *logfile\_directory*  
 Displays calls to the log file. Defaults to `~/hawq/AdminLogs`.
