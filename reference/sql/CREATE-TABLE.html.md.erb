@@ -231,7 +231,7 @@ The following storage options are available:
 
 **ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. Heap-storage tables can only be row-oriented.
 
-**COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. ZLIB provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
+**COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. `ZLIB` provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
 
 **COMPRESSLEVEL** — Set to an integer value from 1 (fastest compression) to 9 (highest compression ratio). If not specified, the default is 1. This option is valid only if `APPENDONLY=TRUE` and `COMPRESSTYPE=[ZLIB|GZIP]`.
 
