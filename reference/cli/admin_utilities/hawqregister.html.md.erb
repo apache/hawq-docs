@@ -24,7 +24,7 @@ The client machine where `hawq register` is executed must have the following:
 
 ## Description<a id="topic1__section4"></a>
 
-`hawq register` is a utility that acts as an interface for loading and registering hdfs data into HAWQ. Table data from the file or directory in the specified path is loaded into the appropriate table directory in HAWQ and updates the corresponding metadata for the files.
+`hawq register` is a utility that acts as an interface for loading and registering hdfs data into HAWQ, so that it can be accessed through HAWQ. Table data from the file or directory in the specified path is loaded into the appropriate table directory in HAWQ and updates the corresponding metadata for the files. The table need not contain data.
 
 Only parquet tables can be loaded using the `hawq register` command. Metadata for the parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and parquet tables, so the data is mapped. It is the user's responsibility to verify the structure of their parquet files and the HAWQ table are compatible before running `hawq register`. The files to be registered and the HAWQ table must be in the same HDFS cluster.
 
