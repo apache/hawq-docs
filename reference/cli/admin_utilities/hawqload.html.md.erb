@@ -38,7 +38,7 @@ The operation, including any SQL commands specified in the `SQL` collection of t
 -f *control\_file*  
 **Required.** A YAML file that contains the load specification details. See [Control File Format](#topic1__section7).
 
---gpfdist\_timeout *seconds*  
+-\\\-gpfdist\_timeout *seconds*  
 Sets the timeout for the `gpfdist` parallel file distribution program to send a response. Enter a value from `0` to `30` seconds (entering "`0`" to disables timeouts). Note that you might need to increase this value when operating on high-traffic networks.
 
 -l *log\_file*  
@@ -59,7 +59,7 @@ Shows very verbose output.
 -? (show help)  
 Show help, then exit.
 
---version  
+-\\\-version  
 Show the version of this utility, then exit.
 
 **Connection Options**
@@ -81,7 +81,7 @@ Force a password prompt. If not specified, reads the password from the environme
 
 ## Control File Format<a id="topic1__section7"></a>
 
-The `hawq                     load` control file uses the [YAML 1.1](http://yaml.org/spec/1.1/) document format and then implements its own schema for defining the various steps of a HAWQ load operation. The control file must be a valid YAML document.
+The `hawq load` control file uses the [YAML 1.1](http://yaml.org/spec/1.1/) document format and then implements its own schema for defining the various steps of a HAWQ load operation. The control file must be a valid YAML document.
 
 The `hawq load` program processes the control file document in order and uses indentation (spaces) to determine the document hierarchy and the relationships of the sections to one another. The use of white space is significant. White space should not be used simply for formatting purposes, and tabs should not be used at all.
 
@@ -170,7 +170,7 @@ Optional. Specifies HAWQ master port. If not specified, defaults to 5432 or `$PG
 Required. Begins the load specification section. A `GPLOAD` specification must have an `INPUT` and an `OUTPUT` section defined.
 
 INPUT -
-Required. Defines the location and the format of the input data to be loaded. `hawq load` will start one or more instances of the [gpfdist](gpfdist.html#topic1) file distribution program on the current host and create the required external table definition(s) in HAWQ that point to the source data. Note that the host from which you run `hawq load` must be accessible over the network by all HAWQ hosts (master and segments).
+Required element. Defines the location and the format of the input data to be loaded. `hawq load` will start one or more instances of the [gpfdist](gpfdist.html#topic1) file distribution program on the current host and create the required external table definition(s) in HAWQ that point to the source data. Note that the host from which you run `hawq load` must be accessible over the network by all HAWQ hosts (master and segments).
 
 SOURCE  
 Required. The `SOURCE` block of an `INPUT` specification defines the location of a source file. An `INPUT` section can have more than one `SOURCE` block defined. Each `SOURCE` block defined corresponds to one instance of the [gpfdist](gpfdist.html#topic1) file distribution program that will be started on the local machine. Each `SOURCE` block defined must have a `FILE` specification.
@@ -254,7 +254,7 @@ Optional when `ERROR_LIMIT` is declared. Specifies an error table where rows wit
 For more information about handling load errors, see "[Loading and Unloading Data](../../../datamgmt/load/g-loading-and-unloading-data.html#topic1)".
 
 OUTPUT - 
-Required. Defines the target table and final data column values that are to be loaded into the database.
+Required element. Defines the target table and final data column values that are to be loaded into the database.
 
 TABLE  
 Required. The name of the target table to load into.
