@@ -10,6 +10,7 @@ This chapter describes the following:
 
 -   <a href="using_pljava.html">Using PL/Java</a>
 -   <a href="using_plpgsql.html">Using PL/pgSQL</a>
+-   <a href="using_plpython.html">Using PL/Python</a>
 -   <a href="using_plr.html">Using PL/R</a>
 
 

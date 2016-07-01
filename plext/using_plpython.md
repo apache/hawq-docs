@@ -6,9 +6,9 @@ This section contains an overview of the HAWQ PL/Python Language.
 
 ## About HAWQ PL/Python <a id="abouthawqplpython"></a>
 
-PL/Python is a loadable procedural language. With the HAWQ PL/Python extension, you can write a HAWQ user-defined functions in Python that take advantage of Python features and modules to quickly build robust database applications.
+PL/Python is a loadable procedural language. With the HAWQ PL/Python extension, you can write HAWQ user-defined functions in Python that take advantage of Python features and modules to quickly build robust database applications.
 
-The HAWQ PL/Python extension is installed by default with HAWQ. HAWQ installs a version of Python and PL/Python. HAWQ uses the following Python installation:
+If PL/Python is enabled during HAWQ build time, HAWQ installs both a version of Python and PL/Python when deployed . HAWQ uses the following Python installation:
 
 ```shell
 $GPHOME/ext/python/
@@ -23,7 +23,7 @@ $GPHOME/ext/python/
  
 ## Enabling and Removing PL/Python Support <a id="enableplpython"></a>
 
-If enabled as an option during HAWQ build, the PL/Python language is installed with HAWQ.
+If enabled as an option during HAWQ compilation, the PL/Python language is installed with HAWQ.
 
 **Note**: To use PL/Python in HAWQ, you must either use a pre-compiled version of HAWQ that includes PL/Python or specify PL/Python as a build option when compiling HAWQ.
 
