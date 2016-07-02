@@ -31,36 +31,36 @@ The name of the database to be created. The name must be unique among all other 
 description  
 A comment to be associated with the newly created database. Descriptions containing white space must be enclosed in quotes.
 
--D *tablespace* | --tablespace *tablespace*  
+-D *tablespace* | -\\\-tablespace *tablespace*  
 The default tablespace for the database.
 
 -e echo  
 Echo the commands that createdb generates and sends to the server.
 
--E *encoding* | --encoding *encoding*  
+-E *encoding* | -\\\-encoding *encoding*  
 Character set encoding to use in the new database. Specify a string constant (such as `'UTF8'`), an integer encoding number, or `DEFAULT` to use the default encoding.
 
--O *owner* | --owner *owner*  
+-O *owner* | -\\\-owner *owner*  
 The name of the database user who will own the new database. Defaults to the user executing this command.
 
--T *template* | --template *template*  
+-T *template* | -\\\-template *template*  
 The name of the template from which to create the new database. Defaults to `template1`.
 
 **Connection Options**
   
--h *host* | --host *host*  
+-h *host* | -\\\-host *host*  
 The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
 
--p *port* | --port *port*  
+-p *port* | -\\\-port *port*  
 The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.
 
--U *username* | --username *username*  
+-U *username* | -\\\-username *username*  
 The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.
 
--w | --no-password  
+-w | -\\\-no-password  
 Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.
 
--W | --password  
+-W | -\\\-password  
 Force a password prompt.
 
 ## Examples<a id="topic1__section6"></a>
