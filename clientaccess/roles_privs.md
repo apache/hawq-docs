@@ -25,7 +25,7 @@ In order to bootstrap the HAWQ system, a freshly initialized system always conta
 
 A user-level role is considered to be a database role that can log in to the database and initiate a database session. Therefore, when you create a new user-level role using the `CREATE ROLE` command, you must specify the `LOGIN` privilege. For example:
 
-```
+``` sql
 =# CREATE ROLE jsmith WITH LOGIN;
 ```
 
@@ -53,7 +53,7 @@ A database role may have a number of attributes that define what sort of tasks t
 
 You can set these attributes when you create the role, or later using the `ALTER ROLE` command. For example:
 
-```
+``` sql
 =# ALTER ROLE jsmith WITH PASSWORD 'passwd123';
 =# ALTER ROLE admin VALID UNTIL 'infinity';
 =# ALTER ROLE jsmith LOGIN;
@@ -63,7 +63,7 @@ You can set these attributes when you create the role, or later using the `ALTER
 
 A role can also have role-specific defaults for many of the server configuration settings. For example, to set the default schema search path for a role:
 
-```
+``` sql
 =# ALTER ROLE admin SET search_path TO myschema, public;
 ```
 
@@ -73,20 +73,20 @@ It is frequently convenient to group users together to ease management of object
 
 Use the `CREATE ROLE` SQL command to create a new group role. For example:
 
-```
+``` sql
 =# CREATE ROLE admin CREATEROLE CREATEDB;
 ```
 
 Once the group role exists, you can add and remove members \(user roles\) using the `GRANT` and `REVOKE` commands. For example:
 
-```
+``` sql
 =# GRANT admin TO john, sally;
 =# REVOKE admin FROM bob;
 ```
 
 For managing object privileges, you would then grant the appropriate permissions to the group-level role only \(see [Table 2](#iq139925)\). The member user roles then inherit the object privileges of the group role. For example:
 
-```
+``` sql
 =# GRANT ALL ON TABLE mytable TO admin;
 =# GRANT ALL ON SCHEMA myschema TO admin;
 =# GRANT ALL ON DATABASE mydb TO admin;
@@ -94,7 +94,7 @@ For managing object privileges, you would then grant the appropriate permissions
 
 The role attributes `LOGIN`, `SUPERUSER`, `CREATEDB`, and `CREATEROLE` are never inherited as ordinary privileges on database objects are. User members must actually `SET ROLE` to a specific role having one of these attributes in order to make use of the attribute. In the above example, we gave `CREATEDB` and `CREATEROLE` to the `admin` role. If `sally` is a member of `admin`, she could issue the following command to assume the role attributes of the parent role:
 
-```
+``` sql
 => SET ROLE admin;
 ```
 
@@ -118,19 +118,19 @@ When an object \(table, view, sequence, database, function, language, schema, or
 
 Use the `GRANT` SQL command to give a specified role privileges on an object. For example:
 
-```
+``` sql
 =# GRANT INSERT ON mytable TO jsmith;
 ```
 
 To revoke privileges, use the `REVOKE` command. For example:
 
-```
+``` sql
 =# REVOKE ALL PRIVILEGES ON mytable FROM jsmith;
 ```
 
 You can also use the `DROP OWNED` and `REASSIGN OWNED` commands for managing objects owned by deprecated roles \(Note: only an object's owner or a superuser can drop an object or reassign ownership\). For example:
 
-```
+``` sql
 =# REASSIGN OWNED BY sally TO bob;
 =# DROP OWNED BY visitor;
 ```
@@ -164,25 +164,25 @@ To set the `password_hash_algorithm` server parameter on a complete HAWQ system 
 1.  Log into your HAWQ instance as a superuser.
 2.  Execute `hawq config` with the `password_hash_algorithm` set to `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\)
 
-    ```
+    ``` bash
     $ hawq config -c password_hash_algorithm -v 'SHA-256'
     ```
 
     or:
 
-    ```
+    ``` bash
     $ hawq config -c password_hash_algorithm -v 'SHA-256-FIPS'
     ```
 
 3.  Verify the setting:
 
-    ```
+    ``` bash
     $ hawq config -s
     ```
 
     You will see:
 
-    ```
+    ``` 
     Master value: SHA-256
     Segment value: SHA-256
     ```
@@ -202,21 +202,21 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 1.  Log into your HAWQ instance as a superuser.
 2.  Set the `password_hash_algorithm` to `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\):
 
-    ```
+    ``` sql
     # set password_hash_algorithm = 'SHA-256'
     SET
     ```
 
     or:
 
-    ```
+    ``` sql
     # set password_hash_algorithm = 'SHA-256-FIPS'
     SET
     ```
 
 3.  Verify the setting:
 
-    ```
+    ``` sql
     # show password_hash_algorithm;
     password_hash_algorithm
     ```
@@ -239,7 +239,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 
 4.  Login in as a super user and verify the password hash algorithm setting:
 
-    ```
+    ``` sql
     # show password_hash_algorithm
     password_hash_algorithm
     -------------------------------
@@ -248,7 +248,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 
 5.  Create a new role with password that has login privileges.
 
-    ```
+    ``` sql
     create role testdb with password 'testdb12345#' LOGIN;
     ```
 
@@ -263,8 +263,8 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 7.  Restart the cluster.
 8.  Login to the database as user just created `testdb`.
 
-    ```
-    psql -U testdb
+    ``` bash
+    $ psql -U testdb
     ```
 
 9.  Enter the correct password at the prompt.
@@ -275,7 +275,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
     1.  Login as the super user.
     2.  Execute the following:
 
-        ```
+        ``` sql
         # select rolpassword from pg_authid where rolname = 'testdb';
         Rolpassword
         -----------

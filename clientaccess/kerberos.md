@@ -210,8 +210,8 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
 
 1.  Create a HAWQ administrator role in the database `template1` for the Kerberos principal that is used as the database administrator. The following example uses `gpamin/kerberos-gpdb`.
 
-    ```
-    psql template1 -c 'create role "gpadmin/kerberos-gpdb" login superuser;'
+    ``` bash
+    $ psql template1 -c 'create role "gpadmin/kerberos-gpdb" login superuser;'
 
     ```
 
@@ -219,7 +219,7 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
 
 2.  Modify `hawq-site.xml` to specify the location of the keytab file. For example, adding this line to the `hawq-site.xml` specifies the folder /home/gpadmin as the location of the keytab filegpdb-kerberos.keytab.
 
-    ```
+    ``` xml
       <property>
           <name>krb_server_keyfile</name>
           <value>/home/gpadmin/gpdb-kerberos.keytab</value>
@@ -237,19 +237,19 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
 4.  Create a ticket using `kinit` and show the tickets in the Kerberos ticket cache with `klist`.
 5.  As a test, log in to the database as the `gpadmin` role with the Kerberos credentials `gpadmin/kerberos-gpdb`:
 
-    ```
-    psql -U "gpadmin/kerberos-gpdb" -h master.test template1
+    ``` bash
+    $ psql -U "gpadmin/kerberos-gpdb" -h master.test template1
     ```
 
     A username map can be defined in the `pg_ident.conf` file and specified in the `pg_hba.conf` file to simplify logging into HAWQ. For example, this `psql` command logs into the default HAWQ on `mdw.proddb` as the Kerberos principal `adminuser/mdw.proddb`:
 
-    ```
+    ``` bash
     $ psql -U "adminuser/mdw.proddb" -h mdw.proddb
     ```
 
     If the default user is `adminuser`, the pg\_ident.conf file and the pg\_hba.conf file can be configured so that the `adminuser` can log in to the database as the Kerberos principal `adminuser/mdw.proddb` without specifying the `-U` option:
 
-    ```
+    ``` bash
     $ psql -h mdw.proddb
     ```
 

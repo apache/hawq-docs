@@ -70,7 +70,7 @@ This example shows how to edit the pg\_hba.conf file of the master to allow remo
 3.  Save and close the file.
 4.  Reload the pg\_hba.conf configuration file for your changes to take effect:
 
-    ```
+    ``` bash
     $ hawq stop -u
     ```
 
@@ -85,7 +85,7 @@ When you set `max_connections`, you must also set the dependent parameter `max_p
 
 For example, in `$GPHOME/etc/hawq-site.xml`:
 
-```
+``` xml
   <property>
       <name>max_connections</name>
       <value>500</value>
@@ -107,7 +107,7 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
 1.  Log into the HAWQ master host as the HAWQ administrator and source the file `$GPHOME/greenplum_path.sh`.
 2.  Set the value of the `max_connections` parameter. This `hawq config` command sets the value to 100 on all HAWQ instances.
 
-    ```
+    ``` bash
     $ hawq config -c max_connections -v 100
     ```
 
@@ -115,7 +115,7 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
 
 3.  Set the value of the `seg_max_connections` parameter. This `hawq config` command sets the value to 6400 on all HAWQ instances.
 
-    ```
+    ``` bash
     $ hawq config -c seg_max_connections -v 6400
     ```
 
@@ -123,7 +123,7 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
 
 4.  Set the value of the `max_prepared_transactions` parameter. This `hawq config` command sets the value to 200 on the master and all segments.
 
-    ```
+    ``` bash
     $ hawq config -c max_prepared_transactions -v 200
     ```
 
@@ -131,13 +131,13 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
 
 5.  Stop and restart your HAWQ system.
 
-    ```
+    ``` bash
     $ hawq restart
     ```
 
 6.  You can check the value of parameters on the master and segments with the `hawq config``-s` option. These `hawq config` commands display the values of the `max_connections` and `seg_max_connections` parameter.
 
-    ```
+    ``` bash
     $ hawq config -s max_connections
     $ hawq config -s seg_max_connections
     ```
@@ -180,7 +180,7 @@ Enter the old passphrase when prompted to unlock the existing key.
 
 Then, enter the following command to turn the certificate into a self-signed certificate and to copy the key and certificate to a location where the server will look for them.
 
-```
+``` 
 # openssl req -x509 -in server.req -text -key server.key -out server.crt
 ```
 

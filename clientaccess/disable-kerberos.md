@@ -10,13 +10,13 @@ Follow these steps to disable Kerberos security for HAWQ and PXF for manual inst
 2.  Disable security for HAWQ:
     1.  Login to the HAWQ database master server as the `gpadmin` user:
 
-        ```
-        ssh hawq_master_fqdn
+        ``` bash
+        $ ssh hawq_master_fqdn
         ```
 
     2.  Run the following commands to set environment variables:
 
-        ```
+        ``` bash
         $ source /usr/local/hawq/greenplum_path.sh
         $ export MASTER_DATA_DIRECTORY = /gpsql
         ```
@@ -25,13 +25,13 @@ Follow these steps to disable Kerberos security for HAWQ and PXF for manual inst
 
     3.  Start HAWQ if necessary:
 
-        ```
+        ``` bash
         $ hawq start -a
         ```
 
     4.  Run the following command to disable security:
 
-        ```
+        ``` bash
         $ hawq config --masteronly -c enable_secure_filesystem -v “off”
         ```
 
@@ -39,13 +39,13 @@ Follow these steps to disable Kerberos security for HAWQ and PXF for manual inst
 
     5.  Change the permission of the HAWQ HDFS data directory:
 
-        ```
+        ``` bash
         $ sudo -u hdfs hdfs dfs -chown -R gpadmin:gpadmin /hawq_data
         ```
 
     6.  On the HAWQ master node and on all segment server nodes, edit the /usr/local/hawq/etc/hdfs-client.xml file to disable kerberos security. Comment or remove the following properties in each file:
 
-        ```
+        ``` xml
         <!--
         <property>
           <name>hadoop.security.authentication</name>
@@ -61,14 +61,14 @@ Follow these steps to disable Kerberos security for HAWQ and PXF for manual inst
 
     7.  Restart HAWQ:
 
-        ```
+        ``` bash
         $ hawq restart -a -M fast
         ```
 
 3.  Disable security for PXF:
     1.  On each PXF node, edit the /etc/gphd/pxf/conf/pxf-site.xml to comment or remove the properties:
 
-        ```
+        ``` xml
         <!--
         <property>
             <name>pxf.service.kerberos.keytab</name>
