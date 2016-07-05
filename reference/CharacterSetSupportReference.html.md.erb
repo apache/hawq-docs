@@ -352,7 +352,7 @@ The character set support in HAWQ allows you to store text in a variety of chara
 
 You can create a database with a different character set besides what is used as the system-wide default. For example:
 
-``` pre
+``` sql
 CREATE DATABASE korean WITH ENCODING 'EUC_KR';
 ```
 
@@ -413,19 +413,19 @@ To enable automatic character set conversion, you have to tell HAWQ the characte
 -   Using the \\encoding command in psql, which allows you to change client encoding on the fly.
 -   Using SET client\_encoding TO. Setting the client encoding can be done with this SQL command:
 
-    ``` pre
+    ``` sql
     SET CLIENT_ENCODING TO 'value';
     ```
 
     To query the current client encoding:
 
-    ``` pre
+    ``` sql
     SHOW client_encoding;
     ```
 
     To return the default encoding:
 
-    ``` pre
+    ``` sql
     RESET client_encoding;
     ```
 
