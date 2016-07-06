@@ -67,7 +67,10 @@ Enter:
 ``` pre
 $ hawq register postgres parquet_table hdfs://localhost:8020/temp/hive.paq
 ```
-The command moves the file `hdfs://localhost:8020/temp/hive.paq` into the corresponding new location at:  `hdfs://localhost:8020/hawq_default/16385/16387/77160/8` in HDFS, then updates the metadata of the table `parquet_table` in HAWQ, which is in the table 'pg\_aoseg.pg\_paqseg\_77160'.
+
+After running the `hawq register` command for the file location  `hdfs://localhost:8020/temp/hive.paq`, the corresponding new location of the file is:  `hdfs://localhost:8020/hawq_default/16385/16387/77160/8` in HDFS. The command then updates the metadata of the table `parquet_table` in HAWQ, which is contained in the table 'pg\_aoseg.pg\_paqseg\_77160'. The row-oriented table name prefix is pg_aoseg, and parquet table prefix is pg_paqseg, and 77160 is the relation id of the table.
+
+To locate the table, you can either find the relation ID by looking up the catalog table pg_class by running `select oid from pg_class where relname=$relname` or by finding the table name by using the command `select segrelid from pg_appendonly where relid = $relid` then running `select relname from pg_class where oid = segrelid`.
 
 ##Data Type Mapping<a id="topic1__section7"></a>
 
