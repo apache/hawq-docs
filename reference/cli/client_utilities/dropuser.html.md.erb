@@ -4,7 +4,7 @@ title: dropuser
 
 Removes a database role.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 dropuser [connection_option ...] [-e] [-i] role_name
@@ -14,13 +14,13 @@ dropuser --help
 dropuser --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `dropuser` removes an existing role from HAWQ. Only superusers and users with the `CREATEROLE` privilege can remove roles. To remove a superuser role, you must yourself be a superuser.
 
 `dropuser` is a wrapper around the SQL command `DROP         ROLE`.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 *role\_name*  
 The name of the role to be removed. You will be prompted for a name if not specified on the command line.
@@ -48,7 +48,7 @@ Never issue a password prompt. If the server requires password authentication an
 -W | -\\\-password  
 Force a password prompt.
 
-## Examples<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Examples
 
 To remove the role `joe` using default connection options:
 

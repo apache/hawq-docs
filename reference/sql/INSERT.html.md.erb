@@ -4,7 +4,7 @@ title: INSERT
 
 Creates new rows in a table.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 INSERT INTO table [( column [, ...] )]
@@ -12,7 +12,7 @@ INSERT INTO table [( column [, ...] )]
    [, ...] | query}
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `INSERT` inserts new rows into a table. One can insert one or more rows specified by value expressions, or zero or more rows resulting from a query.
 
@@ -37,7 +37,7 @@ INSERT oid
 
 The *count* is the number of rows inserted. If count is exactly one, and the target table has OIDs, then *oid* is the OID assigned to the inserted row. Otherwise *oid* is zero.
 
-## Parameters<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Parameters
 
  *table*   
 The name (optionally schema-qualified) of an existing table.
@@ -57,7 +57,7 @@ The corresponding column will be filled with its default value.
  *query*   
 A query (`SELECT` statement) that supplies the rows to be inserted. Refer to the [SELECT](SELECT.html) statement for a description of the syntax.
 
-## Examples<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Examples
 
 Insert a single row into table `films`:
 
@@ -101,12 +101,12 @@ INSERT INTO films SELECT * FROM tmp_films WHERE date_prod <
 '2004-05-07';
 ```
 
-## Compatibility<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>Compatibility
 
 `INSERT` conforms to the SQL standard. The case in which a column name list is omitted, but not all the columns are filled from the `VALUES` clause or query, is disallowed by the standard.
 
 Possible limitations of the *query* clause are documented under `SELECT`.
 
-## See Also<a id="topic1__section9"></a>
+## <a id="topic1__section9"></a>See Also
 
 [COPY](COPY.html), [SELECT](SELECT.html), [CREATE EXTERNAL TABLE](CREATE-EXTERNAL-TABLE.html)

@@ -5,7 +5,7 @@ title: Using PL/Java
 This section contains an overview of the HAWQ PL/Java language. 
 
 
-## About PL/Java <a id="aboutpljava"></a>
+## <a id="aboutpljava"></a>About PL/Java 
 
 With the HAWQ PL/Java extension, you can write Java methods using your favorite Java IDE and install the JAR files that contain the methods in your HAWQ cluster.
 
@@ -38,11 +38,11 @@ PL/Java is optimized for performance. The Java virtual machine executes within t
 The standard Java Native Interface (JNI) is used when bridging calls between the backend and the Java VM.
 
 
-## About HAWQ PL/Java <a id="abouthawqpljava"></a>
+## <a id="abouthawqpljava"></a>About HAWQ PL/Java 
 
 There are a few key differences between the implementation of PL/Java in standard PostgreSQL and HAWQ.
 
-### Functions <a id="pljavafunctions"></a>
+### <a id="pljavafunctions"></a>Functions 
 
 The following functions are not supported in HAWQ. The classpath is handled differently in a distributed HAWQ environment than in the PostgreSQL environment.
 
@@ -55,7 +55,7 @@ The following functions are not supported in HAWQ. The classpath is handled diff
 
 HAWQ uses the `pljava_classpath` server configuration parameter in place of the `sqlj.set_classpath` function.
 
-### Server Configuration Parameters <a id="serverconfigparams"></a>
+### <a id="serverconfigparams"></a>Server Configuration Parameters 
 
 The following server configuration parameters are used by PL/Java in HAWQ. These parameters replace the `pljava.*` parameters that are used in the standard PostgreSQL PL/Java implementation.
 
@@ -78,7 +78,7 @@ If TRUE, lingering savepoints will be released on function exit. If FALSE, they 
 Defines the start up options for the Java VM.
 
 
-## Writing PL/Java Functions <a id="writingpljavafunc"></a>
+## <a id="writingpljavafunc"></a>Writing PL/Java Functions 
 
 This section provides information about writing functions with PL/Java.
 
@@ -92,7 +92,7 @@ This section provides information about writing functions with PL/Java.
 - [Returning a SETOF \<complex type\>](#returnsetofcomplex)
 
 
-### SQL Declaration <a id="sqldeclaration"></a>
+### <a id="sqldeclaration"></a>SQL Declaration 
 
 A Java function is declared with the name of a class and a static method on that class. The class will be resolved using the classpath that has been defined for the schema where the function is declared. If no classpath has been defined for that schema, the public schema is used. If no classpath is found there either, the class is resolved using the system classloader.
 
@@ -111,7 +111,7 @@ Run the following command to return the Java `user.home` property:
 SELECT getsysprop('user.home');
 ```
 
-### Type Mapping <a id="typemapping"></a>
+### <a id="typemapping"></a>Type Mapping 
 
 Scalar types are mapped in a straightforward way. This table lists the current mappings.
 
@@ -137,7 +137,7 @@ Scalar types are mapped in a straightforward way. This table lists the current m
 
 All other types are mapped to `java.lang.String` and will utilize the standard textin/textout routines registered for respective type.
 
-### NULL Handling <a id="nullhandling"></a>
+### <a id="nullhandling"></a>NULL Handling 
 
 The scalar types that map to Java primitives can not be passed as NULL values. To pass NULL values, those types can have an alternative mapping. You enable this mapping by explicitly denoting it in the method reference.
 
@@ -172,7 +172,7 @@ SELECT trueIfEvenOrNull(4);
 
 In order to return NULL values from a Java method, you use the object type that corresponds to the primitive (for example, you return `java.lang.Integer` instead of `int`). The PL/Java resolve mechanism finds the method regardless. Since Java cannot have different return types for methods with the same name, this does not introduce any ambiguity.
 
-### Complex Types <a id="complextypes"></a>
+### <a id="complextypes"></a>Complex Types 
 
 A complex type will always be passed as a read-only `java.sql.ResultSet` with exactly one row. The `ResultSet` is positioned on its row so a call to `next()` should not be made. The values of the complex type are retrieved using the standard getter methods of the `ResultSet`.
 
@@ -202,7 +202,7 @@ throws SQLException
 }
 ```
 
-### Returning Complex Types <a id="returningcomplextypes"></a>
+### <a id="returningcomplextypes"></a>Returning Complex Types 
 
 Java does not stipulate any way to create a `ResultSet`. Hence, returning a ResultSet is not an option. The SQL-2003 draft suggests that a complex return value should be handled as an IN/OUT parameter. PL/Java implements a `ResultSet` that way. If you declare a function that returns a complex type, you will need to use a Java method with boolean return type with a last parameter of type `java.sql.ResultSet`. The parameter will be initialized to an empty updateable ResultSet that contains exactly one row.
 
@@ -232,11 +232,11 @@ throws SQLException
 
 The return value denotes if the receiver should be considered as a valid tuple (true) or NULL (false).
 
-### Functions that Return Sets <a id="functionreturnsets"></a>
+### <a id="functionreturnsets"></a>Functions that Return Sets 
 
 When returning result set, you should not build a result set before returning it, because building a large result set would consume a large amount of resources. It is better to produce one row at a time. Incidentally, that is what the HAWQ backend expects a function with SETOF return to do. You can return a SETOF a scalar type such as an int, float or varchar, or you can return a SETOF a complex type.
 
-### Returning a SETOF \<scalar type\> <a id="returnsetofscalar"></a>
+### <a id="returnsetofscalar"></a>Returning a SETOF \<scalar type\> 
 
 In order to return a set of a scalar type, you need create a Java method that returns something that implements the `java.util.Iterator` interface. Here is an example of a method that returns a SETOF varchar:
 
@@ -267,7 +267,7 @@ public class Bar
 }
 ```
 
-### Returning a SETOF \<complex type\> <a id="returnsetofcomplex"></a>
+### <a id="returnsetofcomplex"></a>Returning a SETOF \<complex type\> 
 
 A method returning a SETOF <complex type> must use either the interface `org.postgresql.pljava.ResultSetProvider` or `org.postgresql.pljava.ResultSetHandle`. The reason for having two interfaces is that they cater for optimal handling of two distinct use cases. The former is for cases when you want to dynamically create each row that is to be returned from the SETOF function. The latter makes is in cases where you want to return the result of an executed query.
 
@@ -380,7 +380,7 @@ eateStatement();
   }
 }
 ```
-## Using JDBC <a id="usingjdbc"></a>
+## <a id="usingjdbc"></a>Using JDBC 
 
 PL/Java contains a JDBC driver that maps to the PostgreSQL SPI functions. A connection that maps to the current transaction can be obtained using the following statement:
 
@@ -402,20 +402,20 @@ After obtaining a connection, you can prepare and execute statements similar to 
 - `CallableStatement` (for stored procedures) is not implemented.
 - The types `Clob` or `Blob` are not completely implemented, they need more work. The types `byte[]` and `String` can be used for `bytea` and `text` respectively.
 
-## Exception Handling <a id="exceptionhandling"></a>
+## <a id="exceptionhandling"></a>Exception Handling 
 
 You can catch and handle an exception in the HAWQ backend just like any other exception. The backend `ErrorData` structure is exposed as a property in a class called `org.postgresql.pljava.ServerException` (derived from `java.sql.SQLException`) and the Java try/catch mechanism is synchronized with the backend mechanism.
 
 **Important:** You will not be able to continue executing backend functions until your function has returned and the error has been propagated when the backend has generated an exception unless you have used a savepoint. When a savepoint is rolled back, the exceptional condition is reset and you can continue your execution.
 
-## Savepoints <a id="savepoints"></a>
+## <a id="savepoints"></a>Savepoints 
 
 HAWQ savepoints are exposed using the `java.sql.Connection` interface. Two restrictions apply.
 
 - A savepoint must be rolled back or released in the function where it was set.
 - A savepoint must not outlive the function where it was set.
 
-## Logging <a id="logging"></a>
+## <a id="logging"></a>Logging 
 
 PL/Java uses the standard Java Logger. Hence, you can write things like:
 
@@ -442,22 +442,22 @@ The following mapping apply between the Logger levels and the HAWQ backend level
 | FINER | DEBUG2 |
 | FINEST | DEBUG3 |
 
-## Security <a id="security"></a>
+## <a id="security"></a>Security 
 
 This section describes security aspects of using PL/Java.
 
-### Installation <a id="installation"></a>
+### <a id="installation"></a>Installation 
 
 Only a database super user can install PL/Java. The PL/Java utility functions are installed using SECURITY DEFINER so that they execute with the access permissions that where granted to the creator of the functions.
 
-### Trusted Language <a id="trustedlang"></a>
+### <a id="trustedlang"></a>Trusted Language 
 
 PL/Java is a trusted language. The trusted PL/Java language has no access to the file system as stipulated by PostgreSQL definition of a trusted language. Any database user can create and access functions in a trusted language.
 
 PL/Java also installs a language handler for the language `javau`. This version is not trusted and only a superuser can create new functions that use it. Any user can call the functions.
 
 
-## Example <a id="pljavaexample"></a>
+## <a id="pljavaexample"></a>Example 
 
 The following simple Java example creates a JAR file that contains a single method and runs the method.
 

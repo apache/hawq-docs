@@ -2,14 +2,14 @@
 title: Accessing HDFS File Data
 ---
 
-## Prerequisites<a id="installingthepxfhdfsplugin"></a>
+## <a id="installingthepxfhdfsplugin"></a>Prerequisites
 
 Before working with HDFS file data using HAWQ and PXF, you should perform the following operations:
 
 -   Test PXF on HDFS before connecting to Hive or HBase.
 -   Ensure that all HDFS users have read permissions to HDFS services and that write permissions have been limited to specific users.
 
-## Syntax<a id="syntax1"></a>
+## <a id="syntax1"></a>Syntax
 
 The syntax for creating an external HDFS file is as follows: 
 
@@ -53,7 +53,7 @@ This topic describes the following:
 
 **Note:** For more details about the API and classes, see [PXF External Tables and API](PXFExternalTableandAPIReference.html#pxfexternaltableandapireference).
 
-### FORMAT clause<a id="formatclause"></a>
+### <a id="formatclause"></a>FORMAT clause
 
 Use one of the following formats to read data with any PXF connector:
 
@@ -63,13 +63,13 @@ Use one of the following formats to read data with any PXF connector:
 
 **Note:** When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
 
-### Profile<a id="topic_ab2_sxy_bv"></a>
+### <a id="topic_ab2_sxy_bv"></a>Profile
 
 For plain or comma-separated text files in HDFS use either the `HdfsTextSimple` or `HdfsTextMulti` Profile, or the classname org.apache.hawq.pxf.plugins.hdfs.*HdfsDataFragmenter*. Use the `Avro` profile for Avro files. See [Using Profiles to Read and Write Data](ReadWritePXF.html#readingandwritingdatawithpxf) for more information.
 
 **Note:** For read tables, you must include a Profile or a Fragmenter in the table definition.
 
-### Accessor<a id="accessor"></a>
+### <a id="accessor"></a>Accessor
 
 The choice of an Accessor depends on the HDFS data file type. 
 
@@ -131,7 +131,7 @@ The choice of an Accessor depends on the HDFS data file type. 
 </tbody>
 </table>
 
-### Resolver<a id="resolver"></a>
+### <a id="resolver"></a>Resolver
 
 Choose the Resolver format if data records are serialized in the HDFS file. 
 
@@ -181,7 +181,7 @@ Choose the Resolver format if data records are serialized in the HDFS file. 
 </tbody>
 </table>
 
-#### Schema File Guidelines for WritableResolver<a id="customizedwritableschemafileguidelines"></a>
+#### <a id="customizedwritableschemafileguidelines"></a>Schema File Guidelines for WritableResolver
 
 When using a WritableResolver, a schema file needs to be defined. The file needs to be a Java class file and must be on the class path of PXF.
 
@@ -202,7 +202,7 @@ The class file must follow the following requirements:
 
     Arrays of any of the above types are supported, but the constructor must define the array size so the reflection will work.
 
-### Additional Options<a id="additionaloptions"></a>
+### <a id="additionaloptions"></a>Additional Options
 
 <a id="additionaloptions__table_skq_kpz_4p"></a>
 
@@ -274,7 +274,7 @@ The class file must follow the following requirements:
 </tbody>
 </table>
 
-## Accessing Data on a High Availability HDFS Cluster<a id="accessingdataonahighavailabilityhdfscluster"></a>
+## <a id="accessingdataonahighavailabilityhdfscluster"></a>Accessing Data on a High Availability HDFS Cluster
 
 To access data on a High Availability HDFS cluster, change the authority in the URI in the LOCATION. Use *HA\_nameservice* instead of *name\_node\_host:51200*.
 
@@ -286,7 +286,7 @@ FORMAT '[TEXT | CSV | CUSTOM]' (<formatting properties>);
 
 The opposite is true when a highly available HDFS cluster is reverted to a single namenode configuration. In that case, any table definition that has the nameservice specified should use the &lt;NN host&gt;:&lt;NN rest port&gt; syntax. 
 
-## Using a Record Key with Key-Value File Formats<a id="recordkeyinkey-valuefileformats"></a>
+## <a id="recordkeyinkey-valuefileformats"></a>Using a Record Key with Key-Value File Formats
 
 For sequence file and other file formats that store rows in a key-value format, the key value can be accessed through HAWQ by using the saved keyword '`recordkey`' as a field name.
 
@@ -304,7 +304,7 @@ WritableResolver supports read and write of recordkey, which can be of the follo
 
 If the `recordkey` field is not defined, the key is ignored in read, and a default value (segment id as LongWritable) is written in write.
 
-### Example<a id="example1"></a>
+### <a id="example1"></a>Example
 
 A data schema `Babies.class` contains three fields: (name text, birthday text, weight float). An external table must include these three fields, and can either include or ignore the recordkey.
 
@@ -356,7 +356,7 @@ CREATE EXTERNAL TABLE babies_1940_2 (name text, birthday text, weight float)
 SELECT * FROM babies_1940_2; 
 ```
 
-## Working with Avro Files<a id="topic_oy3_qwm_ss"></a>
+## <a id="topic_oy3_qwm_ss"></a>Working with Avro Files
 
 Avro files combine their data with a schema, and can support complex data types such as arrays, maps, records, enumerations, and fixed types. When you create a PXF external table to represent Avro data, map top-level fields in the schema that use a primitive data type to HAWQ columns of the same type. Map top-level fields that use a complex data type to a TEXT column in the external table. The PXF Avro profile automatically separates components of a complex type by inserting delimiters in the text column. You can then use functions or application code to further process components of the complex data.
 
@@ -375,11 +375,11 @@ The following table summarizes external table mapping rules for Avro data.
 
 For complex types, the PXF Avro profile inserts default delimiters between collection items and values. You can use non-default delimiter characters by including the `COLLECTION_DELIM`, `MAPKEY_DELIM`, and/or `RECORDKEY_DELIM` optional parameters on the Avro profile. See [Additional PXF Options](#additionaloptions__table_skq_kpz_4p) for a description of the parameters.
 
-### Example<a id="topic_tr3_dpg_ts"></a>
+### <a id="topic_tr3_dpg_ts"></a>Example
 
 The following example uses the Avro schema shown in [Sample Avro Schema](#topic_tr3_dpg_ts__section_m2p_ztg_ts) and the associated data file shown in [Sample Avro Data (JSON)](#topic_tr3_dpg_ts__section_spk_15g_ts).
 
-#### Sample Avro Schema<a id="topic_tr3_dpg_ts__section_m2p_ztg_ts"></a>
+#### <a id="topic_tr3_dpg_ts__section_m2p_ztg_ts"></a>Sample Avro Schema
 
 ``` json
 {
@@ -434,7 +434,7 @@ The following example uses the Avro schema shown in [Sample Avro Schema](#topic_
 }
 ```
 
-#### Sample Avro Data (JSON)<a id="topic_tr3_dpg_ts__section_spk_15g_ts"></a>
+#### <a id="topic_tr3_dpg_ts__section_spk_15g_ts"></a>Sample Avro Data (JSON)
 
 ``` pre
 {"id":1, "username":"john","followers":["kate", "santosh"], "rank":null, "relationship": "FRIEND", "fmap": {"kate":10,"santosh":4},

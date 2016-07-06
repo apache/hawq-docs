@@ -26,7 +26,7 @@ title: Query Performance
 
     To disable automatic query detection and termination, set the value of `runaway_detector_activation_percent` to 100.
 
-## How to Investigate Query Performance Issues<a id="id_xkg_znj_f5"></a>
+## <a id="id_xkg_znj_f5"></a>How to Investigate Query Performance Issues
 
 A query is not executing as quickly as you would expect. Here is how to investigate possible causes of slowdown:
 
@@ -42,7 +42,7 @@ A query is not executing as quickly as you would expect. Here is how to investig
 5.  Check resource queue status. You can query view `pg_resqueue_status` to check if the target queue has already dispatched some resource to the queries, or if the target queue is lacking resources. See [Checking Existing Resource Queues](../resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
 6.  Analyze a dump of the resource manager's status to see more resource queue status. See [Analyzing Resource Manager Status](../resourcemgmt/ResourceQueues.html#topic_zrh_pkc_f5).
 
-## Data Locality Statistics<a id="topic_amk_drc_d5"></a>
+## <a id="topic_amk_drc_d5"></a>Data Locality Statistics
 
 For visibility into query performance, use the EXPLAIN ANALYZE to obtain data locality statistics. For example:
 
@@ -116,7 +116,7 @@ The following table describes the metrics related to data locality. Use these me
 </tbody>
 </table>
 
-## Number of Virtual Segments<a id="topic_wv3_gzc_d5"></a>
+## <a id="topic_wv3_gzc_d5"></a>Number of Virtual Segments
 
 The number of virtual segment used has impacts on the query performance. HAWQ decides the number of virtual segments of a query (its parallelism) by using the following rules:
 

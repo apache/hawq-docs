@@ -4,17 +4,17 @@ title: DROP TYPE
 
 Removes a data type.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 DROP TYPE [IF EXISTS] name [, ...] [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP TYPE` will remove a user-defined data type. Only the owner of a type can remove it.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
 IF EXISTS  
 Do not throw an error if the type does not exist. A notice is issued in this case.
@@ -28,7 +28,7 @@ Automatically drop objects that depend on the type (such as table columns, funct
 RESTRICT  
 Refuse to drop the type if any objects depend on it. This is the default.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Remove the data type `box`;
 
@@ -36,10 +36,10 @@ Remove the data type `box`;
 DROP TYPE box;
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 This command is similar to the corresponding command in the SQL standard, apart from the `IF EXISTS` option, which is a HAWQ extension. But note that the `CREATE TYPE` command and the data type extension mechanisms in HAWQ differ from the SQL standard.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [ALTER TYPE](ALTER-TYPE.html), [CREATE TYPE](CREATE-TYPE.html)

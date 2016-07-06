@@ -4,7 +4,7 @@ title: hawq check
 
 Verifies and validates HAWQ platform settings.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq check -f hostfile_hawq_check [--hadoop hadoop_home | --hadoop hadoop_home]
@@ -21,7 +21,7 @@ hawq check -?
 hawq check --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq check` utility determines the platform on which you are running HAWQ and validates various platform-specific configuration settings as well as HAWQ and HDFS-specific configuration settings. In order to perform HAWQ configuration checks, make sure HAWQ has been already started and `hawq config` works. For HDFS checks, you should either set the HADOOP\_HOME environment variable or give the hadoop installation location using `--hadoop` option.
 
@@ -37,7 +37,7 @@ mount.points = /,/data1,/data2
 diskusage.monitor.mounts = /,/data1,/data2
 ```
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 -\\\-config *config\_file*   
 The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.
@@ -75,7 +75,7 @@ Displays the version of this utility.
 -? (help)  
 Displays the online help.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Verify and validate the HAWQ platform settings by entering a host file and specifying the hadoop location:
 
@@ -113,6 +113,6 @@ View collected HAWQ platform settings:
 $ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/ --stdout
 ```
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [hawq checkperf](hawqcheckperf.html#topic1)

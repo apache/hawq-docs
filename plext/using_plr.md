@@ -6,11 +6,11 @@ PL/R is a procedural language. With the HAWQ PL/R extension you can write databa
 
 **Note**: To use PL/R in HAWQ, you must either install the PL/R package on top of an existing HAWQ deployment or specify PL/R as a build option when compiling HAWQ.
 
-## PL/R Examples <a id="plrexamples"></a>
+## <a id="plrexamples"></a>PL/R Examples 
 
 This section contains simple PL/R examples.
 
-### Example 1: Using PL/R for Single Row Operators <a id="example1"></a>
+### <a id="example1"></a>Example 1: Using PL/R for Single Row Operators 
 
 This function generates an array of numbers with a normal distribution using the R function `rnorm()`.
 
@@ -33,7 +33,7 @@ CREATE TABLE test_norm_var
   DISTRIBUTED BY (id);
 ```
 
-### Example 2: Returning PL/R data.frames in Tabular Form <a id="example2"></a>
+### <a id="example2"></a>Example 2: Returning PL/R data.frames in Tabular Form 
 
 Assuming your PL/R function returns an R `data.frame` as its output \(unless you want to use arrays of arrays\), some work is required in order for HAWQ to see your PL/R `data.frame` as a simple SQL table:
 
@@ -51,7 +51,7 @@ Use this TYPE when defining your PL/R function:
 
 Sample SQL for this is given in the next example.
 
-### Example 3: Process Employee Information Using PL/R <a id="example3"></a>
+### <a id="example3"></a>Example 3: Process Employee Information Using PL/R 
 
 The SQL below defines a TYPE and process employee information with data.frame using PL/R:
 
@@ -76,7 +76,7 @@ SELECT * FROM get_emps();
 ```
 
 
-## Downloading and Installing R Packages <a id="downloadinstallplrlibraries"></a>
+## <a id="downloadinstallplrlibraries"></a>Downloading and Installing R Packages 
 
 R packages are modules that contain R functions and data sets. You can install R packages to extend R and PL/R functionality in HAWQ.
 
@@ -138,7 +138,7 @@ R packages are modules that contain R functions and data sets. You can install R
 	SELECT R_test_require('arm');
 	```
 
-## Displaying R Library Information <a id="rlibrarydisplay"></a>
+## <a id="rlibrarydisplay"></a>Displaying R Library Information 
 
 You can use the R command line to display information about the installed libraries and functions on the HAWQ host. You can also add and remove libraries from the R installation. To start the R command line on the host, log into the host as the gadmin user and run the script R from the directory `$GPHOME/ext/R-N.N.N/bin` where N.N.N corresponds to the version of R installed.
 
@@ -194,7 +194,7 @@ You can use the R command `-e` option to run functions from the command line. Fo
 $ R -e 'help("MASS")'
 ```
 
-## References <a id="plrreferences"></a>
+## <a id="plrreferences"></a>References 
 
 [http://www.r-project.org/](http://www.r-project.org/) - The R Project home page
 
@@ -210,15 +210,15 @@ $GPHOME/ext/R-N.N.N/lib64/R/doc
 
 where N.N.N corresponds to the version of R installed.
 
-### R Functions and Arguments <a id="rfunctions"></a>
+### <a id="rfunctions"></a>R Functions and Arguments 
 
 See [http://www.joeconway.com/plr/doc/plr-funcs.html](http://www.joeconway.com/plr/doc/plr-funcs.html).
 
-### Passing Data Values in R <a id="passdatavalues"></a>
+### <a id="passdatavalues"></a>Passing Data Values in R 
 
 See [http://www.joeconway.com/plr/doc/plr-data.html](http://www.joeconway.com/plr/doc/plr-data.html).
 
-### Aggregate Functions in R <a id="aggregatefunctions"></a>
+### <a id="aggregatefunctions"></a>Aggregate Functions in R 
 
 See [http://www.joeconway.com/plr/doc/plr-aggregate-funcs.html](http://www.joeconway.com/plr/doc/plr-aggregate-funcs.html).
 

@@ -4,7 +4,7 @@ title: RESET
 
 Restores the value of a system configuration parameter to the default value.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 RESET configuration_parameter
@@ -12,7 +12,7 @@ RESET configuration_parameter
 RESET ALL
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `RESET` restores system configuration parameters to their default values. `RESET` is an alternative spelling for `SET                   configuration_parameter TO DEFAULT`.
 
@@ -20,7 +20,7 @@ The default value is defined as the value that the parameter would have had, had
 
 See [Server Configuration Parameter Reference](../HAWQSiteConfig.html) for more information.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
  *configuration\_parameter*   
 The name of a system configuration parameter. See [Server Configuration Parameter Reference](../HAWQSiteConfig.html) for a list of configuration parameters.
@@ -28,7 +28,7 @@ The name of a system configuration parameter. See [Server Configuration Paramete
 ALL  
 Resets all settable configuration parameters to their default values.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Set the `default_statement_mem` configuration parameter to its default value:
 
@@ -36,10 +36,10 @@ Set the `default_statement_mem` configuration parameter to its default value:
 RESET default_statement_mem; 
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 `RESET` is a HAWQ extension.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [SET](SET.html)

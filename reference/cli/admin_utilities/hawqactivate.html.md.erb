@@ -4,7 +4,7 @@ title: hawq activate
 
 Activates a standby master host and makes it the active master for the HAWQ system.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq activate standby  [-t time | --timeout time]  
@@ -16,7 +16,7 @@ hawq activate -v | [-q]
 hawq activate -? | -h | --help
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 If the primary master fails, the log replication process is shut down, and the standby master can be activated in its place. The `hawq activate                                         standby` utility activates a backup, standby master host and brings it into operation as the active master instance for a HAWQ system. The activated standby master effectively becomes the HAWQ master, accepting client connections on the master port.
 
@@ -41,7 +41,7 @@ $ psql dbname -c 'ANALYZE;'
 
 After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the [hawq init](hawqinit.html#topic1) utility.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 -l -\\\-logdir *logfile\_directory*  
 Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.
@@ -70,7 +70,7 @@ Displays detailed status, progress and error messages output by the utility.
 -? | -h | -\\\-help (help)  
 Displays the online help.
 
-## Example<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Example
 
 Activate the standby master host and make it the active master instance for a HAWQ system (run from backup master host you are activating):
 
@@ -78,6 +78,6 @@ Activate the standby master host and make it the active master instance for a HA
 $ hawq activate standby  /gpdata
 ```
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [hawq init](hawqinit.html#topic1)

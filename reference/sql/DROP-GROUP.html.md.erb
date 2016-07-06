@@ -4,17 +4,17 @@ title: DROP GROUP
 
 Removes a database role.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 DROP GROUP [IF EXISTS] name [, ...]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP GROUP` is an obsolete command, though still accepted for backwards compatibility. Groups (and users) have been superseded by the more general concept of roles. See [DROP ROLE](DROP-ROLE.html) for more information.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
 IF EXISTS  
 Do not throw an error if the role does not exist. A notice is issued in this case.
@@ -22,10 +22,10 @@ Do not throw an error if the role does not exist. A notice is issued in this cas
  *name*   
 The name of an existing role.
 
-## Compatibility<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Compatibility
 
 There is no `DROP GROUP` statement in the SQL standard.
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [DROP ROLE](DROP-ROLE.html)

@@ -4,7 +4,7 @@ title: createdb
 
 Creates a new database.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 createdb [connection_option ...] [-D tablespace] [-E encoding] 
@@ -15,7 +15,7 @@ createdb --help
 createdb --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `createdb` creates a new database in a HAWQ system.
 
@@ -23,7 +23,7 @@ Normally, the database user who executes this command becomes the owner of the n
 
 `createdb` is a wrapper around the SQL command `CREATE DATABASE`.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 dbname  
 The name of the database to be created. The name must be unique among all other databases in the HAWQ system. If not specified, reads from the environment variable `PGDATABASE`, then `PGUSER` or defaults to the current system user.
@@ -63,7 +63,7 @@ Never issue a password prompt. If the server requires password authentication an
 -W | -\\\-password  
 Force a password prompt.
 
-## Examples<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Examples
 
 To create the database `testdb` using the default options:
 

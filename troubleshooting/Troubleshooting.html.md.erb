@@ -6,13 +6,13 @@ This chapter describes how to resolve common problems and errors that occur in a
 
 
 
-## Query Performance Issues<a id="topic_dwd_rnx_15"></a>
+## <a id="topic_dwd_rnx_15"></a>Query Performance Issues
 
 **Problem:** Query performance is slow.
 
 **Cause:** There can be multiple reasons why a query might be performing slowly. For example, the locality of data distribution, the number of virtual segments, or the number of hosts used to execute the query can all affect its performance. The following procedure describes how to investigate query performance issues.
 
-### How to Investigate Query Performance Issues<a id="task_ayl_pbw_c5"></a>
+### <a id="task_ayl_pbw_c5"></a>How to Investigate Query Performance Issues
 
 A query is not executing as quickly as you would expect. Here is how to investigate possible causes of slowdown:
 
@@ -28,7 +28,7 @@ A query is not executing as quickly as you would expect. Here is how to investig
 5.  Check resource queue status. You can query view `pg_resqueue_status` to check if the target queue has already dispatched some resource to the queries, or if the target queue is lacking resources. See [Checking Existing Resource Queues](/20/resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
 6.  Analyze a dump of the resource manager's status to see more resource queue status. See [Analyzing Resource Manager Status](/20/resourcemgmt/ResourceQueues.html#topic_zrh_pkc_f5).
 
-## Rejection of Query Resource Requests<a id="topic_vm5_znx_15"></a>
+## <a id="topic_vm5_znx_15"></a>Rejection of Query Resource Requests
 
 **Problem:** HAWQ resource manager is rejecting query resource allocation requests.
 
@@ -54,7 +54,7 @@ A query is not executing as quickly as you would expect. Here is how to investig
 
 **Solution:** Check on the status of the nodes in the cluster. Restart existing nodes, if necessary, or add new nodes. Modify the [hawq\_rm\_nvseg\_variance\_amon\_seg\_limit](../reference/guc/parameter_definitions.html#hawq_rm_nvseg_variance_amon_seg_limit) (although note that this can affect query performance.)
 
-## Queries Cancelled Due to High VMEM Usage<a id="topic_qq4_rkl_wv"></a>
+## <a id="topic_qq4_rkl_wv"></a>Queries Cancelled Due to High VMEM Usage
 
 **Problem:** Certain queries are cancelled due to high virtual memory usage. Example error message:
 
@@ -70,7 +70,7 @@ If the amount of virtual memory utilized by a physical segment exceeds the calcu
 
 Check `pg_log` files for more memory usage details on session and QE processes. HAWQ logs terminated query information such as memory allocation history and context information as well as query plan operator memory usage information. This information is sent to the master and segment instance log files.
 
-## Segments Do Not Appear in gp\_segment\_configuration<a id="topic_hlj_zxx_15"></a>
+## <a id="topic_hlj_zxx_15"></a>Segments Do Not Appear in gp\_segment\_configuration
 
 **Problem:** Segments have successfully started, but cannot be found in table `gp_segment_configuration`.
 
@@ -80,7 +80,7 @@ Some software and projects have virtualized network interfaces that use auto-con
 
 **Solution:** Change your network's configuration to disallow identical IP addresses before starting up the HAWQ cluster.
 
-## Investigating Segments Marked As Down <a id="investigatedownsegment"></a>
+## <a id="investigatedownsegment"></a>Investigating Segments Marked As Down 
 
 **Problem:** The [HAWQ fault tolerance service (FTS)](../admin/FaultTolerance.html) has marked a segment as down in the [gp_segment_configuration](../reference/catalog/gp_segment_configuration.html) catalog table.
 
@@ -88,7 +88,7 @@ Some software and projects have virtualized network interfaces that use auto-con
 
 **Solution:** The actions required for recovering a segment varies depending upon the reason. In some cases, the segment is only marked as down temporarily until the heartbeat interval can recheck the segment's status. To investigate the reason why the segment was marked down, check the gp_configuration_history catalog table for a corresponding reason. See [Viewing the Current Status of a Segment](../admin/FaultTolerance.html#view_segment_status) for a description of various reasons that the fault tolerance service may mark a segment as down.
 
-## Handling Segment Resource Fragmentation<a id="topic_mdz_q2y_15"></a>
+## <a id="topic_mdz_q2y_15"></a>Handling Segment Resource Fragmentation
 
 Different HAWQ resource queues can have different virtual segment resource quotas, which can result in resource fragmentation. For example, a HAWQ cluster has 4GB memory available for a currently queued query, but the resource queues are configured to split four 512MB memory blocks in 4 different segments. It is impossible to allocate two 1GB memory virtual segments.
 

@@ -4,7 +4,7 @@ title: ALTER FUNCTION
 
 Changes the definition of a function.
 
-## Synopsis<a id="alterfunction__section2"></a>
+## <a id="alterfunction__section2"></a>Synopsis
 
 ``` sql
 ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
@@ -29,13 +29,13 @@ where *action* is one of:
 { [EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER }
 ```
 
-## Description<a id="desc"></a>
+## <a id="desc"></a>Description
 
 `ALTER FUNCTION` changes the definition of a function. 
 
 You must own the function to use `ALTER FUNCTION`. To change a function’s schema, you must also have `CREATE` privilege on the new schema. To alter the owner, you must also be a direct or indirect member of the new owning role, and that role must have `CREATE` privilege on the function’s schema. (These restrictions enforce that altering the owner does not do anything you could not do by dropping and recreating the function. However, a superuser can alter ownership of any function anyway.)
 
-## Parameters<a id="alterfunction__section4"></a>
+## <a id="alterfunction__section4"></a>Parameters
 
  *name*  
 The name (optionally schema-qualified) of an existing function.
@@ -75,11 +75,11 @@ Change whether the function is a security definer or not. The key word `EXTERNAL
 RESTRICT  
 Ignored for conformance with the SQL standard.
 
-## Notes<a id="notes"></a>
+## <a id="notes"></a>Notes
 
 HAWQ has limitations on the use of functions defined as `STABLE` or `VOLATILE`. See [CREATE FUNCTION](CREATE-FUNCTION.html) for more information.
 
-## Examples<a id="alterfunction__section6"></a>
+## <a id="alterfunction__section6"></a>Examples
 
 To rename the function `sqrt` for type `integer` to `square_root`:
 
@@ -99,10 +99,10 @@ To change the *schema* of the function `sqrt` for type `integer` to `math`:
 ALTER FUNCTION sqrt(integer) SET SCHEMA math;
 ```
 
-## Compatibility<a id="compat"></a>
+## <a id="compat"></a>Compatibility
 
 This statement is partially compatible with the `ALTER FUNCTION` statement in the SQL standard. The standard allows more properties of a function to be modified, but does not provide the ability to rename a function, make a function a security definer, or change the owner, schema, or volatility of a function. The standard also requires the `RESTRICT` key word, which is optional in HAWQ.
 
-## See Also<a id="see"></a>
+## <a id="see"></a>See Also
 
 [CREATE AGGREGATE](CREATE-AGGREGATE.html), [DROP AGGREGATE](DROP-AGGREGATE.html)

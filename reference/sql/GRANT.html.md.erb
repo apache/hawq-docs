@@ -4,7 +4,7 @@ title: GRANT
 
 Defines access privileges.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 GRANT { {SELECT | INSERT | UPDATE | DELETE | REFERENCES }
@@ -47,7 +47,7 @@ GRANT { SELECT | INSERT | ALL [PRIVILEGES] }
 
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `GRANT` command has two basic variants: one that grants privileges on a database object (table, view, sequence, database, function, procedural language, schema, or tablespace), and one that grants membership in a role.
 
@@ -71,7 +71,7 @@ If `WITH ADMIN OPTION` is specified, the member may in turn grant membership in 
 
 Unlike the case with privileges, membership in a role cannot be granted to `PUBLIC`.
 
-## Parameters<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Parameters
 
 SELECT  
 Allows `SELECT` from any column of the specified table, view, or sequence. Also allows the use of `COPY TO`. For sequences, this privilege also allows the use of the `currval` function.
@@ -129,7 +129,7 @@ The recipient of the privilege may in turn grant it to others.
 WITH ADMIN OPTION  
 The member of a role may in turn grant membership in the role to others.
 
-## Notes<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>Notes
 
 Database superusers can access all objects regardless of object privilege settings. One exception to this rule is view objects. Access to tables referenced in the view is determined by permissions of the view owner not the current user (even if the current user is a superuser).
 
@@ -143,7 +143,7 @@ HAWQ does not support granting or revoking privileges for individual columns of 
 
 Use psql's `\z` meta-command to obtain information about existing privileges for an object.
 
-## Examples<a id="topic1__section9"></a>
+## <a id="topic1__section9"></a>Examples
 
 Grant insert privilege to all roles on table `mytable`:
 
@@ -163,7 +163,7 @@ Grant membership in role `admins` to user `joe`:
 GRANT admins TO joe;
 ```
 
-## Compatibility<a id="topic1__section10"></a>
+## <a id="topic1__section10"></a>Compatibility
 
 The `PRIVILEGES` key word in is required in the SQL standard, but optional in HAWQ. The SQL standard does not support setting the privileges on more than one object per command.
 
@@ -175,6 +175,6 @@ The SQL standard provides for a `USAGE` privilege on other kinds of objects: cha
 
 Privileges on databases, tablespaces, schemas, and languages are HAWQ extensions.
 
-## See Also<a id="topic1__section11"></a>
+## <a id="topic1__section11"></a>See Also
 
 [REVOKE](REVOKE.html)

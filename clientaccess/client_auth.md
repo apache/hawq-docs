@@ -4,7 +4,7 @@ title: Configuring Client Authentication
 
 When a HAWQ system is first initialized, the system contains one predefined *superuser* role. This role will have the same name as the operating system user who initialized the HAWQ system. This role is referred to as `gpadmin`. By default, the system is configured to only allow local connections to the database from the `gpadmin` role. To allow any other roles to connect, or to allow connections from remote hosts, you configure HAWQ to allow such connections.
 
-## Allowing Connections to HAWQ <a id="topic2"></a>
+## <a id="topic2"></a>Allowing Connections to HAWQ 
 
 Client access and authentication is controlled by the standard PostgreSQL host-based authentication file, pg\_hba.conf. In HAWQ, the pg\_hba.conf file of the master instance controls client access and authentication to your HAWQ system. HAWQ segments have pg\_hba.conf files that are configured to allow only client connections from the master host and never accept client connections. Do not alter the pg\_hba.conf file on your segments.
 
@@ -36,13 +36,13 @@ The following table describes meaning of each field.
 |IP-address, IP-mask|These fields can be used as an alternative to the CIDR-address notation. Instead of specifying the mask length, the actual mask is specified in a separate column. For example, 255.0.0.0 represents an IPv4 CIDR mask length of 8, and 255.255.255.255 represents a CIDR mask length of 32. These fields only apply to host, hostssl, and hostnossl records.|
 |authentication-method|Specifies the authentication method to use when connecting. HAWQ supports the [authentication methods](http://www.postgresql.org/docs/9.0/static/auth-methods.html) supported by PostgreSQL 9.0.|
 
-### Editing the pg\_hba.conf File <a id="topic3"></a>
+### <a id="topic3"></a>Editing the pg\_hba.conf File 
 
 This example shows how to edit the pg\_hba.conf file of the master to allow remote client access to all databases from all roles using encrypted password authentication.
 
 **Note:** For a more secure system, consider removing all connections that use trust authentication from your master pg\_hba.conf. Trust authentication means the role is granted access without any authentication, therefore bypassing all security. Replace trust entries with ident authentication if your system has an ident service available.
 
-#### Editing pg\_hba.conf <a id="ip144328"></a>
+#### <a id="ip144328"></a>Editing pg\_hba.conf 
 
 1.  Open the file $MASTER\_DATA\_DIRECTORY/pg\_hba.conf in a text editor.
 2.  Add a line to the file for each type of connection you want to allow. Records are read sequentially, so the order of the records is significant. Typically, earlier records will have tight connection match parameters and weaker authentication methods, while later records will have looser match parameters and stronger authentication methods. For example:
@@ -75,7 +75,7 @@ This example shows how to edit the pg\_hba.conf file of the master to allow remo
     ```
 
 
-## Limiting Concurrent Connections <a id="topic4"></a>
+## <a id="topic4"></a>Limiting Concurrent Connections 
 
 HAWQ allocates some resources on a per-connection basis, so setting the maximum number of connections allowed is recommended.
 
@@ -102,7 +102,7 @@ For example, in `$GPHOME/etc/hawq-site.xml`:
 
 The following steps set the parameter values with the HAWQ utility `hawq config`.
 
-### To change the number of allowed connections <a id="ip142411"></a>
+### <a id="ip142411"></a>To change the number of allowed connections 
 
 1.  Log into the HAWQ master host as the HAWQ administrator and source the file `$GPHOME/greenplum_path.sh`.
 2.  Set the value of the `max_connections` parameter. This `hawq config` command sets the value to 100 on all HAWQ instances.
@@ -145,7 +145,7 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
 
 **Note:** Raising the values of these parameters may cause HAWQ to request more shared memory. To mitigate this effect, consider decreasing other memory-related parameters such as `gp_cached_segworkers_threshold`.
 
-## Encrypting Client/Server Connections <a id="topic5"></a>
+## <a id="topic5"></a>Encrypting Client/Server Connections 
 
 Enable SSL for client connections to HAWQ to encrypt the data passed over the network between the client and the database.
 
@@ -157,7 +157,7 @@ To enable SSL requires that OpenSSL be installed on both the client and the mast
 
 A self-signed certificate can be used for testing, but a certificate signed by a certificate authority \(CA\) should be used in production, so the client can verify the identity of the server. Either a global or local CA can be used. If all the clients are local to the organization, a local CA is recommended.
 
-### Creating a Self-signed Certificate without a Passphrase for Testing Only <a id="topic6"></a>
+### <a id="topic6"></a>Creating a Self-signed Certificate without a Passphrase for Testing Only 
 
 To create a quick self-signed certificate for the server for testing, use the following OpenSSL command:
 

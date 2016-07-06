@@ -4,7 +4,7 @@ title: vacuumdb
 
 Garbage-collects and analyzes a database.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 vacuumdb [connection-option...] [--full | -f] [-F] [--verbose | -v]
@@ -18,13 +18,13 @@ vacuumdb --help
 vacuumdb --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `vacuumdb` is a utility for cleaning a PostgreSQL database. vacuumdb will also generate internal statistics used by the PostgreSQL query optimizer.
 
 `vacuumdb` is a wrapper around the SQL command `VACUUM`. There is no effective difference between vacuuming databases via this utility and via other methods for accessing the server.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 -a | -\\\-all  
 Vacuums all databases.
@@ -69,11 +69,11 @@ Never issue a password prompt. If the server requires password authentication an
 -W | -\\\-password  
 Force a password prompt.
 
-## Notes<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Notes
 
 `vacuumdb` might need to connect several times to the master server, asking for a password each time. It is convenient to have a `~/.pgpass` file in such cases.
 
-## Examples<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Examples
 
 To clean the database `test`:
 

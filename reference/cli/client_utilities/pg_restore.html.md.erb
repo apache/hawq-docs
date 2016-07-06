@@ -4,13 +4,13 @@ title: pg_restore
 
 Restores a database from an archive file created by `pg_dump`.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 pg_restore [connection_option ...] [restore_option ...] filename
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `pg_restore` is a utility for restoring a database from an archive created by [pg\_dump](pg_dump.html#topic1) in one of the non-plain-text formats. It will issue the commands necessary to reconstruct the database to the state it was in at the time it was saved. The archive files also allow `pg_restore` to be selective about what is restored, or even to reorder the items prior to being restored.
 
@@ -18,7 +18,7 @@ pg_restore [connection_option ...] [restore_option ...] filename
 
 `pg_restore` cannot restore information that is not present in the archive file. For instance, if the archive was made using the "dump data as `INSERT` commands" option, `pg_restore` will not be able to load the data using `COPY` statements.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
  *filename*   
 Specifies the location of the archive file to be restored. If not specified, the standard input is used.
@@ -114,7 +114,7 @@ Force a password prompt.
 -1 | -\\\-single-transaction  
 Execute the restore as a single transaction. This ensures that either all the commands complete successfully, or no changes are applied.
 
-## Notes<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Notes
 
 If your installation has any local additions to the `template1` database, be careful to load the output of `pg_restore` into a truly empty database; otherwise you are likely to get errors due to duplicate definitions of the added objects. To make an empty database without any local additions, copy from `template0` not `template1`, for example:
 
@@ -132,7 +132,7 @@ Once restored, it is wise to run `ANALYZE` on each restored table so the query p
 
 When running `pg_restore`, a warning related to the `gp_enable_column_oriented_table` parameter might appear. If it does, disregard it.
 
-## Examples<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Examples
 
 Assume we have dumped a database called `mydb` into a custom-format dump file:
 
@@ -202,6 +202,6 @@ Could be used as input to `pg_restore` and would only restore items 10 and 6, in
 $ pg_restore -L db.list db.dump
 ```
 
-## See Also<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>See Also
 
 [pg\_dump](pg_dump.html#topic1)

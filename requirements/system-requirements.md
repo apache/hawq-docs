@@ -5,7 +5,7 @@ title: Apache HAWQ System Requirements
 Follow these guidelines to configure each host machine that will run an Apache HAWQ or PXF service.
 
 
-## Host Memory Configuration<a id="topic_d3f_vlz_g5"></a>
+## <a id="topic_d3f_vlz_g5"></a>Host Memory Configuration
 
 In order to prevent data loss or corruption in an Apache HAWQ cluster, you must configure the memory on each host machine so that the Linux Out-of-Memory \(OOM\) killer process never kills a HAWQ process due to OOM conditions. \(HAWQ applies its own rules to enforce memory restrictions.\)
 
@@ -70,7 +70,7 @@ In order to prevent data loss or corruption in an Apache HAWQ cluster, you must 
 4.  Ensure that no other services \(such as Puppet\) or automated processes attempt to reset the overcommit settings on cluster hosts.
 5.  During the installation process, configure HAWQ memory by setting YARN or HAWQ configuration parameters, as described in [HAWQ Memory Configuration](#topic_uzf_flz_g5).
 
-## HAWQ Memory Configuration<a id="topic_uzf_flz_g5"></a>
+## <a id="topic_uzf_flz_g5"></a>HAWQ Memory Configuration
 
 You must configure the memory used by HAWQ according to whether you plan to use YARN or HAWQ to manage system resources.
 
@@ -173,7 +173,7 @@ If this system uses YARN for resource management, you would set `yarn.nodemanage
 
 If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` = `RAM - NON_HAWQ_MEMORY` = 8 GB - 7GB = 1.
 
-## Disk Requirements<a id="topic_bsm_hhv_2v"></a>
+## <a id="topic_bsm_hhv_2v"></a>Disk Requirements
 
 -   2GB per host for HAWQ installation. 
 -   Approximately 300MB per segment instance for metadata.
@@ -181,17 +181,17 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 -   Appropriate free space for data: disks should have at least 30% free space \(no more than 70% capacity\).
 -   High-speed, local storage
 
-## Network Requirements<a id="topic_rdb_jhv_2v"></a>
+## <a id="topic_rdb_jhv_2v"></a>Network Requirements
 
 -   Gigabit Ethernet within the array. For a production cluster, 10 Gigabit Ethernet recommended.
 -   Dedicated, non-blocking switch.
 -   Systems with multiple NICs require NIC bonding to utilize all available network bandwidth.
 
 
-## Port Requirements<a id="port-req"></a>
+## <a id="port-req"></a>Port Requirements
 Individual PXF plug-ins, which you install after adding the HAWQ and PXF services, require that you Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009.
 
 If you have configured Oozie JXM reporting on a host that will run a PXF plug-in, make sure that the reporting service uses a port other than 8005. This helps to prevent port conflict errors from occurring when you start the PXF service.
 
-## Umask Requirement<a id="umask"></a>
+## <a id="umask"></a>Umask Requirement
 Set the OS file system umask to 022 on all cluster hosts. This ensure that users can read the HDFS block files.

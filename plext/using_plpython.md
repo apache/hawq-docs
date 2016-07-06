@@ -4,7 +4,7 @@ title: Using PL/Python in HAWQ
 
 This section contains an overview of the HAWQ PL/Python Language.
 
-## About HAWQ PL/Python <a id="abouthawqplpython"></a>
+## <a id="abouthawqplpython"></a>About HAWQ PL/Python 
 
 PL/Python is a loadable procedural language. With the HAWQ PL/Python extension, you can write HAWQ user-defined functions in Python that take advantage of Python features and modules to quickly build robust database applications.
 
@@ -16,12 +16,12 @@ $GPHOME/ext/python/
 
 **Note:** HAWQ uses Python version 2.6.6.
 
-### HAWQ PL/Python Limitations <a id="hawqlimitations"></a>
+### <a id="hawqlimitations"></a>HAWQ PL/Python Limitations 
 
 - HAWQ does not support PL/Python triggers.
 - PL/Python is available only as a HAWQ untrusted language.
  
-## Enabling and Removing PL/Python Support <a id="enableplpython"></a>
+## <a id="enableplpython"></a>Enabling and Removing PL/Python Support 
 
 If enabled as an option during HAWQ compilation, the PL/Python language is installed with HAWQ.
 
@@ -49,7 +49,7 @@ To remove support for plpythonu from a database, run the following SQL command:
 psql# DROP LANGUAGE plpythonu;
 ```
 
-## Developing Functions with PL/Python <a id="developfunctions"></a>
+## <a id="developfunctions"></a>Developing Functions with PL/Python 
 
 The body of a PL/Python user-defined function is a Python script. When the function is called, its arguments are passed as elements of the array `args[]`. Named arguments are also passed as ordinary variables to the Python script. The result is returned from the PL/Python function with return statement, or yield statement in case of a result-set statement.
 
@@ -69,11 +69,11 @@ The HAWQ PL/Python language module imports the Python module `plpy`. The module 
    - `plpy.fatal`
    - `plpy.debug`
    
-## Executing and Preparing SQL Queries <a id="executepreparesql"></a>
+## <a id="executepreparesql"></a>Executing and Preparing SQL Queries 
 
 The PL/Python `plpy` module provides two Python functions to execute an SQL query and prepare an execution plan for a query, `plpy.execute` and `plpy.prepare`. Preparing the execution plan for a query is useful if you run the query from multiple Python functions.
 
-### plpy.execute <a id="plpyexecute"></a>
+### <a id="plpyexecute"></a>plpy.execute 
 
 Calling `plpy.execute` with a query string and an optional limit argument causes the query to be run and the result to be returned in a Python result object. The result object emulates a list or dictionary object. The rows returned in the result object can be accessed by row number and column name. The result set row numbering starts with 0 (zero). The result object can be modified. The result object has these additional methods:
 
@@ -94,7 +94,7 @@ my_col_data = rv[i]["my_column"]
 
 Since the function returns a maximum of 5 rows, the index `i` can be an integer between 0 and 4.
 
-### plpy.prepare <a id="plpyprepare"></a>
+### <a id="plpyprepare"></a>plpy.prepare 
 
 The function `plpy.prepare` prepares the execution plan for a query. It is called with a query string and a list of parameter types, if you have parameter references in the query. For example, this statement can be in a PL/Python user-defined function:
 
@@ -134,13 +134,13 @@ CREATE FUNCTION usesavedplan() RETURNS trigger AS $$
 $$ LANGUAGE plpythonu;
 ```
 
-## Handling Python Errors and Messages <a id="pythonerrors"></a>
+## <a id="pythonerrors"></a>Handling Python Errors and Messages 
 
 The message functions `plpy.error` and `plpy.fatal` raise a Python exception which, if uncaught, propagates out to the calling query, causing the current transaction or subtransaction to be aborted. The functions raise `plpy.ERROR(msg)` and raise `plpy.FATAL(msg)` are equivalent to calling `plpy.error` and `plpy.fatal`, respectively. The other message functions only generate messages of different priority levels.
 
 Whether messages of a particular priority are reported to the client, written to the server log, or both is controlled by the HAWQ server configuration parameters `log_min_messages` and `client_min_messages`. For information about the parameters, see the [Server Configuration Parameter Reference](../reference/HAWQSiteConfig.html).
 
-## Using the Dictionary GD to Improve PL/Python Performance <a id="dictionarygd"></a>
+## <a id="dictionarygd"></a>Using the Dictionary GD to Improve PL/Python Performance 
 
 In terms of performance, importing a Python module is an expensive operation and can affect performance. If you are importing the same module frequently, you can use Python global variables to load the module on the first invocation and not require importing the module on subsequent calls. The following PL/Python function uses the GD persistent storage dictionary to avoid importing a module if it has already been imported and is in the GD.
 
@@ -154,7 +154,7 @@ psql=#
 $$;
 ```
 
-## Installing Python Modules <a id="installpythonmodules"></a>
+## <a id="installpythonmodules"></a>Installing Python Modules 
 
 When you install a Python module on HAWQ, the HAWQ Python environment must have the module added to it across all segment hosts in the cluster. When expanding HAWQ, you must add the Python modules to the new segment hosts. You can use the HAWQ utilities `hawq ssh` and `hawq scp` run commands on HAWQ hosts and copy files to the hosts. For information about the utilities, see the [HAWQ Management Tools Reference](../reference/cli/management_tools.html).
 
@@ -182,7 +182,7 @@ These are examples of installing and testing Python modules:
 - Complex Python Installation Example (NumPy)
 - Testing Installed Python Modules
 
-### Simple Python Module Installation Example (setuptools) <a id="simpleinstall"></a>
+### <a id="simpleinstall"></a>Simple Python Module Installation Example (setuptools) 
 
 This example manually installs the Python `setuptools` module from the Python Package Index repository. The module lets you easily download, build, install, upgrade, and uninstall Python packages.
 
@@ -239,7 +239,7 @@ $ easy_install pip
 
 You can use the `hawq ssh` utility to run the `easy_install` command on all the HAWQ segment hosts.
 
-### Complex Python Installation Example (NumPy) <a id="complexinstall"></a>
+### <a id="complexinstall"></a>Complex Python Installation Example (NumPy) 
 
 This example builds and installs the Python module NumPy. NumPy is a module for scientific computing with Python. For information about NumPy, see [http://www.numpy.org/](http://www.numpy.org/).
 
@@ -263,7 +263,7 @@ $ hawq ssh -f hawq-hosts mkdir packages
 $ hawq scp -f hawq-hosts packages/* =:/home/gpadmin/packages
 ```
 
-#### OpenBLAS Prerequisites <a id="openblasprereq"></a>
+#### <a id="openblasprereq"></a>OpenBLAS Prerequisites 
 
 1. If needed, use `yum` to install gcc compilers from system repositories. The compilers are required on all hosts where you compile OpenBLAS:
 
@@ -297,7 +297,7 @@ $ hawq scp -f hawq-hosts packages/* =:/home/gpadmin/packages
 
 4. If needed, you can use the `hawq scp` utility to copy files to HAWQ hosts and the `hawq ssh` utility to run commands on the hosts.
 
-#### Build and Install OpenBLAS Libraries <a id="buildopenblas"></a>
+#### <a id="buildopenblas"></a>Build and Install OpenBLAS Libraries 
 
 Before build and install the NumPy module, you install the OpenBLAS libraries. This section describes how to build and install the libraries on a single host.
 
@@ -428,7 +428,7 @@ After you have installed the OpenBLAS libraries, you can build and install NumPy
 	$ echo -e 'export LIBRARY_PATH=$LD_LIBRARY_PATH' >> ~/.bashrc
 	```
 
-## Testing Installed Python Modules <a id="testingpythonmodules"></a>
+## <a id="testingpythonmodules"></a>Testing Installed Python Modules 
 
 You can create a simple PL/Python user-defined function (UDF) to validate that Python a module is available in HAWQ. This example tests the NumPy module.
 
@@ -484,7 +484,7 @@ If FAILURE is returned, these are some possible causes:
 
 	**Note:** On HAWQ master and segment hosts, the `.bashrc` file for the gpadmin user must source the file `$GPHOME/greenplum_path.sh`.
 
-## Examples <a id="examples"></a>
+## <a id="examples"></a>Examples 
 
 This PL/Python UDF returns the maximum of two integers:
 
@@ -559,11 +559,11 @@ This command deletes the UDF from the database.
 DROP FUNCTION mypytest(integer) ;
 ```
 
-## References <a id="references"></a>
+## <a id="references"></a>References 
 
 This section lists references for using PL/Python.
 
-### Technical References <a id="technicalreferences"></a>
+### <a id="technicalreferences"></a>Technical References 
 
 For information about PL/Python see the PostgreSQL documentation at [http://www.postgresql.org/docs/8.2/static/plpython.html](http://www.postgresql.org/docs/8.2/static/plpython.html).
 
@@ -589,7 +589,7 @@ $ wget http://pypi.python.org/packages/source/n/nltk/nltk-2.0.2.tar.gz#md5=6e714
 $ wget http://pypi.python.org/packages/source/d/distribute/distribute-0.6.21.tar.gz
 ```
 
-### Useful Reading <a id="usefulreading"></a>
+### <a id="usefulreading"></a>Useful Reading 
 
 For information about the Python language, see [http://www.python.org/](http://www.python.org/).
 

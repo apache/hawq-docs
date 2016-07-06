@@ -6,14 +6,14 @@ This topic outlines the proper procedure for removing a node from a HAWQ cluster
 
 In general, you should not need to remove nodes manually from running HAWQ clusters. HAWQ isolates any nodes that HAWQ detects as failing due to hardware or other types of errors.
 
-## Guidelines for Removing a Node <a id="topic_p53_ct3_kv"></a>
+## <a id="topic_p53_ct3_kv"></a>Guidelines for Removing a Node 
 
 If you do need to remove a node from a HAWQ cluster, keep in mind the following guidelines around removing nodes:
 
 -   Never remove more than two nodes at a time since the risk of data loss is high.
 -   Only remove nodes during system maintenance windows when the cluster is not busy or running queries.
 
-## Removing a Node from a Running HAWQ Cluster <a id="task_oy5_ct3_kv"></a>
+## <a id="task_oy5_ct3_kv"></a>Removing a Node from a Running HAWQ Cluster 
 
 The following is a typical procedure to remove a node from a running HAWQ cluster:
 

@@ -10,7 +10,7 @@ Kerberos provides a secure, encrypted authentication service. It does not encryp
 
 For more information about Kerberos, see [http://web.mit.edu/kerberos/](http://web.mit.edu/kerberos/).
 
-## Requirements for Using Kerberos with HAWQ <a id="kerberos_prereq"></a>
+## <a id="kerberos_prereq"></a>Requirements for Using Kerberos with HAWQ 
 
 The following items are required for using Kerberos with HAWQ:
 
@@ -22,7 +22,7 @@ The following items are required for using Kerberos with HAWQ:
 -   Java 1.7.0\_17 or later is required to use Kerberos-authenticated JDBC on Red Hat Enterprise Linux 6.x
 -   Java 1.6.0\_21 or later is required to use Kerberos-authenticated JDBC on Red Hat Enterprise Linux 4.x or 5.x
 
-## Enabling Kerberos Authentication for HAWQ <a id="nr166539"></a>
+## <a id="nr166539"></a>Enabling Kerberos Authentication for HAWQ 
 
 Complete the following tasks to set up Kerberos authentication with HAWQ:
 
@@ -43,7 +43,7 @@ With Kerberos authentication configured on the HAWQ, you can use Kerberos for PS
 
 [Set up HAWQ with Kerberos for JDBC](#topic9)
 
-## Install and Configure a Kerberos KDC Server <a id="task_setup_kdc"></a>
+## <a id="task_setup_kdc"></a>Install and Configure a Kerberos KDC Server 
 
 Steps to set up a Kerberos Key Distribution Center \(KDC\) server on a Red Hat Enterprise Linux host for use with HAWQ.
 
@@ -131,7 +131,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
     ```
 
 
-## Create HAWQ Roles in the KDC Database <a id="task_m43_vwl_2p"></a>
+## <a id="task_m43_vwl_2p"></a>Create HAWQ Roles in the KDC Database 
 
 Add principals to the Kerberos realm for HAWQ.
 
@@ -164,7 +164,7 @@ Start `kadmin.local` in interactive mode, then add two principals to the HAWQ Re
 
 4.  Exit `kadmin.local` interactive mode with the `quit` command:`kadmin.local: quit`
 
-## Install and Configure the Kerberos Client <a id="topic6"></a>
+## <a id="topic6"></a>Install and Configure the Kerberos Client 
 
 Steps to install the Kerberos client on the HAWQ master host.
 
@@ -202,7 +202,7 @@ Install the Kerberos client libraries on the HAWQ master and configure the Kerbe
     ```
 
 
-### Set up HAWQ with Kerberos for PSQL <a id="topic7"></a>
+### <a id="topic7"></a>Set up HAWQ with Kerberos for PSQL 
 
 Configure a HAWQ to use Kerberos.
 
@@ -277,7 +277,7 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
     The principal must be added as a HAWQ user.
 
 
-### Set up HAWQ with Kerberos for JDBC <a id="topic9"></a>
+### <a id="topic9"></a>Set up HAWQ with Kerberos for JDBC 
 
 Enable Kerberos-authenticated JDBC access to HAWQ.
 

@@ -4,7 +4,7 @@ title: hawq state
 
 Shows the status of a running HAWQ system.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq state [-b] [-l logfile_directory] [-v | -q] 
@@ -12,7 +12,7 @@ hawq state [-b] [-l logfile_directory] [-v | -q]
 hawq state -? | -h | --help
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq state` utility displays information about a running HAWQ instance. A HAWQ system is comprised of multiple PostgreSQL database instances (segments) spanning multiple machines, and the `hawq state` utility can provide additional status information, such as:
 
@@ -22,7 +22,7 @@ The `hawq state` utility displays information about a running HAWQ instance. A H
 -   The ports used by the system.
 -   Whether a standby master is present, and if it is active.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 -b (brief status)  
 Optional. Display a brief summary of the state of the HAWQ system. This is the default option.
@@ -45,7 +45,7 @@ Optional. Displays error messages and outputs detailed status and progress infor
 -? | -h | -\\\-help (help)  
 Displays the online help.
 
-## Examples<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Examples
 
 Show brief status information of a HAWQ system:
 
@@ -53,6 +53,6 @@ Show brief status information of a HAWQ system:
 $ hawq state -b
 ```
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [hawq start](hawqstart.html#topic1), [gplogfilter](gplogfilter.html#topic1)

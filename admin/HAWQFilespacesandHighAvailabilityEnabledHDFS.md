@@ -4,7 +4,7 @@ title: HAWQ Filespaces and High Availability Enabled HDFS
 
 If you initialized HAWQ without the HDFS High Availability \(HA\) feature, you can enable it by using the following procedure.
 
-## Enabling the HDFS NameNode HA Feature <a id="enablingthehdfsnamenodehafeature"></a>
+## <a id="enablingthehdfsnamenodehafeature"></a>Enabling the HDFS NameNode HA Feature 
 
 To enable the HDFS NameNode HA feature for use with HAWQ, you need to perform the following tasks:
 
@@ -16,13 +16,13 @@ To enable the HDFS NameNode HA feature for use with HAWQ, you need to perform th
 1. Start the HAWQ cluster and resynchronize the standby master after moving the filespace.
 
 
-### Step 1: Enable High Availability in Your HDFS Cluster <a id="enablehahdfs"></a>
+### <a id="enablehahdfs"></a>Step 1: Enable High Availability in Your HDFS Cluster 
 
 Enable high availability for NameNodes in your HDFS cluster. See the documentation for your Hadoop distribution for instructions on how to do this. 
 
 **Note:** If you're using Ambari to manage your HDFS cluster, you can use the Enable NameNode HA Wizard. For example, [this Hortonworks HDP procedure](https://docs.hortonworks.com/HDPDocuments/Ambari-2.2.1.1/bk_Ambari_Users_Guide/content/_how_to_configure_namenode_high_availability.html) outlines how to do this in Ambari for HDP.
 
-### Step 2: Collect Information about the Target Filespace <a id="collectinginformationaboutthetargetfilespace"></a>
+### <a id="collectinginformationaboutthetargetfilespace"></a>Step 2: Collect Information about the Target Filespace 
 
 A default filespace named dfs\_system exists in the pg\_filespace catalog and the parameter, pg\_filespace\_entry, contains detailed information for each filespace. 
 
@@ -69,7 +69,7 @@ To move the filespace location to a HA-enabled HDFS location, you must move the 
     New location: hdfs://hdfs-cluster/hawq/hawq-1459499690
     ```
 
-### Step 3: Stop the HAWQ Cluster and Back Up the Catalog <a id="stoppinghawqclusterandbackupcatalog"></a>
+### <a id="stoppinghawqclusterandbackupcatalog"></a>Step 3: Stop the HAWQ Cluster and Back Up the Catalog 
 
 **Note:** Ambari users must perform this manual step.
 
@@ -117,7 +117,7 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
     ```
 	The master data directory contains the catalog. Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. Make sure you back this directory up.
 
-### Step 4: Move the Filespace Location <a id="movingthefilespacelocation"></a>
+### <a id="movingthefilespacelocation"></a>Step 4: Move the Filespace Location 
 
 **Note:** Ambari users must perform this manual step.
 
@@ -142,7 +142,7 @@ Non-fatal error can occur if you provide invalid input or if you have not stoppe
 
 Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. When a fatal error occurs, you will see the message, "PLEASE RESTORE MASTER DATA DIRECTORY" in the output. If this occurs, shut down the database and restore the `${MASTER_DATA_DIRECTORY}` that you backed up in Step 4.
 
-### Step 5: Update HAWQ to Use NameNode HA by Reconfiguring hdfs-client.xml and hawq-site.xml <a id="configuregphomeetchdfsclientxml"></a>
+### <a id="configuregphomeetchdfsclientxml"></a>Step 5: Update HAWQ to Use NameNode HA by Reconfiguring hdfs-client.xml and hawq-site.xml 
 
 If you install and manage your cluster using command-line utilities, follow these steps to modify your HAWQ configuration to use the NameNode HA service.
 
@@ -210,7 +210,7 @@ For command-line administrators:
 	$ hawq scp -f hawq_hosts hdfs-client.xml hawq-site.xml =:$GPHOME/etc/
 	```
 
-### Step 6: Restart the HAWQ Cluster and Resynchronize the Standby Master <a id="reinitializethestandbymaster"></a>
+### <a id="reinitializethestandbymaster"></a>Step 6: Restart the HAWQ Cluster and Resynchronize the Standby Master 
 
 1. Restart the HAWQ cluster:
 

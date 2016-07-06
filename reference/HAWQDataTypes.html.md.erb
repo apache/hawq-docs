@@ -71,7 +71,7 @@ Each data type has an external representation determined by its input and output
  
 For variable length data types (such as char, varchar, text, xml, etc.) if the data is greater than or equal to 127 bytes, the storage overhead is 4 bytes instead of 1.
 
-## Time Zones<a id="timezones"></a>
+## <a id="timezones"></a>Time Zones
 
 Time zones, and time-zone conventions, are influenced by political decisions, not just earth geometry. Time zones around the world became somewhat standardized during the 1900's, but continue to be prone to arbitrary changes, particularly with respect to daylight-savings rules. HAWQ uses the widely-used zoneinfo time zone database for information about historical time zone rules. For times in the future, the assumption is that the latest known rules for a given time zone will continue to be observed indefinitely far into the future.
 
@@ -104,7 +104,7 @@ The timezone configuration parameter can be set in the file `hawq-site.xml`. 
 -   The SQL command SET TIME ZONE sets the time zone for the session. This is an alternative spelling of SET TIMEZONE TO with a more SQL-spec-compatible syntax.
 -   The PGTZ environment variable is used by libpq clients to send a SET TIME ZONE command to the server upon connection.
 
-## Date and Time Configuration Files<a id="dateandtimeconfigurationfiles"></a>
+## <a id="dateandtimeconfigurationfiles"></a>Date and Time Configuration Files
 
 Since timezone abbreviations are not well standardized, HAWQ /&gt; provides a means to customize the set of abbreviations accepted by the server. The timezone\_abbreviations run-time parameter determines the active set of abbreviations. While this parameter can be altered by any database user, the possible values for it are under the control of the database administrator — they are in fact names of configuration files stored in .../share/timezonesets/ of the installation directory. By adding or altering files in that directory, the administrator can set local policy for timezone abbreviations.
 

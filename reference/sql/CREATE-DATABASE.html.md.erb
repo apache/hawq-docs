@@ -4,7 +4,7 @@ title: CREATE DATABASE
 
 Creates a new database.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 CREATE DATABASE name [ [WITH] [OWNER [=] dbowner]
@@ -14,7 +14,7 @@ CREATE DATABASE name [ [WITH] [OWNER [=] dbowner]
                      [CONNECTION LIMIT [=] connlimit ] ]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `CREATE DATABASE` creates a new database. To create a database, you must be a superuser or have the special `CREATEDB` privilege.
 
@@ -22,7 +22,7 @@ The creator becomes the owner of the new database by default. Superusers can cre
 
 By default, the new database will be created by cloning the standard system database `template1`. A different template can be specified by writing `TEMPLATE name             `. In particular, by writing `TEMPLATE template0`, you can create a clean database containing only the standard objects predefined by HAWQ. This is useful if you wish to avoid copying any installation-local objects that may have been added to `template1`.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
  *name*   
 The name of a database to create.
@@ -44,7 +44,7 @@ The name of the tablespace that will be associated with the new database, or `DE
  *connlimit*   
 The maximum number of concurrent connections posible. The default of -1 means there is no limitation.
 
-## Notes<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Notes
 
 `CREATE DATABASE` cannot be executed inside a transaction block.
 
@@ -52,7 +52,7 @@ When you copy a database by specifying its name as the template, no other sessio
 
 The `CONNECTION LIMIT` is not enforced against superusers.
 
-## Examples<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Examples
 
 To create a new database:
 
@@ -72,10 +72,10 @@ To create a database `music` which supports the ISO-8859-1 character set:
 CREATE DATABASE music ENCODING 'LATIN1';
 ```
 
-## Compatibility<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Compatibility
 
 There is no `CREATE DATABASE` statement in the SQL standard. Databases are equivalent to catalogs, whose creation is implementation-defined.
 
-## See Also<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>See Also
 
 [DROP DATABASE](DROP-DATABASE.html)

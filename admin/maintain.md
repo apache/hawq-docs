@@ -2,13 +2,13 @@
 title: Routine System Maintenance Tasks
 ---
 
-## Overview<a id="overview-topic"></a>
+## <a id="overview-topic"></a>Overview
 
 To keep a HAWQ system running efficiently, the database must be regularly cleared of expired data and the table statistics must be updated so that the query optimizer has accurate information.
 
 HAWQ requires that certain tasks be performed regularly to achieve optimal performance. The tasks discussed here are required, but database administrators can automate them using standard UNIX tools such as `cron` scripts. An administrator sets up the appropriate scripts and checks that they execute successfully. See [Recommended Monitoring and Maintenance Tasks](RecommendedMonitoringTasks.html) for additional suggested maintenance activities you can implement to keep your HAWQ system running optimally.
 
-## Database Server Log Files <a id="topic10"></a>
+## <a id="topic10"></a>Database Server Log Files 
 
 HAWQ log output tends to be voluminous, especially at higher debug levels, and you do not need to save it indefinitely. Administrators rotate the log files periodically so new log files are started and old ones are removed.
 
@@ -16,7 +16,7 @@ HAWQ has log file rotation enabled on the master and all segment instances. Dail
 
 For information about viewing the database server log files, see [Viewing the Database Server Log Files](monitor.html).
 
-## Management Utility Log Files <a id="topic11"></a>
+## <a id="topic11"></a>Management Utility Log Files 
 
 Log files for the HAWQ management utilities are written to `~/hawqAdminLogs` by default. The naming convention for management log files is:
 

@@ -4,13 +4,13 @@ title: pg_dump
 
 Extracts a database into a single script file or other archive file.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 pg_dump [connection_option ...] [dump_option ...] dbname
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `pg_dump` is a standard PostgreSQL utility for backing up a database, and is also supported in HAWQ. It creates a single (non-parallel) dump file.
 
@@ -25,7 +25,7 @@ Since `pg_dump` is compatible with regular PostgreSQL, it can be used to migrate
 
 When used with one of the archive file formats and combined with `pg_restore`, `pg_dump` provides a flexible archival and transfer mechanism. `pg_dump` can be used to backup an entire database, then `pg_restore `can be used to examine the archive and/or select which parts of the database are to be restored. The most flexible output file format is the *custom* format (`-Fc`). It allows for selection and reordering of all archived items, and is compressed by default. The tar format (`-Ft`) is not compressed and it is not possible to reorder data when loading, but it is otherwise quite flexible. It can be manipulated with standard UNIX tools such as `tar`.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 dbname  
 Specifies the name of the database to be dumped. If this is not specified, the environment variable `PGDATABASE` is used. If that is not set, the user name specified for the connection is used.
@@ -140,7 +140,7 @@ The database role name to connect as. If not specified, reads from the environme
 -W | -\\\-password  
 Force a password prompt.
 
-## Notes<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Notes
 
 When a data-only dump is chosen and the option `--disable-triggers` is used, `pg_dump` emits commands to disable triggers on user tables before inserting the data and commands to re-enable them after the data has been inserted. If the restore is stopped in the middle, the system catalogs may be left in the wrong state.
 
@@ -148,7 +148,7 @@ Members of `tar` archives are limited to a size less than 8 GB. (This is an inhe
 
 The dump file produced by `pg_dump` does not contain the statistics used by the optimizer to make query planning decisions. Therefore, it is wise to run `ANALYZE` after restoring from a dump file to ensure good performance.
 
-## Examples<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>Examples
 
 Dump a database called `mydb` into a SQL-script file:
 
@@ -194,6 +194,6 @@ To specify an upper-case or mixed-case name in `-t` and related switches, you ne
 $ pg_dump -t '"MixedCaseName"' mydb > mytab.sql
 ```
 
-## See Also<a id="topic1__section9"></a>
+## <a id="topic1__section9"></a>See Also
 
 [pg\_dumpall](pg_dumpall.html#topic1), [pg\_restore](pg_restore.html#topic1), [psql](psql.html#topic1)

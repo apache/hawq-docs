@@ -4,7 +4,7 @@ title: hawq restart
 
 Shuts down and then restarts a HAWQ system after shutdown is complete.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq restart object [-l|--logdir] [-q|--quiet] [-v|--verbose]    
@@ -20,7 +20,7 @@ hawq restart -? | -h | --help
 hawq restart --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq restart` utility is used to shut down and restart the HAWQ server processes. It is essentially equivalent to performing a `hawq stop -M                                         smart` operation followed by `hawq                                         start`.
 
@@ -45,7 +45,7 @@ Restart a HAWQ standby.
 allsegments  
 Restart all segments.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 -a (do not prompt)  
 Do not prompt the user for confirmation.
@@ -87,7 +87,7 @@ Displays the online help.
 -\\\-version (show utility version)  
 Displays the version of this utility.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Restart a HAWQ cluster:
 
@@ -107,6 +107,6 @@ Start the HAWQ master instance only and connect in utility mode:
 $ hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
 ```
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [hawq stop](hawqstop.html#topic1), [hawq start](hawqstart.html#topic1)

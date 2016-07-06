@@ -4,7 +4,7 @@ title: FETCH
 
 Retrieves rows from a query using a cursor.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 FETCH [ forward_direction { FROM | IN } ] cursorname
@@ -26,7 +26,7 @@ where *forward\_direction* can be empty or one of:
     FORWARD ALL
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `FETCH` retrieves rows using a previously-created cursor.
 
@@ -49,7 +49,7 @@ FETCH count
 
 The count is the number of rows fetched (possibly zero). Note that in `psql`, the command tag will not actually be displayed, since `psql` displays the fetched rows instead.
 
-## Parameters<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Parameters
 
  *forward\_direction*  
 Defines the fetch direction and number of rows to fetch. Only forward fetches are allowed in HAWQ. It can be one of the following:
@@ -87,7 +87,7 @@ Fetch all remaining rows.
  *cursorname*  
 The name of an open cursor.
 
-## Notes<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Notes
 
 HAWQ does not support scrollable cursors, so you can only use `FETCH` to move the cursor position forward.
 
@@ -97,7 +97,7 @@ Updating data via a cursor is currently not supported by HAWQ.
 
 `DECLARE` is used to define a cursor. Use `MOVE` to change cursor position without retrieving data.
 
-## Examples<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Examples
 
 -- Start the transaction:
 
@@ -131,7 +131,7 @@ CLOSE mycursor;
 COMMIT;
 ```
 
-## Compatibility<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>Compatibility
 
 SQL standard allows cursors only in embedded SQL and in modules. HAWQ permits cursors to be used interactively.
 
@@ -141,6 +141,6 @@ The `FETCH` forms involving `FORWARD`, as well as the forms `FETCH` count and `F
 
 The SQL standard allows only `FROM` preceding the cursor name; the option to use `IN` is an extension.
 
-## See Also<a id="topic1__section9"></a>
+## <a id="topic1__section9"></a>See Also
 
 [DECLARE](DECLARE.html), [CLOSE](CLOSE.html)

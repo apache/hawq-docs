@@ -4,7 +4,7 @@ title: Amazon EC2 Configuration
 
 Amazon Elastic Compute Cloud (EC2) is a service provided by Amazon Web Services (AWS).  You can install and configure HAWQ on virtual servers provided by Amazon EC2. The following information describes some considerations when installing a HAWQ cluster in an Amazon EC2 environment.
 
-## About Amazon EC2 <a id="topic_wqv_yfx_y5"></a>
+## <a id="topic_wqv_yfx_y5"></a>About Amazon EC2 
 
 Amazon EC2 can be used to launch as many virtual servers as you need, configure security and networking, and manage storage. An EC2 *instance* is a virtual server in the AWS cloud virtual computing environment.
 
@@ -12,17 +12,17 @@ EC2 instances are managed by AWS. AWS isolates your EC2 instances from other use
 
 For information about Amazon EC2, see the [EC2 User Guide](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html).
 
-## Create and Launch HAWQ Instances<a id="topic_nhk_df4_2v"></a>
+## <a id="topic_nhk_df4_2v"></a>Create and Launch HAWQ Instances
 
 Use the *Amazon EC2 Console* to launch instances and configure, start, stop, and terminate (delete) virtual servers. When you launch a HAWQ instance, you select and configure key attributes via the EC2 Console.
 
 
-### Choose AMI Type<a id="topic_amitype"></a>
+### <a id="topic_amitype"></a>Choose AMI Type
 
 An Amazon Machine Image (AMI) is a template that contains a software configuration including the operating system, application server, and applications that best suit your purpose. When configuring a HAWQ virtual instance, select an AMI that runs an operating system supported by HAWQ. Refer to the Release Notes for the HAWQ version that you are installing for a list of supported OS platforms. 
 
 
-### Consider Storage<a id="topic_selcfgstorage"></a>
+### <a id="topic_selcfgstorage"></a>Consider Storage
 **HAWQ** supports either EC2 instance store or Amazon EBS in production environments.
 
  - EC2 *instance store* provides temporary block-level storage. This storage is located on disks that are physically attached to the host computer. Powering off the instance causes data loss when using instance store storage. Soft reboots preserve instance store data. 
@@ -34,7 +34,7 @@ An Amazon Machine Image (AMI) is a template that contains a software configurati
     Select an EBS volume type of `gp2` or `io1` when configuring a virtual HAWQ server.
 
 
-### Select EC2 Instance Type<a id="topic_selinsttype"></a>
+### <a id="topic_selinsttype"></a>Select EC2 Instance Type
 
 An EC2 instance types is a specific combination of CPU, memory, default storage, and networking capacity.  Two EC2 instance types configured with instance store showed acceptable performance for HAWQ nodes.  These include the `d2.8xlarge` instance type configured with four `raid0` volumes of 6 disks each, and the `i2.8xlarge`  instance type configured with two `raid0` volumes of 4 disks. 
 
@@ -43,7 +43,7 @@ Select an EC2 instance type of ??x1 r3??  for your HAWQ EBS node.  ??DESCRIBE FU
 For sufficient network performance, the chosen instance type must support EC2 enhanced networking. To enable enhanced networking on your Red Hat and CentOS RHEL/CentOS HAWQ instance, you must ensure that the kernel has the `ixgbevf` module version 2.14.2 or higher installed and that the `sriovNetSupport` attribute is set. 
 
 
-### Configure Networking <a id="topic_cfgnetw"></a>
+### <a id="topic_cfgnetw"></a>Configure Networking 
 
 The HAWQ cluster instances should be in a single VPC and subnet. Instances are always assigned a VPC internal IP address and may be assigned a public IP address for external and Internet access.  You may choose to assign an Elastic IP Address to your instance.
 

@@ -8,7 +8,7 @@ To use HAWQ InputFormat, you only need to provide the URL of the databasen to co
 
 This chapter describes the document format and schema for defining HAWQ MapReduce jobs.
 
-## Supported Data Types<a id="supporteddatatypes"></a>
+## <a id="supporteddatatypes"></a>Supported Data Types
 
 HAWQ InputFormat supports the following data types:
 
@@ -39,7 +39,7 @@ HAWQ InputFormat supports the following data types:
 | INET                    | com.pivotal.hawq.mapreduce.datatype.HAWQInet     | setInet       | getInet       |
 | CIDR                    | com.pivotal.hawq.mapreduce.datatype.HAWQCIDR     | setCIDR       | getCIDR       |
 
-## HAWQ InputFormat Example<a id="hawqinputformatexample"></a>
+## <a id="hawqinputformatexample"></a>HAWQ InputFormat Example
 
 The following example shows how you can use the HAWQ InputFormat to access HAWQ table data from MapReduce jobs.
 
@@ -205,14 +205,14 @@ The output will appear as follows:
 1 Paul
 ```
 
-## Accessing HAWQ Data<a id="accessinghawqdata"></a>
+## <a id="accessinghawqdata"></a>Accessing HAWQ Data
 
 You can access HAWQ data using the following interfaces:
 
 -   HAWQInputFormat.setInput API: Use this when HAWQ is running.
 -   Metadata Export Tool: Use this when HAWQ is not running.
 
-### HAWQInputFormat.setInput<a id="hawqinputformatsetinput"></a>
+### <a id="hawqinputformatsetinput"></a>HAWQInputFormat.setInput
 
 ``` java
   /**
@@ -236,7 +236,7 @@ public static void setInput(Configuration conf, String db_url,
 throws Exception;
 ```
 
-### Metadata Export Tool<a id="metadataexporttool"></a>
+### <a id="metadataexporttool"></a>Metadata Export Tool
 
 Use the metadata export tool, `hawq extract`, to export the metadata of the target table into a local YAML file:
 

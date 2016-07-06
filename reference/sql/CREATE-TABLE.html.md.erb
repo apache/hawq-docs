@@ -4,7 +4,7 @@ title: CREATE TABLE
 
 Defines a new table.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 CREATE [[GLOBAL | LOCAL] {TEMPORARY | TEMP}] TABLE table_name (
@@ -158,7 +158,7 @@ where *storage\_parameter* for a partition is:
    ROWGROUPSIZE={1024-1073741823}
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `CREATE TABLE` creates a new, initially empty table in the current database. The table is owned by the user issuing the command. If a schema name is given then the table is created in the specified schema. Otherwise it is created in the current schema. Temporary tables exist in a special schema, so a schema name may not be given when creating a temporary table. The name of the table must be distinct from the name of any other table, external table, sequence, or view in the same schema.
 
@@ -174,7 +174,7 @@ By default, a HASH distributed table is created with the number of hash buckets 
 
 The `PARTITION BY` clause allows you to divide the table into multiple sub-tables (or parts) that, taken together, make up the parent table and share its schema. Though the sub-tables exist as independent tables, HAWQ restricts their use in important ways. Internally, partitioning is implemented as a special form of inheritance. Each child table partition is created with a distinct `CHECK` constraint which limits the data the table can contain, based on some defining criteria. The `CHECK` constraints are also used by the query planner to determine which table partitions to scan in order to satisfy a given query predicate. These partition constraints are managed automatically by HAWQ.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
 GLOBAL | LOCAL  
 These keywords are present for SQL standard compatibility, but have no effect in HAWQ.
@@ -284,7 +284,7 @@ Declares one or more columns by which to subpartition the first-level partitions
 SUBPARTITION TEMPLATE  
 Instead of declaring each subpartition definition individually for each partition, you can optionally declare a subpartition template to be used to create the subpartitions. This subpartition specification would then apply to all parent partitions.
 
-## Notes<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Notes
 
 Using OIDs in new applications is not recommended. Avoid assuming that OIDs are unique across tables; if you need a database-wide unique identifier, use the combination of table OID and row OID for the purpose.
 
@@ -292,7 +292,7 @@ Primary key and foreign key constraints are not supported in HAWQ. For inherited
 
 HAWQ also supports the parquet columnar storage format. Parquet tables can be more efficient for increasing performance on large queries.
 
-## Setting Parameters for Parquet Tables<a id="parquetset"></a>
+## <a id="parquetset"></a>Setting Parameters for Parquet Tables
 
 You can set three kinds of parameters for a parquet table.
 
@@ -308,7 +308,7 @@ You can set three kinds of parameters for a parquet table.
 
     **Note:** The page size should be less than the rowgroup size. This is because rowgroup includes the metadata information of a single page even for a single column table. The parameters `PAGESIZE` and `ROWGROUPSIZE` are valid for parquet tables, while `BLOCKSIZE` is valid for append-only tables
 
-## About Parquet Storage<a id="aboutparquet"></a>
+## <a id="aboutparquet"></a>About Parquet Storage
 
 DDL and DML: Most DDL and DML operations are valid for a parquet table. The usage for DDL and DML operations is similar to append-only tables. Valid operations on parquet tables include:
 
@@ -325,7 +325,7 @@ DDL and DML: Most DDL and DML operations are valid for a parquet table. The usag
 
 **Memory occupation**: When inserting or loading data to a parquet table, the whole rowgroup is stored in physical memory until the size exceeds the threshold or the end of the `INSERT` operation. Once either occurs, the entire rowgroup is flushed to disk. Also, at the beginning of the `INSERT` operation, each column is pre-allocated a page buffer. The column pre-allocated page buffer size should be `min(pageSizeLimit,                rowgroupSizeLimit/estimatedColumnWidth/estimatedRecordWidth)` for the first rowgroup. For the following rowgroup, it should be `min(pageSizeLimit,                actualColumnChunkSize in last rowgroup * 1.05)`, of which 1.05 is the estimated scaling factor. When reading data from a parquet table, the requested columns of the row group are loaded into memory. Memory is allocated 8 MB by default. Ensure that memory occupation does not exceed physical memory when setting `ROWGROUPSIZE` or `PAGESIZE`, otherwise you may encounter an out of memory error. 
 
-## Parquet Examples<a id="parquetexamples"></a>
+## <a id="parquetexamples"></a>Parquet Examples
 
 **Parquet Example 1**
 
@@ -363,7 +363,7 @@ ALTER TABLE sales ADD PARTITION
     END (date '2017-02-01') EXCLUSIVE;
 ```
 
-## AO Examples<a id="aoexamples"></a>
+## <a id="aoexamples"></a>AO Examples
 
 Append-only tables support `ZLIB` and `SNAPPY` compression types.
 
@@ -425,7 +425,7 @@ WITH (bucketnum=100)
 DISTRIBUTED BY (id);
 ```
 
-## Compatibility<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Compatibility
 
 The `CREATE TABLE` command conforms to the SQL standard, with the following exceptions:
 
@@ -444,6 +444,6 @@ The `CREATE TABLE` command conforms to the SQL standard, with the following exce
 -   **Tablespaces** — The HAWQ concept of tablespaces is not part of the SQL standard. The clauses `TABLESPACE` and `USING INDEX TABLESPACE` are extensions.
 -   **Data Distribution** — The HAWQ concept of a parallel or distributed database is not part of the SQL standard. The `DISTRIBUTED` clauses are extensions.
 
-## See Also<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>See Also
 
 [ALTER TABLE](ALTER-TABLE.html), [DROP TABLE](DROP-TABLE.html), [CREATE EXTERNAL TABLE](CREATE-EXTERNAL-TABLE.html), [CREATE TABLE AS](CREATE-TABLE-AS.html)

@@ -6,7 +6,7 @@ PXF profiles are collections of common metadata attributes that can be used to s
 
 For example, if you are writing single line records to text files on HDFS, you could use the built-in HdfsTextSimple profile. You specify this profile when you create the PXF external table used to write the data to HDFS.
 
-## Built-In Profiles<a id="built-inprofiles"></a>
+## <a id="built-inprofiles"></a>Built-In Profiles
 
 PXF comes with a number of built-in profiles that group together a collection of metadata attributes. PXF built-in profiles simplify access to the following types of data storage systems:
 
@@ -102,7 +102,7 @@ Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
 </tbody>
 </table>
 
-## Adding and Updating Profiles<a id="addingandupdatingprofiles"></a>
+## <a id="addingandupdatingprofiles"></a>Adding and Updating Profiles
 
 Administrators can add new profiles or edit the built-in profiles inside `/etc/conf/pxf-profiles.xml`. You can use all the profiles in `/etc/conf/pxf-profiles.xml`.
 
@@ -114,7 +114,7 @@ In addition, each profile contains a set of plug-ins that are an extensible s
 
 After you make changes in `pxf-profiles.xml` (or any other PXF configuration file), propagate the changes to all nodes with PXF installed, and then restart the PXF service on all nodes.
 
-## Custom Profile Example<a id="customprofileexample"></a>
+## <a id="customprofileexample"></a>Custom Profile Example
 
 ``` xml
 <profile> 

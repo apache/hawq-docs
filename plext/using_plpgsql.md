@@ -28,7 +28,7 @@ PL/pgSQL supports all the data types, operators, and functions of SQL.
 
 **Note:**  PL/pgSQL is automatically installed and registered in all HAWQ databases.
 
-## Supported Data Types for Arguments and Results <a id="supportedargumentandresultdatatypes"></a>
+## <a id="supportedargumentandresultdatatypes"></a>Supported Data Types for Arguments and Results 
 
 Functions written in PL/pgSQL accept as arguments any scalar or array data type supported by the server, and they can return a result containing this data type. They can also accept or return any composite type (row type) specified by name. It is also possible to declare a PL/pgSQL function as returning record, which means that the result is a row type whose columns are determined by specification in the calling query. See <a href="#tablefunctions" class="xref">Table Functions</a>.
 
@@ -49,7 +49,7 @@ This topic describes the following PL/pgSQLconcepts:
 -   [Polymorphic Types](#polymorphictypes)
 
 
-## Table Functions <a id="tablefunctions"></a>
+## <a id="tablefunctions"></a>Table Functions 
 
 
 Table functions are functions that produce a set of rows, made up of either base data types (scalar types) or composite data types (table rows). They are used like a table, view, or subquery in the FROM clause of a query. Columns returned by table functions can be included in SELECT, JOIN, or WHERE clauses in the same manner as a table, view, or subquery column.
@@ -93,7 +93,7 @@ SELECT *
 The `dblink` function executes a remote query (see `contrib/dblink`). It is declared to return `record` since it might be used for any kind of query. The actual column set must be specified in the calling query so that the parser knows, for example, what `*` should expand to.
 
 
-## SQL Functions with Variable Numbers of Arguments <a id="sqlfunctionswithvariablenumbersofarguments"></a>
+## <a id="sqlfunctionswithvariablenumbersofarguments"></a>SQL Functions with Variable Numbers of Arguments 
 
 SQL functions can be declared to accept variable numbers of arguments, so long as all the "optional" arguments are of the same data type. The optional arguments will be passed to the function as an array. The function is declared by marking the last parameter as VARIADIC; this parameter must be declared as being of an array type. For example:
 
@@ -127,7 +127,7 @@ This prevents expansion of the function's variadic parameter into its element ty
 
 
 
-## Polymorphic Types <a id="polymorphictypes"></a>
+## <a id="polymorphictypes"></a>Polymorphic Types 
 
 Four pseudo-types of special interest are anyelement,anyarray, anynonarray, and anyenum, which are collectively called *polymorphic types*. Any function declared using these types is said to be a*polymorphic function*. A polymorphic function can operate on many different data types, with the specific data type(s) being determined by the data types actually passed to it in a particular call.
 

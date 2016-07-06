@@ -4,7 +4,7 @@ title: hawq config
 
 Sets server configuration parameters on all nodes (master and segments) within a HAWQ system.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq config [options]]
@@ -20,7 +20,7 @@ hawq config [-c hawq_property | --change=hawq_property]
 hawq config --help
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq config` utility allows you to set, unset, or view configuration properties from the `hawq-site.xml` files of all instances in your HAWQ system.
 
@@ -42,7 +42,7 @@ To show the currently set values for a property across the system, use the `-s` 
 -   `PGPASSWORD`
 -   `PGDATABASE`
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
 -c | -\\\-change *hawq\_property*  
 Changes a HAWQ property setting by adding the new setting to the bottom of the `hawq-site.xml` files.
@@ -68,7 +68,7 @@ Overrides copying configuration files to a host on which SSH validation fails. I
 -? | -h | -\\\-help  
 Displays the online help.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Set the `max_connections` setting to 100:
 
@@ -94,6 +94,6 @@ Show the values of a particular property across the system:
 $ hawq config -s max_connections
 ```
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [hawq stop](hawqstop.html#topic1)

@@ -4,7 +4,7 @@ title: VACUUM
 
 Garbage-collects and optionally analyzes a database.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 VACUUM [FULL] [FREEZE] [VERBOSE] [table]
@@ -12,7 +12,7 @@ VACUUM [FULL] [FREEZE] [VERBOSE] ANALYZE
               [table [(column [, ...] )]]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `VACUUM` reclaims storage occupied by deleted tuples. In normal HAWQ operation, tuples that are deleted or obsoleted by an update are not physically removed from their table; they remain present on disk until a `VACUUM` is done. Therefore it is necessary to do `VACUUM` periodically, especially on frequently-updated catalog tables. `VACUUM` has no effect on a normal HAWQ table, since the delete or update operations are not supported on normal HAWQ table.
 
@@ -24,7 +24,7 @@ Plain `VACUUM` (without `FULL`) simply reclaims space and makes it available for
 
 When `VERBOSE` is specified, `VACUUM` emits progress messages to indicate which table is currently being processed. Various statistics about the tables are printed as well.
 
-## Parameters<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Parameters
 
 FULL  
 Selects a full vacuum, which may reclaim more space but takes much longer and exclusively locks the table.
@@ -46,7 +46,7 @@ The name (optionally schema-qualified) of a specific table to vacuum. Defaults t
  *column*   
 The name of a specific column to analyze. Defaults to all columns.
 
-## Notes<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Notes
 
 `VACUUM` cannot be executed inside a transaction block.
 
@@ -63,7 +63,7 @@ Expired rows are held in what is called the *free space map*. The free space map
 -   `max_fsm_pages`
 -   `max_fsm_relations`
 
-## Examples<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Examples
 
 Vacuum all tables in the current database:
 
@@ -83,10 +83,10 @@ Vacuum all tables in the current database and collect statistics for the query p
 VACUUM ANALYZE;
 ```
 
-## Compatibility<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>Compatibility
 
 There is no `VACUUM` statement in the SQL standard.
 
-## See Also<a id="topic1__section9"></a>
+## <a id="topic1__section9"></a>See Also
 
 [ANALYZE](ANALYZE.html)

@@ -4,11 +4,11 @@ title: Creating and Managing Schemas
 
 Schemas logically organize objects and data in a database. Schemas allow you to have more than one object \(such as tables\) with the same name in the database without conflict if the objects are in different schemas.
 
-## The Default "Public" Schema <a id="topic18"></a>
+## <a id="topic18"></a>The Default "Public" Schema 
 
 Every database has a default schema named *public*. If you do not create any schemas, objects are created in the *public* schema. All database roles \(users\) have `CREATE` and `USAGE` privileges in the *public* schema. When you create a schema, you grant privileges to your users to allow access to the schema.
 
-## Creating a Schema <a id="topic19"></a>
+## <a id="topic19"></a>Creating a Schema 
 
 Use the `CREATE SCHEMA` command to create a new schema. For example:
 
@@ -30,7 +30,7 @@ You can create a schema owned by someone else, for example, to restrict the acti
 => CREATE SCHEMA schemaname AUTHORIZATION username;
 ```
 
-## Schema Search Paths <a id="topic20"></a>
+## <a id="topic20"></a>Schema Search Paths 
 
 To specify an object's location in a database, use the schema-qualified name. For example:
 
@@ -40,7 +40,7 @@ To specify an object's location in a database, use the schema-qualified name. Fo
 
 You can set the `search_path` configuration parameter to specify the order in which to search the available schemas for objects. The schema listed first in the search path becomes the *default* schema. If a schema is not specified, objects are created in the default schema.
 
-### Setting the Schema Search Path <a id="topic21"></a>
+### <a id="topic21"></a>Setting the Schema Search Path 
 
 The `search_path` configuration parameter sets the schema search order. The `ALTER DATABASE` command sets the search path. For example:
 
@@ -56,7 +56,7 @@ You can also set `search_path` for a particular role \(user\) using the `ALTER R
 pg_catalog;
 ```
 
-### Viewing the Current Schema <a id="topic22"></a>
+### <a id="topic22"></a>Viewing the Current Schema 
 
 Use the `current_schema()` function to view the current schema. For example:
 
@@ -70,7 +70,7 @@ Use the `SHOW` command to view the current search path. For example:
 => SHOW search_path;
 ```
 
-## Dropping a Schema <a id="topic23"></a>
+## <a id="topic23"></a>Dropping a Schema 
 
 Use the `DROP SCHEMA` command to drop \(delete\) a schema. For example:
 
@@ -84,7 +84,7 @@ By default, the schema must be empty before you can drop it. To drop a schema an
 => DROP SCHEMA myschema CASCADE;
 ```
 
-## System Schemas <a id="topic24"></a>
+## <a id="topic24"></a>System Schemas 
 
 The following system-level schemas exist in every database:
 

@@ -12,7 +12,7 @@ Start `gpfdist` before you create external tables with the `gpfdist` protocol. T
 $ gpfdist -p 8081 -d /var/data/staging -l /home/gpadmin/log &
 ```
 
-## Example 1 - Single gpfdist instance on single-NIC machine<a id="ex1"></a>
+## <a id="ex1"></a>Example 1 - Single gpfdist instance on single-NIC machine
 
 Creates a readable external table, `ext_expenses`, using the `gpfdist` protocol. The files are formatted with a pipe (|) as the column delimiter.
 
@@ -23,7 +23,7 @@ Creates a readable external table, `ext_expenses`, using the `gpfdist` protocol.
     FORMAT 'TEXT' (DELIMITER '|');
 ```
 
-## Example 2 - Multiple gpfdist instances<a id="ex2"></a>
+## <a id="ex2"></a>Example 2 - Multiple gpfdist instances
 
 Creates a readable external table, *ext\_expenses*, using the `gpfdist` protocol from all files with the *txt* extension. The column delimiter is a pipe ( | ) and NULL is a space (' ').
 
@@ -35,7 +35,7 @@ Creates a readable external table, *ext\_expenses*, using the `gpfdist` protocol
     
 ```
 
-## Example 3 - Multiple gpfdists instances<a id="ex3"></a>
+## <a id="ex3"></a>Example 3 - Multiple gpfdists instances
 
 Creates a readable external table, *ext\_expenses,* from all files with the *txt* extension using the `gpfdists` protocol. The column delimiter is a pipe ( | ) and NULL is a space (' '). For information about the location of security certificates, see [gpfdists Protocol](g-gpfdists-protocol.html).
 
@@ -50,7 +50,7 @@ Creates a readable external table, *ext\_expenses,* from all files with the *txt
         
     ```
 
-## Example 4 - Single gpfdist instance with error logging<a id="ex4"></a>
+## <a id="ex4"></a>Example 4 - Single gpfdist instance with error logging
 
 Uses the gpfdist protocol to create a readable external table, `ext_expenses,` from all files with the *txt* extension. The column delimiter is a pipe ( | ) and NULL (' ') is a space.
 
@@ -76,7 +76,7 @@ To create the readable `ext_expenses` table from CSV-formatted text files:
     
 ```
 
-## Example 5 - Readable Web External Table with Script<a id="ex5"></a>
+## <a id="ex5"></a>Example 5 - Readable Web External Table with Script
 
 Creates a readable web external table that executes a script once on five virtual segments:
 
@@ -87,7 +87,7 @@ Creates a readable web external table that executes a script once on five virtua
     
 ```
 
-## Example 6 - Writable External Table with gpfdist<a id="ex6"></a>
+## <a id="ex6"></a>Example 6 - Writable External Table with gpfdist
 
 Creates a writable external table, *sales\_out*, that uses `gpfdist` to write output data to the file *sales.out*. The column delimiter is a pipe ( | ) and NULL is a space (' '). The file will be created in the directory specified when you started the gpfdist file server.
 
@@ -99,7 +99,7 @@ Creates a writable external table, *sales\_out*, that uses `gpfdist` to write ou
     
 ```
 
-## Example 7 - Writable External Web Table with Script<a id="ex7"></a>
+## <a id="ex7"></a>Example 7 - Writable External Web Table with Script
 
 Creates a writable external web table, `campaign_out`, that pipes output data recieved by the segments to an executable script, `to_adreport_etl.sh`:
 
@@ -110,7 +110,7 @@ Creates a writable external web table, `campaign_out`, that pipes output data re
         FORMAT 'TEXT' (DELIMITER '|');
 ```
 
-## Example 8 - Readable and Writable External Tables with XML Transformations<a id="ex8"></a>
+## <a id="ex8"></a>Example 8 - Readable and Writable External Tables with XML Transformations
 
 HAWQ can read and write XML data to and from external tables with gpfdist. For information about setting up an XML transform, see [Transforming XML Data](g-transforming-xml-data.html#topic75).
 

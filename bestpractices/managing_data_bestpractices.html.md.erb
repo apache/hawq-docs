@@ -4,7 +4,7 @@ title: Best Practices for Managing Data
 
 This topic describes best practices for creating databases, loading data, partioning data, and recovering data in HAWQ.
 
-## Best Practices for Loading Data<a id="topic_xhy_v2j_1v"></a>
+## <a id="topic_xhy_v2j_1v"></a>Best Practices for Loading Data
 
 Loading data into HDFS is challenging due to the limit on the number of files that can be opened concurrently for write on both NameNodes and DataNodes.
 
@@ -24,9 +24,9 @@ To obtain the best performance during data loading, observe the following best p
 
 The best practice for loading data into partitioned tables is to create an intermediate staging table, load it, and then exchange it into your partition design. See [Exchanging a Partition](../ddl/ddl-partition.html#topic83).
 
-## Best Practices for Partitioning Data<a id="topic_s23_52j_1v"></a>
+## <a id="topic_s23_52j_1v"></a>Best Practices for Partitioning Data
 
-### Deciding on a Table Partitioning Strategy<a id="topic65"></a>
+### <a id="topic65"></a>Deciding on a Table Partitioning Strategy
 
 Not all tables are good candidates for partitioning. If the answer is *yes* to all or most of the following questions, table partitioning is a viable database design strategy for improving query performance. If the answer is *no* to most of the following questions, table partitioning is not the right solution for that table. Test your design strategy to ensure that query performance improves as expected.
 

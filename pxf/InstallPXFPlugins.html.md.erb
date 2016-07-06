@@ -6,7 +6,7 @@ This topic describes how to install the built-in PXF service plug-ins that are r
 
 **Note:** The PXF plug-ins require that you run Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009. If you have configured Oozie JXM reporting on a host that will run a PXF plug-in, make sure that the reporting service uses a port other than 8005. This helps to prevent port conflict errors from occurring when you start the PXF service.
 
-## PXF Installation and Log File Directories<a id="directories_and_logs"></a>
+## <a id="directories_and_logs"></a>PXF Installation and Log File Directories
 
 Installing PXF plug-ins, regardless of method, creates directories and log files on each node receiving the plug-in installation:
 
@@ -19,17 +19,17 @@ Installing PXF plug-ins, regardless of method, creates directories and log files
 | `/var/run/pxf/catalina.pid`    | PXF Tomcat container PID location                                                                                                                                                                                                          |
 
 
-## Installing PXF Plug-ins Using Ambari<a id="install_pxf_plug_ambari"></a>
+## <a id="install_pxf_plug_ambari"></a>Installing PXF Plug-ins Using Ambari
 
 If you are using Ambari to install and manage your HAWQ cluster, you do *not* need to follow the manual installation steps in this topic. Installing using the Ambari web interface installs all of the necessary PXF plug-in components.
 
-## Installing PXF Plug-ins from the Command Line<a id="install_pxf_plug_cmdline"></a>
+## <a id="install_pxf_plug_cmdline"></a>Installing PXF Plug-ins from the Command Line
 
 Each PXF service plug-in resides in its own RPM.  You may have built these RPMs in the Apache HAWQ open source project repository (see [PXF Build Instructions](https://github.com/apache/incubator-hawq/blob/master/pxf/README.md)), or these RPMs may have been included in a commercial product download package.
 
 RPMs for PXF plug-ins must be installed on *each* node in your cluster.
 
-### Installing Prerequisite Packages<a id="topic_qsz_wq5_25"></a>
+### <a id="topic_qsz_wq5_25"></a>Installing Prerequisite Packages
 All PXF plug-ins require that both the Tomcat and PXF service packages be installed on each node in your cluster. 
 
 Install Tomcat:
@@ -57,7 +57,7 @@ Installing the PXF service package:
    - starts the PXF service
 
 
-### Installing the PXF HDFS Plug-in<a id="topic_qsz_wq5_25"></a>
+### <a id="topic_qsz_wq5_25"></a>Installing the PXF HDFS Plug-in
 
 To install PXF support for HDFS, perform the following steps on *each* node in your cluster:
 
@@ -71,7 +71,7 @@ To install PXF support for HDFS, perform the following steps on *each* node in y
 
     The install copies the HDFS JAR file `pxf-hdfs-n.n.n.jar` to `/usr/lib/pxf-n.n.n/` and creates a softlink `pxf-hdfs.jar` in that directory.
 
-### Installing the PXF Hive Plug-in<a id="topic_s1y_1v5_25"></a>
+### <a id="topic_s1y_1v5_25"></a>Installing the PXF Hive Plug-in
 
 To install PXF support for Hive, perform the following steps on *each* node in your cluster:
 
@@ -85,7 +85,7 @@ To install PXF support for Hive, perform the following steps on *each* node in y
 
     The install copies the Hive JAR file `pxf-hive-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink `pxf-hive.jar` in that directory.
 
-### Installing the PXF HBase Plug-in<a id="topic_std_cv5_25"></a>
+### <a id="topic_std_cv5_25"></a>Installing the PXF HBase Plug-in
 
 To install PXF support for HBase, perform the following steps on *each* node in your cluster. 
 

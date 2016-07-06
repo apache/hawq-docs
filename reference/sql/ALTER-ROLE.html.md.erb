@@ -4,7 +4,7 @@ title: ALTER ROLE
 
 Changes a database role (user or group).
 
-## Synopsis<a id="alterrole__section2"></a>
+## <a id="alterrole__section2"></a>Synopsis
 
 ```pre
 ALTER ROLE name RENAME TO newname
@@ -38,7 +38,7 @@ where *option* can be:
     | [ DROP DENY FOR deny_point ]
 ```
 
-## Description<a id="desc"></a>
+## <a id="desc"></a>Description
 
 `ALTER ROLE` changes the attributes of a HAWQ role. There are several variants of this command:
 
@@ -47,7 +47,7 @@ where *option* can be:
 -   **RESOURCE QUEUE** — Assigns the role to a workload management resource queue. The role would then be subject to the limits assigned to the resource queue when issuing queries. Specify `NONE` to assign the role to the default resource queue. A role can only belong to one resource queue. For a role without `LOGIN` privilege, resource queues have no effect. See [CREATE RESOURCE QUEUE](CREATE-RESOURCE-QUEUE.html#topic1) for more information.
 -   **WITH** *option* — Changes many of the role attributes that can be specified in [CREATE ROLE](CREATE-ROLE.html). Attributes not mentioned in the command retain their previous settings. Database superusers can change any of these settings for any role. Roles having `CREATEROLE` privilege can change any of these settings, but only for non-superuser roles. Ordinary roles can only change their own password.
 
-## Parameters<a id="alterrole__section4"></a>
+## <a id="alterrole__section4"></a>Parameters
 
  *name*
 The name of the role whose attributes are to be altered.
@@ -172,10 +172,10 @@ Alter a role to remove the constraint that does not allow login access on Sunday
 ALTER ROLE user3 DROP DENY FOR DAY 'Sunday';
 ```
 
-## Compatibility<a id="compat"></a>
+## <a id="compat"></a>Compatibility
 
 The `ALTER ROLE` statement is a HAWQ extension.
 
-## See Also<a id="see"></a>
+## <a id="see"></a>See Also
 
 [CREATE ROLE](CREATE-ROLE.html), [DROP ROLE](DROP-ROLE.html), [SET](SET.html), [CREATE RESOURCE QUEUE](CREATE-RESOURCE-QUEUE.html), [GRANT](GRANT.html), [REVOKE](REVOKE.html) 

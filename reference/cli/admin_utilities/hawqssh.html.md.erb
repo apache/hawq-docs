@@ -4,7 +4,7 @@ title: hawq ssh
 
 Provides SSH access to multiple hosts at once.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq ssh { -f hostfile_hawqssh | - h hostname [-h hostname ...] } [-v] [-e]
@@ -15,7 +15,7 @@ hawq ssh -?
 hawq ssh --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq ssh` utility allows you to run bash shell commands on multiple hosts at once using SSH (secure shell). You can execute a single command by specifying it on the command-line, or omit the command to enter into an interactive command-line session.
 
@@ -27,7 +27,7 @@ If you do not specify a command on the command-line, `hawq ssh` will go into int
 
 If a user name is not specified in the host file, `hawq ssh` will execute commands as the currently logged in user. To determine the currently logged in user, do a `whoami` command. By default, `hawq ssh` goes to `$HOME` of the session user on the remote hosts after login. To ensure commands are executed correctly on all remote hosts, you should always enter absolute paths.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
  *bash\_command*   
 A bash shell command to execute on all hosts involved in this session (optionally enclosed in quotes). If not specified, `hawq ssh` will start an interactive session.
@@ -54,7 +54,7 @@ Displays the version of this utility.
 -? (help)  
 Displays the online help.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Start an interactive group SSH session with all hosts listed in the file `hostfile_hawqssh`:
 

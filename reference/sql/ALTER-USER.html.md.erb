@@ -4,7 +4,7 @@ title: ALTER USER
 
 Changes the definition of a database role (user).
 
-## Synopsis<a id="alteruser__section2"></a>
+## <a id="alteruser__section2"></a>Synopsis
 
 ``` pre
 ALTER USER name RENAME TO newname
@@ -29,15 +29,15 @@ where *option* can be:
     | VALID UNTIL 'timestamp'
 ```
 
-## Description<a id="alteruser__section3"></a>
+## <a id="alteruser__section3"></a>Description
 
 `ALTER USER` is a deprecated command but is still accepted for historical reasons. It is an alias for `ALTER ROLE`. See `ALTER ROLE` for more information.
 
-## Compatibility<a id="alteruser__section4"></a>
+## <a id="alteruser__section4"></a>Compatibility
 
 The `ALTER USER` statement is a HAWQ extension. The SQL standard leaves the definition of users to the implementation.
 
-## See Also<a id="see"></a>
+## <a id="see"></a>See Also
 
 [ALTER ROLE](ALTER-ROLE.html)
 

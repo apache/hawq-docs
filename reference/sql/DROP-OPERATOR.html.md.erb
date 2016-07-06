@@ -4,18 +4,18 @@ title: DROP OPERATOR
 
 Removes an operator.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 DROP OPERATOR [IF EXISTS] name ( {lefttype | NONE} , 
     {righttype | NONE} ) [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP OPERATOR` drops an existing operator from the database system. To execute this command you must be the owner of the operator.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
 IF EXISTS  
 Do not throw an error if the operator does not exist. A notice is issued in this case.
@@ -35,7 +35,7 @@ Automatically drop objects that depend on the operator.
 RESTRICT  
 Refuse to drop the operator if any objects depend on it. This is the default.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Remove the power operator `a^b` for type `integer`:
 
@@ -55,10 +55,10 @@ Remove the right unary factorial operator `x!` for type `bigint`:
 DROP OPERATOR ! (bigint, none);
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 There is no `DROP OPERATOR` statement in the SQL standard.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [ALTER OPERATOR](ALTER-OPERATOR.html), [CREATE OPERATOR](CREATE-OPERATOR.html)
