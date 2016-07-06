@@ -1199,6 +1199,7 @@ public class DummyAccessor extends Plugin implements ReadAccessor, WriteAccessor
                 rowNumber + "," + fragmentMetadata + "," + fragment /* value */);
         /* advance */
         rowNumber += 1;
+        if (rowNumber == 2) {
             rowNumber = 0;
             fragmentNumber += 1;
         }
