@@ -24,14 +24,14 @@ In HAWQ, there must be a file system location defined for the master and each se
 
 ## <a id="topic1__section4"></a>Parameters
 
- *tablespacename*   
-The name of a tablespace to be created. The name cannot begin with `pg_`, as such names are reserved for system tablespaces.
+<dt> *tablespacename*   </dt>
+<dd>The name of a tablespace to be created. The name cannot begin with `pg_`, as such names are reserved for system tablespaces.</dd>
 
-OWNER *username*   
-The name of the user who will own the tablespace. If omitted, defaults to the user executing the command. Only superusers may create tablespaces, but they can assign ownership of tablespaces to non-superusers.
+<dt>OWNER *username*   </dt>
+<dd>The name of the user who will own the tablespace. If omitted, defaults to the user executing the command. Only superusers may create tablespaces, but they can assign ownership of tablespaces to non-superusers.</dd>
 
-FILESPACE *filespace\_name*   
-The name of a HAWQ filespace that was defined using the `hawq filespace` management utility.
+<dt>FILESPACE *filespace\_name*   </dt>
+<dd>The name of a HAWQ filespace that was defined using the `hawq filespace` management utility.</dd>
 
 ## <a id="topic1__section5"></a>Notes
 

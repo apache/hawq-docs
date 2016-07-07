@@ -20,13 +20,13 @@ ALTER DATABASE name RESET parameter
 
 ## <a id="alterrole__section4"></a>Parameters
 
- *name*   
-The name of the database whose attributes are to be altered.
+<dt> *name*   </dt>
+<dd>The name of the database whose attributes are to be altered.
 
-**Note:** HAWQ reserves the database "hcatalog" for system use. You cannot connect to or alter the system "hcatalog" database.
+**Note:** HAWQ reserves the database "hcatalog" for system use. You cannot connect to or alter the system "hcatalog" database.</dd>
 
- *parameter*   
-Set this database's session default for the specified configuration parameter to the given value. If value is `DEFAULT` or if `RESET` is used, the database-specific setting is removed, so the system-wide default setting will be inherited in new sessions. Use `RESET ALL` to clear all database-specific settings. See [About Server Configuration Parameters](../guc/guc_config.html#topic1) for information about user-settable configuration parameters.
+<dt> *parameter*   </dt>
+<dd>Set this database's session default for the specified configuration parameter to the given value. If value is `DEFAULT` or if `RESET` is used, the database-specific setting is removed, so the system-wide default setting will be inherited in new sessions. Use `RESET ALL` to clear all database-specific settings. See [About Server Configuration Parameters](../guc/guc_config.html#topic1) for information about user-settable configuration parameters.</dd>
 
 ## <a id="notes"></a>Notes
 

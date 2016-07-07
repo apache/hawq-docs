@@ -18,21 +18,21 @@ With no parameter, `ANALYZE` examines every table in the current database. With 
 
 ## <a id="params"></a>Parameters
 
-VERBOSE  
-Enables display of progress messages. When specified, `ANALYZE` emits progress messages to indicate which table is currently being processed. Various statistics about the tables are printed as well.
+<dt>VERBOSE  </dt>
+<dd>Enables display of progress messages. When specified, `ANALYZE` emits progress messages to indicate which table is currently being processed. Various statistics about the tables are printed as well.</dd>
 
-ROOTPARTITION  
-For partitioned tables, `ANALYZE` on the parent (the root in multi-level partitioning) table without this option will collect statistics on each individual leaf partition as well as the global partition table, both of which are needed for query planning. In scenarios when all the individual child partitions have up-to-date statistics (for example, after loading and analyzing a daily partition), the `ROOTPARTITION` option can be used to collect only the global stats on the partition table. This could save the time of re-analyzing each individual leaf partition.
+<dt>ROOTPARTITION  </dt>
+<dd>For partitioned tables, `ANALYZE` on the parent (the root in multi-level partitioning) table without this option will collect statistics on each individual leaf partition as well as the global partition table, both of which are needed for query planning. In scenarios when all the individual child partitions have up-to-date statistics (for example, after loading and analyzing a daily partition), the `ROOTPARTITION` option can be used to collect only the global stats on the partition table. This could save the time of re-analyzing each individual leaf partition.
 
 If you use `ROOTPARTITION` on a non-root or non-partitioned table, `ANALYZE` will skip the option and issue a warning. You can also analyze all root partition tables in the database by using `ROOTPARTITION ALL`
 
-**Note:** Use `ROOTPARTITION ALL` to analyze all root partition tables in the database.
+**Note:** Use `ROOTPARTITION ALL` to analyze all root partition tables in the database.</dd>
 
- *table*   
-The name (possibly schema-qualified) of a specific table to analyze. Defaults to all tables in the current database.
+<dt> *table*   </dt>
+<dd>The name (possibly schema-qualified) of a specific table to analyze. Defaults to all tables in the current database.</dd>
 
- *column*   
-The name of a specific column to analyze. Defaults to all columns.
+<dt> *column*   </dt>
+<dd>The name of a specific column to analyze. Defaults to all columns.</dd>
 
 ## <a id="notes"></a>Notes
 

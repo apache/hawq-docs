@@ -16,17 +16,17 @@ DROP TYPE [IF EXISTS] name [, ...] [CASCADE | RESTRICT]
 
 ## <a id="topic1__section4"></a>Parameters
 
-IF EXISTS  
-Do not throw an error if the type does not exist. A notice is issued in this case.
+<dt>IF EXISTS  </dt>
+<dd>Do not throw an error if the type does not exist. A notice is issued in this case.</dd>
 
- *name*   
-The name (optionally schema-qualified) of the data type to remove.
+<dt> *name*   </dt>
+<dd>The name (optionally schema-qualified) of the data type to remove.</dd>
 
-CASCADE  
-Automatically drop objects that depend on the type (such as table columns, functions, operators).
+<dt>CASCADE  </dt>
+<dd>Automatically drop objects that depend on the type (such as table columns, functions, operators).</dd>
 
-RESTRICT  
-Refuse to drop the type if any objects depend on it. This is the default.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the type if any objects depend on it. This is the default.</dd>
 
 ## <a id="topic1__section5"></a>Examples
 

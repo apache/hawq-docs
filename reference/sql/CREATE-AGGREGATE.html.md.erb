@@ -78,20 +78,20 @@ If the optional `ORDER BY` is omitted, a system-defined ordering is used. The tr
 
 ## <a id="topic1__section5"></a>Parameters
 
- *name*   
-The name (optionally schema-qualified) of the aggregate function to create.
+<dt> *name*   </dt>
+<dd>The name (optionally schema-qualified) of the aggregate function to create.</dd>
 
- *input\_data\_type*   
-An input data type on which this aggregate function operates. To create a zero-argument aggregate function, write \* in place of the list of input data types. An example of such an aggregate is count(\*).
+<dt> *input\_data\_type*   </dt>
+<dd>An input data type on which this aggregate function operates. To create a zero-argument aggregate function, write \* in place of the list of input data types. An example of such an aggregate is count(\*).</dd>
 
- *sfunc*   
-The name of the state transition function to be called for each input row. For an N-argument aggregate function, the *sfunc* must take N+1 arguments, the first being of type *state\_data\_type* and the rest matching the declared input data types of the aggregate. The function must return a value of type *state\_data\_type*. This function takes the current state value and the current input data values, and returns the next state value.
+<dt> *sfunc*   </dt>
+<dd>The name of the state transition function to be called for each input row. For an N-argument aggregate function, the *sfunc* must take N+1 arguments, the first being of type *state\_data\_type* and the rest matching the declared input data types of the aggregate. The function must return a value of type *state\_data\_type*. This function takes the current state value and the current input data values, and returns the next state value.</dd>
 
- *state\_data\_type*   
-The data type for the aggregate state value.
+<dt> *state\_data\_type*   </dt>
+<dd>The data type for the aggregate state value.</dd>
 
- *prefunc*   
-The name of a preliminary aggregation function. This is a function of two arguments, both of type *state\_data\_type*. It must return a value of *state\_data\_type*. A preliminary function takes two transition state values and returns a new transition state value representing the combined aggregation. In HAWQ, if the result of the aggregate function is computed in a segmented fashion, the preliminary aggregation function is invoked on the individual internal states in order to combine them into an ending internal state.
+<dt> *prefunc*   </dt>
+<dd>The name of a preliminary aggregation function. This is a function of two arguments, both of type *state\_data\_type*. It must return a value of *state\_data\_type*. A preliminary function takes two transition state values and returns a new transition state value representing the combined aggregation. In HAWQ, if the result of the aggregate function is computed in a segmented fashion, the preliminary aggregation function is invoked on the individual internal states in order to combine them into an ending internal state.
 
 Note that this function is also called in hash aggregate mode within a segment. Therefore, if you call this aggregate function without a preliminary function, hash aggregate is never chosen. Since hash aggregate is efficient, consider defining preliminary function whenever possible.
 
@@ -106,15 +106,16 @@ PREFUNC is optional. If defined, it is executed on master. Input to PREFUNC is p
     CREATE OR REPLACE FUNCTION my_avg_final(bytea) returns numeric as 'int8_avg' language internal strict immutable;  
     CREATE AGGREGATE my_avg(bigint) (   stype = bytea,sfunc = my_avg_accum,prefunc = my_avg_merge,finalfunc = my_avg_final,initcond = ''  );
     ```
+</dd>
 
- *ffunc*   
-The name of the final function called to compute the aggregate result after all input rows have been traversed. The function must take a single argument of type `state_data_type`. The return data type of the aggregate is defined as the return type of this function. If `ffunc` is not specified, then the ending state value is used as the aggregate result, and the return type is *state\_data\_type*.
+<dt> *ffunc*   </dt>
+<dd>The name of the final function called to compute the aggregate result after all input rows have been traversed. The function must take a single argument of type `state_data_type`. The return data type of the aggregate is defined as the return type of this function. If `ffunc` is not specified, then the ending state value is used as the aggregate result, and the return type is *state\_data\_type*.</dd>
 
- *initial\_condition*   
-The initial setting for the state value. This must be a string constant in the form accepted for the data type *state\_data\_type*. If not specified, the state value starts out `NULL`.
+<dt> *initial\_condition*   </dt>
+<dd>The initial setting for the state value. This must be a string constant in the form accepted for the data type *state\_data\_type*. If not specified, the state value starts out `NULL`.</dd>
 
- *sort\_operator*   
-The associated sort operator for a MIN- or MAX-like aggregate function. This is just an operator name (possibly schema-qualified). The operator is assumed to have the same input data types as the aggregate function (which must be a single-argument aggregate function).
+<dt> *sort\_operator*   </dt>
+<dd>The associated sort operator for a MIN- or MAX-like aggregate function. This is just an operator name (possibly schema-qualified). The operator is assumed to have the same input data types as the aggregate function (which must be a single-argument aggregate function).</dd>
 
 ## <a id="topic1__section6"></a>Notes
 

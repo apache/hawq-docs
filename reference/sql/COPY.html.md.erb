@@ -59,68 +59,69 @@ NOTICE: Rejected count badly formatted rows.
 
 ## <a id="topic1__section5"></a>Parameters
 
- *table*   
-The name (optionally schema-qualified) of an existing table.
+<dt> *table*   </dt>
+<dd>The name (optionally schema-qualified) of an existing table.</dd>
 
- *column*   
-An optional list of columns to be copied. If no column list is specified, all columns of the table will be copied.
+<dt> *column*   </dt>
+<dd>An optional list of columns to be copied. If no column list is specified, all columns of the table will be copied.</dd>
 
- *query*   
-A `SELECT` or `VALUES` command whose results are to be copied. Note that parentheses are required around the query.
+<dt> *query*   </dt>
+<dd>A `SELECT` or `VALUES` command whose results are to be copied. Note that parentheses are required around the query.</dd>
 
- *file*   
-The absolute path name of the input or output file.
+<dt> *file*   </dt>
+<dd>The absolute path name of the input or output file.</dd>
 
-STDIN  
-Specifies that input comes from the client application.
+<dt>STDIN  </dt>
+<dd>Specifies that input comes from the client application.</dd>
 
-STDOUT  
-Specifies that output goes to the client application.
+<dt>STDOUT  </dt>
+<dd>Specifies that output goes to the client application.</dd>
 
-OIDS  
-Specifies copying the OID for each row. (An error is raised if OIDS is specified for a table that does not have OIDs, or in the case of copying a query.)
+<dt>OIDS  </dt>
+<dd>Specifies copying the OID for each row. (An error is raised if OIDS is specified for a table that does not have OIDs, or in the case of copying a query.)</dd>
 
- *delimiter*   
-The single ASCII character that separates columns within each row (line) of the file. The default is a tab character in text mode, a comma in `CSV` mode.
+<dt> *delimiter*   </dt>
+<dd>The single ASCII character that separates columns within each row (line) of the file. The default is a tab character in text mode, a comma in `CSV` mode.</dd>
 
- *null string*   
-The string that represents a null value. The default is `\N` (backslash-N) in text mode, and a empty value with no quotes in `CSV` mode. You might prefer an empty string even in text mode for cases where you don't want to distinguish nulls from empty strings. When using `COPY FROM`, any data item that matches this string will be stored as a null value, so you should make sure that you use the same string as you used with `COPY TO`.
+<dt> *null string*   </dt>
+<dd>The string that represents a null value. The default is `\N` (backslash-N) in text mode, and a empty value with no quotes in `CSV` mode. You might prefer an empty string even in text mode for cases where you don't want to distinguish nulls from empty strings. When using `COPY FROM`, any data item that matches this string will be stored as a null value, so you should make sure that you use the same string as you used with `COPY TO`.</dd>
 
- *escape*   
-Specifies the single character that is used for C escape sequences (such as `\n`,`\t`,`\100`, and so on) and for quoting data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is `\` (backslash) for text files or `"` (double quote) for CSV files, however it is possible to specify any other character to represent an escape. It is also possible to disable escaping on text-formatted files by specifying the value '`OFF'` as the escape value. This is very useful for data such as web log data that has many embedded backslashes that are not intended to be escapes.
+<dt> *escape*   </dt>
+<dd>Specifies the single character that is used for C escape sequences (such as `\n`,`\t`,`\100`, and so on) and for quoting data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is `\` (backslash) for text files or `"` (double quote) for CSV files, however it is possible to specify any other character to represent an escape. It is also possible to disable escaping on text-formatted files by specifying the value '`OFF'` as the escape value. This is very useful for data such as web log data that has many embedded backslashes that are not intended to be escapes.</dd>
 
-NEWLINE  
-Specifies the newline used in your data files — `LF` (Line feed, 0x0A), `CR` (Carriage return, 0x0D), or `CRLF` (Carriage return plus line feed, 0x0D 0x0A). If not specified, a HAWQ segment will detect the newline type by looking at the first row of data it receives and using the first newline type encountered.
+<dt>NEWLINE  </dt>
+<dd>Specifies the newline used in your data files — `LF` (Line feed, 0x0A), `CR` (Carriage return, 0x0D), or `CRLF` (Carriage return plus line feed, 0x0D 0x0A). If not specified, a HAWQ segment will detect the newline type by looking at the first row of data it receives and using the first newline type encountered.</dd>
 
-CSV  
-Selects Comma Separated Value (CSV) mode.
+<dt>CSV  </dt>
+<dd>Selects Comma Separated Value (CSV) mode.</dd>
 
-HEADER  
-Specifies that a file contains a header line with the names of each column in the file. On output, the first line contains the column names from the table, and on input, the first line is ignored.
+<dt>HEADER  </dt>
+<dd>Specifies that a file contains a header line with the names of each column in the file. On output, the first line contains the column names from the table, and on input, the first line is ignored.</dd>
 
- *quote*   
-Specifies the quotation character in CSV mode. The default is double-quote.
+<dt> *quote*   </dt>
+<dd>Specifies the quotation character in CSV mode. The default is double-quote.</dd>
 
-FORCE QUOTE  
-In `CSV COPY TO` mode, forces quoting to be used for all non-`NULL` values in each specified column. `NULL` output is never quoted.
+<dt>FORCE QUOTE  </dt>
+<dd>In `CSV COPY TO` mode, forces quoting to be used for all non-`NULL` values in each specified column. `NULL` output is never quoted.</dd>
 
-FORCE NOT NULL  
-In `CSV COPY FROM` mode, process each specified column as though it were quoted and hence not a `NULL` value. For the default null string in `CSV` mode (nothing between two delimiters), this causes missing values to be evaluated as zero-length strings.
+<dt>FORCE NOT NULL  </dt>
+<dd>In `CSV COPY FROM` mode, process each specified column as though it were quoted and hence not a `NULL` value. For the default null string in `CSV` mode (nothing between two delimiters), this causes missing values to be evaluated as zero-length strings.</dd>
 
-FILL MISSING FIELDS  
-In `COPY FROM` more for both `TEXT` and `CSV`, specifying `FILL MISSING FIELDS` will set missing trailing field values to `NULL` (instead of reporting an error) when a row of data has missing data fields at the end of a line or row. Blank rows, fields with a `NOT NULL` constraint, and trailing delimiters on a line will still report an error.
+<dt>FILL MISSING FIELDS  </dt>
+<dd>In `COPY FROM` more for both `TEXT` and `CSV`, specifying `FILL MISSING FIELDS` will set missing trailing field values to `NULL` (instead of reporting an error) when a row of data has missing data fields at the end of a line or row. Blank rows, fields with a `NOT NULL` constraint, and trailing delimiters on a line will still report an error.</dd>
 
-LOG ERRORS INTO *error\_table* \[KEEP\]  
-This is an optional clause that can precede a `SEGMENT REJECT LIMIT` clause to log information about rows with formatting errors. The `INTO                 error_table                   ` clause specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the *error\_table* specified already exists, it will be used. If it does not exist, it will be automatically generated. If the command auto-generates the error table and no errors are produced, the default is to drop the error table after the operation completes unless `KEEP` is specified. If the table is auto-generated and the error limit is exceeded, the entire transaction is rolled back and no error data is saved. If you want the error table to persist in this case, create the error table prior to running the `COPY`. An error table is defined as follows:
+<dt>LOG ERRORS INTO *error\_table* \[KEEP\]  </dt>
+<dd>This is an optional clause that can precede a `SEGMENT REJECT LIMIT` clause to log information about rows with formatting errors. The `INTO                 error_table                   ` clause specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the *error\_table* specified already exists, it will be used. If it does not exist, it will be automatically generated. If the command auto-generates the error table and no errors are produced, the default is to drop the error table after the operation completes unless `KEEP` is specified. If the table is auto-generated and the error limit is exceeded, the entire transaction is rolled back and no error data is saved. If you want the error table to persist in this case, create the error table prior to running the `COPY`. An error table is defined as follows:
 
 ``` pre
 CREATE TABLE error_table_name ( cmdtime timestamptz, relname text, 
     filename text, linenum int, bytenum int, errmsg text, 
     rawdata text, rawbytes bytea ) DISTRIBUTED RANDOMLY;
 ```
+</dd>
 
-SEGMENT REJECT LIMIT count \[ROWS | PERCENT\]  
-Runs a `COPY FROM` operation in single row error isolation mode. If the input rows have format errors they will be discarded provided that the reject limit count is not reached on any HAWQ segment instance during the load operation. The reject limit count can be specified as number of rows (the default) or percentage of total rows (1-100). If `PERCENT` is used, each segment starts calculating the bad row percentage only after the number of rows specified by the parameter `gp_reject_percent_threshold` has been processed. The default for `gp_reject_percent_threshold` is 300 rows. Constraint errors such as violation of a `NOT NULL` or `CHECK` constraint will still be handled in 'all-or-nothing' input mode. If the limit is not reached, all good rows will be loaded and any error rows discarded.
+<dt>SEGMENT REJECT LIMIT count \[ROWS | PERCENT\]  </dt>
+<dd>Runs a `COPY FROM` operation in single row error isolation mode. If the input rows have format errors they will be discarded provided that the reject limit count is not reached on any HAWQ segment instance during the load operation. The reject limit count can be specified as number of rows (the default) or percentage of total rows (1-100). If `PERCENT` is used, each segment starts calculating the bad row percentage only after the number of rows specified by the parameter `gp_reject_percent_threshold` has been processed. The default for `gp_reject_percent_threshold` is 300 rows. Constraint errors such as violation of a `NOT NULL` or `CHECK` constraint will still be handled in 'all-or-nothing' input mode. If the limit is not reached, all good rows will be loaded and any error rows discarded.</dd>
 
 ## <a id="topic1__section6"></a>Notes
 

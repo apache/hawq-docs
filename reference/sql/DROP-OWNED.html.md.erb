@@ -16,14 +16,14 @@ DROP OWNED BY name [, ...] [CASCADE | RESTRICT]
 
 ## <a id="topic1__section4"></a>Parameters
 
- *name*   
-The name of a role whose objects will be dropped, and whose privileges will be revoked.
+<dt> *name*   </dt>
+<dd>The name of a role whose objects will be dropped, and whose privileges will be revoked.</dd>
 
-CASCADE  
-Automatically drop objects that depend on the affected objects.
+<dt>CASCADE  </dt>
+<dd>Automatically drop objects that depend on the affected objects.</dd>
 
-RESTRICT  
-Refuse to drop the objects owned by a role if any other database objects depend on one of the affected objects. This is the default.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the objects owned by a role if any other database objects depend on one of the affected objects. This is the default.</dd>
 
 ## <a id="topic1__section5"></a>Notes
 

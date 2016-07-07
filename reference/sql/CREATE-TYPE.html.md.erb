@@ -69,44 +69,44 @@ You might reasonably ask why there is an `ELEMENT` option, if the system makes t
 
 ## <a id="topic1__section7"></a>Parameters
 
- *name*  
-The name (optionally schema-qualified) of a type to be created.
+<dt> *name*  </dt>
+<dd>The name (optionally schema-qualified) of a type to be created.</dd>
 
- *attribute\_name*  
-The name of an attribute (column) for the composite type.
+<dt> *attribute\_name*  </dt>
+<dd>The name of an attribute (column) for the composite type.</dd>
 
- *data\_type*  
-The name of an existing data type to become a column of the composite type.
+<dt> *data\_type*  </dt>
+<dd>The name of an existing data type to become a column of the composite type.</dd>
 
- *input\_function*  
-The name of a function that converts data from the type's external textual form to its internal form.
+<dt> *input\_function*  </dt>
+<dd>The name of a function that converts data from the type's external textual form to its internal form.</dd>
 
- *output\_function*  
-The name of a function that converts data from the type's internal form to its external textual form.
+<dt> *output\_function*  </dt>
+<dd>The name of a function that converts data from the type's internal form to its external textual form.</dd>
 
- *receive\_function*  
-The name of a function that converts data from the type's external binary form to its internal form.
+<dt> *receive\_function*  </dt>
+<dd>The name of a function that converts data from the type's external binary form to its internal form.</dd>
 
- *send\_function*  
-The name of a function that converts data from the type's internal form to its external binary form.
+<dt> *send\_function*  </dt>
+<dd>The name of a function that converts data from the type's internal form to its external binary form.</dd>
 
- *internallength*  
-A numeric constant that specifies the length in bytes of the new type's internal representation. The default assumption is that it is variable-length.
+<dt> *internallength*  </dt>
+<dd>A numeric constant that specifies the length in bytes of the new type's internal representation. The default assumption is that it is variable-length.</dd>
 
- *alignment*  
-The storage alignment requirement of the data type. Must be one of `char`, `int2`, `int4`, or `double`. The default is `int4`.
+<dt> *alignment*  </dt>
+<dd>The storage alignment requirement of the data type. Must be one of `char`, `int2`, `int4`, or `double`. The default is `int4`.</dd>
 
- *storage*  
-The storage strategy for the data type. Must be one of `plain`, `external`, `extended`, or `main`. The default is `plain`.
+<dt> *storage*  </dt>
+<dd>The storage strategy for the data type. Must be one of `plain`, `external`, `extended`, or `main`. The default is `plain`.</dd>
 
- *default*  
-The default value for the data type. If this is omitted, the default is null.
+<dt> *default*  </dt>
+<dd>The default value for the data type. If this is omitted, the default is null.</dd>
 
- *element*  
-The type being created is an array; this specifies the type of the array elements.
+<dt> *element*  </dt>
+<dd>The type being created is an array; this specifies the type of the array elements.</dd>
 
- *delimiter*  
-The delimiter character to be used between values in arrays made of this type.
+<dt> *delimiter*  </dt>
+<dd>The delimiter character to be used between values in arrays made of this type.</dd>
 
 ## <a id="topic1__section8"></a>Notes
 

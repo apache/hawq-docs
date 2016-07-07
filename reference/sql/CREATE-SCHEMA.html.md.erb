@@ -23,14 +23,14 @@ Optionally, `CREATE SCHEMA` can include subcommands to create objects within the
 
 ## <a id="topic1__section4"></a>Parameters
 
- *schema\_name*   
-The name of a schema to be created. If this is omitted, the user name is used as the schema name. The name cannot begin with `pg_`, as such names are reserved for system catalog schemas.
+<dt> *schema\_name*   </dt>
+<dd>The name of a schema to be created. If this is omitted, the user name is used as the schema name. The name cannot begin with `pg_`, as such names are reserved for system catalog schemas.</dd>
 
- *rolename*   
-The name of the role who will own the schema. If omitted, defaults to the role executing the command. Only superusers may create schemas owned by roles other than themselves.
+<dt> *rolename*   </dt>
+<dd>The name of the role who will own the schema. If omitted, defaults to the role executing the command. Only superusers may create schemas owned by roles other than themselves.</dd>
 
- *schema\_element*   
-An SQL statement defining an object to be created within the schema. Currently, only `CREATE TABLE`, `CREATE VIEW`, `CREATE               INDEX`, `CREATE SEQUENCE`, and `GRANT` are accepted as clauses within `CREATE SCHEMA`. Other kinds of objects may be created in separate commands after the schema is created.
+<dt> *schema\_element*   </dt>
+<dd>An SQL statement defining an object to be created within the schema. Currently, only `CREATE TABLE`, `CREATE VIEW`, `CREATE               INDEX`, `CREATE SEQUENCE`, and `GRANT` are accepted as clauses within `CREATE SCHEMA`. Other kinds of objects may be created in separate commands after the schema is created.</dd>
 
 ## <a id="topic1__section5"></a>Notes
 

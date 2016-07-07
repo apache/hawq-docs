@@ -49,35 +49,35 @@ where *option* can be:
 
 ## <a id="alterrole__section4"></a>Parameters
 
- *name*
-The name of the role whose attributes are to be altered.
+<dt> *name*  </dt>
+<dd>The name of the role whose attributes are to be altered.</dd>
 
- *newname*
-The new name of the role.
+<dt> *newname*  </dt>
+<dd>The new name of the role.</dd>
 
- *config\_parameter=value*
-Set this role's session default for the specified configuration parameter to the given value. If value is `DEFAULT` or if `RESET` is used, the role-specific variable setting is removed, so the role will inherit the system-wide default setting in new sessions. Use `RESET ALL` to clear all role-specific settings. See [SET](SET.html) and [About Server Configuration Parameters](../guc/guc_config.html#topic1) for information about user-settable configuration parameters.
+<dt> *config\_parameter=value*  </dt>
+<dd>Set this role's session default for the specified configuration parameter to the given value. If value is `DEFAULT` or if `RESET` is used, the role-specific variable setting is removed, so the role will inherit the system-wide default setting in new sessions. Use `RESET ALL` to clear all role-specific settings. See [SET](SET.html) and [About Server Configuration Parameters](../guc/guc_config.html#topic1) for information about user-settable configuration parameters.</dd>
 
- *queue\_name*
-The name of the resource queue to which the user-level role is to be assigned. Only roles with `LOGIN` privilege can be assigned to a resource queue. To unassign a role from a resource queue and put it in the default resource queue, specify `NONE`. A role can only belong to one resource queue.
+<dt> *queue\_name*  </dt>
+<dd>The name of the resource queue to which the user-level role is to be assigned. Only roles with `LOGIN` privilege can be assigned to a resource queue. To unassign a role from a resource queue and put it in the default resource queue, specify `NONE`. A role can only belong to one resource queue.</dd>
 
-SUPERUSER | NOSUPERUSER  
+<dt>SUPERUSER | NOSUPERUSER  
 CREATEDB | NOCREATEDB  
 CREATEROLE | NOCREATEROLE  
-CREATEEXTTABLE | NOCREATEEXTTABLE \[(*attribute*='*value*')\]  
-If `CREATEEXTTABLE` is specified, the role being defined is allowed to create external tables. The default `type` is `readable` and the default `protocol` is `gpfdist` if not specified. `NOCREATEEXTTABLE` (the default) denies the role the ability to create external tables. Using the `file` protocol when creating external tables is not supported. This is because HAWQ cannot guarantee scheduling executors on a specific host. Likewise, you cannot use the `execute` command with `ON                      ALL` and `ON HOST` for the same reason. Use the `ON MASTER/number/SEGMENT segment_id` to specify which segment instances are to execute the command.
+CREATEEXTTABLE | NOCREATEEXTTABLE \[(*attribute*='*value*')\]  </dt>
+<dd>If `CREATEEXTTABLE` is specified, the role being defined is allowed to create external tables. The default `type` is `readable` and the default `protocol` is `gpfdist` if not specified. `NOCREATEEXTTABLE` (the default) denies the role the ability to create external tables. Using the `file` protocol when creating external tables is not supported. This is because HAWQ cannot guarantee scheduling executors on a specific host. Likewise, you cannot use the `execute` command with `ON                      ALL` and `ON HOST` for the same reason. Use the `ON MASTER/number/SEGMENT segment_id` to specify which segment instances are to execute the command.</dd>
 
-INHERIT | NOINHERIT  
+<dt>INHERIT | NOINHERIT  
 LOGIN | NOLOGIN  
 CONNECTION LIMIT *connlimit*  
 PASSWORD '*password*'  
 ENCRYPTED | UNENCRYPTED  
-VALID UNTIL '*timestamp*'  
-These clauses alter role attributes originally set by [CREATE ROLE](CREATE-ROLE.html).
+VALID UNTIL '*timestamp*'  </dt>
+<dd>These clauses alter role attributes originally set by [CREATE ROLE](CREATE-ROLE.html).</dd>
 
-DENY *deny\_point*  
-DENY BETWEEN *deny\_point* AND *deny\_point*   
-The `DENY` and `DENY BETWEEN` keywords set time-based constraints that are enforced at login. `DENY`sets a day or a day and time to deny access. `DENY BETWEEN` sets an interval during which access is denied. Both use the parameter *deny\_point* that has following format:
+<dt>DENY *deny\_point*  
+DENY BETWEEN *deny\_point* AND *deny\_point*   </dt>
+<dd>The `DENY` and `DENY BETWEEN` keywords set time-based constraints that are enforced at login. `DENY`sets a day or a day and time to deny access. `DENY BETWEEN` sets an interval during which access is denied. Both use the parameter *deny\_point* that has following format:
 
 ```pre
 DAY day [ TIME 'time' ]
@@ -104,9 +104,10 @@ The `DENY BETWEEN` clause uses two *deny\_point* parameters.
 DENY BETWEEN deny_point AND deny_point
 
 ```
+</dd>
 
-DROP DENY FOR *deny\_point*
-The `DROP DENY FOR` clause removes a time-based constraint from the role. It uses the *deny\_point* parameter described above.
+<dt>DROP DENY FOR *deny\_point*  </dt>
+<dd>The `DROP DENY FOR` clause removes a time-based constraint from the role. It uses the *deny\_point* parameter described above.</dd>
 
 ## Notes
 

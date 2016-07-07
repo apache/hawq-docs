@@ -176,48 +176,48 @@ The `PARTITION BY` clause allows you to divide the table into multiple sub-table
 
 ## <a id="topic1__section4"></a>Parameters
 
-GLOBAL | LOCAL  
-These keywords are present for SQL standard compatibility, but have no effect in HAWQ.
+<dt>GLOBAL | LOCAL  </dt>
+<dd>These keywords are present for SQL standard compatibility, but have no effect in HAWQ.</dd>
 
-TEMPORARY | TEMP  
-If specified, the table is created as a temporary table. Temporary tables are automatically dropped at the end of a session, or optionally at the end of the current transaction (see `ON COMMIT`). Existing permanent tables with the same name are not visible to the current session while the temporary table exists, unless they are referenced with schema-qualified names. Any indexes created on a temporary table are automatically temporary as well.
+<dt>TEMPORARY | TEMP  </dt>
+<dd>If specified, the table is created as a temporary table. Temporary tables are automatically dropped at the end of a session, or optionally at the end of the current transaction (see `ON COMMIT`). Existing permanent tables with the same name are not visible to the current session while the temporary table exists, unless they are referenced with schema-qualified names. Any indexes created on a temporary table are automatically temporary as well.</dd>
 
- *table\_name*  
-The name (optionally schema-qualified) of the table to be created.
+<dt> *table\_name*  </dt>
+<dd>The name (optionally schema-qualified) of the table to be created.</dd>
 
- *column\_name*  
-The name of a column to be created in the new table.
+<dt> *column\_name*  </dt>
+<dd>The name of a column to be created in the new table.</dd>
 
- *data\_type*  
-The data type of the column. This may include array specifiers.
+<dt> *data\_type*  </dt>
+<dd>The data type of the column. This may include array specifiers.</dd>
 
-DEFAULT *default\_expr*  
-The `DEFAULT` clause assigns a default data value for the column whose column definition it appears within. The value is any variable-free expression (subqueries and cross-references to other columns in the current table are not allowed). The data type of the default expression must match the data type of the column. The default expression will be used in any insert operation that does not specify a value for the column. If there is no default for a column, then the default is null.
+<dt>DEFAULT *default\_expr*  </dt>
+<dd>The `DEFAULT` clause assigns a default data value for the column whose column definition it appears within. The value is any variable-free expression (subqueries and cross-references to other columns in the current table are not allowed). The data type of the default expression must match the data type of the column. The default expression will be used in any insert operation that does not specify a value for the column. If there is no default for a column, then the default is null.</dd>
 
-INHERITS  
-The optional `INHERITS` clause specifies a list of tables from which the new table automatically inherits all columns. Use of `INHERITS` creates a persistent relationship between the new child table and its parent table(s). Schema modifications to the parent(s) normally propagate to children as well, and by default the data of the child table is included in scans of the parent(s).
+<dt>INHERITS  </dt>
+<dd>The optional `INHERITS` clause specifies a list of tables from which the new table automatically inherits all columns. Use of `INHERITS` creates a persistent relationship between the new child table and its parent table(s). Schema modifications to the parent(s) normally propagate to children as well, and by default the data of the child table is included in scans of the parent(s).
 
 In HAWQ, the `INHERITS` clause is not used when creating partitioned tables. Although the concept of inheritance is used in partition hierarchies, the inheritance structure of a partitioned table is created using the PARTITION BY clause.
 
-If the same column name exists in more than one parent table, an error is reported unless the data types of the columns match in each of the parent tables. If there is no conflict, then the duplicate columns are merged to form a single column in the new table. If the column name list of the new table contains a column name that is also inherited, the data type must likewise match the inherited column(s), and the column definitions are merged into one. However, inherited and new column declarations of the same name need not specify identical constraints: all constraints provided from any declaration are merged together and all are applied to the new table. If the new table explicitly specifies a default value for the column, this default overrides any defaults from inherited declarations of the column. Otherwise, any parents that specify default values for the column must all specify the same default, or an error will be reported.
+If the same column name exists in more than one parent table, an error is reported unless the data types of the columns match in each of the parent tables. If there is no conflict, then the duplicate columns are merged to form a single column in the new table. If the column name list of the new table contains a column name that is also inherited, the data type must likewise match the inherited column(s), and the column definitions are merged into one. However, inherited and new column declarations of the same name need not specify identical constraints: all constraints provided from any declaration are merged together and all are applied to the new table. If the new table explicitly specifies a default value for the column, this default overrides any defaults from inherited declarations of the column. Otherwise, any parents that specify default values for the column must all specify the same default, or an error will be reported.</dd>
 
-LIKE *other\_table* \[{INCLUDING | EXCLUDING} {DEFAULTS | CONSTRAINTS}\]  
-The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. Storage properties like append-only or partition structure are not copied. Unlike `INHERITS`, the new table and original table are completely decoupled after creation is complete.
+<dt>LIKE *other\_table* \[{INCLUDING | EXCLUDING} {DEFAULTS | CONSTRAINTS}\]  </dt>
+<dd>The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. Storage properties like append-only or partition structure are not copied. Unlike `INHERITS`, the new table and original table are completely decoupled after creation is complete.
 
 Default expressions for the copied column definitions will only be copied if `INCLUDING DEFAULTS` is specified. The default behavior is to exclude default expressions, resulting in the copied columns in the new table having null defaults.
 
 Not-null constraints are always copied to the new table. `CHECK` constraints will only be copied if `INCLUDING CONSTRAINTS` is specified; other types of constraints will *never* be copied. Also, no distinction is made between column constraints and table constraints — when constraints are requested, all check constraints are copied.
 
-Note also that unlike `INHERITS`, copied columns and constraints are not merged with similarly named columns and constraints. If the same name is specified explicitly or in another `LIKE` clause an error is signalled.
+Note also that unlike `INHERITS`, copied columns and constraints are not merged with similarly named columns and constraints. If the same name is specified explicitly or in another `LIKE` clause an error is signalled.</dd>
 
-NULL | NOT NULL  
-Specifies if the column is or is not allowed to contain null values. `NULL` is the default.
+<dt>NULL | NOT NULL  </dt>
+<dd>Specifies if the column is or is not allowed to contain null values. `NULL` is the default.</dd>
 
-CHECK ( *expression* )  
-The `CHECK` clause specifies an expression producing a Boolean result which new or updated rows must satisfy for an insert or update operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert or update operation produce a `FALSE` result an error exception is raised and the insert or update does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.
+<dt>CHECK ( *expression* )  </dt>
+<dd>The `CHECK` clause specifies an expression producing a Boolean result which new or updated rows must satisfy for an insert or update operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert or update operation produce a `FALSE` result an error exception is raised and the insert or update does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
 
-WITH ( *storage\_option=value* )  
-The `WITH` clause can be used to set storage options for the table or its indexes. Note that you can also set storage parameters on a particular partition or subpartition by declaring the `WITH` clause in the partition specification.
+<dt>WITH ( *storage\_option=value* )  </dt>
+<dd>The `WITH` clause can be used to set storage options for the table or its indexes. Note that you can also set storage parameters on a particular partition or subpartition by declaring the `WITH` clause in the partition specification.
 
 Note: You cannot create a table with both column encodings and compression parameters in a WITH clause.
 
@@ -235,32 +235,32 @@ The following storage options are available:
 
 **COMPRESSLEVEL** — Set to an integer value from 1 (fastest compression) to 9 (highest compression ratio). If not specified, the default is 1. This option is valid only if `APPENDONLY=TRUE` and `COMPRESSTYPE=[ZLIB|GZIP]`.
 
-**OIDS** — Set to `OIDS=FALSE` (the default) so that rows do not have object identifiers assigned to them. Do not enable OIDS when creating a table. On large tables, such as those in a typical HAWQ system, using OIDs for table rows can cause wrap-around of the 32-bit OID counter. Once the counter wraps around, OIDs can no longer be assumed to be unique, which not only makes them useless to user applications, but can also cause problems in the HAWQ system catalog tables. In addition, excluding OIDs from a table reduces the space required to store the table on disk by 4 bytes per row, slightly improving performance. OIDS are not allowed on partitioned tables.
+**OIDS** — Set to `OIDS=FALSE` (the default) so that rows do not have object identifiers assigned to them. Do not enable OIDS when creating a table. On large tables, such as those in a typical HAWQ system, using OIDs for table rows can cause wrap-around of the 32-bit OID counter. Once the counter wraps around, OIDs can no longer be assumed to be unique, which not only makes them useless to user applications, but can also cause problems in the HAWQ system catalog tables. In addition, excluding OIDs from a table reduces the space required to store the table on disk by 4 bytes per row, slightly improving performance. OIDS are not allowed on partitioned tables.</dd>
 
-ON COMMIT  
-The behavior of temporary tables at the end of a transaction block can be controlled using `ON COMMIT`. The three options are:
+<dt>ON COMMIT  </dt>
+<dd>The behavior of temporary tables at the end of a transaction block can be controlled using `ON COMMIT`. The three options are:
 
 **PRESERVE ROWS** - No special action is taken at the ends of transactions for temporary tables. This is the default behavior.
 
 **DELETE ROWS** - All rows in the temporary table will be deleted at the end of each transaction block. Essentially, an automatic `TRUNCATE` is done at each commit.
 
-**DROP** - The temporary table will be dropped at the end of the current transaction block.
+**DROP** - The temporary table will be dropped at the end of the current transaction block.</dd>
 
-TABLESPACE *tablespace*  
-The name of the tablespace in which the new table is to be created. If not specified, the database's default tablespace dfs\_default is used. Creating table on tablespace `pg_default` is not allowed.
+<dt>TABLESPACE *tablespace*  </dt>
+<dd>The name of the tablespace in which the new table is to be created. If not specified, the database's default tablespace dfs\_default is used. Creating table on tablespace `pg_default` is not allowed.</dd>
 
-DISTRIBUTED BY (*column*, \[ ... \] )  
-DISTRIBUTED RANDOMLY  
-Used to declare the HAWQ distribution policy for the table. The default is RANDOM distribution. `DISTIBUTED BY` can use hash distribution with one or more columns declared as the distribution key. If hash distribution is desired, it must be specified using the first eligible column of the table as the distribution key.
+<dt>DISTRIBUTED BY (*column*, \[ ... \] )  
+DISTRIBUTED RANDOMLY  </dt>
+<dd>Used to declare the HAWQ distribution policy for the table. The default is RANDOM distribution. `DISTIBUTED BY` can use hash distribution with one or more columns declared as the distribution key. If hash distribution is desired, it must be specified using the first eligible column of the table as the distribution key.</dd>
 
-PARTITION BY  
-Declares one or more columns by which to partition the table.
+<dt>PARTITION BY  </dt>
+<dd>Declares one or more columns by which to partition the table.</dd>
 
- *partition\_type*  
-Declares partition type: `LIST` (list of values) or `RANGE` (a numeric or date range).
+<dt> *partition\_type*  </dt>
+<dd>Declares partition type: `LIST` (list of values) or `RANGE` (a numeric or date range).</dd>
 
- *partition\_specification*  
-Declares the individual partitions to create. Each partition can be defined individually or, for range partitions, you can use the `EVERY` clause (with a `START` and optional `END` clause) to define an increment pattern to use to create the individual partitions.
+<dt> *partition\_specification*  </dt>
+<dd>Declares the individual partitions to create. Each partition can be defined individually or, for range partitions, you can use the `EVERY` clause (with a `START` and optional `END` clause) to define an increment pattern to use to create the individual partitions.
 
 **`DEFAULT PARTITION name                      `** — Declares a default partition. When data does not match to an existing partition, it is inserted into the default partition. Partition designs that do not have a default partition will reject incoming rows that do not match to an existing partition.
 
@@ -276,13 +276,13 @@ Declares the individual partitions to create. Each partition can be defined indi
 
 **`WITH`** — Sets the table storage options for a partition. For example, you may want older partitions to be append-only tables and newer partitions to be regular heap tables.
 
-**`TABLESPACE`** — The name of the tablespace in which the partition is to be created.
+**`TABLESPACE`** — The name of the tablespace in which the partition is to be created.</dd>
 
-SUBPARTITION BY  
-Declares one or more columns by which to subpartition the first-level partitions of the table. The format of the subpartition specification is similar to that of a partition specification described above.
+<dt>SUBPARTITION BY  </dt>
+<dd>Declares one or more columns by which to subpartition the first-level partitions of the table. The format of the subpartition specification is similar to that of a partition specification described above.</dd>
 
-SUBPARTITION TEMPLATE  
-Instead of declaring each subpartition definition individually for each partition, you can optionally declare a subpartition template to be used to create the subpartitions. This subpartition specification would then apply to all parent partitions.
+<dt>SUBPARTITION TEMPLATE  </dt>
+<dd>Instead of declaring each subpartition definition individually for each partition, you can optionally declare a subpartition template to be used to create the subpartitions. This subpartition specification would then apply to all parent partitions.</dd>
 
 ## <a id="topic1__section5"></a>Notes
 

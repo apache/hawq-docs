@@ -160,86 +160,86 @@ HAWQ does not support using `ALTER TABLE` to `ADD` or `DROP` a column in an exis
 ## <a id="altertable__section4"></a>Parameters
 
 
-ONLY
-Only perform the operation on the table name specified. If the `ONLY` keyword is not used, the operation       will be performed on the named table and any child table partitions associated with that table.
+<dt>ONLY  </dt>
+<dd>Only perform the operation on the table name specified. If the `ONLY` keyword is not used, the operation       will be performed on the named table and any child table partitions associated with that table.</dd>
 
-*name*
-The name (possibly schema-qualified) of an existing table to alter. If `ONLY` is specified, only that table is altered. If `ONLY` is not specified, the table and all its descendant tables (if any) are updated.
+<dt>*name*  </dt>
+<dd>The name (possibly schema-qualified) of an existing table to alter. If `ONLY` is specified, only that table is altered. If `ONLY` is not specified, the table and all its descendant tables (if any) are updated.
 
-*Note:* Constraints can only be added to an entire table, not to a partition. Because of that restriction, the *name* parameter can only contain a table name, not a partition name.
+*Note:* Constraints can only be added to an entire table, not to a partition. Because of that restriction, the *name* parameter can only contain a table name, not a partition name.</dd>
 
- *column*   
-Name of a new or existing column. Note that HAWQ distribution key columns must be treated with special care. Altering or dropping these columns can change the distribution policy for the table.
+<dt> *column*   </dt>
+<dd>Name of a new or existing column. Note that HAWQ distribution key columns must be treated with special care. Altering or dropping these columns can change the distribution policy for the table.</dd>
 
- *new\_column*   
-New name for an existing column.
+<dt> *new\_column*   </dt>
+<dd>New name for an existing column.</dd>
 
- *new\_name*   
-New name for the table.
+<dt> *new\_name*   </dt>
+<dd>New name for the table.</dd>
 
- *type*   
-Data type of the new column, or new data type for an existing column. If changing the data type of a HAWQ distribution key column, you are only allowed to change it to a compatible type (for example, `text` to `varchar` is OK, but `text` to `int` is not).
+<dt> *type*   </dt>
+<dd>Data type of the new column, or new data type for an existing column. If changing the data type of a HAWQ distribution key column, you are only allowed to change it to a compatible type (for example, `text` to `varchar` is OK, but `text` to `int` is not).</dd>
 
- *table\_constraint*   
-New table constraint for the table. Note that foreign key constraints are currently not supported in HAWQ. Also a table is only allowed one unique constraint and the uniqueness must be within the HAWQ distribution key.
+<dt> *table\_constraint*   </dt>
+<dd>New table constraint for the table. Note that foreign key constraints are currently not supported in HAWQ. Also a table is only allowed one unique constraint and the uniqueness must be within the HAWQ distribution key.</dd>
 
- *constraint\_name*   
-Name of an existing constraint to drop.
+<dt> *constraint\_name*   </dt>
+<dd>Name of an existing constraint to drop.</dd>
 
-CASCADE  
-Automatically drop objects that depend on the dropped column or constraint (for example, views referencing the column).
+<dt>CASCADE  </dt>
+<dd>Automatically drop objects that depend on the dropped column or constraint (for example, views referencing the column).</dd>
 
-RESTRICT  
-Refuse to drop the column or constraint if there are any dependent objects. This is the default behavior.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the column or constraint if there are any dependent objects. This is the default behavior.</dd>
 
-ALL  
-Disable or enable all triggers belonging to the table including constraint related triggers. This requires superuser privilege.
+<dt>ALL  </dt>
+<dd>Disable or enable all triggers belonging to the table including constraint related triggers. This requires superuser privilege.</dd>
 
-USER  
-Disable or enable all user-created triggers belonging to the table.
+<dt>USER  </dt>
+<dd>Disable or enable all user-created triggers belonging to the table.</dd>
 
-DISTRIBUTED RANDOMLY | DISTRIBUTED BY (*column*)  
-Specifies the distribution policy for a table. The default is RANDOM distribution. Changing a distribution policy will cause the table data to be physically redistributed on disk, which can be resource intensive. If you declare the same distribution policy or change from random to hash distribution, data will not be redistributed unless you declare `SET WITH (REORGANIZE=true)`.
+<dt>DISTRIBUTED RANDOMLY | DISTRIBUTED BY (*column*)  </dt>
+<dd>Specifies the distribution policy for a table. The default is RANDOM distribution. Changing a distribution policy will cause the table data to be physically redistributed on disk, which can be resource intensive. If you declare the same distribution policy or change from random to hash distribution, data will not be redistributed unless you declare `SET WITH (REORGANIZE=true)`.</dd>
 
-REORGANIZE=true|false  
-Use `REORGANIZE=true` when the distribution policy has not changed or when you have changed from a random to a hash distribution, and you want to redistribute the data anyways.
+<dt>REORGANIZE=true|false  </dt>
+<dd>Use `REORGANIZE=true` when the distribution policy has not changed or when you have changed from a random to a hash distribution, and you want to redistribute the data anyways.</dd>
 
- *parent\_table*   
-A parent table to associate or de-associate with this table.
+<dt> *parent\_table*   </dt>
+<dd>A parent table to associate or de-associate with this table.</dd>
 
- *new\_owner*   
-The role name of the new owner of the table.
+<dt> *new\_owner*   </dt>
+<dd>The role name of the new owner of the table.</dd>
 
- *new\_tablespace*   
-The name of the tablespace to which the table will be moved.
+<dt> *new\_tablespace*   </dt>
+<dd>The name of the tablespace to which the table will be moved.</dd>
 
- *new\_schema*   
-The name of the schema to which the table will be moved.
+<dt> *new\_schema*   </dt>
+<dd>The name of the schema to which the table will be moved.</dd>
 
- *parent\_table\_name*   
-When altering a partitioned table, the name of the top-level parent table.
+<dt> *parent\_table\_name*   </dt>
+<dd>When altering a partitioned table, the name of the top-level parent table.</dd>
 
-ALTER \[DEFAULT\] PARTITION  
-If altering a partition deeper than the first level of partitions, the `ALTER PARTITION` clause is used to specify which subpartition in the hierarchy you want to alter.
+<dt>ALTER \[DEFAULT\] PARTITION  </dt>
+<dd>If altering a partition deeper than the first level of partitions, the `ALTER PARTITION` clause is used to specify which subpartition in the hierarchy you want to alter.</dd>
 
-DROP \[DEFAULT\] PARTITION  
-**Note:** Cannot be used with multi-level partitions.
+<dt>DROP \[DEFAULT\] PARTITION  </dt>
+<dd>**Note:** Cannot be used with multi-level partitions.
 
-Drops the specified partition. If the partition has subpartitions, the subpartitions are automatically dropped as well.
+Drops the specified partition. If the partition has subpartitions, the subpartitions are automatically dropped as well.</dd>
 
-TRUNCATE \[DEFAULT\] PARTITION  
-Truncates the specified partition. If the partition has subpartitions, the subpartitions are automatically truncated as well.
+<dt>TRUNCATE \[DEFAULT\] PARTITION  </dt>
+<dd>Truncates the specified partition. If the partition has subpartitions, the subpartitions are automatically truncated as well.</dd>
 
-RENAME \[DEFAULT\] PARTITION  
-Changes the partition name of a partition (not the relation name). Partitioned tables are created using the naming convention: \<*parentname*\>\_\<*level*\>\_prt\_\<*partition\_name*\>.
+<dt>RENAME \[DEFAULT\] PARTITION  </dt>
+<dd>Changes the partition name of a partition (not the relation name). Partitioned tables are created using the naming convention: \<*parentname*\>\_\<*level*\>\_prt\_\<*partition\_name*\>.</dd>
 
-ADD DEFAULT PARTITION  
-**Note:** Cannot be used with multi-level partitions.
+<dt>ADD DEFAULT PARTITION  </dt>
+<dd>**Note:** Cannot be used with multi-level partitions.
 
-Adds a default partition to an existing partition design. When data does not match to an existing partition, it is inserted into the default partition. Partition designs that do not have a default partition will reject incoming rows that do not match to an existing partition. Default partitions must be given a name.
+Adds a default partition to an existing partition design. When data does not match to an existing partition, it is inserted into the default partition. Partition designs that do not have a default partition will reject incoming rows that do not match to an existing partition. Default partitions must be given a name.</dd>
 
-ADD PARTITION  
-**Note:** Cannot be used with multi-level partitions.
+<dt>ADD PARTITION  </dt>
+<dd>**Note:** Cannot be used with multi-level partitions.
 
 *partition\_element* - Using the existing partition type of the table (range or list), defines the boundaries of new partition you are adding.
 
@@ -255,20 +255,20 @@ ADD PARTITION
 
 **TABLESPACE** - The name of the tablespace in which the partition is to be created.
 
-*subpartition\_spec* - Only allowed on partition designs that were created without a subpartition template. Declares a subpartition specification for the new partition you are adding. If the partitioned table was originally defined using a subpartition template, then the template will be used to generate the subpartitions automatically.
+*subpartition\_spec* - Only allowed on partition designs that were created without a subpartition template. Declares a subpartition specification for the new partition you are adding. If the partitioned table was originally defined using a subpartition template, then the template will be used to generate the subpartitions automatically.</dd>
 
-EXCHANGE \[DEFAULT\] PARTITION  
-Exchanges another table into the partition hierarchy into the place of an existing partition. In a multi-level partition design, you can only exchange the lowest level partitions (those that contain data).
+<dt>EXCHANGE \[DEFAULT\] PARTITION  </dt>
+<dd>Exchanges another table into the partition hierarchy into the place of an existing partition. In a multi-level partition design, you can only exchange the lowest level partitions (those that contain data).
 
 **WITH TABLE** *table\_name* - The name of the table you are swapping in to the partition design.
 
-**WITH** | **WITHOUT VALIDATION** - Validates that the data in the table matches the `CHECK` constraint of the partition you are exchanging. The default is to validate the data against the `CHECK` constraint.
+**WITH** | **WITHOUT VALIDATION** - Validates that the data in the table matches the `CHECK` constraint of the partition you are exchanging. The default is to validate the data against the `CHECK` constraint.</dd>
 
-SET SUBPARTITION TEMPLATE  
-Modifies the subpartition template for an existing partition. After a new subpartition template is set, all new partitions added will have the new subpartition design (existing partitions are not modified).
+<dt>SET SUBPARTITION TEMPLATE  </dt>
+<dd>Modifies the subpartition template for an existing partition. After a new subpartition template is set, all new partitions added will have the new subpartition design (existing partitions are not modified).</dd>
 
-SPLIT DEFAULT PARTITION  
-**Note:** Cannot be used with multi-level partitions.
+<dt>SPLIT DEFAULT PARTITION  </dt>
+<dd>**Note:** Cannot be used with multi-level partitions.
 
 Splits a default partition. In a multi-level partition design, you can only split the lowest level default partitions (those that contain data). Splitting a default partition creates a new partition containing the values specified and leaves the default partition containing any values that do not match to an existing partition.
 
@@ -278,29 +278,30 @@ Splits a default partition. In a multi-level partition design, you can only spli
 
 **END** - For range partitioned tables, specifies an ending value for the new partition.
 
-**INTO** - Allows you to specify a name for the new partition. When using the `INTO` clause to split a default partition, the second partition name specified should always be that of the existing default partition. If you do not know the name of the default partition, you can look it up using the `pg_partitions` view.
+**INTO** - Allows you to specify a name for the new partition. When using the `INTO` clause to split a default partition, the second partition name specified should always be that of the existing default partition. If you do not know the name of the default partition, you can look it up using the `pg_partitions` view.</dd>
 
-SPLIT PARTITION  
-**Note:** Cannot be used with multi-level partitions.
+<dt>SPLIT PARTITION  </dt>
+<dd>**Note:** Cannot be used with multi-level partitions.
 
 Splits an existing partition into two partitions. In a multi-level partition design, you can only split the lowest level partitions (those that contain data).
 
 **AT** - Specifies a single value that should be used as the criteria for the split. The partition will be divided into two new partitions with the split value specified being the starting range for the *latter* partition.
 
-**INTO** - Allows you to specify names for the two new partitions created by the split.
+**INTO** - Allows you to specify names for the two new partitions created by the split.</dd>
 
- *partition\_name*   
-The given name of a partition.
+<dt> *partition\_name*   </dt>
+<dd>The given name of a partition.</dd>
 
-FOR (RANK(number))  
-For range partitions, the rank of the partition in the range.
+<dt>FOR (RANK(number))  </dt>
+<dd>For range partitions, the rank of the partition in the range.</dd>
 
-FOR ('*value*')  
-Specifies a partition by declaring a value that falls within the partition boundary specification. If the value declared with `FOR` matches to both a partition and one of its subpartitions (for example, if the value is a date and the table is partitioned by month and then by day), then `FOR` will operate on the first level where a match is found (for example, the monthly partition). If your intent is to operate on a subpartition, you must declare so as follows:
+<dt>FOR ('*value*')  </dt>
+<dd>Specifies a partition by declaring a value that falls within the partition boundary specification. If the value declared with `FOR` matches to both a partition and one of its subpartitions (for example, if the value is a date and the table is partitioned by month and then by day), then `FOR` will operate on the first level where a match is found (for example, the monthly partition). If your intent is to operate on a subpartition, you must declare so as follows:
 
 ``` pre
 ALTER TABLE name ALTER PARTITION FOR ('2008-10-01') DROP PARTITION FOR ('2008-10-01');
 ```
+</dd>
 
 ## <a id="notes"></a>Notes
 
