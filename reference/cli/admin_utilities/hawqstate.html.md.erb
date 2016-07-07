@@ -9,7 +9,7 @@ Shows the status of a running HAWQ system.
 ``` pre
 hawq state [-b] [-l logfile_directory] [-v | -q] 
           [-d master_data_directory | --datadir=MASTER\_DIR] [--hawqhome]
-hawq state -? | -h | --help
+hawq state -h | --help
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -28,13 +28,15 @@ The `hawq state` utility displays information about a running HAWQ instance. A H
 Optional. Display a brief summary of the state of the HAWQ system. This is the default option.
 
 -d *master\_data\_directory* | -\\\-datadir=MASTER\_DIR  
-Status of the master data directory. If not specified, the value set for `$MASTER_DATA_DIRECTORY` will be used.
+Status of the master data directory. 
 
 -\\\-hawqhome=HAWQ\_HOME  
 Display details of the designated home data directory (usually $GPHOME).
 
--l *logfile\_directory*  
-Displays calls to the log file. Defaults to `~/hawq/AdminLogs`.
+-l *logfile\_directory*
+Sets the directory to be used for logfiles to the specified directory. The default is `$GPHOME/hawAdminLogs`.
+
+Log files within the directory are named according to the command being invoked, for example:  hawq\_config\_,log_id>.log, hawq\_init\_<log_id>.log, etc. 
 
 -q (no screen output)  
 Optional. Run in quiet mode. Except for warning messages, command output is not displayed on the screen. However, this information is still written to the log file.
@@ -42,7 +44,7 @@ Optional. Run in quiet mode. Except for warning messages, command output is not 
 -v (verbose output)  
 Optional. Displays error messages and outputs detailed status and progress information.
 
--? | -h | -\\\-help (help)  
+-h | -\\\-help (help)  
 Displays the online help.
 
 ## <a id="topic1__section6"></a>Examples
