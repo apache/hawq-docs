@@ -66,73 +66,73 @@ If the primary master fails, the log replication process is shut down, and the s
 
 ## Objects
 
-cluster  
-Start a HAWQ cluster.
+<dt>cluster  </dt>
+<dd>Start a HAWQ cluster.</dd>
 
-master  
-Start HAWQ master.
+<dt>master  </dt>
+<dd>Start HAWQ master.</dd>
 
-segment  
-Start a local segment node.
+<dt>segment  </dt>
+<dd>Start a local segment node.</dd>
 
-standby  
-Start a HAWQ standby master.
+<dt>standby  </dt>
+<dd>Start a HAWQ standby master.</dd>
 
 ## <a id="topic1__section4"></a>Options
 
--a (do not prompt)  
-Do not prompt the user for confirmation.
+<dt>-a (do not prompt)  </dt>
+<dd>Do not prompt the user for confirmation.</dd>
 
--l -\\\-logdir*logfile\_directory*  
-The directory to write the log file. Defaults to `~/hawq/AdminLogs`.
+<dt>-l -\\\-logdir*logfile\_directory*  </dt>
+<dd>The directory to write the log file. Defaults to `~/hawq/AdminLogs`.</dd>
 
--q -\\\-quiet (no screen output)  
-Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.
+<dt>-q -\\\-quiet (no screen output)  </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
 
--v -\\\-verbose  
-Displays detailed status, progress and error messages and writes them to the log files.
+<dt>-v -\\\-verbose  </dt>
+<dd>Displays detailed status, progress and error messages and writes them to the log files.</dd>
 
--t -\\\-timeout  
-Sets timeout value in seconds. The default is 60 seconds.
+<dt>-t -\\\-timeout  </dt>
+<dd>Sets timeout value in seconds. The default is 60 seconds.</dd>
 
--n -\\\-no-update  
-Resync the standby with the master, but do not update system catalog tables.
+<dt>-n -\\\-no-update  </dt>
+<dd>Resync the standby with the master, but do not update system catalog tables.</dd>
 
--\\\-locale=*locale*   
-Sets the default locale used by HAWQ. If not specified, the `LC_ALL`, `LC_COLLATE`, or `LANG` environment variable of the master host determines the locale. If these are not set, the default locale is `C` (`POSIX`). A locale identifier consists of a language identifier and a region identifier, and optionally a character set encoding. For example, `sv_SE` is Swedish as spoken in Sweden, `en_US` is U.S. English, and `fr_CA` is French Canadian. If more than one character set can be useful for a locale, then the specifications look like this: `en_US.UTF-8` (locale specification and character set encoding). On most systems, the command `locale` will show the locale environment settings and `locale -a` will show a list of all available locales.
+<dt>-\\\-locale=*locale*   </dt>
+<dd>Sets the default locale used by HAWQ. If not specified, the `LC_ALL`, `LC_COLLATE`, or `LANG` environment variable of the master host determines the locale. If these are not set, the default locale is `C` (`POSIX`). A locale identifier consists of a language identifier and a region identifier, and optionally a character set encoding. For example, `sv_SE` is Swedish as spoken in Sweden, `en_US` is U.S. English, and `fr_CA` is French Canadian. If more than one character set can be useful for a locale, then the specifications look like this: `en_US.UTF-8` (locale specification and character set encoding). On most systems, the command `locale` will show the locale environment settings and `locale -a` will show a list of all available locales.</dd>
 
--\\\-lc-collate=*locale*  
-Similar to `--locale`, but sets the locale used for collation (sorting data). The sort order cannot be changed after HAWQ is initialized, so it is important to choose a collation locale that is compatible with the character set encodings that you plan to use for your data. There is a special collation name of `C` or `POSIX` (byte-order sorting as opposed to dictionary-order sorting). The `C` collation can be used with any character encoding.
+<dt>-\\\-lc-collate=*locale*  </dt>
+<dd>Similar to `--locale`, but sets the locale used for collation (sorting data). The sort order cannot be changed after HAWQ is initialized, so it is important to choose a collation locale that is compatible with the character set encodings that you plan to use for your data. There is a special collation name of `C` or `POSIX` (byte-order sorting as opposed to dictionary-order sorting). The `C` collation can be used with any character encoding.</dd>
 
--\\\-lc-ctype=*locale*  
-Similar to `--locale`, but sets the locale used for character classification (what character sequences are valid and how they are interpreted). This cannot be changed after HAWQ is initialized, so it is important to choose a character classification locale that is compatible with the data you plan to store in HAWQ.
+<dt>-\\\-lc-ctype=*locale*  </dt>
+<dd>Similar to `--locale`, but sets the locale used for character classification (what character sequences are valid and how they are interpreted). This cannot be changed after HAWQ is initialized, so it is important to choose a character classification locale that is compatible with the data you plan to store in HAWQ.</dd>
 
--\\\-lc-messages=*locale*  
-Similar to `--locale`, but sets the locale used for messages output by HAWQ. The current version of HAWQ does not support multiple locales for output messages (all messages are in English), so changing this setting will not have any effect.
+<dt>-\\\-lc-messages=*locale*  </dt>
+<dd>Similar to `--locale`, but sets the locale used for messages output by HAWQ. The current version of HAWQ does not support multiple locales for output messages (all messages are in English), so changing this setting will not have any effect.</dd>
 
--\\\-lc-monetary=*locale*  
-Similar to `--locale`, but sets the locale used for formatting currency amounts.
+<dt>-\\\-lc-monetary=*locale*  </dt>
+<dd>Similar to `--locale`, but sets the locale used for formatting currency amounts.</dd>
 
--\\\-lc-numeric=*locale*  
-Similar to `--locale`, but sets the locale used for formatting numbers.
+<dt>-\\\-lc-numeric=*locale*  </dt>
+<dd>Similar to `--locale`, but sets the locale used for formatting numbers.</dd>
 
--\\\-lc-time=*locale*  
-Similar to `--locale`, but sets the locale used for formatting dates and times.
+<dt>-\\\-lc-time=*locale*  </dt>
+<dd>Similar to `--locale`, but sets the locale used for formatting dates and times.</dd>
 
--\\\-bucket\_number=*number*   
-Sets value of `default_hash_table_bucket_number`, which sets the default number of hash buckets for creating virtual segments. This parameter overrides the default value of `default_hash_table_bucket_number` set in `hawq-site.xml` by an Ambari install. If not specified, `hawq init` will use the value in `hawq-site.xml`.
+<dt>-\\\-bucket\_number=*number*   </dt>
+<dd>Sets value of `default_hash_table_bucket_number`, which sets the default number of hash buckets for creating virtual segments. This parameter overrides the default value of `default_hash_table_bucket_number` set in `hawq-site.xml` by an Ambari install. If not specified, `hawq init` will use the value in `hawq-site.xml`.</dd>
 
--\\\-max\_connections=*number*   
-Sets the number of client connections allowed to the master. The default is 250.
+<dt>-\\\-max\_connections=*number*   </dt>
+<dd>Sets the number of client connections allowed to the master. The default is 250.</dd>
 
--\\\-shared\_buffers *number*  
-Sets the number of shared\_buffers to be used when initializing HAWQ.
+<dt>-\\\-shared\_buffers *number*  </dt>
+<dd>Sets the number of shared\_buffers to be used when initializing HAWQ.</dd>
 
--s -\\\-standby-host *name\_of\_standby\_host*  
-Adds a standby host name to hawq-site.xml and syncs it to all the nodes. If a standby host name was already defined in hawq-site.xml, using this option will overwrite the existing value.
+<dt>-s -\\\-standby-host *name\_of\_standby\_host*  </dt>
+<dd>Adds a standby host name to hawq-site.xml and syncs it to all the nodes. If a standby host name was already defined in hawq-site.xml, using this option will overwrite the existing value.</dd>
 
--? -\\\-help  
-Displays the online help.
+<dt>-? -\\\-help  </dt>
+<dd>Displays the online help.</dd>
 
 ## <a id="topic1__section6"></a>Examples
 

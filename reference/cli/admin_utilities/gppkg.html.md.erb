@@ -39,20 +39,20 @@ Note that Package Manager installation files for extension packages might releas
 
 ## <a id="topic1__section4"></a>Options
 
--a (do not prompt)  
-Do not prompt the user for confirmation.
+<dt>-a (do not prompt)  </dt>
+<dd>Do not prompt the user for confirmation.</dd>
 
--c | -\\\-clean  
-Reconciles the package state of the cluster to match the state of the master host. Running this option after a failed or partial install/uninstall ensures that the package installation state is consistent across the cluster.
+<dt>-c | -\\\-clean  </dt>
+<dd>Reconciles the package state of the cluster to match the state of the master host. Running this option after a failed or partial install/uninstall ensures that the package installation state is consistent across the cluster.</dd>
 
--d *master\_data\_directory*  
-The master data directory. If not specified, the value set for `$MASTER_DATA_DIRECTORY` will be used.
+<dt>-d *master\_data\_directory*  </dt>
+<dd>The master data directory. If not specified, the value set for `$MASTER_DATA_DIRECTORY` will be used.</dd>
 
--i *package* | -\\\-install=*package*  
-Installs the given package. This includes any pre/post installation steps and installation of any dependencies.
+<dt>-i *package* | -\\\-install=*package*  </dt>
+<dd>Installs the given package. This includes any pre/post installation steps and installation of any dependencies.</dd>
 
--\\\-migrate *GPHOME\_1* *GPHOME\_2*  
-Migrates packages from a separate `$GPHOME`. Carries over packages from one version of HAWQ to another.
+<dt>-\\\-migrate *GPHOME\_1* *GPHOME\_2*  </dt>
+<dd>Migrates packages from a separate `$GPHOME`. Carries over packages from one version of HAWQ to another.
 
 For example: 
 
@@ -62,10 +62,10 @@ $ gppkg --migrate /usr/local/hawq-old-version /usr/local/hawq-new-version
 
 This option is automatically invoked by the installer during minor upgrades. This option is given here for cases when the user wants to migrate packages manually.
 
-Migration can only proceed if `gppkg` is executed from the installation directory to which packages are being migrated. That is, `GPHOME_2` must match the `$GPHOME` from which the currently executing `gppkg` is being run.
+Migration can only proceed if `gppkg` is executed from the installation directory to which packages are being migrated. That is, `GPHOME_2` must match the `$GPHOME` from which the currently executing `gppkg` is being run.</dd>
 
--q | -\\\-query *query\_option*  
-Provides information specified by `query_option` about the installed packages. Only one `query_option` can be specified at a time. The following table lists the possible values for query\_option. `<package_file>` is the name of a package. <a id="topic1__jt142509"></a>
+<dt>-q | -\\\-query *query\_option*  </dt>
+<dd>Provides information specified by `query_option` about the installed packages. Only one `query_option` can be specified at a time. The following table lists the possible values for query\_option. `<package_file>` is the name of a package. <a id="topic1__jt142509"></a>
 
 <span class="tablecap">Table 1. Query Options for gppkg</span>
 
@@ -75,23 +75,23 @@ Provides information specified by `query_option` about the installed packages. O
 | `--info <package_file>` | The name, version, and other information about the specified package. |
 | `--list <package_file>` | The file contents of the specified package.                           |
 | `--all`                 | List of all installed packages.                                       |
+</dd>
 
+<dt>-r *name-version* | -\\\-remove=*name-version*  </dt>
+<dd>Removes the specified package.</dd>
 
--r *name-version* | -\\\-remove=*name-version*  
-Removes the specified package.
+<dt>-u *package* | -\\\-update=*package*  </dt>
+<dd>Updates the given package.
 
--u *package* | -\\\-update=*package*  
-Updates the given package.
+**Warning:** The process of updating a package includes removing all previous versions of the system objects related to the package. For example, previous versions of shared libraries are removed. After the update process, a database function will fail when it is called if the function references a package file that has been removed.</dd>
 
-**Warning:** The process of updating a package includes removing all previous versions of the system objects related to the package. For example, previous versions of shared libraries are removed. After the update process, a database function will fail when it is called if the function references a package file that has been removed.
+<dt>-\\\-version (show utility version)  </dt>
+<dd>Displays the version of this utility.</dd>
 
--\\\-version (show utility version)  
-Displays the version of this utility.
+<dt>-v | -\\\-verbose  </dt>
+<dd>Sets the logging level to verbose.</dd>
 
--v | -\\\-verbose  
-Sets the logging level to verbose.
-
--? | -h | -\\\-help  
-Displays the online help.
+<dt>-? | -h | -\\\-help  </dt>
+<dd>Displays the online help.</dd>
 
 

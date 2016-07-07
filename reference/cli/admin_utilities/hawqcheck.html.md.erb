@@ -39,41 +39,41 @@ diskusage.monitor.mounts = /,/data1,/data2
 
 ## <a id="topic1__section4"></a>Options
 
--\\\-config *config\_file*   
-The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.
+<dt>-\\\-config *config\_file*   </dt>
+<dd>The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.</dd>
 
--f *hostfile\_hawq\_check*  
-The name of a file that contains a list of hosts that `hawq check` uses to validate platform-specific settings. This file should contain a single host name for all hosts in your HAWQ system (master, standby master, and segments).
+<dt>-f *hostfile\_hawq\_check*  </dt>
+<dd>The name of a file that contains a list of hosts that `hawq check` uses to validate platform-specific settings. This file should contain a single host name for all hosts in your HAWQ system (master, standby master, and segments).</dd>
 
--\\\-hadoop | -\\\-hadoop-home *hadoop\_home*  
-Use this option to specify your hadoop installation location so that `hawq check` can validate HDFS settings. This option is not needed if `HADOOP_HOME` environment variable is set.
+<dt>-\\\-hadoop | -\\\-hadoop-home *hadoop\_home*  </dt>
+<dd>Use this option to specify your hadoop installation location so that `hawq check` can validate HDFS settings. This option is not needed if `HADOOP_HOME` environment variable is set.</dd>
 
--\\\-kerberos  
-Use this option to check HDFS and YARN when running Kerberos mode. This allows `hawq check` to validate HAWQ/HDFS/YARN settings with Kerberos enabled.
+<dt>-\\\-kerberos  </dt>
+<dd>Use this option to check HDFS and YARN when running Kerberos mode. This allows `hawq check` to validate HAWQ/HDFS/YARN settings with Kerberos enabled.</dd>
 
--\\\-hdfs-ha  
-Use this option to indicate that HDFS-HA mode is enabled, allowing `hawq               check` to validate HDFS settings with HA mode enabled.
+<dt>-\\\-hdfs-ha  </dt>
+<dd>Use this option to indicate that HDFS-HA mode is enabled, allowing `hawq               check` to validate HDFS settings with HA mode enabled.</dd>
 
--\\\-yarn  
-If HAWQ is using YARN, enables yarn mode, allowing `hawq check` to validate the basic YARN settings.
+<dt>-\\\-yarn  </dt>
+<dd>If HAWQ is using YARN, enables yarn mode, allowing `hawq check` to validate the basic YARN settings.</dd>
 
--\\\-yarn-ha  
-Use this option to indicate HAWQ is using YARN with High Availability mode enabled, to allow `hawq check` to validate HAWQ-YARN settings with YARN-HA enabled.
+<dt>-\\\-yarn-ha  </dt>
+<dd>Use this option to indicate HAWQ is using YARN with High Availability mode enabled, to allow `hawq check` to validate HAWQ-YARN settings with YARN-HA enabled.</dd>
 
--\\\-stdout  
-Send collected host information from `hawq check` to standard output. No checks or validations are performed.
+<dt>-\\\-stdout  </dt>
+<dd>Send collected host information from `hawq check` to standard output. No checks or validations are performed.</dd>
 
--\\\-zipout  
-Save all collected data to a .zip file in the current working directory. `hawq               check` automatically creates the .zip file and names it `hawq_check_timestamp.tar.gz.` No checks or validations are performed.
+<dt>-\\\-zipout  </dt>
+<dd>Save all collected data to a .zip file in the current working directory. `hawq               check` automatically creates the .zip file and names it `hawq_check_timestamp.tar.gz.` No checks or validations are performed.</dd>
 
--\\\-zipin *file*  
-Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.
+<dt>-\\\-zipin *file*  </dt>
+<dd>Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.</dd>
 
--\\\-version  
-Displays the version of this utility.
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
 
--? (help)  
-Displays the online help.
+<dt>-? (help)  </dt>
+<dd>Displays the online help.</dd>
 
 ## <a id="topic1__section5"></a>Examples
 

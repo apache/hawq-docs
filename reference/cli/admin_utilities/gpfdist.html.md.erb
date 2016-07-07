@@ -39,36 +39,36 @@ You can also run `gpfdist` as a Windows Service. See [Running gpfdist as a Windo
 
 ## <a id="topic1__section4"></a>Options
 
--d *directory*  
-The directory from which `gpfdist` will serve files for readable external tables or create output files for writable external tables. If not specified, defaults to the current directory.
+<dt>-d *directory*  </dt>
+<dd>The directory from which `gpfdist` will serve files for readable external tables or create output files for writable external tables. If not specified, defaults to the current directory.</dd>
 
--l *log\_file*  
-The fully qualified path and log file name where standard output messages are to be logged.
+<dt>-l *log\_file*  </dt>
+<dd>The fully qualified path and log file name where standard output messages are to be logged.</dd>
 
--p *http\_port*  
-The HTTP port on which `gpfdist` will serve files. Defaults to 8080.
+<dt>-p *http\_port*  </dt>
+<dd>The HTTP port on which `gpfdist` will serve files. Defaults to 8080.</dd>
 
--t *timeout*  
-Sets the time allowed for HAWQ to establish a connection to a `gpfdist` process. Default is 5 seconds. Allowed values are 2 to 600 seconds. May need to be increased on systems with a lot of network traffic.
+<dt>-t *timeout*  </dt>
+<dd>Sets the time allowed for HAWQ to establish a connection to a `gpfdist` process. Default is 5 seconds. Allowed values are 2 to 600 seconds. May need to be increased on systems with a lot of network traffic.</dd>
 
--m *max\_length*  
-Sets the maximum allowed data row length in bytes. Default is 32768. Should be used when user data includes very wide rows (or when `line too long` error message occurs). Should not be used otherwise as it increases resource allocation. Valid range is 32K to 256MB. (The upper limit is 1MB on Windows systems.)
+<dt>-m *max\_length*  </dt>
+<dd>Sets the maximum allowed data row length in bytes. Default is 32768. Should be used when user data includes very wide rows (or when `line too long` error message occurs). Should not be used otherwise as it increases resource allocation. Valid range is 32K to 256MB. (The upper limit is 1MB on Windows systems.)</dd>
 
--s  
-Enables simplified logging. When this option is specified, only messages with `WARN` level and higher are written to the `gpfdist` log file. `INFO` level messages are not written to the log file. If this option is not specified, all `gpfdist` messages are written to the log file.
+<dt>-s  </dt>
+<dd>Enables simplified logging. When this option is specified, only messages with `WARN` level and higher are written to the `gpfdist` log file. `INFO` level messages are not written to the log file. If this option is not specified, all `gpfdist` messages are written to the log file.
 
-You can specify this option to reduce the information written to the log file.
+You can specify this option to reduce the information written to the log file.</dd>
 
--S (use O\_SYNC)  
-Opens the file for synchronous I/O with the `O_SYNC` flag. Any writes to the resulting file descriptor block `gpfdist` until the data is physically written to the underlying hardware.
+<dt>-S (use O\_SYNC)  </dt>
+<dd>Opens the file for synchronous I/O with the `O_SYNC` flag. Any writes to the resulting file descriptor block `gpfdist` until the data is physically written to the underlying hardware.</dd>
 
--w *time*  
-Sets the number of seconds that HAWQ delays before closing a target file such as a named pipe. The default value is 0, no delay. The maximum value is 600 seconds, 10 minutes.
+<dt>-w *time*  </dt>
+<dd>Sets the number of seconds that HAWQ delays before closing a target file such as a named pipe. The default value is 0, no delay. The maximum value is 600 seconds, 10 minutes.
 
-For a HAWQ with multiple segments, there might be a delay between segments when writing data from different segments to the file. You can specify a time to wait before HAWQ closes the file to ensure all the data is written to the file.
+For a HAWQ with multiple segments, there might be a delay between segments when writing data from different segments to the file. You can specify a time to wait before HAWQ closes the file to ensure all the data is written to the file.</dd>
 
--\\\-ssl *certificate\_path*  
-Adds SSL encryption to data transferred with `gpfdist`. After executing `gpfdist` with the `--ssl               certificate_path` option, the only way to load data from this file server is with the `gpfdist://` protocol.
+<dt>-\\\-ssl *certificate\_path*  </dt>
+<dd>Adds SSL encryption to data transferred with `gpfdist`. After executing `gpfdist` with the `--ssl               certificate_path` option, the only way to load data from this file server is with the `gpfdist://` protocol.
 
 The location specified in *certificate\_path* must contain the following files:
 
@@ -76,19 +76,19 @@ The location specified in *certificate\_path* must contain the following files:
 -   The server private key file, `server.key`
 -   The trusted certificate authorities, `root.crt`
 
-The root directory (`/`) cannot be specified as *certificate\_path*.
+The root directory (`/`) cannot be specified as *certificate\_path*.</dd>
 
--v (verbose)  
-Verbose mode shows progress and status messages.
+<dt>-v (verbose)  </dt>
+<dd>Verbose mode shows progress and status messages.</dd>
 
--V (very verbose)  
-Verbose mode shows all output messages generated by this utility.
+<dt>-V (very verbose)  </dt>
+<dd>Verbose mode shows all output messages generated by this utility.</dd>
 
--? (help)  
-Displays the online help.
+<dt>-? (help)  </dt>
+<dd>Displays the online help.</dd>
 
--\\\-version  
-Displays the version of this utility.
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
 
 ## <a id="topic1__section5"></a>Running gpfdist as a Windows Service
 

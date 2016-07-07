@@ -24,70 +24,70 @@ Superusers can bypass all access permission checks within the database, so super
 
 ## <a id="topic1__section4"></a>Options
 
-role\_name  
-The name of the role to be created. This name must be different from all existing roles in this HAWQ installation.
+<dt>role\_name  </dt>
+<dd>The name of the role to be created. This name must be different from all existing roles in this HAWQ installation.</dd>
 
--c *number* | -\\\-connection-limit *number*  
-Set a maximum number of connections for the new role. The default is to set no limit.
+<dt>-c *number* | -\\\-connection-limit *number*  </dt>
+<dd>Set a maximum number of connections for the new role. The default is to set no limit.</dd>
 
--D | -\\\-no-createdb  
-The new role will not be allowed to create databases. This is the default.
+<dt>-D | -\\\-no-createdb  </dt>
+<dd>The new role will not be allowed to create databases. This is the default.</dd>
 
--d | -\\\-createdb  
-The new role will be allowed to create databases.
+<dt>-d | -\\\-createdb  </dt>
+<dd>The new role will be allowed to create databases.</dd>
 
--e | -\\\-echo  
-Echo the commands that `createuser` generates and sends to the server.
+<dt>-e | -\\\-echo  </dt>
+<dd>Echo the commands that `createuser` generates and sends to the server.</dd>
 
--E | -\\\-encrypted  
-Encrypts the role's password stored in the database. If not specified, the default password behavior is used.
+<dt>-E | -\\\-encrypted  </dt>
+<dd>Encrypts the role's password stored in the database. If not specified, the default password behavior is used.</dd>
 
--i | -\\\-inherit  
-The new role will automatically inherit privileges of roles it is a member of. This is the default.
+<dt>-i | -\\\-inherit  </dt>
+<dd>The new role will automatically inherit privileges of roles it is a member of. This is the default.</dd>
 
--I | -\\\-no-inherit  
-The new role will not automatically inherit privileges of roles it is a member of.
+<dt>-I | -\\\-no-inherit  </dt>
+<dd>The new role will not automatically inherit privileges of roles it is a member of.</dd>
 
--l | -\\\-login  
-The new role will be allowed to log in to HAWQ. This is the default.
+<dt>-l | -\\\-login  </dt>
+<dd>The new role will be allowed to log in to HAWQ. This is the default.</dd>
 
--L | -\\\-no-login  
-The new role will not be allowed to log in (a group-level role).
+<dt>-L | -\\\-no-login  </dt>
+<dd>The new role will not be allowed to log in (a group-level role).</dd>
 
--N | -\\\-unencrypted  
-Does not encrypt the role's password stored in the database. If not specified, the default password behavior is used.
+<dt>-N | -\\\-unencrypted  </dt>
+<dd>Does not encrypt the role's password stored in the database. If not specified, the default password behavior is used.</dd>
 
--P | -\\\-pwprompt  
-If given, `createuser` will issue a prompt for the password of the new role. This is not necessary if you do not plan on using password authentication.
+<dt>-P | -\\\-pwprompt  </dt>
+<dd>If given, `createuser` will issue a prompt for the password of the new role. This is not necessary if you do not plan on using password authentication.</dd>
 
--r | -\\\-createrole  
-The new role will be allowed to create new roles (`CREATEROLE` privilege).
+<dt>-r | -\\\-createrole  </dt>
+<dd>The new role will be allowed to create new roles (`CREATEROLE` privilege).</dd>
 
--R | -\\\-no-createrole  
-The new role will not be allowed to create new roles. This is the default.
+<dt>-R | -\\\-no-createrole  </dt>
+<dd>The new role will not be allowed to create new roles. This is the default.</dd>
 
--s | -\\\-superuser  
-The new role will be a superuser.
+<dt>-s | -\\\-superuser  </dt>
+<dd>The new role will be a superuser.</dd>
 
--S | -\\\-no-superuser  
-The new role will not be a superuser. This is the default.
+<dt>-S | -\\\-no-superuser  </dt>
+<dd>The new role will not be a superuser. This is the default.</dd>
 
 **Connection Options**
 
--h *host* | -\\\-host *host*  
-The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
+<dt>-h *host* | -\\\-host *host*  </dt>
+<dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
--p *port* | -\\\-port *port*  
-The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.
+<dt>-p *port* | -\\\-port *port*  </dt>
+<dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
--U *username* | -\\\-username *username*  
-The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.
+<dt>-U *username* | -\\\-username *username*  </dt>
+<dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
 
--w | -\\\-no-password  
-Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.
+<dt>-w | -\\\-no-password  </dt>
+<dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</dd>
 
--W | -\\\-password  
-Force a password prompt.
+<dt>-W | -\\\-password  </dt>
+<dd>Force a password prompt.</dd>
 
 ## <a id="topic1__section6"></a>Examples
 

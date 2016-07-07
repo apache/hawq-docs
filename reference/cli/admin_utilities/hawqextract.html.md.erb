@@ -28,43 +28,43 @@ hawq extract --version
 
 ## Arguments
 
-&lt;tablename&gt;  
-Name of the table that you need to extract metadata. You can use the format *namespace\_name.table\_name*.
+<dt>&lt;tablename&gt;  </dt>
+<dd>Name of the table that you need to extract metadata. You can use the format *namespace\_name.table\_name*.</dd>
 
 ## Options
 
--o *output\_file*  
-Is the name of a file that `hawq extract` uses to write the metadata. If you do not specify a name, `hawq extract` writes to `stdout`.
+<dt>-o *output\_file*  </dt>
+<dd>Is the name of a file that `hawq extract` uses to write the metadata. If you do not specify a name, `hawq extract` writes to `stdout`.</dd>
 
 <!-- -->
 
--v (verbose mode)  
-Optional. Displays the verbose output of the extraction process.
+<dt>-v (verbose mode)  </dt>
+<dd>Optional. Displays the verbose output of the extraction process.</dd>
 
 <!-- -->
 
--? (help)  
-Displays the online help.
+<dt>-? (help)  </dt>
+<dd>Displays the online help.</dd>
 
--\\\-version  
-Displays the version of this utility.
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
 
 **Connection Options**
 
--d *database*  
-The database to connect to. If not specified, it reads from the environment variable `$PGDATABASE` or defaults to `template1`.
+<dt>-d *database*  </dt>
+<dd>The database to connect to. If not specified, it reads from the environment variable `$PGDATABASE` or defaults to `template1`.</dd>
 
--h *hostname*  
-Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, it reads from the environment variable `$PGHOST` or defaults to `localhost`.
+<dt>-h *hostname*  </dt>
+<dd>Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, it reads from the environment variable `$PGHOST` or defaults to `localhost`.</dd>
 
--p *port*  
-Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `$PGPORT` or defaults to 5432.
+<dt>-p *port*  </dt>
+<dd>Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `$PGPORT` or defaults to 5432.</dd>
 
--U *username*  
-The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.
+<dt>-U *username*  </dt>
+<dd>The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.</dd>
 
--W (force password prompt)  
-Force a password prompt. If not specified, reads the password from the environment variable `$PGPASSWORD` or from a password file specified by `$PGPASSFILE` or in `~/.pgpass`.
+<dt>-W (force password prompt)  </dt>
+<dd>Force a password prompt. If not specified, reads the password from the environment variable `$PGPASSWORD` or from a password file specified by `$PGPASSFILE` or in `~/.pgpass`.</dd>
 
 ## Metadata File Format
 

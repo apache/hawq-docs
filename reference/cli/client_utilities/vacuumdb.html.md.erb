@@ -26,48 +26,48 @@ vacuumdb --version
 
 ## <a id="topic1__section4"></a>Options
 
--a | -\\\-all  
-Vacuums all databases.
+<dt>-a | -\\\-all  </dt>
+<dd>Vacuums all databases.</dd>
 
-\[-d\] *dbname* | \[-\\\-dbname\] *dbname*  
-The name of the database to vacuum. If this is not specified and `--all` is not used, the database name is read from the environment variable `PGDATABASE`. If that is not set, the user name specified for the connection is used.
+<dt>\[-d\] *dbname* | \[-\\\-dbname\] *dbname*  </dt>
+<dd>The name of the database to vacuum. If this is not specified and `--all` is not used, the database name is read from the environment variable `PGDATABASE`. If that is not set, the user name specified for the connection is used.</dd>
 
--f | -\\\-full  
-Selects a full vacuum, which may reclaim more space, but takes much longer and exclusively locks the table.
+<dt>-f | -\\\-full  </dt>
+<dd>Selects a full vacuum, which may reclaim more space, but takes much longer and exclusively locks the table.
 
-**Warning:** A `VACUUM FULL` is not recommended in HAWQ.
+**Warning:** A `VACUUM FULL` is not recommended in HAWQ.</dd>
 
--F | -\\\-freeze  
-Freeze row transaction information.
+<dt>-F | -\\\-freeze  </dt>
+<dd>Freeze row transaction information.</dd>
 
--q | -\\\-quiet  
-Do not display a response.
+<dt>-q | -\\\-quiet  </dt>
+<dd>Do not display a response.</dd>
 
--t *table* \[(*column*)\] | -\\\-table *table* \[(*column*)\]  
-Clean or analyze this table only. Column names may be specified only in conjunction with the `--analyze` option. If you specify columns, you probably have to escape the parentheses from the shell.
+<dt>-t *table* \[(*column*)\] | -\\\-table *table* \[(*column*)\]  </dt>
+<dd>Clean or analyze this table only. Column names may be specified only in conjunction with the `--analyze` option. If you specify columns, you probably have to escape the parentheses from the shell.</dd>
 
--v | -\\\-verbose  
-Print detailed information during processing.
+<dt>-v | -\\\-verbose  </dt>
+<dd>Print detailed information during processing.</dd>
 
--z | -\\\-analyze  
-Collect statistics for use by the query planner.
+<dt>-z | -\\\-analyze  </dt>
+<dd>Collect statistics for use by the query planner.</dd>
 
 **Connection Options**
 
--h *host* | -\\\-host *host*  
-Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
+<dt>-h *host* | -\\\-host *host*  </dt>
+<dd>Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
--p *port* | -\\\-port *port*  
-Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.
+<dt>-p *port* | -\\\-port *port*  </dt>
+<dd>Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
--U *username* | -\\\-username *username*  
-The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system user name.
+<dt>-U *username* | -\\\-username *username*  </dt>
+<dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system user name.</dd>
 
--w | -\\\-no-password  
-Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.
+<dt>-w | -\\\-no-password  </dt>
+<dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</dd>
 
--W | -\\\-password  
-Force a password prompt.
+<dt>-W | -\\\-password  </dt>
+<dd>Force a password prompt.</dd>
 
 ## <a id="topic1__section6"></a>Notes
 
