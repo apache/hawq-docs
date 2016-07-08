@@ -36,23 +36,23 @@ The `hawq ssh-exkeys` utility performs key exchange using the following steps:
 
 ## <a id="topic1__section4"></a>Options
 
--e *hostfile\_exkeys*  
-When doing a system expansion, this is the name and location of a file containing all configured host names and host addresses (interface names) for each host in your *current* HAWQ system (master, standby master and segments), one name per line without blank lines or extra spaces. Hosts specified in this file cannot be specified in the host file used with `-x`.
+<dt>-e *hostfile\_exkeys*  </dt>
+<dd>When doing a system expansion, this is the name and location of a file containing all configured host names and host addresses (interface names) for each host in your *current* HAWQ system (master, standby master and segments), one name per line without blank lines or extra spaces. Hosts specified in this file cannot be specified in the host file used with `-x`.</dd>
 
--f *hostfile\_exkeys*  
-Specifies the name and location of a file containing all configured host names and host addresses (interface names) for each host in your HAWQ system (master, standby master and segments), one name per line without blank lines or extra spaces.
+<dt>-f *hostfile\_exkeys*  </dt>
+<dd>Specifies the name and location of a file containing all configured host names and host addresses (interface names) for each host in your HAWQ system (master, standby master and segments), one name per line without blank lines or extra spaces.</dd>
 
--h *hostname*  
-Specifies a single host name (or host address) that will participate in the SSH key exchange. You can use the `-h` option multiple times to specify multiple host names and host addresses.
+<dt>-h *hostname*  </dt>
+<dd>Specifies a single host name (or host address) that will participate in the SSH key exchange. You can use the `-h` option multiple times to specify multiple host names and host addresses.</dd>
 
--\\\-version  
-Displays the version of this utility.
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
 
--x *hostfile\_hawqexpand*  
-When doing a system expansion, this is the name and location of a file containing all configured host names and host addresses (interface names) for each new segment host you are adding to your HAWQ system, one name per line without blank lines or extra spaces. Hosts specified in this file cannot be specified in the host file used with `-e`.
+<dt>-x *hostfile\_hawqexpand*  </dt>
+<dd>When doing a system expansion, this is the name and location of a file containing all configured host names and host addresses (interface names) for each new segment host you are adding to your HAWQ system, one name per line without blank lines or extra spaces. Hosts specified in this file cannot be specified in the host file used with `-e`.</dd>
 
--? (help)  
-Displays the online help.
+<dt>-? (help)  </dt>
+<dd>Displays the online help.</dd>
 
 ## <a id="topic1__section5"></a>Examples
 

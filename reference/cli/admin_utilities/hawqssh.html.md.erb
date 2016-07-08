@@ -29,30 +29,31 @@ If a user name is not specified in the host file, `hawq ssh` will execute comman
 
 ## <a id="topic1__section4"></a>Options
 
- *bash\_command*   
-A bash shell command to execute on all hosts involved in this session (optionally enclosed in quotes). If not specified, `hawq ssh` will start an interactive session.
+<dt> *bash\_command*   </dt>
+<dd>A bash shell command to execute on all hosts involved in this session (optionally enclosed in quotes). If not specified, `hawq ssh` will start an interactive session.</dd>
 
--e (echo)  
-Optional. Echoes the commands passed to each host and their resulting output while running in non-interactive mode.
+<dt>-e (echo)  </dt>
+<dd>Optional. Echoes the commands passed to each host and their resulting output while running in non-interactive mode.</dd>
 
--f *hostfile\_hawqssh*  
-Specifies the name of a file that contains a list of hosts that will participate in this SSH session. The host name is required, and you can optionally specify an alternate user name and/or SSH port number per host. The syntax of the host file is one host per line as follows:
+<dt>-f *hostfile\_hawqssh*  </dt>
+<dd>Specifies the name of a file that contains a list of hosts that will participate in this SSH session. The host name is required, and you can optionally specify an alternate user name and/or SSH port number per host. The syntax of the host file is one host per line as follows:
 
 ``` pre
 [username@]hostname[:ssh_port]
 ```
+</dd>
 
--h *hostname*  
-Specifies a single host name that will participate in this SSH session. You can use the `-h` option multiple times to specify multiple host names.
+<dt>-h *hostname*  </dt>
+<dd>Specifies a single host name that will participate in this SSH session. You can use the `-h` option multiple times to specify multiple host names.</dd>
 
--v (verbose mode)  
-Optional. Reports additional messages in addition to the command output when running in non-interactive mode.
+<dt>-v (verbose mode)  </dt>
+<dd>Optional. Reports additional messages in addition to the command output when running in non-interactive mode.</dd>
 
--\\\-version  
-Displays the version of this utility.
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
 
--? (help)  
-Displays the online help.
+<dt>-? (help)  </dt>
+<dd>Displays the online help.</dd>
 
 ## <a id="topic1__section5"></a>Examples
 
