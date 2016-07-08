@@ -17,7 +17,7 @@ CREATE [TRUSTED] [PROCEDURAL] LANGUAGE name
 
 `CREATE LANGUAGE` registers a new procedural language with a HAWQ database. Subsequently, functions can be defined in this new language. You must be a superuser to register a new language.
 
-When you register a new procedural language, you effectively associate the language name with a call handler that is responsible for executing functions written in that language. For a function written in a procedural language (a language other than C or SQL), the database server has no built-in knowledge about how to interpret the function's source code. The task is passed to a special handler that knows the details of the language. The handler could either do all the work of parsing,syntax analysis, execution, and so on, or it could serve as a bridge between HAWQ and an existing implementation of a programming language. The handler itself is a C language function compiled into a shared object and loaded on demand, just like any other C function.
+When you register a new procedural language, you effectively associate the language name with a call handler that is responsible for executing functions written in that language. For a function written in a procedural language (a language other than C or SQL), the database server has no built-in knowledge about how to interpret the function's source code. The task is passed to a special handler that knows the details of the language. The handler could either do all the work of parsing, syntax analysis, execution, and so on, or it could serve as a bridge between HAWQ and an existing implementation of a programming language. The handler itself is a C language function compiled into a shared object and loaded on demand, just like any other C function.
 
 There are two forms of the `CREATE LANGUAGE` command. In the first form, the user specifies the name of the desired language and the HAWQ server uses the `pg_pltemplate` system catalog to determine the correct parameters. In the second form, the user specifies the language parameters as well as the language name. You can use the second form to create a language that is not defined in `pg_pltemplate`.
 
@@ -32,7 +32,7 @@ When the server finds an entry in the `pg_pltemplate` catalog for the given lang
 <dd>Indicates that this is a procedural language.</dd>
 
 <dt> *name*   </dt>
-<dd>The name of the new procedural language. The language name is case insensitive. The name must be unique among the languages in the database. Built-in support is included for `plpgsql`, `plpython`, `plpythonu`, and `plr`. `plpgsql` is already installed by default in HAWQ.</dd>
+<dd>The name of the new procedural language. The language name is case insensitive. The name must be unique among the languages in the database. Built-in support is included for `plpgsql`, `plpython`, `plpythonu`, and `plr`. `plpgsql` is installed by default in HAWQ.</dd>
 
 <dt>HANDLER *call\_handler*   </dt>
 <dd>Ignored if the server has an entry for the specified language name in `pg_pltemplate`. The name of a previously registered function that will be called to execute the procedural language functions. The call handler for a procedural language must be written in a compiled language such as C with version 1 call convention and registered with HAWQ as a function taking no arguments and returning the `language_handler` type, a placeholder type that is simply used to identify the function as a call handler.</dd>
@@ -46,16 +46,12 @@ A validator function would typically inspect the function body for syntactical c
 
 The procedural language packages included in the standard HAWQ distribution are:
 
--   `PL/pgSQL`
+-   `PL/pgSQL` - registered in all databases by default
 -   `PL/Perl`
 -   `PL/Python`
 -   `PL/Java`
 
-The `PL/pgSQL` language is registered in all databases by default. HAWQ has a language handler for `PL/R`, but the `PL/R` language package is not pre-installed with HAWQ.
-
-The PL/R libraries require the correct versions of R to be installed, respectively. Download the appropriate extensions from [Pivotal Network](https://network.pivotal.io/), then install the extensions. This ensures that all underlying dependencies are installed along with the extensions.
-
-To use the PL/R procedural language you must make sure that the systems that run HAWQ (master and all segments) have the R language installed and the PL/R package library (`plr.so`) added to their HAWQ installation on all hosts. Compiled packages for R and PL/R are available to install.
+HAWQ supports a language handler for `PL/R`, but the `PL/R` language package is not pre-installed with HAWQ.
 
 The system catalog `pg_language` records information about the currently installed languages.
 
