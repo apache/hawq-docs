@@ -21,8 +21,8 @@ The client machine where `hawq register` is executed must have the following:
 
 -   Network access to and from all hosts in your HAWQ cluster (master and segments).
 -   Network access to and from the hosts where the data to be loaded resides (ETL servers).
--   The files to be registered and the HAWQ table must be in the same HDFS cluster.
--   The target table must be configured with the correct data type mapping.
+-   The files to be registered and the HAWQ table located in the same HDFS cluster.
+-   The target table is configured with the correct data type mapping.
 
 ## <a id="topic1__section4"></a>Description
 
@@ -68,9 +68,9 @@ Enter:
 $ hawq register postgres parquet_table hdfs://localhost:8020/temp/hive.paq
 ```
 
-After running the `hawq register` command for the file location  `hdfs://localhost:8020/temp/hive.paq`, the corresponding new location of the file is:  `hdfs://localhost:8020/hawq_default/16385/16387/77160/8` in HDFS. The command then updates the metadata of the table `parquet_table` in HAWQ, which is contained in the table 'pg\_aoseg.pg\_paqseg\_77160'. The row-oriented table name prefix is pg_aoseg, and parquet table prefix is pg_paqseg, and 77160 is the relation id of the table.
+After running the `hawq register` command for the file location  `hdfs://localhost:8020/temp/hive.paq`, the corresponding new location of the file is:  `hdfs://localhost:8020/hawq_default/16385/16387/77160/8` in HDFS. The command then updates the metadata of the table `parquet_table` in HAWQ, which is contained in the table `pg_aoseg.pg_paqseg_77160`. The row-oriented table name prefix is pg\_aoseg, and the parquet table prefix is pg\_paqseg, and 77160 is the relation id of the table.
 
-To locate the table, you can either find the relation ID by looking up the catalog table pg_class by running `select oid from pg_class where relname=$relname` or by finding the table name by using the command `select segrelid from pg_appendonly where relid = $relid` then running `select relname from pg_class where oid = segrelid`.
+To locate the table, you can either find the relation ID by looking up the catalog table pg\_class by running `select oid from pg_class where relname=$relname` or by finding the table name by using the command `select segrelid from pg_appendonly where relid = $relid` then running `select relname from pg_class where oid = segrelid`.
 
 ##Data Type Mapping<a id="topic1__section7"></a>
 
