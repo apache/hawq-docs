@@ -1308,32 +1308,4 @@ psql=# INSERT INTO dummy_tbl_write VALUES (1, 'a', 11), (2, 'b', 22);
 INSERT 0 2
 ```
 
-## <a id="topic_b44_yw4_c5"></a>Renamed Package Reference
-
-Package names have been renamed to reflect the move of PXF to Apache HAWQ.
-
-If you have any customized PXF plug-ins, you must recompile your plug-in to use the new package names for PXF APIs. If you have defined any PXF tables with built-in plug-ins, you must recreate the tables with the new package names. Using the PXF `PROFILE` option eases this task.
-
-| Old Name                                               | New Name                                                   |
-|--------------------------------------------------------|------------------------------------------------------------|
-| com.pivotal.pxf.plugins.hdfs.LineBreakAccessor         | org.apache.hawq.pxf.plugins.hdfs.LineBreakAccessor         |
-| com.pivotal.pxf.plugins.hdfs.QuotedLineBreakAccessor   | org.apache.hawq.pxf.plugins.hdfs.QuotedLineBreakAccessor   |
-| com.pivotal.pxf.plugins.hdfs.AvroFileAccessor          | org.apache.hawq.pxf.plugins.hdfs.AvroFileAccessor          |
-| com.pivotal.pxf.plugins.hdfs.SequenceFileAccessor      | org.apache.hawq.pxf.plugins.hdfs.SequenceFileAccessor      |
-| com.pivotal.pxf.plugins.hdfs.StringPassResolver        | org.apache.hawq.pxf.plugins.hdfs.StringPassResolver        |
-| com.pivotal.pxf.plugins.hdfs.AvroResolver              | org.apache.hawq.pxf.plugins.hdfs.AvroResolver              |
-| com.pivotal.pxf.plugins.hdfs.WritableResolver          | org.apache.hawq.pxf.plugins.hdfs.WritableResolver          |
-| com.pivotal.pxf.plugins.hdfs.HdfsDataFragmenter        | org.apache.hawq.pxf.plugins.hdfs.HdfsDataFragmenter        |
-| com.pivotal.pxf.plugins.hbase.HBaseAccessor            | org.apache.hawq.pxf.plugins.hbase.HBaseAccessor            |
-| com.pivotal.pxf.plugins.hbase.HBaseDataFragmenter      | org.apache.hawq.pxf.plugins.hbase.HBaseDataFragmenter      |
-| com.pivotal.pxf.plugins.hbase.HBaseResolver            | org.apache.hawq.pxf.plugins.hbase.HBaseResolver            |
-| com.pivotal.pxf.plugins.hive.HiveAccessor              | org.apache.hawq.pxf.plugins.hive.HiveAccessor              |
-| com.pivotal.pxf.plugins.hive.HiveColumnarSerdeResolver | org.apache.hawq.pxf.plugins.hive.HiveColumnarSerdeResolver |
-| com.pivotal.pxf.plugins.hive.HiveDataFragmenter        | org.apache.hawq.pxf.plugins.hive.HiveDataFragmenter        |
-| com.pivotal.pxf.plugins.hive.HiveInputFormatFragmenter | org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter |
-| com.pivotal.pxf.plugins.hive.HiveLineBreakAccessor     | org.apache.hawq.pxf.plugins.hive.HiveLineBreakAccessor     |
-| com.pivotal.pxf.plugins.hive.HiveRCFileAccessor        | org.apache.hawq.pxf.plugins.hive.HiveRCFileAccessor        |
-| com.pivotal.pxf.plugins.hive.HiveResolver              | org.apache.hawq.pxf.plugins.hive.HiveResolver              |
-| com.pivotal.pxf.plugins.hive.HiveStringPassResolver    | org.apache.hawq.pxf.plugins.hive.HiveStringPassResolver    |
-
 
