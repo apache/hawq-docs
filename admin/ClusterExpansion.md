@@ -101,10 +101,10 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
      registration_order | role | status | port  | hostname |    address    
     --------------------+------+--------+-------+----------+---------------
-                     -1 | s    | u      |  5432 | sdw1     | 192.168.2.202
+                     -1 | s    | u      |  5432 | sdw1     | 192.0.2.0
                       0 | m    | u      |  5432 | mdw      | rhel64-1
-                      1 | p    | u      | 40000 | sdw3     | 192.168.2.204
-                      2 | p    | u      | 40000 | sdw2     | 192.168.2.203
+                      1 | p    | u      | 40000 | sdw3     | 192.0.2.2
+                      2 | p    | u      | 40000 | sdw2     | 192.0.2.1
     (4 rows)
     ```
 
@@ -168,11 +168,11 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
      registration_order | role | status | port  | hostname |    address    
     --------------------+------+--------+-------+----------+---------------
-                     -1 | s    | u      |  5432 | sdw1     | 192.168.2.202
+                     -1 | s    | u      |  5432 | sdw1     | 192.0.2.0
                       0 | m    | u      |  5432 | mdw      | rhel64-1
-                      1 | p    | u      | 40000 | sdw3     | 192.168.2.204
-                      2 | p    | u      | 40000 | sdw2     | 192.168.2.203
-                      3 | p    | u      | 40000 | sdw4     | 192.168.2.205
+                      1 | p    | u      | 40000 | sdw3     | 192.0.2.2
+                      2 | p    | u      | 40000 | sdw2     | 192.0.2.1
+                      3 | p    | u      | 40000 | sdw4     | 192.0.2.3
     (5 rows)
     ```
 

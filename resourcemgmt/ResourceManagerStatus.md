@@ -27,13 +27,13 @@ The following output is an example of resource context \(connection track\) stat
 ``` pre
 Number of free connection ids : 65535
 Number of connection tracks having requests to handle : 0
-Number of connection tracks having responses to send : 0SOCK(client=192.168.2.100:37396:time=2015-11-15-20:54:35.379006),
+Number of connection tracks having responses to send : 0SOCK(client=192.0.2.0:37396:time=2015-11-15-20:54:35.379006),
 CONN(id=44:user=role_2:queue=queue2:prog=3:time=2015-11-15-20:54:35.378631:lastact=2015-11-15-20:54:35.378631:
 headqueue=2015-11-15-20:54:35.378631),ALLOC(session=89:resource=(1024 MB, 0.250000 CORE)x(1:min=1:act=-1):
 slicesize=5:io bytes size=3905568:vseg limit per seg=8:vseg limit per query=1000:fixsegsize=1:reqtime=2015-11-15-20:54:35.379144:
 alloctime=2015-11-15-20:54:35.379144:stmt=128 MB x 0),LOC(size=3:host(sdw3:3905568):host(sdw2:3905568):
 host(sdw1:3905568)),RESOURCE(hostsize=0),MSG(id=259:size=96:contsize=96:recvtime=1969-12-31-16:00:00.0,
-client=192.168.2.100:37396),COMMSTAT(fd=5:readbuffer=0:writebuffer=0
+client=192.0.2.0:37396),COMMSTAT(fd=5:readbuffer=0:writebuffer=0
 buffers:toclose=false:forceclose=false)
 ```
 

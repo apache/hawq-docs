@@ -39,7 +39,7 @@ The following is a typical procedure to remove a node from a running HAWQ cluste
     gpadmin 3004 2999 0 Mar21 ? 00:00:50 postgres: port 40000, writer process
     gpadmin 3005 2999 0 Mar21 ? 00:00:06 postgres: port 40000, checkpoint process
     gpadmin 3006 2999 0 Mar21 ? 00:01:25 postgres: port 40000, segment resource manager
-    gpadmin 7880 2999 0 02:08 ? 00:00:00 postgres: port 40000, gpadmin postgres 192.168.2.201(33874) con11 seg0 cmd18 MPPEXEC INSERT
+    gpadmin 7880 2999 0 02:08 ? 00:00:00 postgres: port 40000, gpadmin postgres 192.0.2.0(33874) con11 seg0 cmd18 MPPEXEC INSERT
     ```
 
 3.  Stop hawq on this segment by executing the following command:

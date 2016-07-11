@@ -2,7 +2,7 @@
 title: Using PL/R in HAWQ
 ---
 
-PL/R is a procedural language. With the HAWQ PL/R extension you can write database functions in the R programming language, and use R packages that contain R functions and data sets.
+PL/R is a procedural language. With the HAWQ PL/R extension, you can write database functions in the R programming language and use R packages that contain R functions and data sets.
 
 **Note**: To use PL/R in HAWQ, you must either install the PL/R package on top of an existing HAWQ deployment or specify PL/R as a build option when compiling HAWQ.
 
@@ -37,7 +37,7 @@ CREATE TABLE test_norm_var
 
 Assuming your PL/R function returns an R `data.frame` as its output \(unless you want to use arrays of arrays\), some work is required in order for HAWQ to see your PL/R `data.frame` as a simple SQL table:
 
-Create a TYPE in a HAWQ with the same dimensions as your R `data.frame`:
+Create a TYPE in HAWQ with the same dimensions as your R `data.frame`:
 
 ```sql
 CREATE TYPE t1 AS ...
@@ -49,11 +49,11 @@ Use this TYPE when defining your PL/R function:
 ... RETURNS SET OF t1 AS ...
 ```
 
-Sample SQL for this is given in the next example.
+Sample SQL for this situation is provided in the next example.
 
 ### <a id="example3"></a>Example 3: Process Employee Information Using PL/R 
 
-The SQL below defines a TYPE and process employee information with data.frame using PL/R:
+The SQL below defines a TYPE and a function to process employee information with `data.frame` using PL/R:
 
 ```sql
 -- Create type to store employee information
@@ -80,7 +80,7 @@ SELECT * FROM get_emps();
 
 R packages are modules that contain R functions and data sets. You can install R packages to extend R and PL/R functionality in HAWQ.
 
-<p class="note"><b>Note:</b> If you expand HAWQ and add segment hosts, you must install the R packages in the R installation of the new hosts.</p>
+**Note**: If you expand HAWQ and add segment hosts, you must install the R packages in the R installation of *each* of the new hosts.</p>
 
 1. For an R package, identify all dependent R packages and each package web URL. The information can be found by selecting the given package from the following navigation page:
 
@@ -92,36 +92,36 @@ R packages are modules that contain R functions and data sets. You can install R
 	
 	For the R installation included with the HAWQ PL/R extension, the required R packages are installed with the PL/R extension. However, the Matrix package requires a newer version.
 	
-1. From the command line, use the wget utility to download the tar.gz files for the `arm` package to the HAWQ master host:
+1. From the command line, use the `wget` utility to download the tar.gz files for the `arm` package to the HAWQ master host:
 
 	```shell
 	$ wget http://cran.r-project.org/src/contrib/Archive/arm/arm_1.5-03.tar.gz
 	$ wget http://cran.r-project.org/src/contrib/Archive/Matrix/Matrix_0.9996875-1.tar.gz
 	```
 
-1. Use the `hawq scp` utility and the `hosts_all` file to copy the `tar.gz` files to the same directory on all nodes of the HAWQ cluster. The hawq_hosts file contains a list of all the HAWQ segment hosts. You might require root access to do this.
+1. Use the `hawq scp` utility and the `hawq_hosts` file to copy the tar.gz files to the same directory on all nodes of the HAWQ cluster. The `hawq_hosts` file contains a list of all of the HAWQ segment hosts. You might require root access to do this.
 
 	```shell
 	$ hawq scp -f hosts_all Matrix_0.9996875-1.tar.gz =:/home/gpadmin 
 	$ hawq scp -f hawq_hosts arm_1.5-03.tar.gz =:/home/gpadmin
 	```
 
-1. Use the hawq ssh utility in interactive mode to log into each HAWQ segment host (`hawq ssh -f hawq_hosts`). Install the packages from the command prompt using the `R CMD INSTALL` command. Note that this may require root access. For example, this R install command installs the packages for the `arm` package.
+1. Use the `hawq ssh` utility in interactive mode to log into each HAWQ segment host (`hawq ssh -f hawq_hosts`). Install the packages from the command prompt using the `R CMD INSTALL` command. Note that this may require root access. For example, this R install command installs the packages for the `arm` package.
 
 	```shell
-	$ $R_HOME/bin/R CMD INSTALL Matrix_0.9996875-1.tar.gz   arm_1.5-03.tar.gz
+	$ $R_HOME/bin/R CMD INSTALL Matrix_0.9996875-1.tar.gz arm_1.5-03.tar.gz
 	```
-	<p class="note"><strong>Note:</strong> Some packages require compilation. Refer to the package documentation for any system build requirements.</p>
+	**Note**: Some packages require compilation. Refer to the package documentation for possible build requirements.
 
-1. Ensure that the package is installed in the `$R_HOME/library` directory on all the segments (the hawq ssh utility can be use to install the package). For example, this hawq ssh command lists the contents of the R library directory.
+1. Ensure that the package is installed in the `$R_HOME/library` directory on all the segments (`hawq ssh` can be used to install the package). For example, this `hawq ssh` command lists the contents of the R library directory.
 
 	```shell
 	$ hawq ssh -f hawq_hosts "ls $R_HOME/library"
 	```
 	
-1. Test if the R package can be loaded.
+1. Verify the R package can be loaded.
 
-	This function performs a simple test to if an R package can be loaded:
+	This function performs a simple test to determine if an R package can be loaded:
 	
 	```sql
 	CREATE OR REPLACE FUNCTION R_test_require(fname text)
@@ -132,7 +132,7 @@ R packages are modules that contain R functions and data sets. You can install R
 	LANGUAGE 'plr';
 	```
 
-	This SQL command checks if the R package arm can be loaded:
+	This SQL command calls the previous function to determine if the R package `arm` can be loaded:
 	
 	```sql
 	SELECT R_test_require('arm');
@@ -140,7 +140,7 @@ R packages are modules that contain R functions and data sets. You can install R
 
 ## <a id="rlibrarydisplay"></a>Displaying R Library Information 
 
-You can use the R command line to display information about the installed libraries and functions on the HAWQ host. You can also add and remove libraries from the R installation. To start the R command line on the host, log into the host as the gadmin user and run the script R from the directory `$GPHOME/ext/R-N.N.N/bin` where N.N.N corresponds to the version of R installed.
+You can use the R command line to display information about the installed libraries and functions on the HAWQ host. You can also add and remove libraries from the R installation. To start the R command line on the host, log in to the host as the `gpadmin` user and run the script R from the directory `$GPHOME/ext/R-N.N.N/bin` where N.N.N corresponds to the version of R installed.
 
 This R function lists the available R packages from the R command line:
 
@@ -188,7 +188,7 @@ An R package can be removed with remove.packages
 > remove.packages("package_name")
 ```
 
-You can use the R command `-e` option to run functions from the command line. For example, this command displays help on the R package MASS.
+You can use the R command `-e` option to run functions from the command line. For example, this command displays help on the R package named `MASS`.
 
 ```shell
 $ R -e 'help("MASS")'
