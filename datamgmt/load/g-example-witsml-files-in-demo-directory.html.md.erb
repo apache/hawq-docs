@@ -36,7 +36,7 @@ The goal is to import the information for this rig into HAWQ.
 
 The sample document, *rig.xml*, is about 11KB in size. The input does not contain tabs so the relevant information can be converted into records delimited with a pipe (|).
 
-`W-12|6507/7-A-42|xr31|Deep Drill #5|Deep Drilling Co.|John                             Doe|John.Doe@his-ISP.com|`
+`W-12|6507/7-A-42|xr31|Deep Drill #5|Deep Drilling Co.|John                             Doe|John.Doe@example.com|`
 
 With the columns:
 
@@ -46,7 +46,7 @@ With the columns:
 -   `rig_name text`, -- e.g. Deep Drill \#5
 -   `rig_owner text`, -- e.g. Deep Drilling Co.
 -   `rig_contact text`, -- e.g. John Doe
--   `rig_email text`, -- e.g. John.Doe@his-ISP.com
+-   `rig_email text`, -- e.g. John.Doe@example.com
 -   `doc xml`
 
 Then, load the data into HAWQ.

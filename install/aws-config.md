@@ -72,10 +72,10 @@ AWS uses public-key cryptography to secure the login information for your instan
 
 A key pair for an EC2 instance consists of a *public key* that AWS stores, and a *private key file* that you maintain. Together, they allow you to connect to your instance securely. The private key file name typically has a `.pem` suffix
 
-This example logs into an into EC2 instance from an external location with the private key file `my-test.pem` as user `ec2-user`. (`ec2-user` is the default user for some Linux AMI templates.) In this example, the instance is configured with the public IP address `52.36.113.82` and the private key file resides in the current directory.
+This example logs into an into EC2 instance from an external location with the private key file `my-test.pem` as user `ec2-user`. (`ec2-user` is the default user for some Linux AMI templates.) In this example, the instance is configured with the public IP address `192.0.2.0` and the private key file resides in the current directory.
 
 ```shell
-$ ssh -i my-test.pem ec2-user@52.36.113.82
+$ ssh -i my-test.pem ec2-user@192.0.2.0
 ```
 
 ##Additional HAWQ Considerations <a id="topic_mj4_524_2v"></a>

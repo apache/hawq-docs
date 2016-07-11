@@ -356,6 +356,7 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
     $ hawq ssh -f hawq_hosts 'echo "gpadmin:newpassword" | /usr/sbin/chpasswd'
     ```    
 
+    **Note:** Be sure to make appropriate user and password system administrative changes in order to prevent operational disruption. For example, you may need to disable the password expiration policy for the `gpadmin` account.
 2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\) Then perform the following steps:
     1. Click **HAWQ** in the list of installed services.
     2. On the HAWQ Server Configs page, go to the **Advanced** tab and update the **HAWQ System User Password** to the new password specified in the script.

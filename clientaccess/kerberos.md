@@ -55,7 +55,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
     sudo yum install krb5-libs krb5-server krb5-workstation
     ```
 
-2.  Edit the /etc/krb5.conf configuration file. The following example shows a Kerberos server with a default `KRB.MYCOMPANY.COM` realm.
+2.  Edit the /etc/krb5.conf configuration file. The following example shows a Kerberos server with a default `KRB.EXAMPLE.COM` realm.
 
     ```
     [logging]
@@ -64,7 +64,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
      admin_server = FILE:/var/log/kadmind.log
 
     [libdefaults]
-     default_realm = KRB.MYCOMPANY.COM
+     default_realm = KRB.EXAMPLE.COM
      dns_lookup_realm = false
      dns_lookup_kdc = false
      ticket_lifetime = 24h
@@ -75,15 +75,15 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
      permitted_enctypes = aes128-cts des3-hmac-sha1 des-cbc-crc des-cbc-md5
 
     [realms]
-     KRB.MYCOMPANY.COM = {
+     KRB.EXAMPLE.COM = {
       kdc = kerberos-gpdb:88
       admin_server = kerberos-gpdb:749
       default_domain = kerberos-gpdb
      }
 
     [domain_realm]
-     .kerberos-gpdb = KRB.MYCOMPANY.COM
-     kerberos-gpdb = KRB.MYCOMPANY.COM
+     .kerberos-gpdb = KRB.EXAMPLE.COM
+     kerberos-gpdb = KRB.EXAMPLE.COM
 
     [appdefaults]
      pam = {
@@ -97,7 +97,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
 
     The `kdc` and `admin_server` keys in the `[realms]` section specify the host \(`kerberos-gpdb`\) and port where the Kerberos server is running. IP numbers can be used in place of host names.
 
-    If your Kerberos server manages authentication for other realms, you would instead add the `KRB.MYCOMPANY.COM` realm in the `[realms]` and `[domain_realm]` section of the `kdc.conf` file. See the [Kerberos documentation](http://web.mit.edu/kerberos/krb5-latest/doc/) for information about the `kdc.conf` file.
+    If your Kerberos server manages authentication for other realms, you would instead add the `KRB.EXAMPLE.COM` realm in the `[realms]` and `[domain_realm]` section of the `kdc.conf` file. See the [Kerberos documentation](http://web.mit.edu/kerberos/krb5-latest/doc/) for information about the `kdc.conf` file.
 
 3.  To create a Kerberos KDC database, run the `kdb5_util`.
 
@@ -146,8 +146,8 @@ Start `kadmin.local` in interactive mode, then add two principals to the HAWQ Re
 2.  Add principals:
 
     ```
-    kadmin.local: addprinc gpadmin/kerberos-gpdb@KRB.MYCOMPANY.COM
-    kadmin.local: addprinc postgres/master.test.com@KRB.MYCOMPANY.COM
+    kadmin.local: addprinc gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM
+    kadmin.local: addprinc postgres/master.test.com@KRB.EXAMPLE.COM
     ```
 
     The `addprinc` commands prompt for passwords for each principal. The first `addprinc` creates a HAWQ user as a principal, `gpadmin/kerberos-gpdb`. The second `addprinc` command creates the `postgres` process on the HAWQ master host as a principal in the Kerberos KDC. This principal is required when using Kerberos authentication with HAWQ.
@@ -156,8 +156,8 @@ Start `kadmin.local` in interactive mode, then add two principals to the HAWQ Re
 
     ```
     kadmin.local: xst -k gpdb-kerberos.keytab
-        gpadmin/kerberos-gpdb@KRB.MYCOMPANY.COM
-        postgres/master.test.com@KRB.MYCOMPANY.COM
+        gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM
+        postgres/master.test.com@KRB.EXAMPLE.COM
     ```
 
     You will copy this file to the HAWQ master host.
@@ -184,10 +184,10 @@ Install the Kerberos client libraries on the HAWQ master and configure the Kerbe
     sudo kdestroy
     ```
 
-5.  Use the Kerberos utility `kinit` to request a ticket using the keytab file on the HAWQ master for `gpadmin/kerberos-gpdb@KRB.MYCOMPANY.COM`. The -t option specifies the keytab file on the HAWQ master.
+5.  Use the Kerberos utility `kinit` to request a ticket using the keytab file on the HAWQ master for `gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM`. The -t option specifies the keytab file on the HAWQ master.
 
     ```
-    # kinit -k -t gpdb-kerberos.keytab gpadmin/kerberos-gpdb@KRB.MYCOMPANY.COM
+    # kinit -k -t gpdb-kerberos.keytab gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM
     ```
 
 6.  Use the Kerberos utility `klist` to display the contents of the Kerberos ticket cache on the HAWQ master. The following is an example:
@@ -195,9 +195,9 @@ Install the Kerberos client libraries on the HAWQ master and configure the Kerbe
     ```screen
     # klist
     Ticket cache: FILE:/tmp/krb5cc_108061
-    Default principal: gpadmin/kerberos-gpdb@KRB.MYCOMPANY.COM
+    Default principal: gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM
     Valid starting     Expires            Service principal
-    03/28/13 14:50:26  03/29/13 14:50:26  krbtgt/KRB.MYCOMPANY.COM     @KRB.MYCOMPANY.COM
+    03/28/13 14:50:26  03/29/13 14:50:26  krbtgt/KRB.EXAMPLE.COM     @KRB.EXAMPLE.COM
         renew until 03/28/13 14:50:26
     ```
 
