@@ -100,7 +100,7 @@ The following table describes some common errors while using PXF:
 <td>Required HBase table does not contain the requested column</td>
 </tr>
 <tr class="odd">
-<td><code class="ph codeph">Hive Specific Errors</code></td>
+<td><strong>Hive Specific Errors</td>
 <td> </td>
 </tr>
 <tr class="even">
@@ -112,6 +112,16 @@ The following table describes some common errors while using PXF:
 <p>NoSuchObjectException(message:default.players table not found)</p></td>
 <td>Table doesn't exist in Hive</td>
 </tr>
+<tr class="even">
+<td><strong>JSON Specific Errors</strong></td>
+<td> </td>
+</tr>
+<tr class="odd">
+<td>ERROR: No fields in record (hostname:N pid=N)
+<p>DETAIL: External table tablename</p></td>
+<td>There are probably empty lines in your JSON file; remove them and try again</td>
+</tr>
+
 </tbody>
 </table>
 
