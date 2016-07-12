@@ -114,9 +114,9 @@ Example 2 - Data Set for Multi-Line JSON Record Read Mode:
 }
 ```
 
-## Write JSON Data to HDFS<a id="jsontohdfs"></a>
+## Loading JSON Data to HDFS<a id="jsontohdfs"></a>
 
-The PXF JSON plug-in reads native JSON stored in HDFS. Before JSON data can be queried via HAWQ, it must first be added to an HDFS data store.
+The PXF JSON plug-in reads native JSON stored in HDFS. Before JSON data can be queried via HAWQ, it must first be loaded to an HDFS data store.
 
 Copy and paste the single line JSON record data set to a file named `singleline.json`.  Similarly, copy and paste the multi-line JSON record data set to `multiline.json`.
 
@@ -130,9 +130,9 @@ $ hdfs dfs -put singleline.json /user/data
 $ hdfs dfs -put multiline.json /user/data
 ```
 
-Once stored in HDFS, JSON data may be queried and analyzed via HAWQ.
+Once loaded to HDFS, JSON data may be queried and analyzed via HAWQ.
 
-## Query External JSON Data<a id="jsoncetsyntax1"></a>
+## Querying External JSON Data<a id="jsoncetsyntax1"></a>
 
 Use the following syntax to create an external table representing JSON data: 
 

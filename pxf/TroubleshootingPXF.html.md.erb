@@ -100,7 +100,7 @@ The following table describes some common errors while using PXF:
 <td>Required HBase table does not contain the requested column</td>
 </tr>
 <tr class="odd">
-<td><strong>Hive Specific Errors</td>
+<td><strong>Hive-Specific Errors</td>
 <td> </td>
 </tr>
 <tr class="even">
@@ -113,13 +113,19 @@ The following table describes some common errors while using PXF:
 <td>Table doesn't exist in Hive</td>
 </tr>
 <tr class="even">
-<td><strong>JSON Specific Errors</strong></td>
+<td><strong>JSON-Specific Errors</strong></td>
 <td> </td>
 </tr>
 <tr class="odd">
-<td>ERROR: No fields in record (hostname:N pid=N)
-<p>DETAIL: External table tablename</p></td>
+<td>ERROR: No fields in record (seg0 slice1 host:&ltn&gt pid=&ltn&gt)
+<p>DETAIL: External table &lttablename&gt</p></td>
 <td>Check your JSON file for empty lines; remove them and try again</td>
+</tr>
+<tr class="odd">
+<td>ERROR:  remote component error (500) from host:51200:  type  Exception report   message   &lttext&gt[0] is not an array node    description   The server encountered an internal error that prevented it from fulfilling this request.    exception   java.io.IOException: &lttext&gt[0] is not an array node (libchurl.c:878)  (seg4 host:40000 pid=&ltn&gt)  
+<p>DETAIL:  External table &lttablename&gt</p></td>
+<td>JSON field assumed to be an array, but it is a scalar field.
+</td>
 </tr>
 
 </tbody>
