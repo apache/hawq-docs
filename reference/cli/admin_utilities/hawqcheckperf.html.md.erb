@@ -7,13 +7,13 @@ Verifies the baseline hardware performance of the specified hosts.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq checkperf -d test_directory [-d test_directory ...] 
-    {-f hostfile_checkperf | - h hostname [-h hostname ...]} 
-    [-r ds] [-B block_size] [-S file_size] [-D] [-v|-V]
+hawq checkperf -d <test_directory> [-d <test_directory> ...] 
+    {-f <hostfile_checkperf> | - h <hostname> [-h <hostname> ...]} 
+    [-r ds] [-B <block_size>] [-S <file_size>] [-D] [-v|-V]
 
-hawq checkperf -d temp_directory
-    {-f hostfile_checknet | - h hostname [-h hostname ...]} 
-    [ -r n|N|M [--duration time] [--netperf] ] [-D] [-v|-V]
+hawq checkperf -d <temp_directory>
+    {-f <hostfile_checknet> | - h <hostname> [-h <hostname> ...]} 
+    [ -r n|N|M [--duration <time>] [--netperf] ] [-D] [-v|-V]
 
 hawq checkperf -?
 

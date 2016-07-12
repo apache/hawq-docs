@@ -7,14 +7,14 @@ Verifies and validates HAWQ platform settings.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq check -f hostfile_hawq_check [--hadoop hadoop_home | --hadoop hadoop_home]
-        [--stdout | --zipout] [--config config_file]
+hawq check -f <hostfile_hawq_check> [--hadoop | --hadoop <hadoop_home>]
+        [--stdout | --zipout] [--config <config_file>]
          [--kerberos] [--hdfs-ha] [--yarn] [--yarn-ha]
-hawq check --zipin hawq_check_zipfile
+hawq check --zipin <hawq_check_zipfile>
 
-hawq check -d temp_directory
-    {-f hostfile_checknet | - h hostname [-h hostname ...]} 
-    [ -r n|N|M [--duration time] [--netperf] ] [-D] [-v | -V]
+hawq check -d <temp_directory>
+    {-f <hostfile_checknet> | - h <hostname> [-h <hostname> ...]} 
+    [ -r n|N|M [--duration <time>] [--netperf] ] [-D] [-v | -V]
 
 hawq check -?
 
@@ -66,7 +66,7 @@ diskusage.monitor.mounts = /,/data1,/data2
 <dt>-\\\-zipout  </dt>
 <dd>Save all collected data to a .zip file in the current working directory. `hawq               check` automatically creates the .zip file and names it `hawq_check_timestamp.tar.gz.` No checks or validations are performed.</dd>
 
-<dt>-\\\-zipin *file*  </dt>
+<dt>-\\\-zipin *hawq\_check\_zipfile*  </dt>
 <dd>Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.</dd>
 
 <dt>-\\\-version  </dt>
