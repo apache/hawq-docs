@@ -2,9 +2,9 @@
 title: HAWQ InputFormat for MapReduce
 ---
 
-MapReduce is a programming model developed by Google for processing and generating large data sets on an array of commodity servers. You can use the HAWQ InputFormat option to enable MapReduce jobs to access HAWQ data stored in HDFS.
+MapReduce is a programming model developed by Google for processing and generating large data sets on an array of commodity servers. You can use the HAWQ InputFormat class to enable MapReduce jobs to access HAWQ data stored in HDFS.
 
-To use HAWQ InputFormat, you only need to provide the URL of the databasen to connect to, along with the table name you want to access. HAWQ InputFormat only fetches the metadata of the database and table of interest, which is much less data than the table data itself. After getting the metadata, the HAWQ InputFormat determines where and how the table data is stored in HDFS. It reads and parses those HDFS files and processes the parsed table tuples directly inside a Map task.
+To use HAWQ InputFormat, you need only to provide the URL of the database to connect to, along with the table name you want to access. HAWQ InputFormat fetches only the metadata of the database and table of interest, which is much less data than the table data itself. After getting the metadata, HAWQ InputFormat determines where and how the table data is stored in HDFS. It reads and parses those HDFS files and processes the parsed table tuples directly inside a Map task.
 
 This chapter describes the document format and schema for defining HAWQ MapReduce jobs.
 
@@ -41,7 +41,7 @@ HAWQ InputFormat supports the following data types:
 
 ## <a id="hawqinputformatexample"></a>HAWQ InputFormat Example
 
-The following example shows how you can use the HAWQ InputFormat to access HAWQ table data from MapReduce jobs.
+The following example shows how you can use the `HAWQInputFormat` class to access HAWQ table data from MapReduce jobs.
 
 ``` java
 package com.mycompany.app;
@@ -129,11 +129,26 @@ implements Tool {
 
 **To compile and run the example:**
 
-1.  Add the following dependencies into the project for compilation:
-    1.  HAWQInputFormat jars (located in the `$GPHOME/lib/postgresql/hawq-mr-io` directory):
+1.  Create a work directory:
+
+    ``` shell
+    $ mkdir mrwork
+    $ cd mrwork
+    ```
+ 
+2.  Copy and paste the Java code above into a `.java` file.
+
+    ``` shell
+    $ mkdir -p com/mycompany/app
+    $ cd com/mycompany/app
+    $ vi HAWQInputFormatDemoDriver.java
+    ```
+
+3.  Note the following dependencies required for compilation:
+    1.  `HAWQInputFormat` jars (located in the `$GPHOME/lib/postgresql/hawq-mr-io` directory):
         -   `hawq-mapreduce-common.jar`
         -   `hawq-mapreduce-ao.jar`
-        -   `hawq_mapreduce-parquet.jar`
+        -   `hawq-mapreduce-parquet.jar`
         -   `hawq-mapreduce-tool.jar`
 
     2.  Required 3rd party jars (located in the `$GPHOME/lib/postgresql/hawq-mr-io/lib` directory):
@@ -142,20 +157,33 @@ implements Tool {
         -   `parquet-encoding-1.1.0.jar`
         -   `parquet-format-1.1.0.jar`
         -   `parquet-hadoop-1.1.0.jar`
-        -   `postgresql-jdbc.jar`
-        -   `snakeyaml.jar`
+        -   `postgresql-n.n-n-jdbc4.jar`
+        -   `snakeyaml-n.n.jar`
 
     3.  Hadoop Mapreduce related jars (located in the install directory of your Hadoop distribution).
 
-2.  Check that you have installed HAWQ, HDFS and Yarn.
-3.  Create sample table:
+4.  Compile the Java program.  You may choose to use a different compilation command:
+
+    ``` shell
+    javac -classpath /usr/hdp/2.4.2.0-258/hadoop-mapreduce/*:/usr/local/hawq/lib/postgresql/hawq-mr-io/*:/usr/local/hawq/lib/postgresql/hawq-mr-io/lib/*:/usr/hdp/current/hadoop-client/* HAWQInputFormatDemoDriver.java
+    ```
+   
+5.  Build the JAR file.
+
+    ``` shell
+    $ cd ../../..
+    $ jar cf my-app.jar com
+    ```
+    
+6.  Check that you have installed HAWQ, HDFS and Yarn.
+7.  Create sample table:
     1.  Log in to HAWQ:
 
         ``` shell
          $ psql -d postgres 
         ```
 
-    2.  Create the sample table:
+    2.  Create the table:
 
         ``` sql
         CREATE TABLE employees (
@@ -178,19 +206,11 @@ implements Tool {
     4.  Use the following shell script snippet showing how to run the Mapreduce job:
 
         ``` shell
-        # Suppose all five needed jars are under ./lib
-        export
-        LIBJARS=lib/hawq-mapreduce-common.jar,lib/hawq-mapreduce-ao.
-        jar,lib/hawq-mapreduce-tool.jar,lib/postgresql-9.2-1003-jdbc
-        4.jar,lib/snakeyaml-1.12.jar
-        export
-        HADOOP_CLASSPATH=lib/hawq-mapreduce-common.jar:lib/hawq-mapr
-        educe-ao.jar:lib/hawq-mapreduce-tool.jar:lib/postgresql-9.2-
-        1003-jdbc4.jar:lib/snakeyaml-1.12.jar
-        # Suppose the built application jar is my-app.jar
-        hadoop jar my-app.jar
-        com.mycompany.app.HAWQInputFormatDemoDriver -libjars
-        ${LIBJARS} localhost:5432/postgres employees /tmp/employees
+        #!/bin/bash
+        HAWQMRLIB=/usr/local/hawq/lib/postgresql/hawq-mr-io
+        export HADOOP_CLASSPATH=$HAWQMRLIB/hawq-mapreduce-common.jar:$HAWQMRLIB/hawq-mapreduce-ao.jar:$HAWQMRLIB/hawq-mapreduce-tool.jar:$HAWQMRLIB/lib/postgresql-9.2-1003-jdbc4.jar:$HAWQMRLIB/lib/snakeyaml-1.12.jar
+        
+        hadoop jar my-app.jar com.mycompany.app.HAWQInputFormatDemoDriver localhost:5432/postgres employees /tmp/employees
         ```
 
     5.  Use the following command to check the result of the Mapreduce job:
@@ -207,12 +227,12 @@ The output will appear as follows:
 
 ## <a id="accessinghawqdata"></a>Accessing HAWQ Data
 
-You can access HAWQ data using the following interfaces:
+You can access HAWQ data using the `HAWQInputFormat.setInput()` interface.  You will use a different API signature depending on whether HAWQ is running or not.
 
--   HAWQInputFormat.setInput API: Use this when HAWQ is running.
--   Metadata Export Tool: Use this when HAWQ is not running.
+-   When HAWQ is running, use `HAWQInputFormat.setInput(Configuration conf, String db_url, String username, String password, String tableName)`.
+-   When HAWQ is not running, first extract the table metadata to a file with the Metadata Export Tool and then use `HAWQInputFormat.setInput(Configuration conf, String pathStr)`.
 
-### <a id="hawqinputformatsetinput"></a>HAWQInputFormat.setInput
+### <a id="hawqinputformatsetinput"></a>HAWQ is Running
 
 ``` java
   /**
@@ -236,15 +256,15 @@ public static void setInput(Configuration conf, String db_url,
 throws Exception;
 ```
 
-### <a id="metadataexporttool"></a>Metadata Export Tool
+### <a id="metadataexporttool"></a>HAWQ is not Running
 
 Use the metadata export tool, `hawq extract`, to export the metadata of the target table into a local YAML file:
 
 ``` shell
-$ hawq extract [-h hostname] [-p port] [-U username] [-ddatabase] [-o output_file] [-W] <tablename>
+$ hawq extract [-h hostname] [-p port] [-U username] [-d database] [-o output_file] [-W] <tablename>
 ```
 
-Using the extracted metadata, access HAWQ data through the following interface:
+Using the extracted metadata, access HAWQ data through the following interface.  Pass the complete path to the `.yaml` file in the `pathStr` argument.
 
 ``` java
  /**
