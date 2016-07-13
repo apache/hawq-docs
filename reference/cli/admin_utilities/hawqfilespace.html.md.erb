@@ -7,14 +7,14 @@ Creates a filespace using a configuration file that defines a file system locati
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq filespace [-c | --config fs_config_file ]
-hawq filespace [-o | --output output_directory_name ]
-hawq filespace [--movefilespace FILESPACE]
-hawq filespace [--location dfslocation]
-hawq filespace [-l | --logdir logfile_directory] 
-hawq filespace [-h | --host hostname]
-hawq filespace [-p | --port PORT]
-hawq filespace [-U | --username NAME ]
+hawq filespace [-c | --config <fs_config_file> ]
+hawq filespace [-o | --output <output_directory_name> ]
+hawq filespace [--movefilespace <filespace>]
+hawq filespace [--location <dfslocation>]
+hawq filespace [-l | --logdir <logfile_directory>] 
+hawq filespace [-h | --host <hostname>]
+hawq filespace [-p | --port <port>]
+hawq filespace [-U | --username <superuser_name> ]
 hawq filespace [-W | --password]
 
 hawq filespace -v | --version 
@@ -47,7 +47,7 @@ Once you have a configuration file, you can run `hawq filespace` with the `-c` o
 <dt>-o | -\\\-output *output\_directory\_name*  </dt>
 <dd>The directory location and file name to output the generated filespace configuration file. You will be prompted to enter a name for the filespace and file system location. The file system locations must exist on all hosts in your system prior to running the `hawq filespace` command. You will specify the number of replicas to create. The default is 3 replicas. After the utility creates the configuration file, you can manually edit the file to make any required changes to the filespace layout before creating the filespace in HAWQ.</dd>
 
-<dt>-\\\-movefilespace *FILESPACE*  </dt>
+<dt>-\\\-movefilespace *filespace*  </dt>
 <dd>Create the filespace in a new location on a distributed file system. Updates the dfs url in the HAWQ database, so that data in the original location can be moved or deleted. Data in the original location is not affected by this command.</dd>
 
 <dt>-\\\-location *dfslocation*  </dt>

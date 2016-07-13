@@ -7,10 +7,10 @@ Shuts down and then restarts a HAWQ system after shutdown is complete.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq restart object [-l|--logdir] [-q|--quiet] [-v|--verbose]    
+hawq restart <object> [-l|--logdir <logfile_directory>] [-q|--quiet] [-v|--verbose]    
         [-M|--mode smart | fast | immediate] [-u|--reload] [-m|--masteronly] [-R|--restrict]
-        [-t|--timeout timeout_seconds]  [-U | --special-mode maintenance]
-        [--ignore_bad-hosts] cluster | allsegments
+        [-t|--timeout <timeout_seconds>]  [-U | --special-mode maintenance]
+        [--ignore_bad-hosts cluster | allsegments]
      
 ```
 

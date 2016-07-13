@@ -4,9 +4,9 @@ title: hawq init
 
 The `hawq init cluster` command initializes a HAWQ system and starts it.
 
-The master or segment nodes can be individually initialized by using `hawq init         master` and `hawq init segment` commands, respectively. The `hawq init standby` command initializes a standby master host for a HAWQ system.
+The master or segment nodes can be individually initialized by using `hawq init master` and `hawq init segment` commands, respectively. The `hawq init standby` command initializes a standby master host for a HAWQ system.
 
-The `hawq init object --standby-host=` option allows defining the host for a standby at initialization.
+The `hawq init object --standby-host` option allows defining the host for a standby at initialization.
 
 ## <a id="topic1__section2"></a>Synopsis
 
@@ -17,14 +17,14 @@ hawq init object [--options]
 ``` pre
 hawq init object   
         
-            [--locale=locale] [--lc-collate=locale] 
-            [--lc-ctype=locale] [--lc-messages=locale] 
-            [--lc-monetary=locale] [--lc-numeric=locale] 
-            [--lc-time=locale] 
-            [--bucket_number number] 
-            [--max_connections=number]  
-            [--shared_buffers number]
-            [standby | cluster --standby-host address_of_standby_host 
+            [--locale=<locale>] [--lc-collate=<locale>] 
+            [--lc-ctype=<locale>] [--lc-messages=<locale>] 
+            [--lc-monetary=<locale>] [--lc-numeric=<locale>] 
+            [--lc-time=<locale>] 
+            [--bucket_number <number>] 
+            [--max_connections <number>]  
+            [--shared_buffers <number>]
+            [standby | cluster --standby-host <address_of_standby_host> 
             [-a] [-l logfile_directory] [-q] [-v] [-t] 
 [-n] 
 hawq init -? --help
