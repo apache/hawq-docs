@@ -67,16 +67,20 @@ In the following discussion, a data set defined by a sample schema will be repre
    - "coordinates" - object (optional)
       - "type" - text
       - "values" - array
-         - [0] - float
-         - [1] - float
+         - [0] - integer
+         - [1] - integer
 
 
 Example 1 - Data Set for Single-JSON-Record-Per-Line Read Mode:
 
 ``` pre
-{"created_at":"FriJun0722:45:02+00002013","id_str":343136547115253761,"user"{"id":"26643566","location":"Austin,Texas"}}
-{"created_at":"FriJun0722:45:02+00002013","id_str":343136547136233472,"user"{"id":"287819058","location":""}}
-{"created_at":"FriJun0722:45:03+00002013","id_str":343136551322136576,"user"{"id":"395504494","location":"NearCornwall"},"coordinates":{"type":"Point","values":[‐6.100,50.103]}}
+{"created_at":"FriJun0722:45:03+00002013","id_str":"343136551322136576","user":{
+"id":395504494,"location":"NearCornwall"},"coordinates":{"type":"Point","values"
+: [ 6, 50 ]}},
+{"created_at":"FriJun0722:45:02+00002013","id_str":"343136547115253761","user":{
+"id":26643566,"location":"Austin,Texas"}, "coordinates": null},
+{"created_at":"FriJun0722:45:02+00002013","id_str":"343136547136233472","user":{
+"id":287819058,"location":""}, "coordinates": null}
 ```  
 
 Example 2 - Data Set for Multi-Line JSON Record Read Mode:
@@ -104,8 +108,8 @@ Example 2 - Data Set for Multi-Line JSON Record Read Mode:
         "coordinates":{
           "type":"Point",
           "values":[
-             ‐8.100,
-             52.104
+             8,
+             52
           ]
         }
       }
@@ -146,6 +150,7 @@ JSON-plug-in-specific keywords and values used in the `CREATE EXTERNAL TABLE` ca
 
 | Keyword  | Value |
 |-------|-------------------------------------|
+| host    | Specify the HDFS NameNode in the `host` field. |
 | PROFILE    | The `PROFILE` keyword must specify the value `Json`. |
 | IDENTIFIER  | Include the `IDENTIFIER` keyword and value in the `LOCATION` string only when accessing a JSON file with multi-line records. `value` should identify the member name used to determine the encapsulating JSON object to return.  (If the JSON file is the multi-line record Example 2 above, `&IDENTIFIER=record_obj` would be specified.) |  
 | FORMAT    | The `FORMAT` clause must specify `CUSTOM`. |
@@ -163,10 +168,10 @@ CREATE EXTERNAL TABLE sample_json_singleline_tbl(
   text TEXT,
   "user.id" INTEGER,
   "user.location" TEXT,
-  "coordinates.values[0]" DOUBLE PRECISION,
-  "coordinates.values[1]" DOUBLE PRECISION
+  "coordinates.values[0]" INTEGER,
+  "coordinates.values[1]" INTEGER
 )
-LOCATION('pxf://hostname.localdomain:51200/user/data/singleline.json?PROFILE=Json')
+LOCATION('pxf://namenode:51200/user/data/singleline.json?PROFILE=Json')
 FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
 SELECT * FROM sample_json_singleline_tbl;
 ```
@@ -180,7 +185,7 @@ A `CREATE EXTERNAL TABLE` SQL call to create a queryable external table based on
 The `LOCATION` clause would differ.  The `IDENTIFIER` keyword and an associated value must be specified when reading from multi-line JSON records:
 
 ``` sql
-LOCATION('pxf://localhost.localdomain:51200/user/data/multiline.json?PROFILE=Json&IDENTIFIER=record_obj')
+LOCATION('pxf://namenode:51200/user/data/multiline.json?PROFILE=Json&IDENTIFIER=record_obj')
 ```
 
 `record_obj` identifies the member name used to determine the scope of the JSON object.
