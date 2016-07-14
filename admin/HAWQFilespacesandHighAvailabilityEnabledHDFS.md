@@ -128,13 +128,12 @@ HAWQ provides the command line tool, `hawq filespace`, to move the location of t
 	```shell
 	export PGPORT=9000
 	```
-1. Run the following command to move a file space location:
+1. Run the following command to move a filespace location:
 
 	```shell
 	$ hawq filespace --movefilespace default --location=hdfs://hdfs-cluster/hawq_new_filespace
 	```
-
-	If the target original filespace is not the default filespace, replace `default` in command line with the actual filespace name. Replace `hdfs://hdfs-cluster/hawq_new_filespace` with new filespace location.
+	Specify `default` as the value of the `--movefilespace` option. Replace `hdfs://hdfs-cluster/hawq_new_filespace` with the new filespace location.
 
 #### **Important:** Potential Errors During Filespace Move
 
