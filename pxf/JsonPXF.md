@@ -8,7 +8,7 @@ To access JSON file data with HAWQ, the data must be stored in HDFS and an exter
 
 ## Prerequisites<a id="jsonplugprereq"></a>
 
-Before working with JSON file data using HAWQ and PXF, ensure:
+Before working with JSON file data using HAWQ and PXF, ensure that:
 
 -   The PXF HDFS plug-in is installed on all cluster nodes.
 -   The PXF JSON plug-in is installed on all cluster nodes.
@@ -17,7 +17,7 @@ Before working with JSON file data using HAWQ and PXF, ensure:
 
 ## Working with JSON Files<a id="topic_workwjson"></a>
 
-JSON is a text-based data-interchange format.  JSON data is typically stored in a file with a `.json` suffix. A `.json` file will contain a collection of objects.  A JSON object is collection of unordered name/value pairs.  A value can be a string, a number, true, false, null, or an object or array. Objects and arrays can be nested.
+JSON is a text-based data-interchange format.  JSON data is typically stored in a file with a `.json` suffix. A `.json` file will contain a collection of objects.  A JSON object is a collection of unordered name/value pairs.  A value can be a string, a number, true, false, null, or an object or array. Objects and arrays can be nested.
 
 Refer to [Introducing JSON](http://www.json.org/) for specific information on JSON syntax.
 
@@ -47,9 +47,9 @@ The following table summarizes external mapping rules for JSON data.
 
 | JSON Data Type                                                    | HAWQ Data Type                                                                                                                                                                                            |
 |-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Primitive type (integer, float, string, boolean, null) | use the corresponding HAWQ built-in data type; see [Data Types](../reference/HAWQDataTypes.html). |
-| Array                         | use `[]` brackets to identify a specific array index to a member of primitive type                                                                                            |
-| Object                | use dot `.` notation to specify each level of projection (nesting) to a member of a primitive type                                                                                         |
+| Primitive type (integer, float, string, boolean, null) | Use the corresponding HAWQ built-in data type; see [Data Types](../reference/HAWQDataTypes.html). |
+| Array                         | Use `[]` brackets to identify a specific array index to a member of primitive type.                                                                                            |
+| Object                | Use dot `.` notation to specify each level of projection (nesting) to a member of a primitive type.                                                                                         |
 
 
 ### JSON File Read Modes<a id="topic_jsonreadmodes"></a>

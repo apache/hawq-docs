@@ -52,7 +52,7 @@ Installing the PXF service package:
 
    - creates a `/usr/lib/pxf-n.n.n` directory, adding a softlink from `/usr/lib/pxf` to this directory
    - copies the PXF service JAR file `pxf-service-n.n.n.jar` to `/usr/lib/pxf-n.n.n/`
-   - creates a softlink `pxf-service.jar` in `/usr/lib/pxf-n.n.n/`
+   - creates a softlink to `pxf-service.jar` in `/usr/lib/pxf-n.n.n/`
    - sets up the PXF service configuration files
    - starts the PXF service
 
@@ -69,7 +69,7 @@ To install PXF support for HDFS, perform the following steps on *each* node in y
     $ sudo rpm -i pxf-hdfs-n.n.n-x.noarch.rpm
     ```
 
-    The install copies the HDFS JAR file `pxf-hdfs-n.n.n.jar` to `/usr/lib/pxf-n.n.n/` and creates a softlink `pxf-hdfs.jar` in that directory.
+    The install copies the HDFS JAR file `pxf-hdfs-n.n.n.jar` to `/usr/lib/pxf-n.n.n/` and creates a softlink to `pxf-hdfs.jar` in that directory.
 
 ### <a id="topic_s1y_1v5_25"></a>Install the PXF Hive Plug-in
 
@@ -83,7 +83,7 @@ To install PXF support for Hive, perform the following steps on *each* node in y
     $ sudo rpm -i pxf-hive-n.n.n-x.noarch.rpm
     ```
 
-    The install copies the Hive JAR file `pxf-hive-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink `pxf-hive.jar` in that directory.
+    The install copies the Hive JAR file `pxf-hive-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-hive.jar` in that directory.
 
 ### <a id="topic_std_cv5_25"></a>Install the PXF HBase Plug-in
 
@@ -97,7 +97,7 @@ To install PXF support for HBase, perform the following steps on *each* node in 
     $ sudo rpm -i pxf-hbase-n.n.n-x.noarch.rpm
     ```
 
-    The install copies the HBase JAR file `pxf-hbase-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink `pxf-hbase.jar` in that directory.
+    The install copies the HBase JAR file `pxf-hbase-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-hbase.jar` in that directory.
 
 3.  Add the PXF HBase plug-in JAR file to the HBase `CLASSPATH` by updating the `HBASE_CLASSPATH` environment variable setting in the HBase environment file `/etc/hbase/conf/hbase-env.sh`:
 
@@ -131,7 +131,7 @@ To install PXF support for JSON, perform the following steps on *each* node in y
     $ sudo rpm -i pxf-json-n.n.n-x.noarch.rpm
     ```
 
-    The install copies the JSON JAR file `pxf-json-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink `pxf-json.jar` in that directory.
+    The install copies the JSON JAR file `pxf-json-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-json.jar` in that directory.
 
 ### <a id="topic_qsz_restartpxf"></a>Restart the PXF Service
 Restart PXF on *each* node after installing the PXF service and any PXF plug-ins.
