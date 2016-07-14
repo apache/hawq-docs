@@ -7,10 +7,10 @@ Stops or restarts a HAWQ system.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq stop object [-a]   
-       [-M|--mode smart | fast | immediate] [-t timeout_seconds]  
-       [-l logfile_directory] [-v|--verbose | -q|--quiet]
-       [--ignore_bad-hosts] cluster | allsegments
+hawq stop <object> [-a]   
+       [-M|--mode smart | fast | immediate] [-t <timeout_seconds>]  
+       [-l <logfile_directory>] [-v|--verbose | -q|--quiet]
+       [--ignore_bad-hosts cluster | allsegments]
 hawq stop object -u|--reload [-l logfile_directory] 
  
 hawq stop --version 
@@ -61,7 +61,7 @@ Immediate shutdown aborts transactions in progress and kills all `postgres` proc
 <dt>-q -\\\-quiet  </dt>
 <dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
 
-<dt>-t -\\\-timeout*timeout\_seconds*  </dt>
+<dt>-t -\\\-timeout *timeout\_seconds*  </dt>
 <dd>Specifies a timeout threshold (in seconds) to wait for a segment instance to shutdown. If a segment instance does not shut down in the specified number of seconds, `hawq stop` displays a message indicating that one or more segments are still in the process of shutting down and that you cannot restart HAWQ until the segment instance(s) are stopped. This option is useful in situations where `hawq stop` is executed and there are very large transactions that need to rollback. These large transactions can take over a minute to rollback and surpass the default timeout period of 600 seconds.</dd>
 
 <dt>-\\\-ignore\_bad\_hosts cluster | allsegments  </dt>
