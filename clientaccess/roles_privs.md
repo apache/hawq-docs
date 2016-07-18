@@ -141,7 +141,7 @@ Row-level or column-level access is not supported, nor is labeled security. Row-
 
 ## <a id="topic8"></a>Encrypting Data 
 
-PostgreSQL provides an optional package of encryption/decryption functions called `pgcrypto`, which can also be installed and used in HAWQ. The `pgcrypto` package is not installed by default with HAWQ. However, you can download a `pgcrypto` package from [Pivotal Network](https://network.pivotal.io) and use the Package Manager \(`gppkg`\) to install `pgcrypto` across your entire cluster. 
+PostgreSQL provides an optional package of encryption/decryption functions called `pgcrypto`, which can also be installed and used in HAWQ. The `pgcrypto` package is not installed by default with HAWQ. However, you can download a `pgcrypto` package from [Pivotal Network](https://network.pivotal.io). 
 
 If you are building HAWQ from source files, then you should enable `pgcrypto` support as an option when compiling HAWQ.
 
