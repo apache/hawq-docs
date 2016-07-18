@@ -7,8 +7,45 @@ Extracts a database into a single script file or other archive file.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-pg_dump [-h <host>] [-p <port>] [-U <username>] [-W] [<dump_option> ...] <dbname>
+pg_dump [<connection_options>] [<dump_options>] <dbname>
 ```
+where:
+
+``` pre
+<connection_options> =
+	[-h <host> | --host <host>] 
+	[-p <port> | -- port <port>] 
+	[-U <username> | --username <username>] 
+    [-W | --password] 
+
+<dump_options> =
+	[-a | --data-only]
+	[-b | --blobs]
+	[-c | --clean]
+	[-C | --create]
+	[-d | --inserts]
+	[(-D | --column-inserts) | --attribute-inserts]
+	[-E <encoding> | --encoding <encoding>]
+	[-f <file> | --file <file>]
+	[-F(p|t|c)] | --format (plain|custom|tar)]
+	[-i | --ignore-version]
+	[-n <schema> | --schema <schema>]
+	[-N <schema> | --exclude-schema <schema>]
+	[-o | --oids]
+	[-O | --no-owner]
+	[-s | --schema-only]
+	[-S <username> | --superuser <username>]
+	[-t <table> | --table <table>]
+	[-T <table> | --exclude-table <table>]
+	[-v | --verbose]
+	[(-x | --no-privileges) | --no-acl]
+	[--disable-dollar-quoting]
+	[--disable-triggers]
+	[--use-set-session-authorization]
+	[--gp-syntax | --no-gp-syntax]
+	[-Z <0..9> | --compress <0..9>]
+```
+
 
 ## <a id="topic1__section3"></a>Description
 
@@ -27,72 +64,73 @@ When used with one of the archive file formats and combined with `pg_restore`, `
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>dbname  </dt>
+<dt>**\<dbname\>**</dt>
 <dd>Specifies the name of the database to be dumped. If this is not specified, the environment variable `PGDATABASE` is used. If that is not set, the user name specified for the connection is used.</dd>
 
-**Dump Options**
 
-<dt>-a | -\\\-data-only  </dt>
+**\<dump_options\>**
+
+<dt>-a, -\\\-data-only  </dt>
 <dd>Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
 
-<dt>-b | -\\\-blobs  </dt>
+<dt>-b, -\\\-blobs  </dt>
 <dd>Include large objects in the dump. This is the default behavior except when `--schema`, `--table`, or `--schema-only` is specified, so the `-b` switch is only useful to add large objects to selective dumps.</dd>
 
-<dt>-c | -\\\-clean  </dt>
+<dt>-c, -\\\-clean  </dt>
 <dd>Adds commands to the text output file to clean (drop) database objects prior to (the commands for) creating them. Note that objects are not dropped before the dump operation begins, but `DROP` commands are added to the DDL dump output files so that when you use those files to do a restore, the `DROP` commands are run prior to the `CREATE` commands. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
 
-<dt>-C | -\\\-create  </dt>
+<dt>-C, -\\\-create  </dt>
 <dd>Begin the output with a command to create the database itself and reconnect to the created database. (With a script of this form, it doesn't matter which database you connect to before running the script.) This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
 
-<dt>-d | -\\\-inserts  </dt>
+<dt>-d, -\\\-inserts  </dt>
 <dd>Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.</dd>
 
-<dt>-D | -\\\-column-inserts | -\\\-attribute-inserts  </dt>
-<dd>Dump data as `INSERT` commands with explicit column names `(INSERT INTO` *table*`(`*column*`, ...)                 VALUES ...)`. This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</dd>
+<dt>-D, -\\\-column-inserts | -\\\-attribute-inserts  </dt>
+<dd>Dump data as `INSERT` commands with explicit column names `(INSERT INTO` *table*`(`*column*`, ...) VALUES ...)`. This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</dd>
 
-<dt>-E *encoding* | -\\\-encoding=*encoding*  </dt>
+<dt>-E, -\\\-encoding \<encoding\>  </dt>
 <dd>Create the dump in the specified character set encoding. By default, the dump is created in the database encoding. (Another way to get the same result is to set the `PGCLIENTENCODING` environment variable to the desired dump encoding.)</dd>
 
-<dt>-f *file* | -\\\-file=*file*  </dt>
+<dt>-f, -\\\-file \<file\> </dt>
 <dd>Send output to the specified file. If this is omitted, the standard output is used.</dd>
 
-<dt>-F p|c|t | -\\\-format=plain|custom|tar  </dt>
+<dt>-F(p|c|t), -\\\-format (plain|custom|tar)  </dt>
 <dd>Selects the format of the output. format can be one of the following:
 
-p | plain — Output a plain-text SQL script file (the default).
+p, plain — Output a plain-text SQL script file (the default).
 
-c | custom — Output a custom archive suitable for input into [pg\_restore](pg_restore.html#topic1). This is the most flexible format in that it allows reordering of loading data as well as object definitions. This format is also compressed by default.
+c, custom — Output a custom archive suitable for input into [pg\_restore](pg_restore.html#topic1). This is the most flexible format in that it allows reordering of loading data as well as object definitions. This format is also compressed by default.
 
-t | tar — Output a tar archive suitable for input into [pg\_restore](pg_restore.html#topic1). Using this archive format allows reordering and/or exclusion of database objects at the time the database is restored. It is also possible to limit which data is reloaded at restore time.</dd>
+t, tar — Output a tar archive suitable for input into [pg\_restore](pg_restore.html#topic1). Using this archive format allows reordering and/or exclusion of database objects at the time the database is restored. It is also possible to limit which data is reloaded at restore time.</dd>
 
-<dt>-i | -\\\-ignore-version  </dt>
+<dt>-i, -\\\-ignore-version  </dt>
 <dd>Ignore version mismatch between `pg_dump` and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.</dd>
 
-<dt>-n *schema* | -\\\-schema=*schema*  </dt>
+<dt>-n, -\\\-schema \<schema\>  </dt>
 <dd>Dump only schemas matching the schema pattern; this selects both the schema itself, and all its contained objects. When this option is not specified, all non-system schemas in the target database will be dumped. Multiple schemas can be selected by writing multiple `-n` switches. Also, the schema parameter is interpreted as a pattern according to the same rules used by `psql`'s` \d` commands, so multiple schemas can also be selected by writing wildcard characters in the pattern. When using wildcards, be careful to quote the pattern if needed to prevent the shell from expanding the wildcards.
 
 **Note:** When -n is specified, `pg_dump` makes no attempt to dump any other database objects that the selected schema(s) may depend upon. Therefore, there is no guarantee that the results of a specific-schema dump can be successfully restored by themselves into a clean database.
 
 **Note:** Non-schema objects such as blobs are not dumped when `-n` is specified. You can add blobs back to the dump with the `--blobs` switch.</dd>
 
-<dt>-N *schema* | -\\\-exclude-schema=*schema*  </dt>
+<dt>-N, -\\\-exclude-schema \<schema\>  </dt>
 <dd>Do not dump any schemas matching the schema pattern. The pattern is interpreted according to the same rules as for `-n`. `-N` can be given more than once to exclude schemas matching any of several patterns. When both `-n` and `-N` are given, the behavior is to dump just the schemas that match at least one `-n` switch but no `-N` switches. If `-N` appears without `-n`, then schemas matching `-N` are excluded from what is otherwise a normal dump.</dd>
 
-<dt>-o | -\\\-oids  </dt>
+<dt>-o, -\\\-oids  </dt>
 <dd>Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into HAWQ.</dd>
 
-<dt>-O | -\\\-no-owner  </dt>
+<dt>-O, -\\\-no-owner  </dt>
 <dd>Do not output commands to set ownership of objects to match the original database. By default, `pg_dump` issues `ALTER OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify `-O`. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
 
-<dt>-s | -\\\-schema-only  </dt>
+<dt>-s, -\\\-schema-only  </dt>
 <dd>Dump only the object definitions (schema), not data.</dd>
 
-<dt>-S *username* | -\\\-superuser=*username*  </dt>
+<dt>-S, -\\\-superuser \<username\>  </dt>
 <dd>Specify the superuser user name to use when disabling triggers. This is only relevant if `--disable-triggers` is used. It is better to leave this out, and instead start the resulting script as a superuser.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
-<dt>-t *table* | -\\\-table=*table*  </dt>
+<dt>-t, -\\\-table \<table\>  </dt>
 <dd>Dump only tables (or views or sequences) matching the table pattern. Specify the table in the format `schema.table`.
 
 Multiple tables can be selected by writing multiple `-t` switches. Also, the table parameter is interpreted as a pattern according to the same rules used by `psql`'s `\d` commands, so multiple tables can also be selected by writing wildcard characters in the pattern. When using wildcards, be careful to quote the pattern if needed to prevent the shell from expanding the wildcards. The `-n` and `-N` switches have no effect when `-t` is used, because tables selected by `-t` will be dumped regardless of those switches, and non-table objects will not be dumped.
@@ -100,13 +138,13 @@ Multiple tables can be selected by writing multiple `-t` switches. Also, the tab
 **Note:** When `-t` is specified, `pg_dump` makes no attempt to dump any other database objects that the selected table(s) may depend upon. Therefore, there is no guarantee that the results of a specific-table dump can be successfully restored by themselves into a clean database.
 Also, `-t` cannot be used to specify a child table partition. To dump a partitioned table, you must specify the parent table name.</dd>
 
-<dt>-T *table* | -\\\-exclude-table=*table*  </dt>
+<dt>-T, -\\\-exclude-table \<table\>  </dt>
 <dd>Do not dump any tables matching the table pattern. The pattern is interpreted according to the same rules as for `-t`. `-T` can be given more than once to exclude tables matching any of several patterns. When both `-t` and `-T` are given, the behavior is to dump just the tables that match at least one `-t` switch but no `-T` switches. If `-T` appears without `-t`, then tables matching `-T` are excluded from what is otherwise a normal dump.</dd>
 
-<dt>-v | -\\\-verbose  </dt>
+<dt>-v, -\\\-verbose  </dt>
 <dd>Specifies verbose mode. This will cause `pg_dump` to output detailed object comments and start/stop times to the dump file, and progress messages to standard error.</dd>
 
-<dt>-x | -\\\-no-privileges | -\\\-no-acl  </dt>
+<dt>-x, -\\\-no-privileges | -\\\-no-acl  </dt>
 <dd>Prevent dumping of access privileges (`GRANT/REVOKE` commands).</dd>
 
 <dt>-\\\-disable-dollar-quoting  </dt>
@@ -123,22 +161,24 @@ Also, `-t` cannot be used to specify a child table partition. To dump a partitio
 <dt>-\\\-gp-syntax | -\\\-no-gp-syntax   </dt>
 <dd>Use `--gp-syntax` to dump HAWQ syntax in the `CREATE TABLE` statements. This allows the distribution policy (`DISTRIBUTED BY` or `DISTRIBUTED RANDOMLY` clauses) of a HAWQ table to be dumped, which is useful for restoring into other HAWQ systems. The default is to include HAWQ syntax when connected to a HAWQ system, and to exclude it when connected to a regular PostgreSQL system.</dd>
 
-<dt>-Z 0..9 | -\\\-compress=0..9  </dt>
+<dt>-Z, -\\\-compress 0..9 </dt>
 <dd>Specify the compression level to use in archive formats that support compression. Currently only the *custom* archive format supports compression.</dd>
 
-**Connection Options**
 
-<dt>-h *host*| -\\\-host *host*  </dt>
+**\<connection_options\>**
+
+<dt>-h, -\\\-host \<host\> </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
-<dt>-p *port*| -\\\-port *port*  </dt>
+<dt>-p, -\\\-port \<port\>  </dt>
 <dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
-<dt>-U *username*| -\\\-username *username*  </dt>
+<dt>-U, -\\\-username \<username\>  </dt>
 <dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
 
-<dt>-W | -\\\-password  </dt>
+<dt>-W, -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
+
 
 ## <a id="topic1__section7"></a>Notes
 
