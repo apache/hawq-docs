@@ -7,11 +7,16 @@ Creates a new database.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE DATABASE name [ [WITH] [OWNER [=] dbowner]
-                     [TEMPLATE [=] template]
-                     [ENCODING [=] encoding]
-                     [TABLESPACE [=] tablespace]
-                     [CONNECTION LIMIT [=] connlimit ] ]
+CREATE DATABASE <database_name> [s[WITH] <database_attribute>=<value> [ ... ]]
+```
+where \<database\_attribute\> is:
+ 
+``` pre
+	[OWNER=<database_owner>]
+    [TEMPLATE=<template>]
+    [ENCODING=<encoding>]
+    [TABLESPACE=<tablespace>]
+    [CONNECTION LIMIT=<connection_limit>]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -20,29 +25,29 @@ CREATE DATABASE name [ [WITH] [OWNER [=] dbowner]
 
 The creator becomes the owner of the new database by default. Superusers can create databases owned by other users by using the `OWNER` clause. They can even create databases owned by users with no special privileges. Non-superusers with `CREATEDB` privilege can only create databases owned by themselves.
 
-By default, the new database will be created by cloning the standard system database `template1`. A different template can be specified by writing `TEMPLATE name             `. In particular, by writing `TEMPLATE template0`, you can create a clean database containing only the standard objects predefined by HAWQ. This is useful if you wish to avoid copying any installation-local objects that may have been added to `template1`.
+By default, the new database will be created by cloning the standard system database `template1`. A different template can be specified by writing `TEMPLATE <template>`. In particular, by writing `TEMPLATE template0`, you can create a clean database containing only the standard objects predefined by HAWQ. This is useful if you wish to avoid copying any installation-local objects that may have been added to `template1`.
 
 ## <a id="topic1__section4"></a>Parameters
 
-<dt> *name*   </dt>
+<dt>\<database_name\></dt>
 <dd>The name of a database to create.
 
 **Note:** HAWQ reserves the database name "hcatalog" for system use.</dd>
 
-<dt> *dbowner*   </dt>
+<dt>OWNER=\<database_owner\> </dt>
 <dd>The name of the database user who will own the new database, or `DEFAULT` to use the default owner (the user executing the command).</dd>
 
-<dt> *template*   </dt>
+<dt>TEMPLATE=\<template\> </dt>
 <dd>The name of the template from which to create the new database, or `DEFAULT` to use the default template (*template1*).</dd>
 
-<dt> *encoding*   </dt>
+<dt>ENCODING=\<encoding\> </dt>
 <dd>Character set encoding to use in the new database. Specify a string constant (such as `'SQL_ASCII'`), an integer encoding number, or `DEFAULT` to use the default encoding.</dd>
 
-<dt> *tablespace*   </dt>
+<dt>TABLESPACE=\<tablespace\> </dt>
 <dd>The name of the tablespace that will be associated with the new database, or `DEFAULT` to use the template database's tablespace. This tablespace will be the default tablespace used for objects created in this database.</dd>
 
-<dt> *connlimit*   </dt>
-<dd>The maximum number of concurrent connections posible. The default of -1 means there is no limitation.</dd>
+<dt>CONNECTION LIMIT=\<connection_limit\></dt>
+<dd>The maximum number of concurrent connections possible. The default of -1 means there is no limitation.</dd>
 
 ## <a id="topic1__section5"></a>Notes
 
@@ -63,13 +68,13 @@ CREATE DATABASE gpdb;
 To create a database `sales` owned by user `salesapp` with a default tablespace of `salesspace`:
 
 ``` pre
-CREATE DATABASE sales OWNER salesapp TABLESPACE salesspace;
+CREATE DATABASE sales OWNER=salesapp TABLESPACE=salesspace;
 ```
 
 To create a database `music` which supports the ISO-8859-1 character set:
 
 ``` pre
-CREATE DATABASE music ENCODING 'LATIN1';
+CREATE DATABASE music ENCODING='LATIN1';
 ```
 
 ## <a id="topic1__section7"></a>Compatibility
