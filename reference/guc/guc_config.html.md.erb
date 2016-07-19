@@ -16,7 +16,7 @@ All parameter names are case-insensitive. Every parameter takes a value of one o
 Some settings specify a memory size or time value. Each of these has an implicit unit, which is either kilobytes, blocks (typically eight kilobytes), milliseconds, seconds, or minutes. Valid memory size units are `kB` (kilobytes), `MB` (megabytes), and `GB` (gigabytes). Valid time units are `ms` (milliseconds), `s` (seconds), `min` (minutes), `h` (hours), and `d` (days). Note that the multiplier for memory units is 1024, not 1000. A valid time expression contains a number and a unit. When specifying a memory or time unit using the `SET` command, enclose the value in quotes. For example:
 
 ``` pre
-SET default_statement_mem TO '200MB';
+SET hawq_rm_stmt_vseg_memory TO '4GB';
 ```
 
 **Note:** There is no space between the value and the unit names.

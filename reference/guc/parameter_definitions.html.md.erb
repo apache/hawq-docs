@@ -56,6 +56,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[default\_hash\_table\_bucket\_number](../../reference/guc/parameter_definitions.html#topic_fqj_4fd_kv)**
 
+-   **[default\_statement\_mem](../../reference/guc/parameter_definitions.html#default_statement_mem)**
+   
 -   **[default\_statistics\_target](../../reference/guc/parameter_definitions.html#default_statistics_target)**
 
 -   **[default\_tablespace](../../reference/guc/parameter_definitions.html#default_tablespace)**
@@ -789,6 +791,17 @@ When expanding the cluster, you should adjust this number to reflect the number 
 |----------------|-----------------|-------------------------|
 | integer &gt; 0 | 6\*SegmentCount | master, session, reload |
 
+
+## default\_statement\_mem <a name="default_statement_mem"></a>
+
+The default amount of memory, in KB, to allocate to query statements that do not require any segment resources and are executed only on the master host. This type of query execution is rare in HAWQ. 
+
+The default value of this configuration parameter is acceptable for most deployments. Modify this value only if you are using an advanced configuration.
+ 
+
+| Value Range    | Default         | Set Classifications     |
+|----------------|-----------------|-------------------------|
+| integer &gt; 1000 |128000 | master, session, reload |
 
 ## default\_statistics\_target <a name="default_statistics_target"></a>
 
