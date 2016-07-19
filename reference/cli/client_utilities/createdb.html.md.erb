@@ -6,18 +6,30 @@ Creates a new database.
 
 ## <a id="topic1__section2"></a>Synopsis
 
-``` shell
-createdb [-h <host>] [-p <port>] [-U <username>] [-w | --no-password] [-W | --password] 
-         [-D <tablespace> | --tablespace <tablespace>]
-         [-E <encoding> | --encoding <encoding>]
-         [-O <username> | --owner <username>] 
-         [-T <template>| --template <template>] 
-         [-e | --echo] 
-         [<dbname> ['<description>']]
-          
+``` pre
+
+createdb [<connection_options>] [<database_options>] [<dbname> ['<description>']]
+
 createdb --help 
 
 createdb --version
+
+```
+where:
+
+``` pre
+<connection_options> =
+	[-h <host> | --host <host>] 
+	[-p <port> | -- port <port>] 
+	[-U <username> | --username <username>] 
+    [-W | --password] 
+         
+<database_options> =
+    [-D <tablespace> | --tablespace <tablespace>]
+    [-E <encoding> | --encoding <encoding>]
+    [-O <username> | --owner <username>] 
+    [-T <template>| --template <template>] 
+    [-e | --echo] 
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -30,11 +42,13 @@ Normally, the database user who executes this command becomes the owner of the n
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>\<dbname\></dt>
+<dt>**\<dbname\>**</dt>
 <dd>The name of the database to be created. The name must be unique among all other databases in the HAWQ system. If not specified, reads from the environment variable `PGDATABASE`, then `PGUSER` or defaults to the current system user.</dd>
 
 <dt>\<description\></dt>
-<dd>A comment to be associated with the newly created database. Descriptions containing white space must be enclosed in quotes.</dd>
+<dd>Optional comment to be associated with the newly created database. Descriptions containing white space must be enclosed in quotes.</dd>
+
+**\<database_options\>**
 
 <dt>-D, -\\\-tablespace \<tablespace\>  </dt>
 <dd>The default tablespace for the database.</dd>
@@ -51,7 +65,7 @@ Normally, the database user who executes this command becomes the owner of the n
 <dt>-T, -\\\-template \<template\>  </dt>
 <dd>The name of the template from which to create the new database. Defaults to `template1`.</dd>
 
-**Connection Options**
+**\<connection_options\>**
  
 <dt>-h, -\\\-host \<hostname\>  </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
@@ -65,7 +79,7 @@ Normally, the database user who executes this command becomes the owner of the n
 <dt>-w, -\\\-no-password  </dt>
 <dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</dd>
 
-<dt>-W | -\\\-password  </dt>
+<dt>-W, -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
 
 ## <a id="topic1__section6"></a>Examples
