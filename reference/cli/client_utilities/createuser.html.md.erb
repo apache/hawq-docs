@@ -7,7 +7,7 @@ Creates a new database role.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-createuser [<connection_options>] [<role_attribute_options>] [-e] <role_name>
+createuser [<connection_options>] [<role_attribute_options>] [-e | --echo] <role_name>
 
 createuser --help 
 
@@ -44,11 +44,11 @@ Superusers can bypass all access permission checks within the database, so super
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-e, -\\\-echo  </dt>
-<dd>Echo the commands that `createuser` generates and sends to the server.</dd>
-
 <dt>**\<role\_name\>**</dt>
 <dd>The name of the role to be created. This name must be different from all existing roles in this HAWQ installation.</dd>
+
+<dt>-e, -\\\-echo  </dt>
+<dd>Echo the commands that `createuser` generates and sends to the server.</dd>
 
 **\<role\_attribute\_options\>**
 

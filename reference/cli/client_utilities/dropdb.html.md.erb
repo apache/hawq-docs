@@ -7,11 +7,20 @@ Removes a database.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-dropdb [-h <host>] [-p <port>] [-U <username>] [-w | --no-password] [-W | --password] [-e] [-i] <dbname>
+dropdb [<connection_options] [-e | --echo] [-i | --interactive] <dbname>
 
 dropdb --help 
 
 dropdb --version
+```
+where:
+
+``` pre
+<connection_options> =
+	[-h <host> | --host <host>] 
+	[-p <port> | -- port <port>] 
+	[-U <username> | --username <username>] 
+    [-W | --password] 
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -22,30 +31,30 @@ dropdb --version
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>*dbname*  </dt>
+<dt>**\<dbname\>** </dt>
 <dd>The name of the database to be removed.</dd>
 
-<dt>-e | -\\\-echo  </dt>
+<dt>-e, -\\\-echo  </dt>
 <dd>Echo the commands that `dropdb` generates and sends to the server.</dd>
 
-<dt>-i | -\\\-interactive  </dt>
+<dt>-i, -\\\-interactive  </dt>
 <dd>Issues a verification prompt before doing anything destructive.</dd>
 
-**Connection Options**
+**\<connection_options\>**
 
-<dt>-h *host* | -\\\-host *host*  </dt>
+<dt>-h, -\\\-host \<host\> </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
-<dt>-p *port* | -\\\-port *port*  </dt>
+<dt>-p, -\\\-port \<port\>  </dt>
 <dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
-<dt>-U *username* | -\\\-username *username*  </dt>
+<dt>-U, -\\\-username \<username\>  </dt>
 <dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
 
-<dt>-w | -\\\-no-password  </dt>
+<dt>-w, -\\\-no-password  </dt>
 <dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</dd>
 
-<dt>-W | -\\\-password  </dt>
+<dt>-W, -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
 
 ## <a id="topic1__section6"></a>Examples

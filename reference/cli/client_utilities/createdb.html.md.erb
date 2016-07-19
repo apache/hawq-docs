@@ -8,7 +8,7 @@ Creates a new database.
 
 ``` pre
 
-createdb [<connection_options>] [<database_options>] [<dbname> ['<description>']]
+createdb [<connection_options>] [<database_options>] [-e | --echo] [<dbname> ['<description>']]
 
 createdb --help 
 
@@ -29,7 +29,6 @@ where:
     [-E <encoding> | --encoding <encoding>]
     [-O <username> | --owner <username>] 
     [-T <template>| --template <template>] 
-    [-e | --echo] 
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -48,13 +47,13 @@ Normally, the database user who executes this command becomes the owner of the n
 <dt>\<description\></dt>
 <dd>Optional comment to be associated with the newly created database. Descriptions containing white space must be enclosed in quotes.</dd>
 
+<dt>-e, --echo </dt>
+<dd>Echo the commands that createdb generates and sends to the server.</dd>
+
 **\<database_options\>**
 
 <dt>-D, -\\\-tablespace \<tablespace\>  </dt>
 <dd>The default tablespace for the database.</dd>
-
-<dt>-e, --echo </dt>
-<dd>Echo the commands that createdb generates and sends to the server.</dd>
 
 <dt>-E, -\\\-encoding \<encoding\> </dt>
 <dd>Character set encoding to use in the new database. Specify a string constant (such as `'UTF8'`), an integer encoding number, or `DEFAULT` to use the default encoding.</dd>
