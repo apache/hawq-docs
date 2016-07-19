@@ -7,13 +7,13 @@ This section contains an overview of the HAWQ PL/Java language.
 
 ## <a id="aboutpljava"></a>About PL/Java 
 
-With the HAWQ PL/Java extension, you can write Java methods using your favorite Java IDE and install the JAR files that contain the methods in your HAWQ cluster.
+With the HAWQ PL/Java extension, you can write Java methods using your favorite Java IDE and install the JAR files that implement the methods in your HAWQ cluster.
 
-**Note**: To use PL/Java in HAWQ, you must either install the PL/Java package on top of an existing HAWQ deployment or specify PL/Java as a build option when compiling HAWQ.
+**Note**: If building HAWQ from source, you must specify PL/Java as a build option when compiling HAWQ. To use PL/Java in a HAWQ deployment, you must explicitly enable the PL/Java extension in all desired databases.  
 
 The HAWQ PL/Java package is based on the open source PL/Java 1.4.0. HAWQ PL/Java provides the following features.
 
-- Ability to execute PL/Java functions with Java 1.6 or higher.
+- Ability to execute PL/Java functions with Java 1.6 or 1.7.
 - Standardized utilities (modeled after the SQL 2003 proposal) to install and maintain Java code in the database.
 - Standardized mappings of parameters and result. Complex types as well as sets are supported.
 - An embedded, high performance, JDBC driver utilizing the internal HAWQ Database SPI routines.
@@ -76,6 +76,11 @@ If TRUE, lingering savepoints will be released on function exit. If FALSE, they 
 #### pljava\_vmoptions
 
 Defines the start up options for the Java VM.
+
+
+## <a id="enablepljava"></a>Enabling and Removing PL/Java Support 
+
+The PL/Java extension must be explicitly enabled on each database in which it will be used.  See [Enabling and Removing PL/Java Support](enabling_pljava.html).
 
 
 ## <a id="writingpljavafunc"></a>Writing PL/Java Functions 

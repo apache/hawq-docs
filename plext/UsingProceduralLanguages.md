@@ -1,5 +1,5 @@
 ---
-title: Using Procedural Languages in HAWQ
+title: Using Procedural Languages and Extensions in HAWQ
 ---
 
 HAWQ allows user-defined functions to be written in other languages besides SQL and C. These other languages are generically called *procedural languages* (PLs).
@@ -9,9 +9,11 @@ For a function written in a procedural language, the database server has no buil
 This chapter describes the following:
 
 -   <a href="using_pljava.html">Using PL/Java</a>
+-   <a href="using_plperl.html">Using PL/Perl</a>
 -   <a href="using_plpgsql.html">Using PL/pgSQL</a>
 -   <a href="using_plpython.html">Using PL/Python</a>
 -   <a href="using_plr.html">Using PL/R</a>
+-   <a href="using_pgcrypto.html">Using pgcrypto</a>
 
 
 
