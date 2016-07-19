@@ -10,6 +10,40 @@ Restores a database from an archive file created by `pg_dump`.
 pg_restore [-h <host>] [-p <port>] [-U <username>] [-W] [-1][<restore_option> ...] <filename>
 ```
 
+``` pre
+<connection_options> =
+    [-h <host> | --host <host>] 
+    [-p <port> | -- port <port>] 
+    [-U <username> | --username <username>] 
+    [-W | --password] 
+    [-1]
+<dump options> =
+         [-a | --dataonly ]
+         [-c | --clean ]
+         [-C | --create ]
+         [-d | --dbname=dbname ]
+         [-e | --exit-on-error ] 
+         [-f outfilename | --file=outfilename ]
+         [-F t|c | --format=tar | custom ] 
+         [-i | --ignore-version ]
+         [-I | --index=index ]
+         [-l | --list ]
+         [-L <list-file> | --use-list=<list-file> ]
+         [-n | --schema <schema> ]
+         [-O, --no-owner ]
+         [-P ’<function-name(<argtype> [, …])’ | --function=’<function-name>(<argtype> [, …])’]
+         [-s | --schema-only]
+         [-S <username>   | --superuser=<username> ]
+         [-t <table>, --table <table> ]
+         [-T <trigger> | --trigger=<trigger> ]
+         [-v  | --verbose ]
+         [-x | --no-privileges | --no-acl] 
+         [--disable-dollar-quoting] 
+         [--disable-triggers] 
+         [--no-data-for-failed-tables]
+         [-1 | --single-transaction ]    ```
+```
+
 ## <a id="topic1__section3"></a>Description
 
 `pg_restore` is a utility for restoring a database from an archive created by [pg\_dump](pg_dump.html#topic1) in one of the non-plain-text formats. It will issue the commands necessary to reconstruct the database to the state it was in at the time it was saved. The archive files also allow `pg_restore` to be selective about what is restored, or even to reorder the items prior to being restored.

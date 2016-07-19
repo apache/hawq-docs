@@ -7,8 +7,36 @@ Extracts all databases in a HAWQ system to a single script file or other archive
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-pg_dumpall [-h <host>] [-p <port>] [-U <username>] [-W] [<dump_option> ...]
+pg_dumpall [<connection_options>] [<dump_option> ...]
 ```
+``` pre
+
+<connection_options> =
+    [-h <host> | --host <host>] 
+    [-p <port> | -- port <port>] 
+    [-U <username> | --username <username>] 
+    [-W | --password] 
+Dump options:
+         [-a   --dataonly ]
+         [-c | --clean ]
+         [-d | --inserts] 
+         [-D| --column_inserts] 
+         [-f | --filespaces] 
+         [-g | --globals-only]
+         [-i | --ignore-version ]
+         [-o | --oids ]
+         [-d | --inserts] 
+         [-O | --no-owner] 
+         [-r | --resource-queues] 
+         [-s | --schema-only]
+         [-S <username>  | --superuser+username ]
+         [-v  | --verbose ]
+         [-x | --no-privileges | --no-acl] 
+         [--disable-dollar-quoting] 
+         [--disable-triggers] 
+         [--use-set-session-authorization]         
+         [--gp-syntax]         
+ ```
 
 ## <a id="topic1__section3"></a>Description
 
