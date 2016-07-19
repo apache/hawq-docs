@@ -7,7 +7,7 @@ Extracts all databases in a HAWQ system to a single script file or other archive
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-pg_dumpall [<connection_options>] [<dump_option> ...]
+pg_dumpall [<options>] ...
 ```
 where:
 
@@ -17,27 +17,33 @@ where:
     [-h <host> | --host <host>] 
     [-p <port> | -- port <port>] 
     [-U <username> | --username <username>] 
+    [-w | --no-password]
     [-W | --password] 
-<dump options> =
+<general options> =
+    [-f | --filespaces] 
+    [-i | --ignore-version ]
+    [--help ]
+    [--version]
+<options controlling output content> =
     [-a   --dataonly ]
     [-c | --clean ]
     [-d | --inserts] 
     [-D | --column_inserts] 
-    [-f | --filespaces] 
+    [-F | --filespaces ]
     [-g | --globals-only]
-    [-i | --ignore-version ]
     [-o | --oids ]
     [-d | --inserts] 
     [-O | --no-owner] 
     [-r | --resource-queues] 
     [-s | --schema-only]
-    [-S <username>  | --superuser+username ]
+    [-S <username>  | --superuser=<username> ]
     [-v  | --verbose ]
     [-x | --no-privileges | --no-acl] 
     [--disable-dollar-quoting] 
     [--disable-triggers] 
     [--use-set-session-authorization]         
-    [--gp-syntax]      
+    [--gp-syntax]     
+    [--no-gp-syntax] 
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -54,7 +60,20 @@ The SQL script will be written to the standard output. Shell operators should be
 
 ## <a id="topic1__section4"></a>Options
 
-**Dump Options**
+**General Options**
+<dt>-f | -\\\-filespaces  </dt>
+<dd>Dump filespace definitions.</dd>
+
+<dt>-i | -\\\-ignore-version  </dt>
+<dd>Ignore version mismatch between [pg\_dump](pg_dump.html#topic1) and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.</dd>
+
+<dt>--help</dt>
+<dd>Displays this help, then exits.</dt>
+
+<dt>--version</dt>
+<dd>Displays the version information for the output.</dd>
+
+**Output Control Options**
 
 <dt>-a | -\\\-data-only  </dt>
 <dd>Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
@@ -65,17 +84,11 @@ The SQL script will be written to the standard output. Shell operators should be
 <dt>-d | -\\\-inserts  </dt>
 <dd>Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.</dd>
 
-<dt>-D | -\\\-column-inserts | -\\\-attribute-inserts  </dt>
+<dt>-D | -\\\-column-inserts  </dt>
 <dd>Dump data as `INSERT` commands with explicit column names `(INSERT INTO table                                     (column, ...) VALUES ...)`. This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</dd>
-
-<dt>-f | -\\\-filespaces  </dt>
-<dd>Dump filespace definitions.</dd>
 
 <dt>-g | -\\\-globals-only  </dt>
 <dd>Dump only global objects (roles and tablespaces), no databases.</dd>
-
-<dt>-i | -\\\-ignore-version  </dt>
-<dd>Ignore version mismatch between [pg\_dump](pg_dump.html#topic1) and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.</dd>
 
 <dt>-o | -\\\-oids  </dt>
 <dd>Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into HAWQ.</dd>
@@ -89,13 +102,10 @@ The SQL script will be written to the standard output. Shell operators should be
 <dt>-s | -\\\-schema-only  </dt>
 <dd>Dump only the object definitions (schema), not data.</dd>
 
-<dt>-S *username* | -\\\-superuser=*username*  </dt>
+<dt>-S \<username\> | -\\\-superuser=\<username\>  </dt>
 <dd>Specify the superuser user name to use when disabling triggers. This is only relevant if `--disable-triggers` is used. It is better to leave this out, and instead start the resulting script as a superuser.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
-
-<dt>-v | -\\\-verbose  </dt>
-<dd>Specifies verbose mode. This will cause [pg\_dump](pg_dump.html#topic1) to output detailed object comments and start/stop times to the dump file, and progress messages to standard error.</dd>
 
 <dt>-x | -\\\-no-privileges | -\\\-no-acl  </dt>
 <dd>Prevent dumping of access privileges (`GRANT/REVOKE` commands).</dd>
@@ -113,6 +123,9 @@ The SQL script will be written to the standard output. Shell operators should be
 
 <dt>-\\\-gp-syntax  </dt>
 <dd>Output HAWQ syntax in the `CREATE                                 TABLE` statements. This allows the distribution policy (`DISTRIBUTED BY` or `DISTRIBUTED                                 RANDOMLY` clauses) of a HAWQ table to be dumped, which is useful for restoring into other HAWQ systems.</dd>
+
+<dt>-\\\-no-gp-syntax </dt>
+<dd>
 
 **Connection Options**
 
