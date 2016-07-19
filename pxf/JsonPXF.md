@@ -185,10 +185,10 @@ A `CREATE EXTERNAL TABLE` SQL call to create a queryable external table based on
 The `LOCATION` clause would differ.  The `IDENTIFIER` keyword and an associated value must be specified when reading from multi-line JSON records:
 
 ``` sql
-LOCATION('pxf://namenode:51200/user/data/multiline.json?PROFILE=Json&IDENTIFIER=record_obj')
+LOCATION('pxf://namenode:51200/user/data/multiline.json?PROFILE=Json&IDENTIFIER=created_at')
 ```
 
-`record_obj` identifies the member name used to determine the scope of the JSON object.
+`created_at` identifies the member name used to determine the encapsulating JSON object, `record_obj` in this case.
 
 To query this external table populated with JSON data:
 
