@@ -9,6 +9,8 @@ Extracts all databases in a HAWQ system to a single script file or other archive
 ``` pre
 pg_dumpall [<connection_options>] [<dump_option> ...]
 ```
+where:
+
 ``` pre
 
 <connection_options> =
@@ -17,26 +19,26 @@ pg_dumpall [<connection_options>] [<dump_option> ...]
     [-U <username> | --username <username>] 
     [-W | --password] 
 Dump options:
-         [-a   --dataonly ]
-         [-c | --clean ]
-         [-d | --inserts] 
-         [-D| --column_inserts] 
-         [-f | --filespaces] 
-         [-g | --globals-only]
-         [-i | --ignore-version ]
-         [-o | --oids ]
-         [-d | --inserts] 
-         [-O | --no-owner] 
-         [-r | --resource-queues] 
-         [-s | --schema-only]
-         [-S <username>  | --superuser+username ]
-         [-v  | --verbose ]
-         [-x | --no-privileges | --no-acl] 
-         [--disable-dollar-quoting] 
-         [--disable-triggers] 
-         [--use-set-session-authorization]         
-         [--gp-syntax]         
- ```
+    [-a   --dataonly ]
+    [-c | --clean ]
+    [-d | --inserts] 
+    [-D | --column_inserts] 
+    [-f | --filespaces] 
+    [-g | --globals-only]
+    [-i | --ignore-version ]
+    [-o | --oids ]
+    [-d | --inserts] 
+    [-O | --no-owner] 
+    [-r | --resource-queues] 
+    [-s | --schema-only]
+    [-S <username>  | --superuser+username ]
+    [-v  | --verbose ]
+    [-x | --no-privileges | --no-acl] 
+    [--disable-dollar-quoting] 
+    [--disable-triggers] 
+    [--use-set-session-authorization]         
+    [--gp-syntax]      
+```
 
 ## <a id="topic1__section3"></a>Description
 

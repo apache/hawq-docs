@@ -9,6 +9,7 @@ Restores a database from an archive file created by `pg_dump`.
 ``` pre
 pg_restore [-h <host>] [-p <port>] [-U <username>] [-W] [-1][<restore_option> ...] <filename>
 ```
+where:
 
 ``` pre
 <connection_options> =
@@ -18,30 +19,30 @@ pg_restore [-h <host>] [-p <port>] [-U <username>] [-W] [-1][<restore_option> ..
     [-W | --password] 
     [-1]
 <dump options> =
-         [-a | --dataonly ]
-         [-c | --clean ]
-         [-C | --create ]
-         [-d | --dbname=dbname ]
-         [-e | --exit-on-error ] 
-         [-f outfilename | --file=outfilename ]
-         [-F t|c | --format=tar | custom ] 
-         [-i | --ignore-version ]
-         [-I | --index=index ]
-         [-l | --list ]
-         [-L <list-file> | --use-list=<list-file> ]
-         [-n | --schema <schema> ]
-         [-O, --no-owner ]
-         [-P ’<function-name(<argtype> [, …])’ | --function=’<function-name>(<argtype> [, …])’]
-         [-s | --schema-only]
-         [-S <username>   | --superuser=<username> ]
-         [-t <table>, --table <table> ]
-         [-T <trigger> | --trigger=<trigger> ]
-         [-v  | --verbose ]
-         [-x | --no-privileges | --no-acl] 
-         [--disable-dollar-quoting] 
-         [--disable-triggers] 
-         [--no-data-for-failed-tables]
-         [-1 | --single-transaction ]    ```
+    [-a | --dataonly ]
+    [-c | --clean ]
+    [-C | --create ]
+    [-d | --dbname=dbname ]
+    [-e | --exit-on-error ] 
+    [-f outfilename | --file=outfilename ]
+    [-F t|c | --format=tar | custom ] 
+    [-i | --ignore-version ]
+    [-I | --index=index ]
+    [-l | --list ]
+    [-L <list-file> | --use-list=<list-file> ]
+    [-n | --schema <schema> ]
+    [-O, --no-owner ]
+    [-P ’<function-name(<argtype> [, …])’ | --function=’<function-name>(<argtype> [, …])’]
+    [-s | --schema-only]
+    [-S <username>   | --superuser=<username> ]
+    [-t <table>, --table <table> ]
+    [-T <trigger> | --trigger=<trigger> ]
+    [-v  | --verbose ]
+    [-x | --no-privileges | --no-acl] 
+    [--disable-dollar-quoting] 
+    [--disable-triggers] 
+    [--no-data-for-failed-tables]
+    [-1 | --single-transaction ]    
 ```
 
 ## <a id="topic1__section3"></a>Description

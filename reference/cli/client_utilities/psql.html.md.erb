@@ -7,7 +7,42 @@ Interactive command-line interface for HAWQ.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-psql [option ...] [dbname [username]]
+psql [<option> ...] [<dbname> [<username>]]
+```
+
+``` pre
+
+<connection_options> =
+    [-h <host> | --host <host>] 
+    [-p <port> | -- port <port>] 
+    [-U <username> | --username <username>] 
+    [-W | --password] 
+<dump options> =
+    [-a | --echo-all]
+    [-A | --no-align]
+    [-c ’<command>’ | --command ’<command>’] 
+    [-d <dbname> | --dbname <dbname>] 
+    [-e | --echo-queries]
+    [-E | --echo-hidden]
+    [-f <filename> | --file <filename>] 
+    [-F <separator> | --field-separator <separator>]
+    [-H | --html]
+    [-l | --list]
+    [-L <filename> | --log-file <filename>]
+    [-o <filename> | --output <filename>]
+    [-P <assignment> | --pset <assignment>]
+    [-q | --quiet]
+    [-R <separator> | --record-separator <separator>]
+    [-s | --single-step]
+    [-S | --single-line]
+    [-t | --tuples-only]
+    [-T <table_options> | --table-attr <table_options>]
+    [-v <assignment> | --set <assignment> | --variable <assignment>]
+    [-V | --version]
+    [-x | --expanded]
+    [-X | --no-psqlrc]
+    [-1 | --single-transaction]
+    [-? | --help]    
 ```
 
 ## <a id="topic1__section3"></a>Description
