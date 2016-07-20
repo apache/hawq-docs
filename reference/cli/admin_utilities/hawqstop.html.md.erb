@@ -7,20 +7,19 @@ Stops or restarts a HAWQ system.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq stop <object> [-a]   
-       [-M|--mode smart | fast | immediate] [-t <timeout_seconds>]  
-       [-l <logfile_directory>] [-v|--verbose | -q|--quiet]
-       [--ignore_bad-hosts cluster | allsegments]
-hawq stop object -u|--reload [-l logfile_directory] 
- 
-hawq stop --version 
+hawq stop <object> [-a | --prompt]
+       [-M (smart|fast|immediate) | --mode (smart|fast|immediate)]   
+       [-t <timeout_seconds> | --timeout <timeout_seconds>]  
+       [-l <logfile_directory> | --logdir <logfile_directory]
+       [(-v | --verbose) | (-q | --quiet)]
+hawq stop <object> (-u | --reload)
 
-hawq stop -? | -h | --help
+hawq stop [-? | -h | --help]
 ```
 
 ## <a id="topic1__section3"></a>Description
 
-The `hawq stop` utility is used to stop the database servers that comprise a HAWQ system. When you stop a HAWQ system, you are actually stopping several `postgres` database server processes at once (the master and all of the segment instances). The `hawq           stop` utility handles the shutdown of the individual instances. Each instance is shutdown in parallel.
+The `hawq stop` utility is used to stop the database servers that comprise a HAWQ system. When you stop a HAWQ system, you are actually stopping several `postgres` database server processes at once (the master and all of the segment instances). The `hawq           stop` utility handles the shutdown of the individual instances. Each instance is shut down in parallel.
 
 By default, you are not allowed to shut down HAWQ if there are any client connections to the database. Use the `-M fast` option to roll back all in progress transactions and terminate any connections before shutting down. If there are any transactions in progress, the default behavior is to wait for them to commit before shutting down.
 
@@ -45,39 +44,34 @@ With the `-u` option, the utility uploads changes made to the master `pg_hba.con
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-a -\\\-prompt  </dt>
+<dt>-a, -\\\-prompt  </dt>
 <dd>Do not prompt the user for confirmation before executing.</dd>
 
-<dt>-l -\\\-logdir*logfile\_directory*  </dt>
+<dt>-l, -\\\-logdir \<logfile\_directory\>  </dt>
 <dd>The directory to write the log file. The default is `~/hawq/Adminlogs/`.</dd>
 
-<dt>-M smart | fast | immediate  </dt>
+<dt>-M, -\\\-mode (smart | fast | immediate)  </dt>
 <dd>Smart shutdown is the default. Shutdown fails with a warning message, if active connections are found.
 
 Fast shut down interrupts and rolls back any transactions currently in progress .
 
 Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
 
-<dt>-q -\\\-quiet  </dt>
+<dt>-q, -\\\-quiet  </dt>
 <dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
 
-<dt>-t -\\\-timeout *timeout\_seconds*  </dt>
+<dt>-t, -\\\-timeout \<timeout\_seconds\>  </dt>
 <dd>Specifies a timeout threshold (in seconds) to wait for a segment instance to shutdown. If a segment instance does not shut down in the specified number of seconds, `hawq stop` displays a message indicating that one or more segments are still in the process of shutting down and that you cannot restart HAWQ until the segment instance(s) are stopped. This option is useful in situations where `hawq stop` is executed and there are very large transactions that need to rollback. These large transactions can take over a minute to rollback and surpass the default timeout period of 600 seconds.</dd>
 
-<dt>-\\\-ignore\_bad\_hosts cluster | allsegments  </dt>
-<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
-
-<dt>-u -\\\-reload   </dt>
+<dt>-u, -\\\-reload   </dt>
 <dd>This option reloads configuration parameter values without restarting the HAWQ cluster.</dd>
 
-<dt>-v -\\\-verbose  </dt>
+<dt>-v, -\\\-verbose  </dt>
 <dd>Displays detailed status, progress and error messages output by the utility.</dd>
 
-<dt>-? | -h | -\\\-help (help)  </dt>
+<dt>-?, -h, -\\\-help (help) </dt>
 <dd>Displays the online help.</dd>
 
-<dt>-\\\-version (show utility version)  </dt>
-<dd>Displays the version of this utility.</dd>
 
 ## <a id="topic1__section5"></a>Examples
 
