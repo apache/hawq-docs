@@ -136,19 +136,19 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
 2.  If necessary, set the `pxf_service_address` global configuration property to a hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
 
     ``` sql
-    postgres# SET pxf_service_address TO "hivenode:51200"
+    postgres=# SET pxf_service_address TO "hivenode:51200"
     ```
 
 3.  To query a Hive table with HCatalog integration, simply query HCatalog directly from HAWQ. The query syntax is:
 
     ``` sql
-    postgres# SELECT * FROM hcatalog.hive-db-name.hive-table-name;
+    postgres=# SELECT * FROM hcatalog.hive-db-name.hive-table-name;
     ```
 
     For example:
 
     ``` sql
-    postgres# SELECT * FROM hcatalog.default.sales;
+    postgres=# SELECT * FROM hcatalog.default.sales;
     ```
 
 4.  To obtain a description of a Hive table with HCatalog integration, you can use the `psql` client interface.
@@ -255,7 +255,7 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
     The following statement returns a description of the entire schema.
 
     ``` sql
-    postgres# select * from pxf_get_item_fields('Hive', '*.*');
+    postgres=# select * from pxf_get_item_fields('Hive', '*.*');
     ```
     
     ``` pre
@@ -319,7 +319,7 @@ The Hive storage directory should appears as follows:
 To define a HAWQ PXF table that will read this Hive table and take advantage of partition filter push-down, define the fields corresponding to the Hive partition fields at the end of the attribute list. In HiveQL, a `select                         *` statement on a partitioned table shows the partition fields at the end of the record.
 
 ``` sql
-postgres# CREATE EXTERNAL TABLE pxf_sales_part(
+postgres=# CREATE EXTERNAL TABLE pxf_sales_part(
   item_name TEXT, 
   item_type TEXT, 
   supplier_key INTEGER, 
@@ -330,7 +330,7 @@ postgres# CREATE EXTERNAL TABLE pxf_sales_part(
 LOCATION ('pxf://namenode_host:51200/sales_part?Profile=Hive')
 FORMAT 'custom' (FORMATTER='pxfwritable_import');
 
-postgres# SELECT * FROM pxf_sales_part;
+postgres=# SELECT * FROM pxf_sales_part;
 ```
 
 ### <a id="example3"></a>Example
@@ -338,7 +338,7 @@ postgres# SELECT * FROM pxf_sales_part;
 In the following example, the HAWQ query filters the `delivery_city` partition `Sacramento`. The filter on  `item_name` is not pushed down, since it is not a partition column. It is performed on the HAWQ side after all the data on `Sacramento` is transferred for processing.
 
 ``` sql
-postgres# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND item_name = 'shirt';
+postgres=# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND item_name = 'shirt';
 ```
 
 ### <a id="example4"></a>Example
@@ -346,7 +346,7 @@ postgres# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND it
 The following HAWQ query reads all the data under `delivery_state` partition `CALIFORNIA`, regardless of the city.
 
 ``` sql
-postgres# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
+postgres=# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
 ```
 
 ## <a id="topic_fdm_zrh_1s"></a>Using PXF with Hive Default Partitions
@@ -397,7 +397,7 @@ hive> create table hive_parquet_table (fname string, lname string, custid int, a
 Then you would define the HAWQ external table using:
 
 ``` sql
-postgres# create external table pxf_parquet_table (fname text, lname text, custid int, acctbalance double precision) 
+postgres=# create external table pxf_parquet_table (fname text, lname text, custid int, acctbalance double precision) 
     location ('pxf://localhost:51200/hive_parquet_table?profile=Hive') 
     format 'custom' (formatter='pxfwritable_import'); 
 ```
