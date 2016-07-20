@@ -24,9 +24,9 @@ hawq restart --version
 
 The `hawq restart` utility is used to shut down and restart the HAWQ server processes. It is essentially equivalent to performing a `hawq stop -M                                         smart` operation followed by `hawq                                         start`.
 
-The *object* in the command specifies what entity should be started: e.g. a cluster, a segment, the master node, standby node, or all segments in the cluster.
+The \<object\> in the command specifies what entity should be started: e.g. a cluster, a segment, the master node, standby node, or all segments in the cluster.
 
-When the `hawq restart` command runs, the utility uploads changes made to the master `pg_hba.conf` file or to *runtime* configuration parameters in the master `hawq-site.xml` file without interruption of service. Note that any active sessions will not pick up the changes until they reconnect to the database.
+When the `hawq restart` command runs, the utility uploads changes made to the master `pg_hba.conf` file or to the runtime configuration parameters in the master `hawq-site.xml` file without interruption of service. Note that any active sessions will not pick up the changes until they reconnect to the database.
 
 ## Objects
 
@@ -50,7 +50,7 @@ When the `hawq restart` command runs, the utility uploads changes made to the ma
 <dt>-a (do not prompt)  </dt>
 <dd>Do not prompt the user for confirmation.</dd>
 
-<dt>-l -\\\-logdir *logfile\_directory*  </dt>
+<dt>-l -\\\-logdir \<logfile\_directory\>  </dt>
 <dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
 
 <dt>-q -\\\-quiet   </dt>
@@ -59,7 +59,7 @@ When the `hawq restart` command runs, the utility uploads changes made to the ma
 <dt>-v -\\\-verbose  </dt>
 <dd>Displays detailed status, progress and error messages output by the utility.</dd>
 
-<dt>-t -\\\-timeout *timeout\_seconds*  </dt>
+<dt>-t -\\\-timeout \<timeout\_seconds\>  </dt>
 <dd>Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 60 seconds.</dd>
 
 <dt>-M -\\\-mode smart | fast | immediate  </dt>

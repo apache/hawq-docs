@@ -40,24 +40,34 @@ The following HIVE data types cannot be converted to HAWQ equivalents: timestamp
 
 ## <a id="topic1__section5"></a>Options
 
-<span class="tablecap">Table 1. General Options</span>
+**General Options**
 
-| Option| Description |
-| ----  | ----- |
-|-? (show help)   |Show help, then exit.|
-|-\\\-version  | Show the version of this utility, then exit.|
+<dt>-? (show help) </dt>  
+<dd>Show help, then exit.
+
+<dt>-\\\-version  </dt> 
+<dd>Show the version of this utility, then exit.</dd>
 
 
-<span class="tablecap">Table 2. Connection Options</span>
+**Connection Options**
 
-| Option| Description |
-| ----  | ----- |
-|-h *hostname* | Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `$PGHOST` or defaults to `localhost`.|
-| -p *port*  |Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `$PGPORT` or defaults to 5432.|
-|-U *username*  |The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.|
-|*databasename*  |The database to register the parquet HDFS data into. |
-|*tablename*  |The HAWQ table that will store the parquet data. The table cannot use hash distribution. |
-|*hdfspath*|The path of the file or directory containing the files to be registered.|
+<dt>-h \<hostname\> </dt>
+<dd>Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `$PGHOST` or defaults to `localhost`.</dd>
+
+<dt> -p \<port\> </dt> 
+<dd>Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `$PGPORT` or defaults to 5432.</dd>
+
+<dt>-U \<username\> </dt> 
+<dd>The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.</dd>
+
+<dt>\<databasename\>  </dt>
+<dd>The database to register the parquet HDFS data into.<dd>
+ 
+<dt>\<tablename\> </dt>
+<dd>The HAWQ table that will store the parquet data. The table cannot use hash distribution. </dd>
+
+<dt>\<hdfspath\></dt>
+<dd>The path of the file or directory containing the files to be registered.</dd>
 
 
 ## <a id="topic1__section6"></a>Examples

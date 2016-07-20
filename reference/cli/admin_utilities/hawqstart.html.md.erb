@@ -53,7 +53,7 @@ Before you can start a HAWQ system, you must have initialized the system or node
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-l -\\\-logdir *logfile\_directory*  </dt>
+<dt>-l -\\\-logdir \<logfile\_directory\>  </dt>
 <dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
 
 <dt>-q -\\\-quiet   </dt>
@@ -73,7 +73,7 @@ $ PGOPTIONS='-c gp_role=utility' psql
 <dt>-R -\\\-restrict (restricted mode)  </dt>
 <dd>Starts HAWQ in restricted mode (only database superusers are allowed to connect).</dd>
 
-<dt>-t -\\\-timeout *timeout\_seconds*  </dt>
+<dt>-t -\\\-timeout \<timeout\_seconds\>  </dt>
 <dd>Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 60 seconds.</dd>
 
 <dt>-U -\\\-special-mode maintenance   </dt>
