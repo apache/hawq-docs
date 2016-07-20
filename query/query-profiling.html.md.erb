@@ -143,4 +143,96 @@ If a query performs poorly, examine its query plan and ask the following questio
 
     The "bytes wanted" message from `EXPLAIN               ANALYZE` is based on the amount of data written to work files and is not exact. The minimum `work_mem` needed can differ from the suggested value.
 
+## <a id="explainplan_plpgsql"></a>Generating EXPLAIN Plan from a PL/pgSQL Function
 
+User-defined PL/pgSQL functions often include dynamically created queries.  You may find it useful to generate the `EXPLAIN` plan for such queries for query performance optimization and tuning. 
+
+Perform the following steps to create and run a user-defined PL/pgSQL function.  This function displays the `EXPLAIN` plan for a simple query on a test database.
+
+1. Log in to the HAWQ master node as user `gpadmin` and set up the HAWQ environment:
+
+    ``` shell
+    $ ssh gpadmin@hawq_master
+    $ . /usr/local/hawq/greenplum_path.sh
+    ```
+
+2. Create a test database named `testdb`:
+
+    ``` shell
+    $ createdb testdb
+    ```
+   
+3. Start the PostgreSQL interactive utility, connecting to `testdb`:
+
+    ``` shell
+    $ psql -d testdb
+    ```
+
+4. Create the table `test_tbl` with a single column named `id` of type `integer`:
+
+    ``` sql
+    testdb=# create table test_tbl (id int);
+    ```
+   
+5. Add some data to the `test_tbl` table:
+
+    ``` sql
+    testdb=# insert into test_tbl select generate_series(1,100);
+    ```
+   
+    This `insert` command adds 100 rows to `test_tbl`, incrementing the `id` for each row.
+   
+6. Create a PL/pgSQL function named `explain_plan_func()` by copying and pasting the following text at the `psql` prompt:
+
+    ``` sql
+    create or replace function explain_plan_func() returns varchar as $$
+   declare
+
+     a varchar;
+     b varchar;
+
+     begin
+       a = '';
+       for b in execute 'explain select count(*) from test_tbl group by id' loop
+         a = a || E'\n' || b;
+       end loop;
+       return a;
+     end;
+   $$
+   language plpgsql
+   volatile;
+    ```
+
+7. Verify the `explain_plan_func()` user-defined function was created successfully:
+
+    ``` shell
+    testdb=# \df+
+    ```
+
+    The `\df+` command lists all user-defined functions.
+   
+8. Perform a query using the user-defined function you just created:
+
+    ``` sql
+    testdb=# select explain_plan_func();
+    ```
+
+    The `EXPLAIN` plan results for the query are displayed:
+    
+    ``` pre
+                                             explain_plan_func                               
+---------------------------------------------------------------------------------------------------------                                                                                             
+ Gather Motion 1:1  (slice2; segments: 1)  (cost=0.00..431.04 rows=100 width=8)                          
+   ->  Result  (cost=0.00..431.03 rows=100 width=8)                         
+         ->  HashAggregate  (cost=0.00..431.03 rows=100 width=8)                
+               Group By: id                                                 
+               ->  Redistribute Motion 1:1  (slice1; segments: 1)  (cost=0.00..431.02 rows=100 width=12) 
+                     Hash Key: id                                              
+                     ->  Result  (cost=0.00..431.01 rows=100 width=12)      
+                           ->  HashAggregate  (cost=0.00..431.01 rows=100 width=12)                      
+                                 Group By: id                               
+                                 ->  Table Scan on test_tbl  (cost=0.00..431.00 rows=100 width=4) 
+ Settings:  default_hash_table_bucket_number=6                              
+ Optimizer status: PQO version 1.627
+(1 row)
+    ```
