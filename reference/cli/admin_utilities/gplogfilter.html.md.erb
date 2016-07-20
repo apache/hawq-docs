@@ -8,12 +8,40 @@ Searches through HAWQ log files for specified entries.
 
 ``` pre
 gplogfilter [<timestamp_options>] [<pattern_matching_options>] 
-     [<output_options>] [<input_options><input_file>]  
+     [<output_options>] [<input_options>]  
 
 gplogfilter --help 
 
 gplogfilter --version
 ```
+where:
+
+``` pre
+<timestamp_options> =
+     [-b <datetime> | --begin <datetime>]
+     [-e <datetime> | --end <datetime>]
+     [-d <time> | --duration <time>]
+
+<pattern_matching_options> =
+     [-c i[gnore] | r[espect] | --case i[gnore] | r[espect]]
+     [-C '<string>'  | --columns '<string>']
+     [-f '<string>' | --find '<string>']
+     [-F '<string> | --nofind '<string>']
+     [-m <regex> | --match <regex>]
+     [-M <regex>] | --nomatch <regex>]
+     [-t | --trouble]
+     
+<output_options> =
+     [-n <integer> |  --tail <integer>]
+     [-s <offset> [<limit>] | --slice <offset> [<limit>]]
+     [-o <output_file> | --out <output_file>]   
+     [-z <0..9> | --zip <0..9>]
+     [-a | --append]
+     
+<input_options> =
+     [<input_file> [-u | --unzip]]       
+```
+
 
 ## <a id="topic1__section3"></a>Description
 
@@ -31,9 +59,59 @@ By default, the output of `gplogfilter` is sent to standard output. Use the `-o`
 
 ## <a id="topic1__section4"></a>Options
 
-**Timestamp Options**
 
-<dt>-b *datetime* | -\\\-begin=*datetime*  </dt>
+**\<input_options\>**
+
+<dt>\<input\_file\></dt>
+<dd>The name of the input log file(s) to search through. If an input file is not supplied, `gplogfilter` will use the `$MASTER_DATA_DIRECTORY` environment variable to locate the HAWQ master log file. To read from standard input, use a dash (`-`) as the input file name.</dd>
+
+<dt>-u, -\\\-unzip  </dt>
+<dd>Uncompress the input file using `gunzip`. If the input file name ends in `.gz`, it will be uncompressed by default.</dd>
+
+**\<output_options\>**
+
+<dt>-n, -\\\-tail \<integer\>  </dt>
+<dd>Limits the output to the last \<integer\> of qualifying log entries found.</dd>
+
+<dt>-s,  -\\\-slice \<offset\> \[\<limit\>\] </dt>
+<dd>From the list of qualifying log entries, returns the \<limit\> number of entries starting at the \<offset\> entry number, where an \<offset\> of zero (`0`) denotes the first entry in the result set and an \<offset\> of any number greater than zero counts back from the end of the result set.</dd>
+
+<dt>-o, -\\\-out \<output\_file\> </dt>
+<dd>Writes the output to the specified file or directory location instead of `STDOUT`.</dd>
+
+<dt>-z, -\\\-zip \<0..9\>  </dt>
+<dd>Compresses the output file to the specified compression level using `gzip`, where `0` is no compression and `9` is maximum compression. If you supply an output file name ending in `.gz`, the output file will be compressed by default using maximum compression.</dd>
+
+<dt>-a, -\\\-append  </dt>
+<dd>If the output file already exists, appends to the file instead of overwriting it.</dd>
+
+
+**\<pattern\_matching\_options\>**
+
+<dt>-c, -\\\-case i\[gnore\] | r\[espect\]  </dt>
+<dd>Matching of alphabetic characters is case sensitive by default unless proceeded by the `--case=ignore` option.</dd>
+
+<dt>-C, -\\\-columns '\<string\>'  </dt>
+<dd>Selects specific columns from the log file. Specify the desired columns as a comma-delimited string of column numbers beginning with 1, where the second column from left is 2, the third is 3, and so on.</dd>
+
+<dt>-f, -\\\-find '\<string\>'  </dt>
+<dd>Finds the log entries containing the specified string.</dd>
+
+<dt>-F, -\\\-nofind '\<string\>'  </dt>
+<dd>Rejects the log entries containing the specified string.</dd>
+
+<dt>-m, -\\\-match \<regex\>  </dt>
+<dd>Finds log entries that match the specified Python regular expression. See [http://docs.python.org/library/re.html](http://docs.python.org/library/re.html) for Python regular expression syntax.</dd>
+
+<dt>-M, -\\\-nomatch \<regex\> </dt>
+<dd>Rejects log entries that match the specified Python regular expression. See [http://docs.python.org/library/re.html](http://docs.python.org/library/re.html) for Python regular expression syntax.</dd>
+
+<dt>-t, -\\\-trouble  </dt>
+<dd>Finds only the log entries that have `ERROR:`, `FATAL:`, or `PANIC:` in the first line.</dd>
+
+**\<timestamp_options\>**
+
+<dt>-b, -\\\-begin \<datetime\>  </dt>
 <dd>Specifies a starting date and time to begin searching for log entries in the format of `YYYY-MM-DD [hh:mm[:ss]]`.
 
 If a time is specified, the date and time must be enclosed in either single or double quotes. This example encloses the date and time in single quotes:
@@ -43,7 +121,7 @@ $ gplogfilter -b '2016-02-13 14:23'
 ```
 </dd>
 
-<dt>-e *datetime* | -\\\-end=*datetime*  </dt>
+<dt>-e, -\\\-end \<datetime\>  </dt>
 <dd>Specifies an ending date and time to stop searching for log entries in the format of `YYYY-MM-DD [hh:mm[:ss]]`.
 
 If a time is specified, the date and time must be enclosed in either single or double quotes. This example encloses the date and time in single quotes:
@@ -53,56 +131,10 @@ $ gplogfilter -e '2016-02-13 14:23'
 ```
 </dd>
 
-<dt>-d *time* | -\\\-duration=*time*  </dt>
+<dt>-d, -\\\-duration \<time\>  </dt>
 <dd>Specifies a time duration to search for log entries in the format of `[hh][:mm[:ss]]`. If used without either the `-b` or `-e` option, will use the current time as a basis.</dd>
 
-**Pattern Matching Options**
-
-<dt>-c i \[gnore\] | r \[espect\] | -\\\-case=i \[gnore\] | r \[espect\]  </dt>
-<dd>Matching of alphabetic characters is case sensitive by default unless proceeded by the `--case=ignore` option.</dd>
-
-<dt>-C '*string*' | -\\\-columns='*string*'  </dt>
-<dd>Selects specific columns from the log file. Specify the desired columns as a comma-delimited string of column numbers beginning with 1, where the second column from left is 2, the third is 3, and so on.</dd>
-
-<dt>-f '*string*' | -\\\-find='*string*'  </dt>
-<dd>Finds the log entries containing the specified string.</dd>
-
-<dt>-F '*string*' | -\\\-nofind='*string*'  </dt>
-<dd>Rejects the log entries containing the specified string.</dd>
-
-<dt>-m *regex* | -\\\-match=*regex*  </dt>
-<dd>Finds log entries that match the specified Python regular expression. See [http://docs.python.org/library/re.html](http://docs.python.org/library/re.html) for Python regular expression syntax.</dd>
-
-<dt>-M *regex* | -\\\-nomatch=*regex*  </dt>
-<dd>Rejects log entries that match the specified Python regular expression. See [http://docs.python.org/library/re.html](http://docs.python.org/library/re.html) for Python regular expression syntax.</dd>
-
-<dt>-t | -\\\-trouble  </dt>
-<dd>Finds only the log entries that have `ERROR:`, `FATAL:`, or `PANIC:` in the first line.</dd>
-
-**Output Options**
-
-<dt>-n *integer* | -\\\-tail=*integer*  </dt>
-<dd>Limits the output to the last *integer* of qualifying log entries found.</dd>
-
-<dt>-s *offset* \[limit\] | -\\\-slice=*offset* \[limit\]  </dt>
-<dd>From the list of qualifying log entries, returns the *limit* number of entries starting at the *offset* entry number, where an *offset* of zero (`0`) denotes the first entry in the result set and an *offset* of any number greater than zero counts back from the end of the result set.</dd>
-
-<dt>-o *output\_file* | -\\\-out=*output\_file*  </dt>
-<dd>Writes the output to the specified file or directory location instead of `STDOUT`.</dd>
-
-<dt>-z 0-9 | -\\\-zip=0-9  </dt>
-<dd>Compresses the output file to the specified compression level using `gzip`, where `0` is no compression and `9` is maximum compression. If you supply an output file name ending in `.gz`, the output file will be compressed by default using maximum compression.</dd>
-
-<dt>-a | -\\\-append  </dt>
-<dd>If the output file already exists, appends to the file instead of overwriting it.</dd>
-
-**Input Options**
-
-<dt>input\_file  </dt>
-<dd>The name of the input log file(s) to search through. If an input file is not supplied, `gplogfilter` will use the `$MASTER_DATA_DIRECTORY` environment variable to locate the HAWQ master log file. To read from standard input, use a dash (`-`) as the input file name.</dd>
-
-<dt>-u | -\\\-unzip  </dt>
-<dd>Uncompress the input file using `gunzip`. If the input file name ends in `.gz`, it will be uncompressed by default.</dd>
+**Other Options**
 
 <dt>-\\\-help  </dt>
 <dd>Displays the online help.</dd>
