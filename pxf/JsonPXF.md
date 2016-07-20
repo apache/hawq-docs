@@ -152,7 +152,7 @@ JSON-plug-in-specific keywords and values used in the `CREATE EXTERNAL TABLE` ca
 |-------|-------------------------------------|
 | host    | Specify the HDFS NameNode in the `host` field. |
 | PROFILE    | The `PROFILE` keyword must specify the value `Json`. |
-| IDENTIFIER  | Include the `IDENTIFIER` keyword and value in the `LOCATION` string only when accessing a JSON file with multi-line records. `value` should identify the member name used to determine the encapsulating JSON object to return.  (If the JSON file is the multi-line record Example 2 above, `&IDENTIFIER=record_obj` would be specified.) |  
+| IDENTIFIER  | Include the `IDENTIFIER` keyword and value in the `LOCATION` string only when accessing a JSON file with multi-line records. `value` should identify the member name used to determine the encapsulating JSON object to return.  (If the JSON file is the multi-line record Example 2 above, `&IDENTIFIER=created_at` would be specified.) |  
 | FORMAT    | The `FORMAT` clause must specify `CUSTOM`. |
 | FORMATTER    | The JSON `CUSTOM` format supports only the built-in `pxfwritable_import` `FORMATTER`. |
 
