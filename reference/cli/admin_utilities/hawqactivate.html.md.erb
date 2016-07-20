@@ -7,13 +7,15 @@ Activates a standby master host and makes it the active master for the HAWQ syst
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq activate standby  [-t <time> | --timeout <time>]  
-    [-l <logfile_directory>] 
-hawq activate -M [smart|fast|immediate] | --mode [smart|fast|immediate] ]
-              [--ignore_bad-hosts]
-hawq activate -v | [-q]
+hawq activate standby 
+     [-M (smart|fast|immediate) | --mode (smart|fast|immediate)] 
+     [-t <time> | --timeout <time>] 
+     [-l <logfile_directory> | --logdir <logfile_directory]
+     [(-v | --verbose) | (-q | --quiet)] 
+     [--ignore-bad-hosts]
 
-hawq activate -? | -h | --help
+hawq activate [-? | -h | --help]
+
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -36,38 +38,38 @@ In order to use `hawq activate standby` to activate a new primary master host, t
 After activating a standby master, run `ANALYZE` to update the database query statistics. For example:
 
 ``` shell
-$ psql dbname -c 'ANALYZE;'
+$ psql <dbname> -c 'ANALYZE;'
 ```
 
 After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the [hawq init](hawqinit.html#topic1) utility.
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-l -\\\-logdir *logfile\_directory*  </dt>
-<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
-
-<dt>-t -\\\-timeout *timeout\_seconds*  </dt>
-<dd>Seconds to wait before discontinuing the operation. If not specified, the default timeout is 60 seconds.</dd>
-
-<dt>-M -\\\-mode smart | fast | immediate  </dt>
+<dt>-M, -\\\-mode (smart | fast | immediate) </dt>
 <dd>Stop with one of the specified modes.
 
 Smart shutdown is the default. Shutdown fails with a warning message, if active connections are found.
 
-Fast shut down interrupts and rolls back any transactions currently in progress .
+Fast shut down interrupts and rolls back any transactions currently in progress.
 
 Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
 
-<dt>-\\\-ignore\_bad\_hosts  </dt>
-<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
+<dt>-t, -\\\-timeout \<timeout\_seconds\>  </dt>
+<dd>Seconds to wait before discontinuing the operation. If not specified, the default timeout is 60 seconds.</dd>
 
-<dt>-q (no screen output)  </dt>
-<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
+<dt>-l, -\\\-logdir \<logfile\_directory\> </dt>
+<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
 
-<dt> -v -\\\-verbose  </dt>
+<dt>-v, -\\\-verbose  </dt>
 <dd>Displays detailed status, progress and error messages output by the utility.</dd>
 
-<dt>-? | -h | -\\\-help (help)  </dt>
+<dt>-q, -\\\-quiet  </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
+
+<dt>-\\\-ignore-bad-hosts  </dt>
+<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
+
+<dt>-?, -h, -\\\-help (help)  </dt>
 <dd>Displays the online help.</dd>
 
 ## <a id="topic1__section5"></a>Example
@@ -75,7 +77,7 @@ Immediate shutdown aborts transactions in progress and kills all `postgres` proc
 Activate the standby master host and make it the active master instance for a HAWQ system (run from backup master host you are activating):
 
 ``` shell
-$ hawq activate standby  /gpdata
+$ hawq activate standby
 ```
 
 ## <a id="topic1__section6"></a>See Also
