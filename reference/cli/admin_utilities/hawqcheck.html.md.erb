@@ -7,18 +7,20 @@ Verifies and validates HAWQ platform settings.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq check -f <hostfile_hawq_check> [--hadoop | --hadoop <hadoop_home>]
-        [--stdout | --zipout] [--config <config_file>]
-         [--kerberos] [--hdfs-ha] [--yarn] [--yarn-ha]
+hawq check -f <hostfile_hawq_check>
+    [--config <config_file>] 
+    [--hadoop <hadoop_home> | --hadoop-home <hadoop_home>]
+    [--stdout | --zipout]
+    [--kerberos] 
+    [--hdfs-ha] 
+    [--yarn] 
+    [--yarn-ha]
+         
 hawq check --zipin <hawq_check_zipfile>
 
-hawq check -d <temp_directory>
-    {-f <hostfile_checknet> | - h <hostname> [-h <hostname> ...]} 
-    [ -r n|N|M [--duration <time>] [--netperf] ] [-D] [-v | -V]
+hawq check --version
 
 hawq check -?
-
-hawq check --version
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -39,14 +41,21 @@ diskusage.monitor.mounts = /,/data1,/data2
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-\\\-config *config\_file*   </dt>
-<dd>The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.</dd>
 
-<dt>-f *hostfile\_hawq\_check*  </dt>
+<dt>-f \<hostfile\_hawq\_check\>  </dt>
 <dd>The name of a file that contains a list of hosts that `hawq check` uses to validate platform-specific settings. This file should contain a single host name for all hosts in your HAWQ system (master, standby master, and segments).</dd>
 
-<dt>-\\\-hadoop | -\\\-hadoop-home *hadoop\_home*  </dt>
+<dt>-\\\-config \<config\_file\>   </dt>
+<dd>The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.</dd>
+
+<dt>-\\\-hadoop, -\\\-hadoop-home \<hadoop\_home\>  </dt>
 <dd>Use this option to specify your hadoop installation location so that `hawq check` can validate HDFS settings. This option is not needed if `HADOOP_HOME` environment variable is set.</dd>
+
+<dt>-\\\-stdout  </dt>
+<dd>Send collected host information from `hawq check` to standard output. No checks or validations are performed.</dd>
+
+<dt>-\\\-zipout  </dt>
+<dd>Save all collected data to a .zip file in the current working directory. `hawq check` automatically creates the .zip file and names it `hawq_check_timestamp.tar.gz.` No checks or validations are performed.</dd>
 
 <dt>-\\\-kerberos  </dt>
 <dd>Use this option to check HDFS and YARN when running Kerberos mode. This allows `hawq check` to validate HAWQ/HDFS/YARN settings with Kerberos enabled.</dd>
@@ -60,13 +69,7 @@ diskusage.monitor.mounts = /,/data1,/data2
 <dt>-\\\-yarn-ha  </dt>
 <dd>Use this option to indicate HAWQ is using YARN with High Availability mode enabled, to allow `hawq check` to validate HAWQ-YARN settings with YARN-HA enabled.</dd>
 
-<dt>-\\\-stdout  </dt>
-<dd>Send collected host information from `hawq check` to standard output. No checks or validations are performed.</dd>
-
-<dt>-\\\-zipout  </dt>
-<dd>Save all collected data to a .zip file in the current working directory. `hawq               check` automatically creates the .zip file and names it `hawq_check_timestamp.tar.gz.` No checks or validations are performed.</dd>
-
-<dt>-\\\-zipin *hawq\_check\_zipfile*  </dt>
+<dt>-\\\-zipin \<hawq\_check\_zipfile\>  </dt>
 <dd>Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.</dd>
 
 <dt>-\\\-version  </dt>
