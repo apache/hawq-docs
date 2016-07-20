@@ -7,19 +7,30 @@ Creates a filespace using a configuration file that defines a file system locati
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq filespace [-c | --config <fs_config_file> ]
-hawq filespace [-o | --output <output_directory_name> ]
-hawq filespace [--movefilespace <filespace>]
-hawq filespace [--location <dfslocation>]
-hawq filespace [-l | --logdir <logfile_directory>] 
-hawq filespace [-h | --host <hostname>]
-hawq filespace [-p | --port <port>]
-hawq filespace [-U | --username <superuser_name> ]
-hawq filespace [-W | --password]
+hawq filespace [<connection_options>] 
+  -o <output_directory_name> | --output <output_directory_name>
+  [-l <logfile_directory> | --logdir <logfile_directory>] 
+
+hawq filespace [<connection_options]  
+  -c <fs_config_file> | --config <fs_config_file> 
+  [-l <logfile_directory> | --logdir <logfile_directory>] 
+
+hawq filespace [<connection_options>]
+  --movefilespace <filespace> --location <dfslocation>
+  [-l <logfile_directory> | --logdir <logfile_directory>] 
 
 hawq filespace -v | --version 
 
 hawq filespace -? | --help
+```
+where:
+
+``` pre
+<connection_options> =
+  [-h <host> | --host <host>] 
+  [-p <port> | -- port <port>] 
+  [-U <username> | --username <username>] 
+  [-W | --password] 
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -36,44 +47,44 @@ Once you have a configuration file, you can run `hawq filespace` with the `-c` o
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-c | -\\\-config *fs\_config\_file*  </dt>
+<dt>-o, -\\\-output &lt;output\_directory\_name&gt;  </dt>
+<dd>The directory location and file name to output the generated filespace configuration file. You will be prompted to enter a name for the filespace and file system location. The file system locations must exist on all hosts in your system prior to running the `hawq filespace` command. You will specify the number of replicas to create. The default is 3 replicas. After the utility creates the configuration file, you can manually edit the file to make any required changes to the filespace layout before creating the filespace in HAWQ.</dd>
+
+<dt>-c, -\\\-config &lt;fs\_config\_file&gt;  </dt>
 <dd>A configuration file containing:
 
 -   An initial line denoting the new filespace name. For example:
 
-    filespace:*myfs*
+    filespace:&lt;myfs&gt;
 </dd>
 
-<dt>-o | -\\\-output *output\_directory\_name*  </dt>
-<dd>The directory location and file name to output the generated filespace configuration file. You will be prompted to enter a name for the filespace and file system location. The file system locations must exist on all hosts in your system prior to running the `hawq filespace` command. You will specify the number of replicas to create. The default is 3 replicas. After the utility creates the configuration file, you can manually edit the file to make any required changes to the filespace layout before creating the filespace in HAWQ.</dd>
-
-<dt>-\\\-movefilespace *filespace*  </dt>
+<dt>-\\\-movefilespace &lt;filespace&gt;  </dt>
 <dd>Create the filespace in a new location on a distributed file system. Updates the dfs url in the HAWQ database, so that data in the original location can be moved or deleted. Data in the original location is not affected by this command.</dd>
 
-<dt>-\\\-location *dfslocation*  </dt>
+<dt>-\\\-location &lt;dfslocation&gt;  </dt>
 <dd>Specifies the new URL location to which a dfs file system should be moved.</dd>
 
-<dt>-l | -\\\-logdir *logfile\_directory*  </dt>
+<dt>-l, -\\\-logdir &lt;logfile\_directory&gt;  </dt>
 <dd>The directory to write the log file. Defaults to `~/hawqAdminLogs`.</dd>
 
-<dt>-v | -\\\-version (show utility version)  </dt>
+<dt>-v, -\\\-version (show utility version)  </dt>
 <dd>Displays the version of this utility.</dd>
 
-<dt>-? | -\\\-help (help)  </dt>
+<dt>-?, -\\\-help (help)  </dt>
 <dd>Displays the command usage and syntax.</dd>
 
-**Connection Options**
+**&lt;connection_options&gt;**
 
-<dt>-h | -\\\-host *hostname*  </dt>
+<dt>-h, -\\\-host &lt;hostname&gt;  </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
-<dt>-p | -\\\-port *port*  </dt>
+<dt>-p, -\\\-port &lt;port&gt;  </dt>
 <dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
-<dt>-U | -\\\-username *superuser\_name*  </dt>
+<dt>-U, -\\\-username &lt;superuser\_name&gt;  </dt>
 <dd>The database superuser role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system user name. Only database superusers are allowed to create filespaces.</dd>
 
-<dt>-W | -\\\-password  </dt>
+<dt>-W, -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
 
 ## <a id="topic1__section6"></a>Example 1

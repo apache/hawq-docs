@@ -7,13 +7,26 @@ Acts as an interface to the external table parallel loading feature. Executes a 
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq load -f <control_file> [-l <log_file>] [-h <hostname>] [-p <port>] 
-   [-U <username>] [-d <database>] [-W]  
-   [--gpfdist_timeout <seconds>] [[-v | -V] [-q]] [-D]
+hawq load -f <control_file> [-l <log_file>]   
+  [--gpfdist_timeout <seconds>] 
+  [[-v | -V] 
+  [-q]]
+  [-D]
+  [<connection_options>]
 
 hawq load -? 
 
 hawq load --version
+```
+where:
+
+``` pre
+<connection_options> =
+  [-h <host>] 
+  [-p <port>] 
+  [-U <username>] 
+  [-d <database>]
+  [-W]
 ```
 
 ## <a id="topic1__section3"></a>Prerequisites
@@ -33,15 +46,17 @@ The client machine where `hawq load` is executed must have the following:
 
 The operation, including any SQL commands specified in the `SQL` collection of the YAML control file (see [Control File Format](#topic1__section7)), are performed as a single transaction to prevent inconsistent data when performing multiple, simultaneous load operations on a target table.
 
+## <a id="args"></a>Arguments
+
+<dt>-f &lt;control\_file&gt;  </dt>
+<dd>A YAML file that contains the load specification details. See [Control File Format](#topic1__section7).</dd>
+
 ## <a id="topic1__section5"></a>Options
 
-<dt>-f *control\_file*  </dt>
-<dd>**Required.** A YAML file that contains the load specification details. See [Control File Format](#topic1__section7).</dd>
-
-<dt>-\\\-gpfdist\_timeout *seconds*  </dt>
+<dt>-\\\-gpfdist\_timeout &lt;seconds&gt;  </dt>
 <dd>Sets the timeout for the `gpfdist` parallel file distribution program to send a response. Enter a value from `0` to `30` seconds (entering "`0`" to disables timeouts). Note that you might need to increase this value when operating on high-traffic networks.</dd>
 
-<dt>-l *log\_file*  </dt>
+<dt>-l &lt;log\_file&gt;  </dt>
 <dd>Specifies where to write the log file. Defaults to `~/hawq/Adminlogs/hawq_load_YYYYMMDD`. For more information about the log file, see [Log File Format](#topic1__section9).</dd>
 
 <dt>-q (no screen output)  </dt>
@@ -64,16 +79,16 @@ The operation, including any SQL commands specified in the `SQL` collection of t
 
 **Connection Options**
 
-<dt>-d *database*  </dt>
+<dt>-d &lt;database&gt;  </dt>
 <dd>The database to load into. If not specified, reads from the load control file, the environment variable `$PGDATABASE` or defaults to the current system user name.</dd>
 
-<dt>-h *hostname*  </dt>
+<dt>-h &lt;hostname&gt;  </dt>
 <dd>Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the load control file, the environment variable `$PGHOST` or defaults to `localhost`.</dd>
 
-<dt>-p *port*  </dt>
+<dt>-p &lt;port&gt;  </dt>
 <dd>Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the load control file, the environment variable `$PGPORT` or defaults to 5432.</dd>
 
-<dt>-U *username*  </dt>
+<dt>-U &lt;username&gt;  </dt>
 <dd>The database role name to connect as. If not specified, reads from the load control file, the environment variable `$PGUSER` or defaults to the current system user name.</dd>
 
 <dt>-W (force password prompt)  </dt>
@@ -149,24 +164,24 @@ The control file contains the schema elements for:
 -   Port
 -   GPLOAD file
 
-<dt>**VERSION**  </dt>
+<dt>VERSION  </dt>
 <dd>Optional. The version of the `hawq load` control file schema, for example: 1.0.0.1.</dd>
 
-<dt>**DATABASE**  </dt>
+<dt>DATABASE  </dt>
 <dd>Optional. Specifies which database in HAWQ to connect to. If not specified, defaults to `$PGDATABASE` if set or the current system user name. You can also specify the database on the command line using the `-d` option.</dd>
 
-<dt>**USER**  </dt>
+<dt>USER  </dt>
 <dd>Optional. Specifies which database role to use to connect. If not specified, defaults to the current user or `$PGUSER` if set. You can also specify the database role on the command line using the `-U` option.
 
 If the user running `hawq load` is not a HAWQ superuser, then the server configuration parameter `gp_external_grant_privileges` must be set to `on` for the load to be processed.</dd>
 
-<dt>**HOST**  </dt>
+<dt>HOST  </dt>
 <dd>Optional. Specifies HAWQ master host name. If not specified, defaults to localhost or `$PGHOST` if set. You can also specify the master host name on the command line using the `-h` option.</dd>
 
-<dt>**PORT**  </dt>
+<dt>PORT  </dt>
 <dd>Optional. Specifies HAWQ master port. If not specified, defaults to 5432 or `$PGPORT` if set. You can also specify the master port on the command line using the `-p` option.</dd>
 
-<dt>**GPLOAD**  </dt>
+<dt>GPLOAD  </dt>
 <dd>Required. Begins the load specification section. A `GPLOAD` specification must have an `INPUT` and an `OUTPUT` section defined.</dd>
 
 <dt>INPUT  </dt>
@@ -294,7 +309,7 @@ or
 
 `target_column_name:                                                   'expression'`
 
-Where *expression* is any expression that you would specify in the `SELECT` list of a query, such as a constant value, a column reference, an operator invocation, a function call, and so on.</dd>
+Where &lt;expression&gt; is any expression that you would specify in the `SELECT` list of a query, such as a constant value, a column reference, an operator invocation, a function call, and so on.</dd>
 
 <dt>PRELOAD  </dt>
 <dd>Optional. Specifies operations to run prior to the load operation. Currently, the only preload operation is `TRUNCATE`.</dd>
@@ -339,7 +354,7 @@ Log files output by `hawq load` have the following format:
 timestamp|level|message
 ```
 
-Where *timestamp* takes the form: `YYYY-MM-DD                     HH:MM:SS`, *level* is one of `DEBUG`, `LOG`, `INFO`, `ERROR`, and *message* is a normal text message.
+Where &lt;timestamp&gt; takes the form: `YYYY-MM-DD                     HH:MM:SS`, &lt;level&gt; is one of `DEBUG`, `LOG`, `INFO`, `ERROR`, and &lt;message&gt; is a normal text message.
 
 Some `INFO` messages that may be of interest in the log files are (where *\#* corresponds to the actual number of seconds, units of data, or failed rows):
 
