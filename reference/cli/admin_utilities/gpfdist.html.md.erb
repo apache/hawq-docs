@@ -68,15 +68,15 @@ You can specify this option to reduce the information written to the log file.</
 For a HAWQ with multiple segments, there might be a delay between segments when writing data from different segments to the file. You can specify a time to wait before HAWQ closes the file to ensure all the data is written to the file.</dd>
 
 <dt>-\\\-ssl \<certificate\_path\>  </dt>
-<dd>Adds SSL encryption to data transferred with `gpfdist`. After executing `gpfdist` with the `--ssl               certificate_path` option, the only way to load data from this file server is with the `gpfdist://` protocol.
+<dd>Adds SSL encryption to data transferred with `gpfdist`. After executing `gpfdist` with the `--ssl <certificate_path>` option, the only way to load data from this file server is with the `gpfdist://` protocol.
 
-The location specified in *certificate\_path* must contain the following files:
+The location specified in \<certificate\_path\> must contain the following files:
 
 -   The server certificate file, `server.crt`
 -   The server private key file, `server.key`
 -   The trusted certificate authorities, `root.crt`
 
-The root directory (`/`) cannot be specified as *certificate\_path*.</dd>
+The root directory (`/`) cannot be specified as \<certificate\_path\>.</dd>
 
 <dt>-v (verbose)  </dt>
 <dd>Verbose mode shows progress and status messages.</dd>
