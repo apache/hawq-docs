@@ -8,6 +8,10 @@ Extracts a database into a single script file or other archive file.
 
 ``` pre
 pg_dump [<connection_options>] [<dump_options>] <dbname>
+
+pg_dump --help
+
+pg_dump --version
 ```
 where:
 
@@ -86,7 +90,7 @@ When used with one of the archive file formats and combined with `pg_restore`, `
 <dd>Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.</dd>
 
 <dt>-D, -\\\-column-inserts | -\\\-attribute-inserts  </dt>
-<dd>Dump data as `INSERT` commands with explicit column names `(INSERT INTO` *table*`(`*column*`, ...) VALUES ...)`. This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</dd>
+<dd>Dump data as `INSERT` commands with explicit column names `(INSERT INTO` \<table\>`(`\<column\>`, ...) VALUES ...)`. This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</dd>
 
 <dt>-E, -\\\-encoding \<encoding\>  </dt>
 <dd>Create the dump in the specified character set encoding. By default, the dump is created in the database encoding. (Another way to get the same result is to set the `PGCLIENTENCODING` environment variable to the desired dump encoding.)</dd>
@@ -178,6 +182,15 @@ Also, `-t` cannot be used to specify a child table partition. To dump a partitio
 
 <dt>-W, -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
+
+
+**Other Options**
+
+<dt>-\\\-help  </dt>
+<dd>Displays the online help.</dd>
+
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
 
 
 ## <a id="topic1__section7"></a>Notes
