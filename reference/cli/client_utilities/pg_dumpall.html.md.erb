@@ -12,13 +12,6 @@ pg_dumpall [<options>] ...
 where:
 
 ``` pre
-
-<connection_options> =
-    [-h <host> | --host <host>] 
-    [-p <port> | -- port <port>] 
-    [-U <username> | --username <username>] 
-    [-w | --no-password]
-    [-W | --password] 
 <general options> =
     [-f | --filespaces] 
     [-i | --ignore-version ]
@@ -44,6 +37,13 @@ where:
     [--use-set-session-authorization]         
     [--gp-syntax]     
     [--no-gp-syntax] 
+<connection_options> =
+    [-h <host> | --host <host>] 
+    [-p <port> | -- port <port>] 
+    [-U <username> | --username <username>] 
+    [-w | --no-password]
+    [-W | --password] 
+    
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -125,18 +125,24 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>Output HAWQ syntax in the `CREATE                                 TABLE` statements. This allows the distribution policy (`DISTRIBUTED BY` or `DISTRIBUTED                                 RANDOMLY` clauses) of a HAWQ table to be dumped, which is useful for restoring into other HAWQ systems.</dd>
 
 <dt>-\\\-no-gp-syntax </dt>
-<dd>
+<dd>Do not use HAWQ syntax in the dump. This is the default if using posgresql. 
 
 **Connection Options**
 
-<dt>-h *host* | -\\\-host *host*  </dt>
+<dt>-h \<host\> | -\\\-host \<host\>  </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to `localhost`.</dd>
 
-<dt>-p *port* | -\\\-port *port*  </dt>
+<dt>-l | -\\\-database \<database_name\>  </dt>
+<dd>Connect to an alternate database.</dd>
+
+<dt>-p \<port\> | -\\\-port \<port\>  </dt>
 <dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
-<dt>-U *username* | -\\\-username *username*  </dt>
+<dt>-U \<username\> | -\\\-username \<username\>  </dt>
 <dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
+
+<dt>-w | -\\\-no-password  </dt>
+<dd>Do not prompt for a password.</dd>
 
 <dt>-W | -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
