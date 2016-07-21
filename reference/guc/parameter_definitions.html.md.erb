@@ -396,9 +396,9 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[pljava\_classpath](../../reference/guc/parameter_definitions.html#pljava_classpath)**
 
--   **[pljava\_statement\_cache\_size](../../reference/guc/parameter_definitions.html#pljava_statement_cache_size)**
-
 -   **[pljava\_release\_lingering\_savepoints](../../reference/guc/parameter_definitions.html#pljava_release_lingering_savepoints)**
+
+-   **[pljava\_statement\_cache\_size](../../reference/guc/parameter_definitions.html#pljava_statement_cache_size)**
 
 -   **[pljava\_vmoptions](../../reference/guc/parameter_definitions.html#pljava_vmoptions)**
 
@@ -2601,13 +2601,6 @@ A colon (:) separated list of the jar files containing the Java classes used in 
 |-------------|---------|-------------------------|
 | string      |         | master, session, reload |
 
-## <a name="pljava_statement_cache_size"></a>pljava\_statement\_cache\_size
-
-Sets the size in KB of the JRE MRU (Most Recently Used) cache for prepared statements.
-
-| Value Range         | Default | Set Classifications                |
-|---------------------|---------|------------------------------------|
-| number of kilobytes | 10      | master, system, restart, superuser |
 
 ## <a name="pljava_release_lingering_savepoints"></a>pljava\_release\_lingering\_savepoints
 
@@ -2616,6 +2609,17 @@ If true, lingering savepoints used in PL/Java functions will be released on func
 | Value Range | Default | Set Classifications                |
 |-------------|---------|------------------------------------|
 | Boolean     | true    | master, system, restart, superuser |
+
+
+## <a name="pljava_statement_cache_size"></a>pljava\_statement\_cache\_size
+
+Sets the size in KB of the JRE MRU (Most Recently Used) cache for prepared statements.
+
+| Value Range         | Default | Set Classifications                |
+|---------------------|---------|------------------------------------|
+| number of kilobytes | 10      | master, system, restart, superuser |
+
+
 
 ## <a name="pljava_vmoptions"></a>pljava\_vmoptions
 
