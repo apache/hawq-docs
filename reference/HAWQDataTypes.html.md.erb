@@ -8,6 +8,7 @@ HAWQ has a rich set of native data types available to users. Users may also defi
 
 The following data types are specified by SQL:
 
+-   array (*)
 -   bit
 -   bit varying
 -   boolean
@@ -26,6 +27,8 @@ The following data types are specified by SQL:
 -   timestamp (with or without time zone)
 -   varchar
 
+**Note**: HAWQ supports the array data type for append-only tables; parquet table storage does *not* support the array type. 
+
 Each data type has an external representation determined by its input and output functions. Many of the built-in types have obvious external formats. However, several types are unique to HAWQ, such as geometric paths, or have several possibilities for formats, such as the date and time types. Some of the input and output functions are not invertible. That is, the result of an output function may lose accuracy when compared to the original input.
 
  
@@ -35,6 +38,7 @@ Each data type has an external representation determined by its input and output
 
 | Name                                       | Alias               | Size                  | Range                                       | Description                                                                       |
 |--------------------------------------------|---------------------|-----------------------|---------------------------------------------|-----------------------------------------------------------------------------------|
+| array                                     |          [ ]       |    variable (ignored)    | multi-dimensional |   any built-in or user-defined base type, enum type, or composite type                                                               |
 | bigint                                     | int8                | 8 bytes               | -9223372036854775808 to 9223372036854775807 | large range integer                                                               |
 | bigserial                                  | serial8             | 8 bytes               | 1 to 9223372036854775807                    | large autoincrementing integer                                                    |
 | bit \[ (n) \]                              |                     | n bits                | bit string constant                         | fixed-length bit string                                                           |
