@@ -38,12 +38,17 @@ mount.points = /,/data1,/data2
 [linux.diskusage] 
 diskusage.monitor.mounts = /,/data1,/data2
 ```
-
-## <a id="topic1__section4"></a>Options
-
+## <a id="args"></a>Arguments
 
 <dt>-f \<hostfile\_hawq\_check\>  </dt>
 <dd>The name of a file that contains a list of hosts that `hawq check` uses to validate platform-specific settings. This file should contain a single host name for all hosts in your HAWQ system (master, standby master, and segments).</dd>
+
+<dt>-\\\-zipin \<hawq\_check\_zipfile\>  </dt>
+<dd>Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.</dd>
+
+
+## <a id="topic1__section4"></a>Options
+
 
 <dt>-\\\-config \<config\_file\>   </dt>
 <dd>The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.</dd>
@@ -68,9 +73,6 @@ diskusage.monitor.mounts = /,/data1,/data2
 
 <dt>-\\\-yarn-ha  </dt>
 <dd>Use this option to indicate HAWQ is using YARN with High Availability mode enabled, to allow `hawq check` to validate HAWQ-YARN settings with YARN-HA enabled.</dd>
-
-<dt>-\\\-zipin \<hawq\_check\_zipfile\>  </dt>
-<dd>Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.</dd>
 
 <dt>-\\\-version  </dt>
 <dd>Displays the version of this utility.</dd>

@@ -6,28 +6,38 @@ The `hawq init cluster` command initializes a HAWQ system and starts it.
 
 The master or segment nodes can be individually initialized by using `hawq init master` and `hawq init segment` commands, respectively. The `hawq init standby` command initializes a standby master host for a HAWQ system.
 
-The `hawq init object --standby-host` option allows defining the host for a standby at initialization.
+The `hawq init <object> --standby-host` option allows defining the host for a standby at initialization.
 
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
+<<<<<<< HEAD
 hawq init \<object\> [--options]
+=======
+hawq init <object> [<options>]
+
+hawq init standby | cluster
+  [--standby-host <address_of_standby_host>] 
+  [<options>]
+
+hawq init -? | --help
+>>>>>>> f082b4ffdb2f0b944203608f2c63ebf956c3913f
 ```
+where:
 
 ``` pre
-hawq init object   
-        
-            [--locale=<locale>] [--lc-collate=<locale>] 
-            [--lc-ctype=<locale>] [--lc-messages=<locale>] 
-            [--lc-monetary=<locale>] [--lc-numeric=<locale>] 
-            [--lc-time=<locale>] 
-            [--bucket_number <number>] 
-            [--max_connections <number>]  
-            [--shared_buffers <number>]
-            [standby | cluster --standby-host <address_of_standby_host> 
-            [-a] [-l logfile_directory] [-q] [-v] [-t] 
-[-n] 
-hawq init -? --help
+<object> = cluster | master | segment | standby
+
+<options> =   
+  [--locale=<locale>] [--lc-collate=<locale>] 
+  [--lc-ctype=<locale>] [--lc-messages=<locale>] 
+  [--lc-monetary=<locale>] [--lc-numeric=<locale>] 
+  [--lc-time=<locale>] 
+  [--bucket_number <number>] 
+  [--max_connections <number>]  
+  [--shared_buffers <number>]
+  [-a] [-l logfile_directory] [-q] [-v] [-t] 
+  [-n] 
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -83,7 +93,11 @@ If the primary master fails, the log replication process is shut down, and the s
 <dt>-a (do not prompt)  </dt>
 <dd>Do not prompt the user for confirmation.</dd>
 
+<<<<<<< HEAD
 <dt>-l -\\\-logdir \<logfile\_directory\>  </dt>
+=======
+<dt>-l -\\\-logdir &lt;logfile\_directory&gt;  </dt>
+>>>>>>> f082b4ffdb2f0b944203608f2c63ebf956c3913f
 <dd>The directory to write the log file. Defaults to `~/hawq/AdminLogs`.</dd>
 
 <dt>-q -\\\-quiet (no screen output)  </dt>
@@ -98,6 +112,7 @@ If the primary master fails, the log replication process is shut down, and the s
 <dt>-n -\\\-no-update  </dt>
 <dd>Resync the standby with the master, but do not update system catalog tables.</dd>
 
+<<<<<<< HEAD
 <dt>-\\\-locale=\<locale\>   </dt>
 <dd>Sets the default locale used by HAWQ. If not specified, the `LC_ALL`, `LC_COLLATE`, or `LANG` environment variable of the master host determines the locale. If these are not set, the default locale is `C` (`POSIX`). A locale identifier consists of a language identifier and a region identifier, and optionally a character set encoding. For example, `sv_SE` is Swedish as spoken in Sweden, `en_US` is U.S. English, and `fr_CA` is French Canadian. If more than one character set can be useful for a locale, then the specifications look like this: `en_US.UTF-8` (locale specification and character set encoding). On most systems, the command `locale` will show the locale environment settings and `locale -a` will show a list of all available locales.</dd>
 
@@ -129,6 +144,39 @@ If the primary master fails, the log replication process is shut down, and the s
 <dd>Sets the number of shared\_buffers to be used when initializing HAWQ.</dd>
 
 <dt>-s -\\\-standby-host \<name\_of\_standby\_host\>  </dt>
+=======
+<dt>-\\\-locale=&lt;locale&gt;   </dt>
+<dd>Sets the default locale used by HAWQ. If not specified, the `LC_ALL`, `LC_COLLATE`, or `LANG` environment variable of the master host determines the locale. If these are not set, the default locale is `C` (`POSIX`). A locale identifier consists of a language identifier and a region identifier, and optionally a character set encoding. For example, `sv_SE` is Swedish as spoken in Sweden, `en_US` is U.S. English, and `fr_CA` is French Canadian. If more than one character set can be useful for a locale, then the specifications look like this: `en_US.UTF-8` (locale specification and character set encoding). On most systems, the command `locale` will show the locale environment settings and `locale -a` will show a list of all available locales.</dd>
+
+<dt>-\\\-lc-collate=&lt;locale&gt;  </dt>
+<dd>Similar to `--locale`, but sets the locale used for collation (sorting data). The sort order cannot be changed after HAWQ is initialized, so it is important to choose a collation locale that is compatible with the character set encodings that you plan to use for your data. There is a special collation name of `C` or `POSIX` (byte-order sorting as opposed to dictionary-order sorting). The `C` collation can be used with any character encoding.</dd>
+
+<dt>-\\\-lc-ctype=&lt;locale&gt;  </dt>
+<dd>Similar to `--locale`, but sets the locale used for character classification (what character sequences are valid and how they are interpreted). This cannot be changed after HAWQ is initialized, so it is important to choose a character classification locale that is compatible with the data you plan to store in HAWQ.</dd>
+
+<dt>-\\\-lc-messages=&lt;locale&gt;  </dt>
+<dd>Similar to `--locale`, but sets the locale used for messages output by HAWQ. The current version of HAWQ does not support multiple locales for output messages (all messages are in English), so changing this setting will not have any effect.</dd>
+
+<dt>-\\\-lc-monetary=&lt;locale&gt;  </dt>
+<dd>Similar to `--locale`, but sets the locale used for formatting currency amounts.</dd>
+
+<dt>-\\\-lc-numeric=&lt;locale&gt;  </dt>
+<dd>Similar to `--locale`, but sets the locale used for formatting numbers.</dd>
+
+<dt>-\\\-lc-time=&lt;locale&gt;  </dt>
+<dd>Similar to `--locale`, but sets the locale used for formatting dates and times.</dd>
+
+<dt>-\\\-bucket\_number=&lt;number&gt;   </dt>
+<dd>Sets value of `default_hash_table_bucket_number`, which sets the default number of hash buckets for creating virtual segments. This parameter overrides the default value of `default_hash_table_bucket_number` set in `hawq-site.xml` by an Ambari install. If not specified, `hawq init` will use the value in `hawq-site.xml`.</dd>
+
+<dt>-\\\-max\_connections=&lt;number&gt;   </dt>
+<dd>Sets the number of client connections allowed to the master. The default is 250.</dd>
+
+<dt>-\\\-shared\_buffers &lt;number&gt;  </dt>
+<dd>Sets the number of shared\_buffers to be used when initializing HAWQ.</dd>
+
+<dt>-s -\\\-standby-host &lt;name\_of\_standby\_host&gt;  </dt>
+>>>>>>> f082b4ffdb2f0b944203608f2c63ebf956c3913f
 <dd>Adds a standby host name to hawq-site.xml and syncs it to all the nodes. If a standby host name was already defined in hawq-site.xml, using this option will overwrite the existing value.</dd>
 
 <dt>-? -\\\-help  </dt>
