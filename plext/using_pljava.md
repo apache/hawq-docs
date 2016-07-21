@@ -87,9 +87,9 @@ The PL/Java extension must be explicitly enabled on each database in which it wi
 
 Before you enable PL/Java:
 
-1. Ensure that the `$JAVA_HOME` variable is set to the same path on the master and all segment nodes.
+1. Ensure that you have installed a supported Java runtime environment and that the `$JAVA_HOME` variable is set to the same path on the master and all segment nodes.
 
-2. Perform the following step on all machines to set up ldconfig for JDK:
+2. Perform the following step on all machines to set up `ldconfig` for JDK:
 
 	``` shell
 	$ echo "$JAVA_HOME/jre/lib/amd64/server" > /etc/ld.so.conf.d/libjdk.conf
