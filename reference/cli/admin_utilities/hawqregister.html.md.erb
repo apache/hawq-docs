@@ -2,7 +2,7 @@
 title: hawq register
 ---
 
-Registers a parquet-formatted file or folder from an HDFS system into a corresponding table in HAWQ.
+Registers and ingests and external parquet-formatted file or directory from HDFS into a corresponding table in HAWQ.
 
 ## <a id="topic1__section2"></a>Synopsis
 
@@ -19,14 +19,13 @@ hawq register --version
 
 The client machine where `hawq register` is executed must have the following:
 
--   Network access to and from all hosts in your HAWQ cluster (master and segments).
--   Network access to and from the hosts where the data to be loaded resides (ETL servers).
+-   Network access to and from all hosts in your HAWQ cluster (master and segments) and the hosts where the data to be loaded resides.
 -   The files to be registered and the HAWQ table located in the same HDFS cluster.
--   The target table is configured with the correct data type mapping.
+-   The target table DDL is configured with the correct data type mapping.
 
 ## <a id="topic1__section4"></a>Description
 
-`hawq register` is a utility that loads and registers parquet data in HDFS into HAWQ, so that it can be directly accessed through HAWQ. Table data from the file or directory in the specified path is loaded into the appropriate table directory in HAWQ and the utility updates the corresponding metadata for the files. The table need not contain data.
+`hawq register` is a utility that loads and registers existing or external parquet data in HDFS into HAWQ, so that it can be directly ingested and accessed through HAWQ. Table data from the file or directory in the specified path is loaded into the appropriate table directory in HAWQ and the utility updates the corresponding metadata for the files. The table need not contain data.
 
 Only parquet tables can be loaded using the `hawq register` command. Metadata for the parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and parquet tables, so the data is mapped. You must verify that the structure of the parquet files and the HAWQ table are compatible before running `hawq register`. 
 
