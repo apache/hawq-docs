@@ -7,28 +7,25 @@ Restores a database from an archive file created by `pg_dump`.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-pg_restore [-h <host>] [-p <port>] [-U <username>] [-W] [-1][<restore_option> ...] <filename>
+pg_restore [<general_options>] [<restore_options>] [<connection_options>] <filename>
 ```
 where:
 
 ``` pre
-<connection_options> =
-    [-h <host> | --host <host>] 
-    [-p <port> | -- port <port>] 
-    [-U <username> | --username <username>] 
-    [-W | --password] 
-    [-1]
-<dump options> =
-    [-a | --dataonly ]
-    [-c | --clean ]
-    [-C | --create ]
+<general_options>
     [-d | --dbname=dbname ]
-    [-e | --exit-on-error ] 
     [-f outfilename | --file=outfilename ]
     [-F t|c | --format=tar | custom ] 
     [-i | --ignore-version ]
-    [-I | --index=index ]
     [-l | --list ]
+    [-v  | --verbose ]
+    [--help]
+    [--version]
+<restore_options> =
+    [-a | --dataonly ]
+    [-c | --clean ]
+    [-C | --create ]
+    [-I | --index=index ]
     [-L <list-file> | --use-list=<list-file> ]
     [-n | --schema <schema> ]
     [-O, --no-owner ]
@@ -37,12 +34,17 @@ where:
     [-S <username>   | --superuser=<username> ]
     [-t <table>, --table <table> ]
     [-T <trigger> | --trigger=<trigger> ]
-    [-v  | --verbose ]
     [-x | --no-privileges | --no-acl] 
-    [--disable-dollar-quoting] 
     [--disable-triggers] 
+    [--use-set-session-authoriztion]
     [--no-data-for-failed-tables]
-    [-1 | --single-transaction ]    
+    [-1 | --single-transaction ]  
+<connection_options> =
+    [-h <host> | --host <host>] 
+    [-p <port> | -- port <port>] 
+    [-U <username> | --username <username>] 
+    [-W | --password] 
+    [-e] | --exit-on-error ]  
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -58,70 +60,78 @@ where:
 <dt> *filename*   </dt>
 <dd>Specifies the location of the archive file to be restored. If not specified, the standard input is used.</dd>
 
-**Restore Options**
+**General Options**
 
-<dt>-a | -\\\-data-only  </dt>
-<dd>Restore only the data, not the schema (data definitions).</dd>
-
-<dt>-c | -\\\-clean  </dt>
-<dd>Clean (drop) database objects before recreating them.</dd>
-
-<dt>-C | -\\\-create  </dt>
-<dd>Create the database before restoring into it. (When this option is used, the database named with `-d` is used only to issue the initial `CREATE DATABASE` command. All data is restored into the database name that appears in the archive.)</dd>
-
-<dt>-d *dbname* | -\\\-dbname=*dbname*  </dt>
+<dt>-d *dbname* , -\\\-dbname=*dbname*  </dt>
 <dd>Connect to this database and restore directly into this database. The default is to use the `PGDATABASE` environment variable setting, or the same name as the current system user.</dd>
 
-<dt>-e | -\\\-exit-on-error  </dt>
-<dd>Exit if an error is encountered while sending SQL commands to the database. The default is to continue and to display a count of errors at the end of the restoration.</dd>
-
-<dt>-f *outfilename* | -\\\-file=*outfilename*  </dt>
+<dt>-f *outfilename* , -\\\-file=*outfilename*  </dt>
 <dd>Specify output file for generated script, or for the listing when used with `-l`. Default is the standard output.</dd>
 
-<dt>-F t |c | -\\\-format=tar | custom  </dt>
+<dt>-F t |c , -\\\-format=tar|custom  </dt>
 <dd>The format of the archive produced by [pg\_dump](pg_dump.html#topic1). It is not necessary to specify the format, since `pg_restore` will determine the format automatically. Format can be either `tar` or `custom`.</dd>
 
-<dt>-i | -\\\-ignore-version  </dt>
+<dt>-i , -\\\-ignore-version  </dt>
 <dd>Ignore database version checks.</dd>
 
-<dt>-I *index* | -\\\-index=*index*  </dt>
-<dd>Restore definition of named index only.</dd>
-
-<dt>-l | -\\\-list  </dt>
+<dt>-l , -\\\-list  </dt>
 <dd>List the contents of the archive. The output of this operation can be used with the `-L` option to restrict and reorder the items that are restored.</dd>
 
-<dt>-L *list-file* | -\\\-use-list=*list-file*  </dt>
+<dt>-v , -\\\-verbose  </dt>
+<dd>Specifies verbose mode.</dd>
+
+<dt> -\\\-help  </dt>
+<dd>Displays this help and exits.</dd>
+
+<dt>-\\\-version  </dt>
+<dd>Displays version number information, then exits.</dd>
+
+**Restore Options**
+
+<dt>-a , -\\\-data-only  </dt>
+<dd>Restore only the data, not the schema (data definitions).</dd>
+
+<dt>-c , -\\\-clean  </dt>
+<dd>Clean (drop) database objects before recreating them.</dd>
+
+<dt>-C , -\\\-create  </dt>
+<dd>Create the database before restoring into it. (When this option is used, the database named with `-d` is used only to issue the initial `CREATE DATABASE` command. All data is restored into the database name that appears in the archive.)</dd>
+
+<dt>-e , -\\\-exit-on-error  </dt>
+<dd>Exit if an error is encountered while sending SQL commands to the database. The default is to continue and to display a count of errors at the end of the restoration.</dd>
+
+<dt>-I *index* , -\\\-index=*index*  </dt>
+<dd>Restore definition of named index only.</dd>
+
+<dt>-L *list-file* , -\\\-use-list=*list-file*  </dt>
 <dd>Restore elements in the *list-file* only, and in the order they appear in the file. Lines can be moved and may also be commented out by placing a `;` at the start of the line.</dd>
 
-<dt>-n *schema* | -\\\-schema=*schema*  </dt>
+<dt>-n *schema* , -\\\-schema=*schema*  </dt>
 <dd>Restore only objects that are in the named schema. This can be combined with the `-t` option to restore just a specific table.</dd>
 
-<dt>-O | -\\\-no-owner  </dt>
+<dt>-O , -\\\-no-owner  </dt>
 <dd>Do not output commands to set ownership of objects to match the original database. By default, `pg_restore` issues `ALTER OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created schema elements. These statements will fail unless the initial connection to the database is made by a superuser (or the same user that owns all of the objects in the script). With `-O`, any user name can be used for the initial connection, and this user will own all the created objects.</dd>
 
-<dt>-P '*function-name*(*argtype* \[, ...\])' | -\\\-function='*function-name*(*argtype* \[, ...\])'  </dt>
+<dt>-P '*function-name*(*argtype* \[, ...\])' , -\\\-function='*function-name*(*argtype* \[, ...\])'  </dt>
 <dd>Restore the named function only. The function name must be enclosed in quotes. Be careful to spell the function name and arguments exactly as they appear in the dump file's table of contents (as shown by the `--list` option).</dd>
 
-<dt>-s | -\\\-schema-only  </dt>
+<dt>-s , -\\\-schema-only  </dt>
 <dd>Restore only the schema (data definitions), not the data (table contents). Sequence current values will not be restored, either. (Do not confuse this with the `--schema` option, which uses the word schema in a different meaning.)</dd>
 
-<dt>-S *username* | -\\\-superuser=*username*  </dt>
+<dt>-S *username* , -\\\-superuser=*username*  </dt>
 <dd>Specify the superuser user name to use when disabling triggers. This is only relevant if `--disable-triggers` is used.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
-<dt>-t *table* | -\\\-table=*table*  </dt>
+<dt>-t *table* , -\\\-table=*table*  </dt>
 <dd>Restore definition and/or data of named table only.</dd>
 
-<dt>-T *trigger* | -\\\-trigger=*trigger*  </dt>
+<dt>-T *trigger* , -\\\-trigger=*trigger*  </dt>
 <dd>Restore named trigger only.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
-<dt>-v | -\\\-verbose  </dt>
-<dd>Specifies verbose mode.</dd>
-
-<dt>-x | -\\\-no-privileges | -\\\-no-acl  </dt>
+<dt>-x , -\\\-no-privileges , -\\\-no-acl  </dt>
 <dd>Prevent restoration of access privileges (`GRANT/REVOKE` commands).</dd>
 
 <dt>-\\\-disable-triggers  </dt>
@@ -132,22 +142,25 @@ where:
 <dt>-\\\-no-data-for-failed-tables  </dt>
 <dd>By default, table data is restored even if the creation command for the table failed (e.g., because it already exists). With this option, data for such a table is skipped. This behavior is useful when the target database may already contain the desired table contents. Specifying this option prevents duplicate or obsolete data from being loaded. This option is effective only when restoring directly into a database, not when producing SQL script output.</dd>
 
+<dt>-1 , -\\\-single-transaction  </dt>
+<dd>Execute the restore as a single transaction. This ensures that either all the commands complete successfully, or no changes are applied.</dd>
+
 **Connection Options**
 
-<dt>-h *host* | -\\\-host *host*  </dt>
+<dt>-h *host* , -\\\-host *host*  </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
-<dt>-p *port* | -\\\-port *port*  </dt>
+<dt>-p *port* , -\\\-port *port*  </dt>
 <dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
-<dt>-U *username* | -\\\-username *username*  </dt>
+<dt>-U *username* , -\\\-username *username*  </dt>
 <dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
 
-<dt>-W | -\\\-password  </dt>
+<dt>-W , -\\\-password  </dt>
 <dd>Force a password prompt.</dd>
 
-<dt>-1 | -\\\-single-transaction  </dt>
-<dd>Execute the restore as a single transaction. This ensures that either all the commands complete successfully, or no changes are applied.</dd>
+<dt>-e , -\\\-exit-on-error  </dt>
+<dd>Exit if an error is encountered while sending SQL commands to the database. The default is to continue and to display a count of errors at the end of the restoration.</dd>
 
 ## <a id="topic1__section6"></a>Notes
 
