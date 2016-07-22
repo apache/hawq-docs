@@ -10,7 +10,7 @@ Starts a HAWQ system.
 hawq start <object> [-l| --logdir <logfile_directory>] [-q| --quiet] 
         [-v|--verbose] [-m|--masteronly]  [-t|--timeout <timeout_seconds>] 
         [-R | --restrict] [-U | --special-mode maintenance]
-        [--ignore_bad-hosts cluster | allsegments]
+        [--ignore-bad-hosts cluster | allsegments]
      
 ```
 
@@ -79,7 +79,7 @@ $ PGOPTIONS='-c gp_role=utility' psql
 <dt>-U -\\\-special-mode maintenance   </dt>
 <dd>(Superuser only) Start HAWQ in \[maintenance | upgrade\] mode. In maintenance mode, the `gp_maintenance_conn` parameter is set.</dd>
 
-<dt>-\\\-ignore\_bad\_hosts cluster | allsegments  </dt>
+<dt>-\\\-ignore-bad-hosts cluster | allsegments  </dt>
 <dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
 
 <dt>-? | -h | -\\\-help (help)  </dt>
