@@ -38,7 +38,7 @@ Start an initialized HAWQ system by running the `hawq start` command on the mast
 
 Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts HAWQ by starting all the segments on the HAWQ cluster. `hawq start cluster` orchestrates this process and performs the process in parallel.
 
-You can also use the `hawq start master` command to start only the HAWQ master, without segment nodes, then add these later, using `hawq start segment`. If you want HAWQ to ignore hosts that fail ssh validation, use the hawq start `--ignore_bad_hosts` option. 
+You can also use the `hawq start master` command to start only the HAWQ master, without segment nodes, then add these later, using `hawq start segment`. If you want HAWQ to ignore hosts that fail ssh validation, use the hawq start `--ignore-bad-hosts` option. 
 
 -   Run `hawq start cluster` on the master host to start a HAWQ system:
 

@@ -10,7 +10,7 @@ Shuts down and then restarts a HAWQ system after shutdown is complete.
 hawq restart <object> [-l|--logdir <logfile_directory>] [-q|--quiet] [-v|--verbose]    
         [-M|--mode smart | fast | immediate] [-u|--reload] [-m|--masteronly] [-R|--restrict]
         [-t|--timeout <timeout_seconds>]  [-U | --special-mode maintenance]
-        [--ignore_bad-hosts cluster | allsegments]
+        [--ignore-bad-hosts cluster | allsegments]
      
 ```
 
@@ -78,7 +78,7 @@ Immediate shutdown aborts transactions in progress and kills all `postgres` proc
 <dt>-U -\\\-special-mode maintenance   </dt>
 <dd>(Superuser only) Start HAWQ in \[maintenance | upgrade\] mode. In maintenance mode, the `gp_maintenance_conn` parameter is set.</dd>
 
-<dt>-\\\-ignore\_bad\_hosts cluster | allsegments  </dt>
+<dt>-\\\-ignore-bad-hosts cluster | allsegments  </dt>
 <dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
 
 <dt>-? | -h | -\\\-help (help)  </dt>
