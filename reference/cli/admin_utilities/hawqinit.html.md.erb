@@ -86,23 +86,23 @@ If the primary master fails, the log replication process is shut down, and the s
 
 ## <a id="topic1__section4"></a>Options
 
-<dt>-a (do not prompt)  </dt>
+<dt>-a, (do not prompt)  </dt>
 <dd>Do not prompt the user for confirmation.</dd>
 
 
-<dt>-l -\\\-logdir \<logfile\_directory\>  </dt>
+<dt>-l, -\\\-logdir \<logfile\_directory\>  </dt>
 <dd>The directory to write the log file. Defaults to `~/hawq/AdminLogs`.</dd>
 
-<dt>-q -\\\-quiet (no screen output)  </dt>
+<dt>-q, -\\\-quiet (no screen output)  </dt>
 <dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
 
-<dt>-v -\\\-verbose  </dt>
+<dt>-v, -\\\-verbose  </dt>
 <dd>Displays detailed status, progress and error messages and writes them to the log files.</dd>
 
-<dt>-t -\\\-timeout  </dt>
+<dt>-t, -\\\-timeout  </dt>
 <dd>Sets timeout value in seconds. The default is 60 seconds.</dd>
 
-<dt>-n -\\\-no-update  </dt>
+<dt>-n, -\\\-no-update  </dt>
 <dd>Resync the standby with the master, but do not update system catalog tables.</dd>
 
 <dt>-\\\-locale=\<locale\>   </dt>
@@ -135,10 +135,10 @@ If the primary master fails, the log replication process is shut down, and the s
 <dt>-\\\-shared\_buffers \<number\>  </dt>
 <dd>Sets the number of shared\_buffers to be used when initializing HAWQ.</dd>
 
-<dt>-s -\\\-standby-host \<name\_of\_standby\_host\>  </dt>
+<dt>-s, -\\\-standby-host \<name\_of\_standby\_host\>  </dt>
 <dd>Adds a standby host name to hawq-site.xml and syncs it to all the nodes. If a standby host name was already defined in hawq-site.xml, using this option will overwrite the existing value.</dd>
 
-<dt>-? -\\\-help  </dt>
+<dt>-?, -\\\-help  </dt>
 <dd>Displays the online help.</dd>
 
 ## <a id="topic1__section6"></a>Examples
