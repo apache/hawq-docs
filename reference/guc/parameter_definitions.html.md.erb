@@ -93,6 +93,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[enable\_tidscan](../../reference/guc/parameter_definitions.html#enable_tidscan)**
 
 -   **[escape\_string\_warning](../../reference/guc/parameter_definitions.html#escape_string_warning)**
+  
+-   **[explain\_memory\_verbosity](../../reference/guc/parameter_definitions.html#explain_memory_verbosity)**
 
 -   **[explain\_pretty\_print](../../reference/guc/parameter_definitions.html#explain_pretty_print)**
 
@@ -973,6 +975,39 @@ When on, a warning is issued if a backslash (\\) appears in an ordinary string l
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | Boolean     | on      | master, session, reload |
+
+
+## <a name="explain_memory_verbosity"></a>explain\_memory\_verbosity
+Controls the granularity of memory information displayed in `EXPLAIN ANALYZE` output.  `explain_memory_verbosity` takes three values:
+
+* SUPPRESS - generate only total memory information for the whole query
+* SUMMARY - generate basic memory information for each executor node
+* DETAIL - generate detailed memory information for each executor node
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="34%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value Range</th>
+<th>Default</th>
+<th>Set Classifications</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>SUPPRESS</p>
+<p>SUMMARY</p>
+<p>DETAIL</p></td>
+<td>SUPPRESS</td>
+<td>master</td>
+</tr>
+</tbody>
+</table>
+
 
 ## <a name="explain_pretty_print"></a>explain\_pretty\_print
 

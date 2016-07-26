@@ -110,13 +110,19 @@ To use PL/Java:
 
 Perform the following steps as the `gpadmin` user:
 
-1. Enable PL/Java by running the `$GPHOME/share/postgresql/pljava/install.sql` SQL script in the databases that use PL/Java. For example, this example enables PL/Java on a database named `testdb`:
+1. Enable PL/Java by running the `$GPHOME/share/postgresql/pljava/install.sql` SQL script in the databases that use PL/Java. The `install.sql` script registers both the trusted and untrusted PL/Java. For example, the following command enables PL/Java on a database named `testdb`:
 
 	``` shell
 	$ psql -d testdb -f $GPHOME/share/postgresql/pljava/install.sql
 	```
+	
+	To enable the PL/Java extension in all new HAWQ databases, run the script on the `template1` database: 
 
-	The `install.sql` script registers both the trusted and untrusted PL/Java.
+    ``` shell
+    $ psql -d template1 -f $GPHOME/share/postgresql/pljava/install.sql
+    ```
+
+    Use this option *only* if you are certain you want to enable PL/Java in all new databases.
 	
 2. Copy your Java archives (JAR files) to `$GPHOME/lib/postgresql/java/` on all the HAWQ hosts. This example uses the `hawq scp` utility to copy the `myclasses.jar` file:
 
@@ -125,59 +131,31 @@ Perform the following steps as the `gpadmin` user:
 	```
 	The `hawq_hosts` file contains a list of the HAWQ hosts.
 
-3. Set the `pljava_classpath` server configuration parameter in the `hawq-site.xml` configuration file. The parameter value is a colon (:) separated list of the JAR files containing the Java classes used in any PL/Java functions. For example:
+3. The JAR files must be added to the `pljava_classpath` configuration parameter. This parameter can be set at either the database session or global levels.  
 
-	``` shell
-	$ hawq config -c pljava_classpath -v \'examples.jar:myclasses.jar\' 
-	```
+    To affect only the *current* database session, set the `pljava_classpath` configuration parameter at the `psql` prompt:
 	
-4. Restart the HAWQ cluster:
+	 ``` sql
+	 psql> set pljava_classpath='myclasses.jar';
+	 ```
 
-	``` shell
-	$ hawq restart cluster
-	```
+    To affect *all* sessions, set the `pljava_classpath` server configuration parameter and restart the HAWQ cluster:
 
-5. (Optional) Your HAWQ installation includes an `examples.sql` file.  This script contains sample PL/Java functions that you can use for testing. Run the commands in this file to create the test functions, which use the Java classes in `examples.jar`:
+	 ``` shell
+	 $ hawq config -c pljava_classpath -v \'examples.jar:myclasses.jar\' 
+	 $ hawq restart cluster
+	 ```
+
+5. (Optional) Your HAWQ installation includes an `examples.sql` file.  This script contains sample PL/Java functions that you can use for testing. Run the commands in this file to create and run test functions that use the Java classes in `examples.jar`:
 
 	``` shell
 	$ psql -f $GPHOME/share/postgresql/pljava/examples.sql
 	```
-	
-#### Enabling PL/Java in the template1 Database
-
-
-To enable the PL/Java extension in all new HAWQ databases, execute the following command: 
-
-``` shell
-$ psql template1 -f $GPHOME/share/postgresql/pljava/install.sql
-```
-
-Use this option only if you are certain you want to enable PL/Java in all new databases.
 
 #### Configuring PL/Java VM Options
 
 PL/Java JVM options can be configured via the `pljava_vmoptions` parameter in `hawq-site.xml`. For example, `pljava_vmoptions=-Xmx512M` sets the maximum heap size of the JVM. The default Xmx value is set to `-Xmx64M`.
 
-### <a id="installcustomjars"></a>Install Custom JARS 
-
-1. Copy the JAR file on the master host in `$GPHOME/lib/postgresql/java`.
-1. Copy the JAR file on all segments in the same location using `hawq scp` from master:
-
- 	``` shell
-	$ cd $GPHOME/lib/postgresql/java
-	$ hawq scp -f hawq_hosts myfunc.jar =:$GPHOME/lib/postgresql/java/
-	```
-1. Set `pljava_classpath` to include the newly-copied JAR file. From the `psql` session, execute set to affect the current session:
-
-	``` sql
-	psql> set pljava_classpath='myfunc.jar'; 
-	```
-
-1. To affect all sessions, use `hawq config`: 
-	
-	``` shell
-	$ hawq config -c pljava_classpath -v \'myfunc.jar\' 
-	```
 	
 ### <a id="uninstallpljava"></a>Disable PL/Java 
 
