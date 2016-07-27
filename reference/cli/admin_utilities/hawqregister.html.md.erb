@@ -84,6 +84,8 @@ After running the `hawq register` command for the file location  `hdfs://localho
 
 To locate the table, you can either find the relation ID by looking up the catalog table pg\_class by running `select oid from pg_class where relname=$relname` or by finding the table name by using the command `select segrelid from pg_appendonly where relid = $relid` then running `select relname from pg_class where oid = segrelid`.
 
+**Recommendation:** Before running ```hawq register```, create a copy of the parquet file to be registered, then run ```hawq register``` on the copy. This leaves the original file available for additional Hive queries or if a data mapping error is encountered.
+
 ##Data Type Mapping<a id="topic1__section7"></a>
 
 HAWQ and parquet tables and HIVE and HAWQ tables use different data types. Mapping must be used for compatibility. You are responsible for making sure your implementation is mapped to the appropriate data type before running `hawq register`. The tables below show equivalent data types, if available.
