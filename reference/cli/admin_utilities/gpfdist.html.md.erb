@@ -96,19 +96,22 @@ HAWQ Loaders allow `gpfdist` to run as a Windows Service.
 
 Follow the instructions below to download, register and activate `gpfdist` as a service:
 
-1.  Update your HAWQ Loader package to the latest version. This package is available from [Pivotal Network](https://network.gopivotal.com/products).
+1.  Update your HAWQ Loaders for Windows package to the latest version. This package is available from [Pivotal Network](https://network.pivotal.io/products/pivotal-gpdb).
+  
+    **Note**: HAWQ Loaders for Windows supports only Python version 2.5 (available from [www.python.org](http://python.org)).
+    
 2.  Register `gpfdist` as a Windows service:
     1.  Open a Windows command window
     2.  Run the following command:
 
         ``` pre
-        sc create gpfdist binpath= "path_to_gpfdist.exe -p 8081 -d External\load\files\path -l Log\file\path"
+        sc create gpfdist binpath= "path_to_gpfdist.exe -p 8081 -d \"External\load\files\path\" -l \"Log\file\path\""
         ```
 
         You can create multiple instances of `gpfdist` by running the same command again, with a unique name and port number for each instance:
 
         ``` pre
-        sc create gpfdistN binpath= "path_to_gpfdist.exe -p 8082 -d External\load\files\path -l Log\file\path"
+        sc create gpfdistN binpath= "path_to_gpfdist.exe -p 8082 -d \"External\load\files\path\" -l \"Log\file\path\""
         ```
 
 3.  Activate the `gpfdist` service:
