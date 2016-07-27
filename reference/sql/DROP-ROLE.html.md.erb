@@ -7,7 +7,7 @@ Removes a database role.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP ROLE [IF EXISTS] name [, ...]
+DROP ROLE [IF EXISTS] <name> [, ...]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -16,14 +16,14 @@ DROP ROLE [IF EXISTS] name [, ...]
 
 A role cannot be removed if it is still referenced in any database; an error will be raised if so. Before dropping the role, you must drop all the objects it owns (or reassign their ownership) and revoke any privileges the role has been granted. The `REASSIGN           OWNED` and `DROP OWNED` commands can be useful for this purpose.
 
-However, it is not necessary to remove role memberships involving the role; `DROP           ROLE` automatically revokes any memberships of the target role in other roles, and of other roles in the target role. The other roles are not dropped nor otherwise affected.
+However, it is not necessary to remove role memberships involving the role; `DROP ROLE` automatically revokes any memberships of the target role in other roles, and of other roles in the target role. The other roles are not dropped nor otherwise affected.
 
 ## <a id="topic1__section4"></a>Parameters
 
 <dt>IF EXISTS  </dt>
 <dd>Do not throw an error if the role does not exist. A notice is issued in this case.</dd>
 
-<dt> *name*   </dt>
+<dt>\<name\>   </dt>
 <dd>The name of the role to remove.</dd>
 
 ## <a id="topic1__section5"></a>Examples

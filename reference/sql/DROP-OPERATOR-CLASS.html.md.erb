@@ -7,7 +7,7 @@ Removes an operator class.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP OPERATOR CLASS [IF EXISTS] name USING index_method [CASCADE | RESTRICT]
+DROP OPERATOR CLASS [IF EXISTS] <name> USING <index_method> [CASCADE | RESTRICT]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -19,10 +19,10 @@ DROP OPERATOR CLASS [IF EXISTS] name USING index_method [CASCADE | RESTRICT]
 <dt>IF EXISTS  </dt>
 <dd>Do not throw an error if the operator class does not exist. A notice is issued in this case.</dd>
 
-<dt> *name*   </dt>
+<dt>\<name\>   </dt>
 <dd>The name (optionally schema-qualified) of an existing operator class.</dd>
 
-<dt> *index\_method*   </dt>
+<dt>\<index\_method\>   </dt>
 <dd>The name of the index access method the operator class is for.</dd>
 
 <dt>CASCADE  </dt>
