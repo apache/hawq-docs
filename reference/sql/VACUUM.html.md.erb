@@ -7,9 +7,9 @@ Garbage-collects and optionally analyzes a database.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-VACUUM [FULL] [FREEZE] [VERBOSE] [table]
+VACUUM [FULL] [FREEZE] [VERBOSE] <table>
 VACUUM [FULL] [FREEZE] [VERBOSE] ANALYZE
-              [table [(column [, ...] )]]
+              [<table> [(<column> [, ...] )]]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -40,10 +40,10 @@ When `VERBOSE` is specified, `VACUUM` emits progress messages to indicate which 
 <dt>ANALYZE  </dt>
 <dd>Updates statistics used by the planner to determine the most efficient way to execute a query.</dd>
 
-<dt> *table*   </dt>
+<dt> \<table\>   </dt>
 <dd>The name (optionally schema-qualified) of a specific table to vacuum. Defaults to all tables in the current database.</dd>
 
-<dt> *column*   </dt>
+<dt> \<column\>   </dt>
 <dd>The name of a specific column to analyze. Defaults to all columns.</dd>
 
 ## <a id="topic1__section6"></a>Notes

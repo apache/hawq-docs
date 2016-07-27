@@ -7,16 +7,16 @@ Sets the current role identifier of the current session.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-SET [SESSION | LOCAL] ROLE rolename
+SET [SESSION | LOCAL] ROLE <rolename>
 SET [SESSION | LOCAL] ROLE NONE
 RESET ROLE
 ```
 
 ## <a id="topic1__section3"></a>Description
 
-This command sets the current role identifier of the current SQL-session context to be *rolename*. The role name may be written as either an identifier or a string literal. After `SET ROLE`, permissions checking for SQL commands is carried out as though the named role were the one that had logged in originally.
+This command sets the current role identifier of the current SQL-session context to be \<rolename\>. The role name may be written as either an identifier or a string literal. After `SET ROLE`, permissions checking for SQL commands is carried out as though the named role were the one that had logged in originally.
 
-The specified *rolename* must be a role that the current session user is a member of. If the session user is a superuser, any role can be selected.
+The specified \<rolename\> must be a role that the current session user is a member of. If the session user is a superuser, any role can be selected.
 
 The `NONE` and `RESET` forms reset the current role identifier to be the current session role identifier. These forms may be executed by any user.
 
@@ -28,7 +28,7 @@ The `NONE` and `RESET` forms reset the current role identifier to be the current
 <dt>LOCAL  </dt>
 <dd>Specifies that the command takes effect for only the current transaction. After `COMMIT` or `ROLLBACK`, the session-level setting takes effect again. Note that `SET LOCAL` will appear to have no effect if it is executed outside of a transaction.</dd>
 
-<dt> *rolename*   </dt>
+<dt> \<rolename\>   </dt>
 <dd>The name of a role to use for permissions checking in this session.</dd>
 
 <dt>NONE  
@@ -65,7 +65,7 @@ SELECT SESSION_USER, CURRENT_USER;
 
 ## <a id="topic1__section7"></a>Compatibility
 
-HAWQ allows identifier syntax (*rolename*), while the SQL standard requires the role name to be written as a string literal. SQL does not allow this command during a transaction; HAWQ does not make this restriction. The `SESSION` and `LOCAL` modifiers are a HAWQ extension, as is the `RESET` syntax.
+HAWQ allows identifier syntax (\<rolename\>), while the SQL standard requires the role name to be written as a string literal. SQL does not allow this command during a transaction; HAWQ does not make this restriction. The `SESSION` and `LOCAL` modifiers are a HAWQ extension, as is the `RESET` syntax.
 
 ## <a id="topic1__section8"></a>See Also
 
