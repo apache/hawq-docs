@@ -394,6 +394,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[password\_encryption](../../reference/guc/parameter_definitions.html#password_encryption)**
 
+-   **[password\_hash\_algorithm](../../reference/guc/parameter_definitions.html#password_hash_algorithm)**
+
 -   **[pgstat\_track\_activity\_query\_size](../../reference/guc/parameter_definitions.html#pgstat_track_activity_query_size)**
 
 -   **[pljava\_classpath](../../reference/guc/parameter_definitions.html#pljava_classpath)**
@@ -2619,6 +2621,34 @@ When a password is specified in `CREATE USER` or `ALTER           USER` without 
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | Boolean     | on      | master, session, reload |
+
+## <a name="password_hash_algorithm"></a>password\_hash\_algorithm
+
+Specifies the cryptographic hash algorithm that is used when storing an encrypted HAWQ Database user password. The default algorithm is MD5.
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="34%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value Range</th>
+<th>Default</th>
+<th>Set Classifications</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MD5</p>
+<p>SHA-256</p></td>
+<td>MD5</td>
+<td>master<p>session<p>reload<p>superuser</td>
+</tr>
+</tbody>
+</table>
+
 
 ## <a name="pgstat_track_activity_query_size"></a>pgstat\_track\_activity\_query\_size
 
