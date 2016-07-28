@@ -7,9 +7,9 @@ Changes the definition of a tablespace.
 ## <a id="synopsis"></a>Synopsis
 
 ``` pre
-ALTER TABLESPACE name RENAME TO newname
+ALTER TABLESPACE <name> RENAME TO <newname>
 
-ALTER TABLESPACE name OWNER TO newowner
+ALTER TABLESPACE <name> OWNER TO <newowner>
          
 ```
 
@@ -21,13 +21,13 @@ You must own the tablespace to use `ALTER TABLESPACE`. To alter the owner, you m
 
 ## <a id="altertablespace__section4"></a>Parameters
 
-<dt> *name*   </dt>
+<dt> \<name\>   </dt>
 <dd>The name of an existing tablespace.</dd>
 
-<dt> *newname*   </dt>
+<dt> \<newname\>   </dt>
 <dd>The new name of the tablespace. The new name cannot begin with *pg\_* (reserved for system tablespaces).</dd>
 
-<dt> *newowner*   </dt>
+<dt> \<newowner\>   </dt>
 <dd>The new owner of the tablespace.</dd>
 
 ## <a id="altertablespace__section5"></a>Examples

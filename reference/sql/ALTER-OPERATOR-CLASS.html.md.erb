@@ -7,9 +7,9 @@ Changes the definition of an operator class.
 ## <a id="synop"></a>Synopsis
 
 ``` sql
-ALTER OPERATOR CLASS name USING index_method RENAME TO newname
+ALTER OPERATOR CLASS <name> USING <index_method> RENAME TO <newname>
 
-ALTER OPERATOR CLASS name USING index_method OWNER TO newowner
+ALTER OPERATOR CLASS <name> USING <index_method> OWNER TO <newowner>
 ```
 
 ## <a id="desc"></a>Description
@@ -20,16 +20,16 @@ You must own the operator class to use `ALTER OPERATOR CLASS`. To alter the owne
 
 ## <a id="alteroperatorclass__section4"></a>Parameters
 
-<dt> *name*   </dt>
+<dt> \<name\>   </dt>
 <dd>The name (optionally schema-qualified) of an existing operator class.</dd>
 
-<dt> *index\_method*   </dt>
+<dt> \<index\_method\>   </dt>
 <dd>The name of the index method this operator class is for.</dd>
 
-<dt> *newname*   </dt>
+<dt> \<newname\>   </dt>
 <dd>The new name of the operator class.</dd>
 
-<dt> *newowner*   </dt>
+<dt> \<newowner\>   </dt>
 <dd>The new owner of the operator class</dd>
 
 ## <a id="compat"></a>Compatibility
