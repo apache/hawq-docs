@@ -5,7 +5,7 @@ title: Getting Started with HAWQ
 
 ## <a id="tut_getstartov"></a>Overview
 
-This tutorial provides a 15 minute introduction to get you up and running with your HAWQ installation.  You will be introduced to basic HAWQ functionality, including cluster management, database creation, and basic querying.  An introduction to the external data sources is also provided.
+This tutorial provides a 15 minute introduction to get you up and running with your HAWQ installation.  You will be introduced to basic HAWQ functionality, including cluster management, database creation, and basic querying.  An introduction to external data sources is also provided.
 
 
 ## <a id="tut_getstartov_prereq"></a>Prerequisites
@@ -18,3 +18,4 @@ This introduction to the tutorial environment includes the following content and
 
 [HAWQ Administration Basics](basichawqadmin.html)     
 [Introduction to HAWQ Tables](introhawqtbls.html)  
+[Introduction to PXF](intropxfhdfs.html)
