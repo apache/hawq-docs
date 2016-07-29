@@ -7,21 +7,21 @@ Defines a new table from the results of a query.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE [ [GLOBAL | LOCAL] {TEMPORARY | TEMP} ] TABLE table_name
-   [(column_name [, ...] )]
-   [ WITH ( storage_parameter=value [, ... ] )
+CREATE [ [GLOBAL | LOCAL] {TEMPORARY | TEMP} ] TABLE <table_name>
+   [(<column_name> [, ...] )]
+   [ WITH ( storage_parameter=<value> [, ... ] )
    [ON COMMIT {PRESERVE ROWS | DELETE ROWS | DROP}]
-   [TABLESPACE tablespace]
-   AS query
-   [DISTRIBUTED BY (column, [ ... ] ) | DISTRIBUTED RANDOMLY]
+   [TABLESPACE <tablespace>]
+   AS <query>
+   [DISTRIBUTED BY (<column>, [ ... ] ) | DISTRIBUTED RANDOMLY]
 ```
 
-where *storage\_parameter* is:
+where \>storage\_parameter\> is:
 
 ``` pre
    APPENDONLY={TRUE}
    BLOCKSIZE={8192-2097152} 
-   bucketnum={x}
+   bucketnum={<x>}
    ORIENTATION={ROW | PARQUET}
    COMPRESSTYPE={ZLIB | SNAPPY | GZIP | NONE}
    COMPRESSLEVEL={0-9 | 1}
@@ -45,13 +45,13 @@ where *storage\_parameter* is:
 <dt>TEMPORARY | TEMP  </dt>
 <dd>If specified, the new table is created as a temporary table. Temporary tables are automatically dropped at the end of a session, or optionally at the end of the current transaction (see `ON COMMIT`). Existing permanent tables with the same name are not visible to the current session while the temporary table exists, unless they are referenced with schema-qualified names. Any indexes created on a temporary table are automatically temporary as well.</dd>
 
-<dt> *table\_name*   </dt>
+<dt> \<table\_name\>   </dt>
 <dd>The name (optionally schema-qualified) of the new table to be created.</dd>
 
-<dt> *column\_name*   </dt>
+<dt> \<column\_name\>   </dt>
 <dd>The name of a column in the new table. If column names are not provided, they are taken from the output column names of the query. If the table is created from an `EXECUTE` command, a column name list cannot be specified.</dd>
 
-<dt>WITH ( *storage\_parameter=value* )  </dt>
+<dt>WITH (\<storage\_parameter\>=\<value\> )  </dt>
 <dd>The `WITH` clause can be used to set storage options for the table or its indexes. Note that you can also set different storage parameters on a particular partition or subpartition by declaring the `WITH` clause in the partition specification. The following storage options are available:
 
 **APPENDONLY** — Set to `TRUE` to create the table as an append-only table. If `FALSE`, an error message displays stating that heap tables are not supported.

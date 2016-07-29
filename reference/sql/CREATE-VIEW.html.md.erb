@@ -7,9 +7,9 @@ Defines a new view.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE [OR REPLACE] [TEMP | TEMPORARY] VIEW name
-       [ ( column_name [, ...] ) ]
-       AS query
+CREATE [OR REPLACE] [TEMP | TEMPORARY] VIEW <name>
+       [ ( <column_name> [, ...] ) ]
+       AS <query>
          
 ```
 
@@ -26,13 +26,13 @@ If a schema name is given then the view is created in the specified schema. Othe
 <dt>TEMPORARY | TEMP  </dt>
 <dd>If specified, the view is created as a temporary view. Temporary views are automatically dropped at the end of the current session. Existing permanent relations with the same name are not visible to the current session while the temporary view exists, unless they are referenced with schema-qualified names. If any of the tables referenced by the view are temporary, the view is created as a temporary view (whether `TEMPORARY` is specified or not).</dd>
 
-<dt> *name*   </dt>
+<dt> \<name\>   </dt>
 <dd>The name (optionally schema-qualified) of a view to be created.</dd>
 
-<dt> *column\_name*   </dt>
+<dt> \<column\_name\>   </dt>
 <dd>An optional list of names to be used for columns of the view. If not given, the column names are deduced from the query.</dd>
 
-<dt> *query*   </dt>
+<dt> \<query\>   </dt>
 <dd>A [SELECT](SELECT.html) command which will provide the columns and rows of the view.</dd>
 
 ## <a id="topic1__section5"></a>Notes

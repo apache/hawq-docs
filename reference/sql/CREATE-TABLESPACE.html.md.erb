@@ -7,8 +7,8 @@ Defines a new tablespace.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE TABLESPACE tablespace_name [OWNER username]
-       FILESPACE filespace_name
+CREATE TABLESPACE <tablespace_name> [OWNER <username>]
+       FILESPACE <filespace_name>
          
 ```
 
@@ -24,13 +24,13 @@ In HAWQ, there must be a file system location defined for the master and each se
 
 ## <a id="topic1__section4"></a>Parameters
 
-<dt> *tablespacename*   </dt>
+<dt> \<tablespacename\>   </dt>
 <dd>The name of a tablespace to be created. The name cannot begin with `pg_`, as such names are reserved for system tablespaces.</dd>
 
-<dt>OWNER *username*   </dt>
+<dt>OWNER \<username\>   </dt>
 <dd>The name of the user who will own the tablespace. If omitted, defaults to the user executing the command. Only superusers may create tablespaces, but they can assign ownership of tablespaces to non-superusers.</dd>
 
-<dt>FILESPACE *filespace\_name*   </dt>
+<dt>FILESPACE \<filespace\_name\>   </dt>
 <dd>The name of a HAWQ filespace that was defined using the `hawq filespace` management utility.</dd>
 
 ## <a id="topic1__section5"></a>Notes
