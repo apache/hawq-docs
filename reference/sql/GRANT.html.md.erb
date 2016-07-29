@@ -9,41 +9,41 @@ Defines access privileges.
 ``` pre
 GRANT { {SELECT | INSERT | UPDATE | DELETE | REFERENCES }
 [,...] | ALL [PRIVILEGES] }
-    ON [TABLE] tablename [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON [TABLE] <tablename> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { {USAGE | SELECT | UPDATE} [,...] | ALL [PRIVILEGES] }
-    ON SEQUENCE sequencename [, ...]
-    TO { rolename | PUBLIC } [, ...] [WITH GRANT OPTION]
+    ON SEQUENCE <sequencename> [, ...]
+    TO { <rolename> | PUBLIC } [, ...] [WITH GRANT OPTION]
 
 GRANT { {CREATE | CONNECT | TEMPORARY | TEMP} [,...] | ALL
 [PRIVILEGES] }
-    ON DATABASE dbname [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON DATABASE <dbname> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { EXECUTE | ALL [PRIVILEGES] }
-    ON FUNCTION funcname ( [ [argmode] [argname] argtype [, ...]
+    ON FUNCTION <funcname> ( [ [<argmode>] [<argname>] <argtype> [, ...]
     ] ) [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { USAGE | ALL [PRIVILEGES] }
-    ON LANGUAGE langname [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON LANGUAGE <langname> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { {CREATE | USAGE} [,...] | ALL [PRIVILEGES] }
-    ON SCHEMA schemaname [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON SCHEMA <schemaname> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { CREATE | ALL [PRIVILEGES] }
-    ON TABLESPACE tablespacename [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON TABLESPACE <tablespacename> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
-GRANT parent_role [, ...]
-    TO member_role [, ...] [WITH ADMIN OPTION]
+GRANT <parent_role> [, ...]
+    TO <member_role> [, ...] [WITH ADMIN OPTION]
 
 GRANT { SELECT | INSERT | ALL [PRIVILEGES] }
-    ON PROTOCOL protocolname
-    TO username
+    ON PROTOCOL <protocolname>
+    TO <username>
 
 ```
 

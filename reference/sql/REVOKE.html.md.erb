@@ -9,46 +9,46 @@ Removes access privileges.
 ``` pre
 REVOKE [GRANT OPTION FOR] { {SELECT | INSERT | UPDATE | DELETE 
        | REFERENCES | TRUNCATE } [,...] | ALL [PRIVILEGES] }
-       ON [TABLE] tablename [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON [TABLE] <tablename> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] { {USAGE | SELECT | UPDATE} [,...] 
        | ALL [PRIVILEGES] }
-       ON SEQUENCE sequencename [, ...]
-       FROM { rolename | PUBLIC } [, ...]
+       ON SEQUENCE <sequencename> [, ...]
+       FROM { <rolename> | PUBLIC } [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] { {CREATE | CONNECT 
        | TEMPORARY | TEMP} [,...] | ALL [PRIVILEGES] }
-       ON DATABASE dbname [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON DATABASE <dbname> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] {EXECUTE | ALL [PRIVILEGES]}
-       ON FUNCTION funcname ( [[argmode] [argname] argtype
+       ON FUNCTION <funcname> ( [[<argmode>] [<argname>] <argtype>
                               [, ...]] ) [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] {USAGE | ALL [PRIVILEGES]}
-       ON LANGUAGE langname [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON LANGUAGE <langname> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [ CASCADE | RESTRICT ]
 
 REVOKE [GRANT OPTION FOR] { {CREATE | USAGE} [,...] 
        | ALL [PRIVILEGES] }
-       ON SCHEMA schemaname [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON SCHEMA <schemaname> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] { CREATE | ALL [PRIVILEGES] }
-       ON TABLESPACE tablespacename [, ...]
-       FROM { rolename | PUBLIC } [, ...]
+       ON TABLESPACE <tablespacename> [, ...]
+       FROM { <rolename> | PUBLIC } [, ...]
        [CASCADE | RESTRICT]
 
-REVOKE [ADMIN OPTION FOR] parent_role [, ...] 
-       FROM member_role [, ...]
+REVOKE [ADMIN OPTION FOR] <parent_role> [, ...] 
+       FROM <member_role> [, ...]
        [CASCADE | RESTRICT]
 ```
 
