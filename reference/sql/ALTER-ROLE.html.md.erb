@@ -65,7 +65,7 @@ where \<option\> can be:
 CREATEDB | NOCREATEDB  
 CREATEROLE | NOCREATEROLE  
 CREATEEXTTABLE | NOCREATEEXTTABLE \[(\<attribute\>='\<value\>')\]  </dt>
-<dd>If `CREATEEXTTABLE` is specified, the role being defined is allowed to create external tables. The default `type` is `readable` and the default `protocol` is `gpfdist` if not specified. `NOCREATEEXTTABLE` (the default) denies the role the ability to create external tables. Using the `file` protocol when creating external tables is not supported. This is because HAWQ cannot guarantee scheduling executors on a specific host. Likewise, you cannot use the `execute` command with `ON                      ALL` and `ON HOST` for the same reason. Use the `ON MASTER/<number>/SEGMENT <segment_id>` to specify which segment instances are to execute the command.</dd>
+<dd>If `CREATEEXTTABLE` is specified, the role being defined is allowed to create external tables. The default `type` is `readable` and the default `protocol` is `gpfdist` if not specified. `NOCREATEEXTTABLE` (the default) denies the role the ability to create external tables. Using the `file` protocol when creating external tables is not supported. This is because HAWQ cannot guarantee scheduling executors on a specific host. Likewise, you cannot use the `execute` command with `ON ALL` and `ON HOST` for the same reason. Use the `ON MASTER/<number>/SEGMENT <segment_id>` to specify which segment instances are to execute the command.</dd>
 
 <dt>INHERIT | NOINHERIT  
 LOGIN | NOLOGIN  
