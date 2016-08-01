@@ -7,29 +7,29 @@ Copies data between a file and a table.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-COPY table [(column [, ...])] FROM {'file' | STDIN}
+COPY <table> [(<column> [, ...])] FROM {'<file>' | STDIN}
      [ [WITH] 
        [OIDS]
        [HEADER]
-       [DELIMITER [ AS ] 'delimiter']
-       [NULL [ AS ] 'null string']
-       [ESCAPE [ AS ] 'escape' | 'OFF']
+       [DELIMITER [ AS ] '<delimiter>']
+       [NULL [ AS ] '<null string>']
+       [ESCAPE [ AS ] '<escape>' | 'OFF']
        [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
-       [CSV [QUOTE [ AS ] 'quote'] 
-            [FORCE NOT NULL column [, ...]]
+       [CSV [QUOTE [ AS ] '<quote>'] 
+            [FORCE NOT NULL <column> [, ...]]
        [FILL MISSING FIELDS]
-       [[LOG ERRORS INTO error_table [KEEP] 
-       SEGMENT REJECT LIMIT count [ROWS | PERCENT] ]
+       [[LOG ERRORS INTO <error_table> [KEEP] 
+       SEGMENT REJECT LIMIT <count> [ROWS | PERCENT] ]
 
-COPY {table [(column [, ...])] | (query)} TO {'file' | STDOUT}
+COPY {<table> [(<column> [, ...])] | (<query>)} TO {'<file>' | STDOUT}
       [ [WITH] 
         [OIDS]
         [HEADER]
-        [DELIMITER [ AS ] 'delimiter']
-        [NULL [ AS ] 'null string']
-        [ESCAPE [ AS ] 'escape' | 'OFF']
-        [CSV [QUOTE [ AS ] 'quote'] 
-             [FORCE QUOTE column [, ...]] ]
+        [DELIMITER [ AS ] '<delimiter>']
+        [NULL [ AS ] '<null string>']
+        [ESCAPE [ AS ] '<escape>' | 'OFF']
+        [CSV [QUOTE [ AS ] '<quote>'] 
+             [FORCE QUOTE <column> [, ...]] ]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -111,7 +111,9 @@ NOTICE: Rejected <count> badly formatted rows.
 <dd>In `COPY FROM` more for both `TEXT` and `CSV`, specifying `FILL MISSING FIELDS` will set missing trailing field values to `NULL` (instead of reporting an error) when a row of data has missing data fields at the end of a line or row. Blank rows, fields with a `NOT NULL` constraint, and trailing delimiters on a line will still report an error.</dd>
 
 <dt>LOG ERRORS INTO \<error\_table\> \[KEEP\]  </dt>
-<dd>This is an optional clause that can precede a `SEGMENT REJECT LIMIT` clause to log information about rows with formatting errors. The `INTO                 error_table  ` clause specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the \<error\_table\> specified already exists, it will be used. If it does not exist, it will be automatically generated. If the command auto-generates the error table and no errors are produced, the default is to drop the error table after the operation completes unless `KEEP` is specified. If the table is auto-generated and the error limit is exceeded, the entire transaction is rolled back and no error data is saved. If you want the error table to persist in this case, create the error table prior to running the `COPY`. An error table is defined as follows:
+
+<dd>This is an optional clause that can precede a `SEGMENT REJECT LIMIT` clause to log information about rows with formatting errors. The `INTO <error_table>` clause specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the \<error\_table\> specified already exists, it will be used. If it does not exist, it will be automatically generated. If the command auto-generates the error table and no errors are produced, the default is to drop the error table after the operation completes unless `KEEP` is specified. If the table is auto-generated and the error limit is exceeded, the entire transaction is rolled back and no error data is saved. If you want the error table to persist in this case, create the error table prior to running the `COPY`. An error table is defined as follows:
+
 
 ``` pre
 CREATE TABLE <error_table_name> ( cmdtime timestamptz, relname text, 
@@ -120,7 +122,7 @@ CREATE TABLE <error_table_name> ( cmdtime timestamptz, relname text,
 ```
 </dd>
 
-<dt>SEGMENT REJECT LIMIT count \[ROWS | PERCENT\]  </dt>
+<dt>SEGMENT REJECT LIMIT \<count\> \[ROWS | PERCENT\]  </dt>
 <dd>Runs a `COPY FROM` operation in single row error isolation mode. If the input rows have format errors they will be discarded provided that the reject limit count is not reached on any HAWQ segment instance during the load operation. The reject limit count can be specified as number of rows (the default) or percentage of total rows (1-100). If `PERCENT` is used, each segment starts calculating the bad row percentage only after the number of rows specified by the parameter `gp_reject_percent_threshold` has been processed. The default for `gp_reject_percent_threshold` is 300 rows. Constraint errors such as violation of a `NOT NULL` or `CHECK` constraint will still be handled in 'all-or-nothing' input mode. If the limit is not reached, all good rows will be loaded and any error rows discarded.</dd>
 
 ## <a id="topic1__section6"></a>Notes
@@ -149,7 +151,7 @@ COPY supports creating readable foreign tables with error tables. The default fo
 File formats supported by `COPY`.
 
 **Text Format**
-When `COPY` is used without the `BINARY` or `CSV` options, the data read or written is a text file with one line per table row. Columns in a row are separated by the *delimiter* character (tab by default). The column values themselves are strings generated by the output function, or acceptable to the input function, of each attribute's data type. The specified null string is used in place of columns that are null. `COPY             FROM` will raise an error if any line of the input file contains more or fewer columns than are expected. If `OIDS` is specified, the OID is read or written as the first column, preceding the user data columns.
+When `COPY` is used without the `BINARY` or `CSV` options, the data read or written is a text file with one line per table row. Columns in a row are separated by the \<delimiter\> character (tab by default). The column values themselves are strings generated by the output function, or acceptable to the input function, of each attribute's data type. The specified null string is used in place of columns that are null. `COPY             FROM` will raise an error if any line of the input file contains more or fewer columns than are expected. If `OIDS` is specified, the OID is read or written as the first column, preceding the user data columns.
 
 The data file has two reserved characters that have special meaning to `COPY`:
 
@@ -166,7 +168,7 @@ For example, suppose you have a table with three columns and you want to load th
 -   vertical bar = |
 -   backslash = \\
 
-Your designated *delimiter* character is `|` (pipe character), and your designated *escape* character is `*` (asterisk). The formatted row in your data file would look like this:
+Your designated \<delimiter\> character is `|` (pipe character), and your designated \<escape\> character is `*` (asterisk). The formatted row in your data file would look like this:
 
 ``` pre
 percentage sign = % | vertical bar = *| | backslash = \

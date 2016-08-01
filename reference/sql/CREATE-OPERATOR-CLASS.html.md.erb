@@ -7,14 +7,14 @@ Defines a new operator class.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE OPERATOR CLASS name [DEFAULT] FOR TYPE data_type  
-  USING index_method AS 
+CREATE OPERATOR CLASS <name> [DEFAULT] FOR TYPE <data_type>  
+  USING <index_method> AS 
   { 
-  OPERATOR strategy_number
-            op_name [(op_type, op_type)] [RECHECK]
-  | FUNCTION support_number
-            funcname (argument_type [, ...] )
-  | STORAGE storage_type
+  OPERATOR <strategy_number>
+            <op_name> [(<op_type>, <op_type>)] [RECHECK]
+  | FUNCTION <support_number>
+            <funcname> (<argument_type> [, ...] )
+  | STORAGE <storage_type>
   } [, ... ]
 ```
 
@@ -28,20 +28,20 @@ You must be a superuser to create an operator class.
 
 ## <a id="topic1__section4"></a>Parameters
 
-<dt> *name*   </dt>
+<dt> \<name\>   </dt>
 <dd>The (optionally schema-qualified) name of the operator class to be defined. Two operator classes in the same schema can have the same name only if they are for different index methods.</dd>
 
 <dt>DEFAULT  </dt>
 <dd>Makes the operator class the default operator class for its data type. At most one operator class can be the default for a specific data type and index method.</dd>
 
-<dt> *data\_type*   </dt>
+<dt> \<data\_type\>   </dt>
 <dd>The column data type that this operator class is for.</dd>
 
-<dt> *index\_method*   </dt>
+<dt> \<index\_method\>   </dt>
 <dd>The name of the index method this operator class is for. Choices are `btree`, `bitmap`, and `gist`.</dd>
 
-<dt> *strategy\_number*   </dt>
-<dd>The operators associated with an operator class are identified by *strategy numbers*, which serve to identify the semantics of each operator within the context of its operator class. For example, B-trees impose a strict ordering on keys, lesser to greater, and so operators like *less than* and *greater than or equal to* are interesting with respect to a B-tree. These strategies can be thought of as generalized operators. Each operator class specifies which actual operator corresponds to each strategy for a particular data type and interpretation of the index semantics. The corresponding strategy numbers for each index method are as follows: <a id="topic1__bx145491"></a>
+<dt> \<strategy\_number\>   </dt>
+<dd>The operators associated with an operator class are identified by \<strategy number\>s, which serve to identify the semantics of each operator within the context of its operator class. For example, B-trees impose a strict ordering on keys, lesser to greater, and so operators like *less than* and *greater than or equal to* are interesting with respect to a B-tree. These strategies can be thought of as generalized operators. Each operator class specifies which actual operator corresponds to each strategy for a particular data type and interpretation of the index semantics. The corresponding strategy numbers for each index method are as follows: <a id="topic1__bx145491"></a>
 
 <span class="tablecap">Table 1. B-tree and Bitmap Strategies</span>
 
@@ -72,16 +72,16 @@ You must be a superuser to create an operator class.
 | strictly above              | 11              |
 </dd>
 
-<dt> *operator\_name*   </dt>
+<dt> \<operator\_name\>   </dt>
 <dd>The name (optionally schema-qualified) of an operator associated with the operator class.</dd>
 
-<dt> *op\_type*   </dt>
+<dt> \<op\_type\>   </dt>
 <dd>The operand data type(s) of an operator, or `NONE` to signify a left-unary or right-unary operator. The operand data types may be omitted in the normal case where they are the same as the operator class data type.</dd>
 
 <dt>RECHECK  </dt>
 <dd>If present, the index is "lossy" for this operator, and so the rows retrieved using the index must be rechecked to verify that they actually satisfy the qualification clause involving this operator.</dd>
 
-<dt> *support\_number*   </dt>
+<dt> \<support\_number\>   </dt>
 <dd>Index methods require additional support routines in order to work. These operations are administrative routines used internally by the index methods. As with strategies, the operator class identifies which specific functions should play each of these roles for a given data type and semantic interpretation. The index method defines the set of functions it needs, and the operator class identifies the correct functions to use by assigning them to the *support function numbers* as follows: <a id="topic1__bx145974"></a>
 
 <span class="tablecap">Table 3. B-tree and Bitmap Support Functions</span>
@@ -106,13 +106,13 @@ You must be a superuser to create an operator class.
 | equal - compare two keys and return true if they are equal.                                                                   | 7              |
 </dd>
 
-<dt> *funcname*   </dt>
+<dt> \<funcname\>   </dt>
 <dd>The name (optionally schema-qualified) of a function that is an index method support procedure for the operator class.</dd>
 
-<dt> *argument\_types*   </dt>
+<dt> \<argument\_types\>   </dt>
 <dd>The parameter data type(s) of the function.</dd>
 
-<dt> *storage\_type*   </dt>
+<dt> \<storage\_type\>   </dt>
 <dd>The data type actually stored in the index. Normally this is the same as the column data type, but the GiST index method allows it to be different. The `STORAGE` clause must be omitted unless the index method allows a different type to be used.</dd>
 
 ## <a id="topic1__section5"></a>Notes

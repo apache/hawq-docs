@@ -31,8 +31,7 @@ On successful completion, an `INSERT` command returns a command tag of the form:
 
 ``` pre
 INSERT oid
-               count
-            
+               count           
 ```
 
 The *count* is the number of rows inserted. If count is exactly one, and the target table has OIDs, then *oid* is the OID assigned to the inserted row. Otherwise *oid* is zero.
