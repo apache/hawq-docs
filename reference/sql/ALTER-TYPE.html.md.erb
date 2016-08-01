@@ -7,8 +7,8 @@ Changes the definition of a data type.
 ## <a id="synopsis"></a>Synopsis
 
 ``` pre
-ALTER TYPE name
-   OWNER TO new_owner | SET SCHEMA new_schema
+ALTER TYPE <name>
+   OWNER TO <new_owner> | SET SCHEMA <new_schema>
          
 ```
 
@@ -20,13 +20,13 @@ You must own the type to use `ALTER TYPE`. To change the schema of a type, you m
 
 ## <a id="altertype__section4"></a>Parameters
 
-<dt> *name*   </dt>
+<dt> \<name\>   </dt>
 <dd>The name (optionally schema-qualified) of an existing type to alter.</dd>
 
-<dt> *new\_owner*   </dt>
+<dt> \<new\_owner\>   </dt>
 <dd>The user name of the new owner of the type.</dd>
 
-<dt> *new\_schema*   </dt>
+<dt> \<new\_schema\>   </dt>
 <dd>The new schema for the type.</dd>
 
 ## <a id="altertype__section5"></a>Examples
