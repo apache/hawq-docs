@@ -139,6 +139,12 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
     postgres=# SET pxf_service_address TO "hivenode:51200"
     ```
 
+3.  HCatalog internally uses the `pxf` protocol to query.  Grant this protocol privilege to all roles requiring access:
+
+    ``` sql
+    postgres=# GRANT ALL ON PROTOCOL pxf TO "role";
+    ``` 
+    
 3.  To query a Hive table with HCatalog integration, simply query HCatalog directly from HAWQ. The query syntax is:
 
     ``` sql
