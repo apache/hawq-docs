@@ -42,10 +42,10 @@ It is important to note that the cost of an upper-level node includes the cost o
     [seg0] pass 1: 263 groups made from 263 rows
     ```
 
--   The time (in milliseconds) it took to retrieve the first row from the segment that produced the most rows, and the total time taken to retrieve all rows from that segment. The *&lt;time&gt; to first row* may be omitted if it is the same as the *&lt;time&gt; to end*.
+-   The time (in milliseconds) it took to retrieve the first row from the segment that produced the most rows, and the total time taken to retrieve all rows from that segment. The `\<time\> to first row` may be omitted if it is the same as the `\<time\> to end`.
 
 **Important:**
-Keep in mind that the statement is actually executed when `EXPLAIN             ANALYZE` is used. Although `EXPLAIN ANALYZE` will discard any output that a `SELECT` would return, other side effects of the statement will happen as usual. If you wish to use `EXPLAIN ANALYZE` on a DML statement without letting the command affect your data, use this approach:
+Keep in mind that the statement is actually executed when `EXPLAIN  ANALYZE` is used. Although `EXPLAIN ANALYZE` will discard any output that a `SELECT` would return, other side effects of the statement will happen as usual. If you wish to use `EXPLAIN ANALYZE` on a DML statement without letting the command affect your data, use this approach:
 
 ``` pre
 BEGIN;
