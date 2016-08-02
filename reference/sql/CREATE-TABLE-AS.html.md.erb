@@ -16,7 +16,7 @@ CREATE [ [GLOBAL | LOCAL] {TEMPORARY | TEMP} ] TABLE <table_name>
    [DISTRIBUTED BY (<column>, [ ... ] ) | DISTRIBUTED RANDOMLY]
 ```
 
-where \>storage\_parameter\> is:
+where \<storage\_parameter\> is:
 
 ``` pre
    APPENDONLY={TRUE}
@@ -77,13 +77,13 @@ where \>storage\_parameter\> is:
 
 **DROP** — The temporary table will be dropped at the end of the current transaction block.</dd>
 
-<dt>TABLESPACE *tablespace*   </dt>
+<dt>TABLESPACE \<tablespace\>   </dt>
 <dd>The tablespace is the name of the tablespace in which the new table is to be created. If not specified, the database's default tablespace is used.</dd>
 
-<dt>AS *query*   </dt>
+<dt>AS \<query\>   </dt>
 <dd>A [SELECT](SELECT.html) command, or an [EXECUTE](EXECUTE.html) command that runs a prepared `SELECT` query.</dd>
 
-<dt>DISTRIBUTED BY (*column*, \[ ... \] )  
+<dt>DISTRIBUTED BY (\<column\>, \[ ... \] )  
 DISTRIBUTED RANDOMLY  </dt>
 <dd>Used to declare the HAWQ distribution policy for the table. The default is RANDOM distribution. `DISTIBUTED BY` can use hash distribution with one or more columns declared as the distribution key. If hash distribution is desired, it can be specified using `bucketnum` attribute, using the first eligible column of the table as the distribution key.</dd>
 
