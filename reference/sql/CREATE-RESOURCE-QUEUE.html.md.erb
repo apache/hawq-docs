@@ -50,7 +50,7 @@ See also [Best Practices for Using Resource Queues](../../bestpractices/managing
 <dt>\<name\> </dt>
 <dd>Required. The name of the resource queue. The name must not already be in use and must not be `pg_default` or `pg_root`.</dd>
 
-<dt>PARENT=\<queue_name\> </dt>
+<dt>PARENT=\<queue\_name\> </dt>
 <dd>Required. The parent queue of the new resource queue. The parent queue must already exist. This attribute is used to organize resource queues into a tree structure. You cannot specify `pg_default` as a parent queue. Resource queues that are parents to other resource queues are also called branch queues. Resource queues without any children are also called leaf queues. If you do not have any existing resource queues, use `pg_root` as the starting point for new resource queues.
 
 The parent queue cannot have any roles assigned.</dd>
