@@ -4,11 +4,13 @@ title: Introduction to HAWQ Tables
 
 ## <a id="tut_introhawqtbldisc"></a>Discussion 
 
-In this exercise, you will learn how to create a HAWQ table, add data to the table, and perform simple queries.
+DISCUSS HAWQ TABLES HERE
+
+In this exercise, you will create a HAWQ table, add data to the table, and perform simple queries. You will also load the Retail sample data set into HAWQ tables and perform more complicated queries.
 
 ## <a id="tut_introhawqtblprereq"></a>Prerequisites
 
-Ensure that you have a running HAWQ installation and have downloaded the tutorial work files, including the Retail example data set.
+Ensure that you have a running HAWQ installation and have downloaded the tutorial work files, including the Retail example data set and HAWQ scripts.
 
 ## <a id="tut_excreatehawqtblsteps"></a>Steps
 
@@ -31,26 +33,28 @@ Perform the following steps to create a HAWQ database and associated tables to r
     ``` shell
     $ psql -d hawqintro_tbl1
     ```
-    
+
 	 You will enter the `psql` interpreter:
-	
-	 ``` sql
-    hawqintro_tbl1=# 
+    
+    ``` sql
+    hawqintro_tbl1=#
     ```
+    
+    Notice that the `psql` prompt is the database name followed by `=#`.
 
 4. Create the table `id_tbl1` with a single column named `id` of type `integer`:
 
-	``` sql
-	hawqintro_tbl1=# create table id_tbl1 (id int);
-	```
+	 ``` sql
+	 hawqintro_tbl1=# create table id_tbl1 (id int);
+	 ```
 
 5. Add some data to `id_tbl1`:
 
-	``` sql
-	hawqintro_tbl1=# insert into id_tbl1 select generate_series(1,100);
-	```
+	 ``` sql
+	 hawqintro_tbl1=# insert into id_tbl1 select generate_series(1,100);
+	 ```
 	
-	This `insert` command adds 100 rows to `id_tbl1`, incrementing the `id` for each row.
+	This `insert` command adds 100 rows to `id_tbl1`, incrementing and writing the `id` for each row.
 
 6. Query the table:
 
@@ -84,6 +88,8 @@ Perform the following steps to create a HAWQ database and associated tables to r
 	``` sql
 	gpadmin=# CREATE SCHEMA retail_demo;
 	```
+	
+	A schema is a namespace for the database. It contains named objects like tables, data types, functions, and operators.  These named objects are accessed by qualifying their name with `schemaname.` (or `retail_demo.` in this exercise) as a prefix. You may also set a search path that includes schema name(s).
     
 7. Use the provided scripts to create tables for, load, and verify the Retail demo data set:
     
@@ -93,13 +99,24 @@ Perform the following steps to create a HAWQ database and associated tables to r
     ```	
     The `create_hawq_tables.sql` script deletes each table before creating.  If this is your first time performing this exercise, ignore the `psql` "table does not exist, skipping" messages.
     
+    View the `create_hawq_tables.sql` script. Notice the use of the `retail_demo.` prefix to the table name:
+    
+    ``` sql
+    CREATE TABLE retail_demo.categories_dim_hawq
+(   
+    category_id integer NOT NULL,
+    category_name character varying(400) NOT NULL
+)
+WITH (appendonly=true, compresstype=zlib) DISTRIBUTED RANDOMLY;
+    ```
+    
     Load data into the tables and verify the load succeeded.  You will run a script that displays the row count of tables in the `retail_demo` schema:
 
     ``` shell
     $ ../hawq/hawq_tables/load_hawq_tables.sh
     $ cd ../hawq/hawq_tables
     $ ./verify_load_hawq_tables.sh
-   	 ```
+    ```
 
     The output of the script should match the following:
 
@@ -132,7 +149,7 @@ Perform the following steps to create a HAWQ database and associated tables to r
     order by total desc limit 10;
     ```
 
-    The output should match the following:
+    Compare your output to the following:
  
     ``` shell
  billing_address_postal_code |   total   |    tax    
