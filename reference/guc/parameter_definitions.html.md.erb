@@ -86,6 +86,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[enable\_nestloop](../../reference/guc/parameter_definitions.html#enable_nestloop)**
 
+-   **[enable\_secure\_filesystem](../../reference/guc/parameter_definitions.html#enable_secure_filesystem)**
+  
 -   **[enable\_seqscan](../../reference/guc/parameter_definitions.html#enable_seqscan)**
 
 -   **[enable\_sort](../../reference/guc/parameter_definitions.html#enable_sort)**
@@ -947,6 +949,15 @@ Enables or disables the use of nested-loop join plans by the legacy query optimi
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | Boolean     | off     | master, session, reload |
+
+## <a name="enable_secure_filesystem"></a>enable\_secure\_filesystem 
+
+Enables or disables access to a secure HDFS file system.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| Boolean     | off     | master, system, superuser |
+
 
 ## <a name="enable_seqscan"></a>enable\_seqscan
 
