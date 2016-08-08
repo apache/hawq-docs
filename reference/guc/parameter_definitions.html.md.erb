@@ -360,6 +360,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[log\_truncate\_on\_rotation](../../reference/guc/parameter_definitions.html#log_truncate_on_rotation)**
 
+-   **[maintenance\_work\_mem](../../reference/guc/parameter_definitions.html#maintenance_work_mem)**
+
 -   **[max\_appendonly\_tables](../../reference/guc/parameter_definitions.html#max_appendonly_tables)**
 
 -   **[max\_connections](../../reference/guc/parameter_definitions.html#max_connections)**
@@ -2417,6 +2419,16 @@ Truncates (overwrites), rather than appends to, any existing log file of the sam
 | Value Range | Default | Set Classifications    |
 |-------------|---------|------------------------|
 | Boolean     | off     | local, system, restart |
+
+
+## <a name="maintenance_work_mem"></a>maintenance\_work\_mem
+
+Sets the maximum amount of memory to be used for maintenance operations including vacuum and create index.
+
+| Value Range                      | Default | Set Classifications |
+|----------------------------------|---------|---------------------|
+| 1024KB - (no upper bound) | 65536KB    | master, session, reload     |
+
 
 ## <a name="max_appendonly_tables"></a>max\_appendonly\_tables
 
