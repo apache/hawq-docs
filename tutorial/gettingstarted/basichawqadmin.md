@@ -159,6 +159,8 @@ HAWQ databases and roles can be created and deleted by authorized users via the 
 | remove database    | `dropdb`                                                                                         |
 | remove database role     | `dropuser`                                                                                         |
 | interactive HAWQ database front-end     | `psql`                                                                                         |
+| run SQL command directly     | `psql -c SQL_COMMAND`                                                                                         |
+
 
 ### <a id="tut_admindbaccesspsql"></a>psql
 
