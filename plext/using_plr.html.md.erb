@@ -109,14 +109,14 @@ R packages are modules that contain R functions and data sets. You can install R
 1. Use the `hawq ssh` utility in interactive mode to log into each HAWQ segment host (`hawq ssh -f hawq_hosts`). Install the packages from the command prompt using the `R CMD INSTALL` command. Note that this may require root access. For example, this R install command installs the packages for the `arm` package.
 
 	```shell
-	$ $R_HOME/bin/R CMD INSTALL Matrix_0.9996875-1.tar.gz arm_1.5-03.tar.gz
+	$ R CMD INSTALL Matrix_0.9996875-1.tar.gz arm_1.5-03.tar.gz
 	```
 	**Note**: Some packages require compilation. Refer to the package documentation for possible build requirements.
 
-1. Ensure that the package is installed in the `$R_HOME/library` directory on all the segments (`hawq ssh` can be used to install the package). For example, this `hawq ssh` command lists the contents of the R library directory.
+1. Ensure that the R package was installed in the `/usr/lib64/R/library` directory on all the segments (`hawq ssh` can be used to install the package). For example, this `hawq ssh` command lists the contents of the R library directory.
 
 	```shell
-	$ hawq ssh -f hawq_hosts "ls $R_HOME/library"
+	$ hawq ssh -f hawq_hosts "ls /usr/lib64/R/library"
 	```
 	
 1. Verify the R package can be loaded.
@@ -140,7 +140,11 @@ R packages are modules that contain R functions and data sets. You can install R
 
 ## <a id="rlibrarydisplay"></a>Displaying R Library Information 
 
-You can use the R command line to display information about the installed libraries and functions on the HAWQ host. You can also add and remove libraries from the R installation. To start the R command line on the host, log in to the host as the `gpadmin` user and run the script R from the directory `$GPHOME/ext/R-N.N.N/bin` where N.N.N corresponds to the version of R installed.
+You can use the R command line to display information about the installed libraries and functions on the HAWQ host. You can also add and remove libraries from the R installation. To start the R command line on the host, log in to the host as the `gpadmin` user and run the script R.
+
+``` shell
+$ R
+```
 
 This R function lists the available R packages from the R command line:
 
@@ -202,10 +206,10 @@ $ R -e 'help("MASS")'
 
 [https://github.com/pivotalsoftware/PivotalR](https://github.com/pivotalsoftware/PivotalR) - GitHub repository for PivotalR, a package that provides an R interface to operate on HAWQ tables and views that is similar to the R `data.frame`. PivotalR also supports using the machine learning package MADlib directly from R.
 
-R documentation is installed with the HAWQ R package:
+R documentation is installed with the R package:
 
 ```shell
-$GPHOME/ext/R-N.N.N/lib64/R/doc
+/usr/share/doc/R-N.N.N
 ```
 
 where N.N.N corresponds to the version of R installed.
