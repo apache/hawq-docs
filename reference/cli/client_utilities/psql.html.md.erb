@@ -79,7 +79,7 @@ where:
 
 **General Options**
 
-<dt>-c '\<command\>' , -\\\-command '\<command\>'  </dt>
+<dt>-c  , -\\\-command '\<command\>'  </dt>
 <dd>Specifies that `psql` is to execute the specified command string, and then exit. This is useful in shell scripts. \<command\> must be either a command string that is completely parseable by the server, or a single backslash command. Thus you cannot mix SQL and `psql` meta-commands with this option. To achieve that, you could pipe the string into `psql`, like this:
 
 ``` shell
@@ -90,19 +90,19 @@ echo '\x \\ SELECT * FROM foo;' | psql
 
 If the command string contains multiple SQL commands, they are processed in a single transaction, unless there are explicit `BEGIN/COMMIT` commands included in the string to divide it into multiple transactions. This is different from the behavior when the same string is fed to `psql`'s standard input.</dd>
 
-<dt>-d \<dbname\> , -\\\-dbname \<dbname\>  </dt>
+<dt>-d  , -\\\-dbname \<dbname\>  </dt>
 <dd>Specifies the name of the database to connect to. This is equivalent to specifying dbname as the first non-option argument on the command line.
 
 If this parameter contains an equals sign, it is treated as a `conninfo` string; for example you can pass `'dbname=postgres user=username        password=mypass'` as `dbname`.</dd>
 
-<dt>-f \<filename\> , -\\\-file \<filename\>  </dt>
+<dt>-f  , -\\\-file \<filename\>  </dt>
 <dd>Use a file as the source of commands instead of reading commands interactively. After the file is processed, `psql` terminates. If \<filename\> is `-` (hyphen), then standard input is read. Using this option is subtly different from writing `psql <`\<filename\> In general, both will do what you expect, but using `-f` enables some nice features such as error messages with line numbers.</dd>
 
 <dt>-l , -\\\-list  </dt>
 <dd>List all available databases, then exit. Other non-connection options are ignored.</dd>
 
 <dt>-v \<assignment\> , -\\\-set \<assignment\> , -\\\-variable \<NAME=VALUE\>  </dt>
-<dd>Perform a variable assignment, like the `\set` internal command. \<NAME\> will be set to \<VALUE\>. Note that you must separate name and value, if any, by an equal sign on the command line. To unset a variable, leave off the equal sign. To just set a variable without a value, use the equal sign but leave off the value. These assignments are done during a very early stage of start-up, so variables reserved for internal purposes might get overwritten later.</dd>
+<dd>Perform a variable assignment, like the `\set` internal command. \<NAME\> will be set to \<VALUE\>. Note that you must separate name and value, if any, by an equal sign on the command line. To unset a variable, leave off the equal sign. To just set a variable without a value, use the equal sign but leave off the value. These assignments are done during a very early stage of start-up, so variables reserved for internal purposes could be overwritten later.</dd>
 
 <dt>-X , -\\\-no-psqlrc  </dt>
 <dd>Do not read the start-up file (neither the system-wide `psqlrc` file nor the user's `~/.psqlrc` file).</dd>
@@ -153,22 +153,22 @@ If the script itself uses `BEGIN`, `COMMIT`, or `ROLLBACK`, this option will not
 <dt>-A , -\\\-no-align  </dt>
 <dd>Switches to unaligned output mode. (The default output mode is aligned.)</dd>
 
-<dt>-F \<separator\> , -\\\-field-separator \<separator\>  </dt>
+<dt>-F  , -\\\-field-separator \<separator\>  </dt>
 <dd>Use the specified separator as the field separator for unaligned output.</dd>
 
 <dt>-H , -\\\-html  </dt>
 <dd>Turn on HTML tabular output.</dd>
 
-<dt>-P \<assignment\> , -\\\-pset \<assignment\>  </dt>
+<dt>-P , -\\\-pset \<assignment\>  </dt>
 <dd>Allows you to specify printing options in the style of `\pset` on the command line. Note that here you have to separate name and value with an equal sign instead of a space. Thus to set the output format to LaTeX, you could write `-P        format=latex`.</dd>
 
-<dt>-R \<separator\> , -\\\-record-separator \<separator\>  </dt>
+<dt>-R  , -\\\-record-separator \<separator\>  </dt>
 <dd>Use \<separator\> as the record separator for unaligned output.</dd>
 
 <dt>-t , -\\\-tuples-only  </dt>
 <dd>Turn off printing of column names and result row count footers, etc. This command is equivalent to `\pset tuples_only` and is provided for convenience.</dd>
 
-<dt>-T \<table\_options\> , -\\\-table-attr \<table\_options\>  </dt>
+<dt>-T  , -\\\-table-attr \<table\_options\>  </dt>
 <dd>Allows you to specify options to be placed within the HTML table tag. See `\pset` for details.</dd>
 
 <dt>-x , -\\\-expanded  </dt>
@@ -176,13 +176,13 @@ If the script itself uses `BEGIN`, `COMMIT`, or `ROLLBACK`, this option will not
 
 **Connection Options**
 
-<dt>-h \<host\> , -\\\-host \<host\>  </dt>
+<dt>-h , -\\\-host \<host\>  </dt>
 <dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
-<dt>-p \<port\> , -\\\-port \<port\>  </dt>
+<dt>-p , -\\\-port \<port\>  </dt>
 <dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
-<dt>-U \<username\> , -\\\-username \<username\>  </dt>
+<dt>-U , -\\\-username \<username\>  </dt>
 <dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
 
 <dt>-W , -\\\-password  </dt>
@@ -271,7 +271,7 @@ This operation is not as efficient as the SQL `COPY` command because all data mu
 <dt>\\copyright  </dt>
 <dd>Shows the copyright and distribution terms of PostgreSQL on which HAWQ is based.</dd>
 
-<dt>\\d \[\<relation\_pattern\>\]  | \\d+ \[\<relation\_pattern\>\] | \\dS \[\<relation\_pattern\>\]  </dt>
+<dt>\\d , \\d+ , \\dS \[\<relation\_pattern\>\]  </dt>
 <dd>For each relation (table, external table, view, index, or sequence) matching the relation pattern, show all columns, their types, the tablespace (if not the default) and any special attributes such as `NOT NULL` or defaults, if any. Associated indexes, constraints, rules, and triggers are also shown, as is the view definition if the relation is a view.
 
 -   The command form `\d+` is identical, except that more information is displayed: any comments associated with the columns of the table are shown, as is the presence of OIDs in the table.
@@ -282,7 +282,7 @@ This operation is not as efficient as the SQL `COPY` command because all data mu
 <dt>\\da \[\<aggregate\_pattern\>\]  </dt>
 <dd>Lists all available aggregate functions, together with the data types they operate on. If a pattern is specified, only aggregates whose names match the pattern are shown.</dd>
 
-<dt>\\db \[\<tablespace\_pattern\>\] | \\db+ \[\<tablespace\_pattern\>\]  </dt>
+<dt>\\db , \\db+ \[\<tablespace\_pattern\>\]  </dt>
 <dd>Lists all available tablespaces and their corresponding filespace locations. If pattern is specified, only tablespaces whose names match the pattern are shown. If + is appended to the command name, each object is listed with its associated permissions.</dd>
 
 <dt>\\dc \[\<conversion\_pattern\>\]  </dt>
@@ -297,7 +297,7 @@ This operation is not as efficient as the SQL `COPY` command because all data mu
 <dt>\\dD \[\<domain\_pattern\>\]  </dt>
 <dd>Lists all available domains. If pattern is specified, only matching domains are shown.</dd>
 
-<dt>\\df \[\<function\_pattern\>\] | \\df+ \[\<function\_pattern\> \]  </dt>
+<dt>\\df , \\df+ \[\<function\_pattern\> \]  </dt>
 <dd>Lists available functions, together with their argument and return types. If pattern is specified, only functions whose names match the pattern are shown. If the form `\df+` is used, additional information about each function, including language and description, is shown. To reduce clutter, `\df `does not show data type I/O functions. This is implemented by ignoring functions that accept or return type `cstring`.</dd>
 
 <dt>\\dg \[\<role\_pattern\>\]  </dt>
@@ -309,7 +309,7 @@ This operation is not as efficient as the SQL `COPY` command because all data mu
 <dt>\\dl  </dt>
 <dd>This is an alias for `\lo_list`, which shows a list of large objects.</dd>
 
-<dt>\\dn \[\<schema\_pattern\>\] | \\dn+ \[\<schema\_pattern\>\]  </dt>
+<dt>\\dn , \\dn+ \[\<schema\_pattern\>\]  </dt>
 <dd>Lists all available schemas (namespaces). If pattern is specified, only schemas whose names match the pattern are listed. Non-local temporary schemas are suppressed. If `+` is appended to the command name, each object is listed with its associated permissions and description, if any.</dd>
 
 <dt>\\do \[\<operator\_pattern\>\]  </dt>
@@ -318,7 +318,7 @@ This operation is not as efficient as the SQL `COPY` command because all data mu
 <dt>\\dp \[\<relation\_pattern\_to\_show\_privileges\>\]  </dt>
 <dd>Produces a list of all available tables, views and sequences with their associated access privileges. If pattern is specified, only tables, views and sequences whose names match the pattern are listed. The `GRANT` and `REVOKE` commands are used to set access privileges.</dd>
 
-<dt>\\dT \[\<datatype\_pattern\>\] | \\dT+ \[\<datatype\_pattern\>\]  </dt>
+<dt>\\dT , \\dT+ \[\<datatype\_pattern\>\]  </dt>
 <dd>Lists all data types or only those that match pattern. The command form `\dT+` shows extra information.</dd>
 
 <dt>\\du \[\<role\_pattern\>\]  </dt>
