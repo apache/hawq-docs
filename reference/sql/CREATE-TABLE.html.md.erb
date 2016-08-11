@@ -303,6 +303,8 @@ You can set three kinds of parameters for a parquet table.
 
 2.  Set the compression type parameter. Parquet tables can be compressed using either `SNAPPY` or `GZIP`. `GZIP` supports compression level values between 1 and 9. `SNAPPY` does not support compression level; providing a compression level when using `SNAPPY` will cause the create table operation to fail. Specifying a compression level but no compression type when creating a parquet table will default to `GZIP` compression.
 
+    **Note:**  For best performance with parquet storage, use `SNAPPY` compression. 
+
 3.  Set the data storage parameter: By default, the two parameters, `PAGESIZE` and `ROWGROUPSIZE` are set to 1MB/8MB for common and partitioned tables.
 
     **Note:** The page size should be less than the rowgroup size. This is because rowgroup includes the metadata information of a single page even for a single column table. The parameters `PAGESIZE` and `ROWGROUPSIZE` are valid for parquet tables, while `BLOCKSIZE` is valid for append-only tables
@@ -316,6 +318,8 @@ DDL and DML: Most DDL and DML operations are valid for a parquet table. The usag
 
 **Compression type and level**: You can only set the compression type at the table level. HAWQ does not support setting column level compression. The specified compression type is propagated to the columns. All the columns must have the same compress type and level.
 
+Using `SNAPPY` compression with parquet files is recommended for best performance.
+
 **Data type**: HAWQ supports all data types except arrays and user defined types.
 
 **Alter table**: HAWQ does not support adding a new column to an existing parquet table or dropping a column. You can use `ALTER TABLE` for a partition operation.
@@ -323,6 +327,9 @@ DDL and DML: Most DDL and DML operations are valid for a parquet table. The usag
 **FillFactor/OIDS/Checksum**: HAWQ does not support these operations when creating parquet tables. The default value for checksum for a parquet table is false. You cannot set this value or specify fillfactor and oids.
 
 **Memory occupation**: When inserting or loading data to a parquet table, the whole rowgroup is stored in physical memory until the size exceeds the threshold or the end of the `INSERT` operation. Once either occurs, the entire rowgroup is flushed to disk. Also, at the beginning of the `INSERT` operation, each column is pre-allocated a page buffer. The column pre-allocated page buffer size should be `min(pageSizeLimit,                rowgroupSizeLimit/estimatedColumnWidth/estimatedRecordWidth)` for the first rowgroup. For the following rowgroup, it should be `min(pageSizeLimit,                actualColumnChunkSize in last rowgroup * 1.05)`, of which 1.05 is the estimated scaling factor. When reading data from a parquet table, the requested columns of the row group are loaded into memory. Memory is allocated 8 MB by default. Ensure that memory occupation does not exceed physical memory when setting `ROWGROUPSIZE` or `PAGESIZE`, otherwise you may encounter an out of memory error. 
+
+**Batch vs. individual inserts**
+Only batch loading should be used with parquet files. Repeated individual inserts can result in bloated footers.
 
 ## <a id="parquetexamples"></a>Parquet Examples
 
