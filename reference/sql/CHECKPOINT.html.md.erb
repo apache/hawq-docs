@@ -4,20 +4,20 @@ title: CHECKPOINT
 
 Forces a transaction log checkpoint.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 CHECKPOINT
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
-Write-Ahead Logging (WAL) puts a checkpoint in the transaction log every so often. The automatic checkpoint interval is set per HAWQ segment instance by the server configuration parameters *checkpoint\_segments* and *checkpoint\_timeout*. The `CHECKPOINT` command forces an immediate checkpoint when the command is issued, without waiting for a scheduled checkpoint.
+Write-Ahead Logging (WAL) puts a checkpoint in the transaction log every so often. The automatic checkpoint interval is set per HAWQ segment instance by the server configuration parameters `checkpoint\_segments` and `checkpoint\_timeout`. The `CHECKPOINT` command forces an immediate checkpoint when the command is issued, without waiting for a scheduled checkpoint.
 
 A checkpoint is a point in the transaction log sequence at which all data files have been updated to reflect the information in the log. All data files will be flushed to disk.
 
 Only superusers may call `CHECKPOINT`. The command is not intended for use during normal operation.
 
-## Compatibility<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Compatibility
 
 The `CHECKPOINT` command is a HAWQ language extension.

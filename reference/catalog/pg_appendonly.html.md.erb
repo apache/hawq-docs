@@ -10,11 +10,11 @@ The `pg_appendonly` table contains information about the storage options and oth
 | column          | type     | references | description                                                                                                                                        |
 |-----------------|----------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `relid`         | oid      |            | The table object identifier (OID) of the compressed table.                                                                                         |
-| `compresslevel` | smallint |            | The compression level, with compression ratio increasing from 1 to 9. If `zlib` is specified, valid values are also 1-9.                           |
+| `compresslevel` | smallint |            | The compression level, with increasing compression ratio. If the `gzip` or `zlib` compression type is specified, valid values are 1-9.                           |
 | `majorversion`  | smallint |            | The major version number of the pg\_appendonly table.                                                                                              |
 | `minorversion`  | smallint |            | The minor version number of the pg\_appendonly table.                                                                                              |
 | `checksum`      | boolean  |            | A checksum value that is stored to compare the state of a block of data at compression time and at scan time to ensure data integrity.             |
-| `compresstype`  | text     |            | Type of compression used to compress append-only tables. The default is `zlib` (gzip compression). The `quicklz` compresstype has been deprecated. |
+| `compresstype`  | text     |            | Type of compression used on append-only and parquet tables. `zlib`, `snappy`, and `gzip` compression types are supported. |
 | `columnstore`   | boolean  |            | `0` for row-oriented storage.                                                                                                                      |
 | `segrelid`      | oid      |            | Table on-disk segment file id.                                                                                                                     |
 | `segidxid`      | oid      |            | Index on-disk segment file id.                                                                                                                     |

@@ -4,37 +4,37 @@ title: ANALYZE
 
 Collects statistics about a database.
 
-## Synopsis<a id="synopsis"></a>
+## <a id="synopsis"></a>Synopsis
 
 ``` pre
-ANALYZE [VERBOSE] [ROOTPARTITION] table [ (column [, ...] ) ]]
+ANALYZE [VERBOSE] [ROOTPARTITION] <table> [ (<column> [, ...] ) ]]
 ```
 
-## Description<a id="desc"></a>
+## <a id="desc"></a>Description
 
 `ANALYZE` collects statistics about the contents of tables in the database, and stores the results in the system table `pg_statistic`. Subsequently, the query planner uses these statistics to help determine the most efficient execution plans for queries.
 
 With no parameter, `ANALYZE` examines every table in the current database. With a parameter, `ANALYZE` examines only that table. It is further possible to give a list of column names, in which case only the statistics for those columns are collected.
 
-## Parameters<a id="params"></a>
+## <a id="params"></a>Parameters
 
-VERBOSE  
-Enables display of progress messages. When specified, `ANALYZE` emits progress messages to indicate which table is currently being processed. Various statistics about the tables are printed as well.
+<dt>VERBOSE  </dt>
+<dd>Enables display of progress messages. When specified, `ANALYZE` emits progress messages to indicate which table is currently being processed. Various statistics about the tables are printed as well.</dd>
 
-ROOTPARTITION  
-For partitioned tables, `ANALYZE` on the parent (the root in multi-level partitioning) table without this option will collect statistics on each individual leaf partition as well as the global partition table, both of which are needed for query planning. In scenarios when all the individual child partitions have up-to-date statistics (for example, after loading and analyzing a daily partition), the `ROOTPARTITION` option can be used to collect only the global stats on the partition table. This could save the time of re-analyzing each individual leaf partition.
+<dt>ROOTPARTITION  </dt>
+<dd>For partitioned tables, `ANALYZE` on the parent (the root in multi-level partitioning) table without this option will collect statistics on each individual leaf partition as well as the global partition table, both of which are needed for query planning. In scenarios when all the individual child partitions have up-to-date statistics (for example, after loading and analyzing a daily partition), the `ROOTPARTITION` option can be used to collect only the global stats on the partition table. This could save the time of re-analyzing each individual leaf partition.
 
 If you use `ROOTPARTITION` on a non-root or non-partitioned table, `ANALYZE` will skip the option and issue a warning. You can also analyze all root partition tables in the database by using `ROOTPARTITION ALL`
 
-**Note:** Use `ROOTPARTITION ALL` to analyze all root partition tables in the database.
+**Note:** Use `ROOTPARTITION ALL` to analyze all root partition tables in the database.</dd>
 
- *table*   
-The name (possibly schema-qualified) of a specific table to analyze. Defaults to all tables in the current database.
+<dt> \<table\>   </dt>
+<dd>The name (possibly schema-qualified) of a specific table to analyze. Defaults to all tables in the current database.</dd>
 
- *column*   
-The name of a specific column to analyze. Defaults to all columns.
+<dt> \<column\>   </dt>
+<dd>The name of a specific column to analyze. Defaults to all columns.</dd>
 
-## Notes<a id="notes"></a>
+## <a id="notes"></a>Notes
 
 It is a good idea to run `ANALYZE` periodically, or just after making major changes in the contents of a table. Accurate statistics will help the query planner to choose the most appropriate query plan, and thereby improve the speed of query processing. A common strategy is to run `VACUUM` and `ANALYZE` once a day during a low-usage time of day.
 
@@ -56,7 +56,7 @@ When `pxf_stat_max_fragments` is false, `ANALYZE` outputs a message to warn that
 
 There may be situations where the remote statistics retrieval could fail to perform a task on a PXF table. For example, if a PXF Java component is down, the remote statistics retrieval might not occur, and the database transaction would not succeed. In these cases, the statistics remain with the default external table values.
 
-## Examples<a id="examples"></a>
+## <a id="examples"></a>Examples
 
 Collect statistics for the table `mytable`:
 
@@ -64,11 +64,11 @@ Collect statistics for the table `mytable`:
 ANALYZE mytable;
 ```
 
-## Compatibility<a id="compat"></a>
+## <a id="compat"></a>Compatibility
 
 There is no ANALYZE statement in the SQL standard.
 
-## See Also<a id="see"></a>
+## <a id="see"></a>See Also
 
 [ALTER TABLE](ALTER-TABLE.html), [EXPLAIN](EXPLAIN.html), [VACUUM](VACUUM.html)
 

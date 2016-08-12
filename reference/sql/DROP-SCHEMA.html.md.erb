@@ -4,31 +4,31 @@ title: DROP SCHEMA
 
 Removes a schema.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP SCHEMA [IF EXISTS] name [, ...] [CASCADE | RESTRICT]
+DROP SCHEMA [IF EXISTS] <name> [, ...] [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP SCHEMA` removes schemas from the database. A schema can only be dropped by its owner or a superuser. Note that the owner can drop the schema (and thereby all contained objects) even if he does not own some of the objects within the schema.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
-IF EXISTS  
-Do not throw an error if the schema does not exist. A notice is issued in this case.
+<dt>IF EXISTS  </dt>
+<dd>Do not throw an error if the schema does not exist. A notice is issued in this case.</dd>
 
- *name*   
-The name of the schema to remove.
+<dt>\<name\>   </dt>
+<dd>The name of the schema to remove.</dd>
 
-CASCADE  
-Automatically drops any objects contained in the schema (tables, functions, etc.).
+<dt>CASCADE  </dt>
+<dd>Automatically drops any objects contained in the schema (tables, functions, etc.).</dd>
 
-RESTRICT  
-Refuse to drop the schema if it contains any objects. This is the default.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the schema if it contains any objects. This is the default.</dd>
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Remove the schema `mystuff` from the database, along with everything it contains:
 
@@ -36,10 +36,10 @@ Remove the schema `mystuff` from the database, along with everything it contains
 DROP SCHEMA mystuff CASCADE;
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 `DROP SCHEMA` is fully conforming with the SQL standard, except that the standard only allows one schema to be dropped per command. Also, the `IF           EXISTS` option is a HAWQ extension.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [CREATE SCHEMA](CREATE-SCHEMA.html)

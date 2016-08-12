@@ -4,33 +4,33 @@ title: DROP TABLE
 
 Removes a table.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP TABLE [IF EXISTS] name [, ...] [CASCADE | RESTRICT]
+DROP TABLE [IF EXISTS] <name> [, ...] [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP TABLE` removes tables from the database. Only its owner may drop a table. To empty a table of rows without removing the table definition, use `DELETE` or `TRUNCATE`.
 
 `DROP TABLE` always removes any indexes, rules, and constraints that exist for the target table. However, to drop a table that is referenced by a view, `CASCADE` must be specified. `CASCADE` will remove a dependent view entirely.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
-IF EXISTS  
-Do not throw an error if the table does not exist. A notice is issued in this case.
+<dt>IF EXISTS  </dt>
+<dd>Do not throw an error if the table does not exist. A notice is issued in this case.</dd>
 
- *name*   
-The name (optionally schema-qualified) of the table to remove.
+<dt>\<name\>   </dt>
+<dd>The name (optionally schema-qualified) of the table to remove.</dd>
 
-CASCADE  
-Automatically drop objects that depend on the table (such as views).
+<dt>CASCADE  </dt>
+<dd>Automatically drop objects that depend on the table (such as views).</dd>
 
-RESTRICT  
-Refuse to drop the table if any objects depend on it. This is the default.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the table if any objects depend on it. This is the default.</dd>
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Remove the table `mytable`:
 
@@ -38,10 +38,10 @@ Remove the table `mytable`:
 DROP TABLE mytable;
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 `DROP TABLE` is fully conforming with the SQL standard, except that the standard only allows one table to be dropped per command. Also, the `IF           EXISTS` option is a HAWQ extension.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [CREATE TABLE](CREATE-TABLE.html), [ALTER TABLE](ALTER-TABLE.html), [TRUNCATE](TRUNCATE.html)

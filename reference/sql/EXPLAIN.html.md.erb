@@ -4,14 +4,14 @@ title: EXPLAIN
 
 Shows the query plan of a statement.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-EXPLAIN [ANALYZE] [VERBOSE] statement
+EXPLAIN [ANALYZE] [VERBOSE] <statement>
          
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `EXPLAIN` displays the query plan that the HAWQ planner generates for the supplied statement. Query plans are a tree plan of nodes. Each node in the plan represents a single operation, such as table scan, join, aggregation or a sort.
 
@@ -42,10 +42,10 @@ It is important to note that the cost of an upper-level node includes the cost o
     [seg0] pass 1: 263 groups made from 263 rows
     ```
 
--   The time (in milliseconds) it took to retrieve the first row from the segment that produced the most rows, and the total time taken to retrieve all rows from that segment. The *&lt;time&gt; to first row* may be omitted if it is the same as the *&lt;time&gt; to end*.
+-   The time (in milliseconds) it took to retrieve the first row from the segment that produced the most rows, and the total time taken to retrieve all rows from that segment. The `\<time\> to first row` may be omitted if it is the same as the `\<time\> to end`.
 
 **Important:**
-Keep in mind that the statement is actually executed when `EXPLAIN             ANALYZE` is used. Although `EXPLAIN ANALYZE` will discard any output that a `SELECT` would return, other side effects of the statement will happen as usual. If you wish to use `EXPLAIN ANALYZE` on a DML statement without letting the command affect your data, use this approach:
+Keep in mind that the statement is actually executed when `EXPLAIN  ANALYZE` is used. Although `EXPLAIN ANALYZE` will discard any output that a `SELECT` would return, other side effects of the statement will happen as usual. If you wish to use `EXPLAIN ANALYZE` on a DML statement without letting the command affect your data, use this approach:
 
 ``` pre
 BEGIN;
@@ -53,19 +53,19 @@ EXPLAIN ANALYZE ...;
 ROLLBACK;
 ```
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
- *name*   
-The name of the prepared statement to execute.
+<dt>\<name\>   </dt>
+<dd>The name of the prepared statement to execute.</dd>
 
- *parameter*   
-The actual value of a parameter to the prepared statement. This must be an expression yielding a value that is compatible with the data type of this parameter, as was determined when the prepared statement was created.
+<dt>\<parameter\>  </dt>
+<dd>The actual value of a parameter to the prepared statement. This must be an expression yielding a value that is compatible with the data type of this parameter, as was determined when the prepared statement was created.</dd>
 
-## Notes<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Notes
 
 In order to allow the query planner to make reasonably informed decisions when optimizing queries, the `ANALYZE` statement should be run to record statistics about the distribution of data within the table. If you have not done this (or if the statistical distribution of the data in the table has changed significantly since the last time `ANALYZE` was run), the estimated costs are unlikely to conform to the real properties of the query, and consequently an inferior query plan may be chosen.
 
-## Examples<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Examples
 
 To illustrate how to read an `EXPLAIN` query plan, consider the following example for a very simple query:
 
@@ -85,10 +85,10 @@ The results of the scan operation are passed up to a *gather motion* operation. 
 
 The estimated startup cost for this plan is `00.00` (no cost) and a total cost of `20.88` disk page fetches. The planner is estimating that this query will return one row.
 
-## Compatibility<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Compatibility
 
 There is no `EXPLAIN` statement defined in the SQL standard.
 
-## See Also<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>See Also
 
 [ANALYZE](ANALYZE.html)

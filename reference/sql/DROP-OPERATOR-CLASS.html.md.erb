@@ -4,38 +4,38 @@ title: DROP OPERATOR CLASS
 
 Removes an operator class.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP OPERATOR CLASS [IF EXISTS] name USING index_method [CASCADE | RESTRICT]
+DROP OPERATOR CLASS [IF EXISTS] <name> USING <index_method> [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP OPERATOR` drops an existing operator class. To execute this command you must be the owner of the operator class.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
-IF EXISTS  
-Do not throw an error if the operator class does not exist. A notice is issued in this case.
+<dt>IF EXISTS  </dt>
+<dd>Do not throw an error if the operator class does not exist. A notice is issued in this case.</dd>
 
- *name*   
-The name (optionally schema-qualified) of an existing operator class.
+<dt>\<name\>   </dt>
+<dd>The name (optionally schema-qualified) of an existing operator class.</dd>
 
- *index\_method*   
-The name of the index access method the operator class is for.
+<dt>\<index\_method\>   </dt>
+<dd>The name of the index access method the operator class is for.</dd>
 
-CASCADE  
-Automatically drop objects that depend on the operator class.
+<dt>CASCADE  </dt>
+<dd>Automatically drop objects that depend on the operator class.</dd>
 
-RESTRICT  
-Refuse to drop the operator class if any objects depend on it. This is the default.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the operator class if any objects depend on it. This is the default.</dd>
 
 ## Notes
 
 This command will not succeed if there are any existing indexes that use the operator class. Add `CASCADE` to drop such indexes along with the operator class.
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Remove the B-tree operator class `widget_ops`:
 
@@ -45,10 +45,10 @@ DROP OPERATOR CLASS widget_ops USING btree;
 
 This command will not succeed if there are any existing indexes that use the operator class. Add `CASCADE` to drop such indexes along with the operator class.
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 There is no `DROP OPERATOR CLASS` statement in the SQL standard.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [ALTER OPERATOR](ALTER-OPERATOR.html), [CREATE OPERATOR](CREATE-OPERATOR.html) [CREATE OPERATOR CLASS](CREATE-OPERATOR-CLASS.html)

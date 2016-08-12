@@ -4,62 +4,81 @@ title: dropdb
 
 Removes a database.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-dropdb [connection_option ...] [-e] [-i] dbname
+dropdb [<connection_options>] [-e | --echo] [-i | --interactive] <dbname>
 
 dropdb --help 
 
 dropdb --version
 ```
+where:
 
-## Description<a id="topic1__section3"></a>
+``` pre
+<connection_options> =
+	[-h <host> | --host <host>] 
+	[-p <port> | -- port <port>] 
+	[-U <username> | --username <username>] 
+    [-W | --password] 
+```
+
+## <a id="topic1__section3"></a>Description
 
 `dropdb` destroys an existing database. The user who executes this command must be a superuser or the owner of the database being dropped.
 
 `dropdb` is a wrapper around the SQL command `DROP                                         DATABASE`.
 
-## Options<a id="topic1__section4"></a>
+## <a id="args"></a>Arguments
 
-*dbname*  
-The name of the database to be removed.
+<dt>**\<dbname\>** </dt>
+<dd>The name of the database to be removed.</dd>
 
--e | --echo  
-Echo the commands that `dropdb` generates and sends to the server.
+## <a id="topic1__section4"></a>Options
 
--i | --interactive  
-Issues a verification prompt before doing anything destructive.
+<dt>-e, -\\\-echo  </dt>
+<dd>Echo the commands that `dropdb` generates and sends to the server.</dd>
 
-**Connection Options**
+<dt>-i, -\\\-interactive  </dt>
+<dd>Issues a verification prompt before doing anything destructive.</dd>
 
--h *host* | --host *host*  
-The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.
+**\<connection_options\>**
 
--p *port* | --port *port*  
-The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.
+<dt>-h, -\\\-host \<host\> </dt>
+<dd>The host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `PGHOST` or defaults to localhost.</dd>
 
--U *username* | --username *username*  
-The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.
+<dt>-p, -\\\-port \<port\>  </dt>
+<dd>The TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the environment variable `PGPORT` or defaults to 5432.</dd>
 
--w | --no-password  
-Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.
+<dt>-U, -\\\-username \<username\>  </dt>
+<dd>The database role name to connect as. If not specified, reads from the environment variable `PGUSER` or defaults to the current system role name.</dd>
 
--W | --password  
-Force a password prompt.
+<dt>-w, -\\\-no-password  </dt>
+<dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a `.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.</dd>
 
-## Examples<a id="topic1__section6"></a>
+<dt>-W, -\\\-password  </dt>
+<dd>Force a password prompt.</dd>
+
+**Other Options**
+
+<dt>-\\\-help  </dt>
+<dd>Displays the online help.</dd>
+
+<dt>-\\\-version  </dt>
+<dd>Displays the version of this utility.</dd>
+
+## <a id="topic1__section6"></a>Examples
 
 To destroy the database named `demo` using default connection parameters:
 
-``` pre
-dropdb demo
+``` shell
+$ dropdb demo
 ```
 
 To destroy the database named `demo` using connection options, with verification, and a peek at the underlying command:
 
-``` pre
-dropdb -p 54321 -h masterhost -i -e demo
+``` shell
+$ dropdb -p 54321 -h masterhost -i -e demo
 Database "demo" will be permanently deleted.
 Are you sure? (y/n) y
 DROP DATABASE "demo"

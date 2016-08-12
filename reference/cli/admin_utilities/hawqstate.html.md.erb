@@ -4,15 +4,20 @@ title: hawq state
 
 Shows the status of a running HAWQ system.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq state [-b] [-l log_directory] [-v | -q] 
-          [-d master_data_directory] [--hawqhome]
-hawq state -? | -h | --help
+hawq state 
+     [-b]
+     [-d <master_data_dir> | --datadir <master_data_dir>]
+     [-l <logfile_directory> | --logdir <logfile_directory>]
+     [(-v | --verbose) | (-q | --quiet)]  
+     [--hawqhome <hawq_home_dir>]
+     
+hawq state [-h | --help]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq state` utility displays information about a running HAWQ instance. A HAWQ system is comprised of multiple PostgreSQL database instances (segments) spanning multiple machines, and the `hawq state` utility can provide additional status information, such as:
 
@@ -22,37 +27,47 @@ The `hawq state` utility displays information about a running HAWQ instance. A H
 -   The ports used by the system.
 -   Whether a standby master is present, and if it is active.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
--b (brief status)  
-Optional. Display a brief summary of the state of the HAWQ system. This is the default option.
+<dt>-b (brief status)  </dt>
+<dd>Display a brief summary of the state of the HAWQ system. This is the default mode.</dd>
 
--d *master\_data\_directory* --datadir=MASTER\_DIR  
-Status of the master data directory. If not specified, the value set for `$MASTER_DATA_DIRECTORY` will be used.
+<dt>-d, -\\\-datadir \<master\_data\_dir\>  </dt>
+<dd>Status of the master data directory.</dd>
 
---hawqhome=HAWQ\_HOME  
-Display details of the designated home data directory.
+<dt>-\\\-hawqhome \<hawq\_home\_dir\>  </dt>
+<dd>Display details of the designated home data directory if`$GPHOME` is not defined.` $GPHOME` is used by default in a standard installation.</dd>
 
--l *logfile\_directory*  
-Displays calls to the log file. Defaults to `~/hawq/AdminLogs`.
+<dt>-l, -\\\-logdir \<logfile\_directory\>  </dt>
+<dd>Specifies the directory to check for logfiles. The default is `$GPHOME/hawqAdminLogs`. 
 
--q (no screen output)  
-Optional. Run in quiet mode. Except for warning messages, command output is not displayed on the screen. However, this information is still written to the log file.
+Log files within the directory are named according to the command being invoked, for example:  hawq\_config\_\<log\_id\>.log, hawq\_state\_\<log\_id\>.log, etc.</dd>
 
--v (verbose output)  
-Optional. Displays error messages and outputs detailed status and progress information.
+<dt>-q, -\\\-quiet  </dt>
+<dd>Run in quiet mode. Except for warning messages, command output is not displayed on the screen. However, this information is still written to the log file.</dd>
 
--? | -h | --help (help)  
-Displays the online help.
+<dt>-v, -\\\-verbose  </dt>
+<dd>Displays error messages and outputs detailed status and progress information.</dd>
 
-## Examples<a id="topic1__section6"></a>
+<dt>-h, -\\\-help (help)  </dt>
+<dd>Displays the online help.</dd>
+
+## <a id="topic1__section6"></a>Examples
 
 Show brief status information of a HAWQ system:
 
-``` pre
-hawq state -b
+``` shell
+$ hawq state -b
 ```
 
-## See Also<a id="topic1__section7"></a>
+Change the log directory from `hawqAdminLogs` to `TodaysLogs`.
+
+```shell
+$ hawq state -l TodaysLogs
+$ ls TodaysLogs
+hawq_config_20160707.log  hawq_init_20160707.log   master.initdb
+```
+
+## <a id="topic1__section7"></a>See Also
 
 [hawq start](hawqstart.html#topic1), [gplogfilter](gplogfilter.html#topic1)

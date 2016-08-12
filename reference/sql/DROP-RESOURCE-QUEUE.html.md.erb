@@ -4,25 +4,25 @@ title: DROP RESOURCE QUEUE
 
 Removes a resource queue.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP RESOURCE QUEUE queue_name
+DROP RESOURCE QUEUE <queue_name>
          
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 This command removes a resource queue from HAWQ. To drop a resource queue, the queue cannot have any roles assigned to it, nor can it have any statements waiting in the queue or have any children resource queues. Only a superuser can drop a resource queue.
 
 **Note:** The `pg_root` and `pg_default` resource queues cannot be dropped.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
- *queue\_name*   
-The name of a resource queue to remove.
+<dt> \<queue\_name\>   </dt>
+<dd>The name of a resource queue to remove.</dd>
 
-## Notes<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Notes
 
 Use [ALTER ROLE](ALTER-ROLE.html) to remove a user from a resource queue.
 
@@ -42,7 +42,7 @@ SELECT rolname, rsqname FROM pg_roles, pg_resqueue WHERE
 pg_roles.rolresqueue=pg_resqueue.oid;
 ```
 
-## Examples<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Examples
 
 Remove a role from a resource queue (and move the role to the default resource queue, `pg_default`):
 
@@ -56,10 +56,10 @@ Remove the resource queue named `adhoc`:
 DROP RESOURCE QUEUE adhoc;
 ```
 
-## Compatibility<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>Compatibility
 
 The `DROP RESOURCE QUEUE` statement is a HAWQ extension.
 
-## See Also<a id="topic1__section8"></a>
+## <a id="topic1__section8"></a>See Also
 
 [CREATE RESOURCE QUEUE](CREATE-RESOURCE-QUEUE.html), [ALTER ROLE](ALTER-ROLE.html), [ALTER RESOURCE QUEUE](ALTER-RESOURCE-QUEUE.html)

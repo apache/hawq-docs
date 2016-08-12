@@ -346,13 +346,13 @@ The character set support in HAWQ allows you to store text in a variety of chara
 -   Not all the APIs support all the listed character sets. For example, the JDBC driver does not support MULE\_INTERNAL, LATIN6, LATIN8, and LATIN10.
 -   The SQLASCII setting behaves considerable differently from the other settings. Byte values 0-127 are interpreted according to the ASCII standard, while byte values 128-255 are taken as uninterpreted characters. If you are working with any nonASCII data, it is unwise to use the SQL\_ASCII setting as a client encoding. SQL\_ASCII is not supported as a server encoding.
 
-## Setting the Character Set<a id="settingthecharacterset"></a>
+## <a id="settingthecharacterset"></a>Setting the Character Set
 
 `hawq init` defines the default character set for a HAWQ system by reading the setting of the ENCODING parameter in the gp\_init\_config file at initialization time. The default character set is UNICODE or UTF8.
 
 You can create a database with a different character set besides what is used as the system-wide default. For example:
 
-``` pre
+``` sql
 CREATE DATABASE korean WITH ENCODING 'EUC_KR';
 ```
 
@@ -362,7 +362,7 @@ Since these locale settings are frozen by hawq init, the apparent flexibility to
 
 One way to use multiple encodings safely is to set the locale to C or POSIX during initialization time, thus disabling any real locale awareness.
 
-## Character Set Conversion Between Server and Client<a id="charactersetconversionbetweenserverandclient"></a>
+## <a id="charactersetconversionbetweenserverandclient"></a>Character Set Conversion Between Server and Client
 
 HAWQ supports automatic character set conversion between server and client for certain character set combinations. The conversion information is stored in the master pg\_conversion system catalog table. HAWQ comes with some predefined conversions or you can create a new conversion using the SQL command CREATE CONVERSION.
 
@@ -413,19 +413,19 @@ To enable automatic character set conversion, you have to tell HAWQ the characte
 -   Using the \\encoding command in psql, which allows you to change client encoding on the fly.
 -   Using SET client\_encoding TO. Setting the client encoding can be done with this SQL command:
 
-    ``` pre
+    ``` sql
     SET CLIENT_ENCODING TO 'value';
     ```
 
     To query the current client encoding:
 
-    ``` pre
+    ``` sql
     SHOW client_encoding;
     ```
 
     To return the default encoding:
 
-    ``` pre
+    ``` sql
     RESET client_encoding;
     ```
 

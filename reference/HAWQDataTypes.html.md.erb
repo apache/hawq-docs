@@ -8,6 +8,7 @@ HAWQ has a rich set of native data types available to users. Users may also defi
 
 The following data types are specified by SQL:
 
+-   array (*)
 -   bit
 -   bit varying
 -   boolean
@@ -26,6 +27,8 @@ The following data types are specified by SQL:
 -   timestamp (with or without time zone)
 -   varchar
 
+**Note**: HAWQ supports the array data type for append-only tables; parquet table storage does *not* support the array type. 
+
 Each data type has an external representation determined by its input and output functions. Many of the built-in types have obvious external formats. However, several types are unique to HAWQ, such as geometric paths, or have several possibilities for formats, such as the date and time types. Some of the input and output functions are not invertible. That is, the result of an output function may lose accuracy when compared to the original input.
 
  
@@ -35,6 +38,7 @@ Each data type has an external representation determined by its input and output
 
 | Name                                       | Alias               | Size                  | Range                                       | Description                                                                       |
 |--------------------------------------------|---------------------|-----------------------|---------------------------------------------|-----------------------------------------------------------------------------------|
+| array                                     |          [ ]       |    variable (ignored)    | multi-dimensional |   any built-in or user-defined base type, enum type, or composite type                                                               |
 | bigint                                     | int8                | 8 bytes               | -9223372036854775808 to 9223372036854775807 | large range integer                                                               |
 | bigserial                                  | serial8             | 8 bytes               | 1 to 9223372036854775807                    | large autoincrementing integer                                                    |
 | bit \[ (n) \]                              |                     | n bits                | bit string constant                         | fixed-length bit string                                                           |
@@ -71,7 +75,7 @@ Each data type has an external representation determined by its input and output
  
 For variable length data types (such as char, varchar, text, xml, etc.) if the data is greater than or equal to 127 bytes, the storage overhead is 4 bytes instead of 1.
 
-## Time Zones<a id="timezones"></a>
+## <a id="timezones"></a>Time Zones
 
 Time zones, and time-zone conventions, are influenced by political decisions, not just earth geometry. Time zones around the world became somewhat standardized during the 1900's, but continue to be prone to arbitrary changes, particularly with respect to daylight-savings rules. HAWQ uses the widely-used zoneinfo time zone database for information about historical time zone rules. For times in the future, the assumption is that the latest known rules for a given time zone will continue to be observed indefinitely far into the future.
 
@@ -104,7 +108,7 @@ The timezone configuration parameter can be set in the file `hawq-site.xml`. 
 -   The SQL command SET TIME ZONE sets the time zone for the session. This is an alternative spelling of SET TIMEZONE TO with a more SQL-spec-compatible syntax.
 -   The PGTZ environment variable is used by libpq clients to send a SET TIME ZONE command to the server upon connection.
 
-## Date and Time Configuration Files<a id="dateandtimeconfigurationfiles"></a>
+## <a id="dateandtimeconfigurationfiles"></a>Date and Time Configuration Files
 
 Since timezone abbreviations are not well standardized, HAWQ /&gt; provides a means to customize the set of abbreviations accepted by the server. The timezone\_abbreviations run-time parameter determines the active set of abbreviations. While this parameter can be altered by any database user, the possible values for it are under the control of the database administrator — they are in fact names of configuration files stored in .../share/timezonesets/ of the installation directory. By adding or altering files in that directory, the administrator can set local policy for timezone abbreviations.
 

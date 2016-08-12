@@ -4,55 +4,55 @@ title: REVOKE
 
 Removes access privileges.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 REVOKE [GRANT OPTION FOR] { {SELECT | INSERT | UPDATE | DELETE 
        | REFERENCES | TRUNCATE } [,...] | ALL [PRIVILEGES] }
-       ON [TABLE] tablename [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON [TABLE] <tablename> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] { {USAGE | SELECT | UPDATE} [,...] 
        | ALL [PRIVILEGES] }
-       ON SEQUENCE sequencename [, ...]
-       FROM { rolename | PUBLIC } [, ...]
+       ON SEQUENCE <sequencename> [, ...]
+       FROM { <rolename> | PUBLIC } [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] { {CREATE | CONNECT 
        | TEMPORARY | TEMP} [,...] | ALL [PRIVILEGES] }
-       ON DATABASE dbname [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON DATABASE <dbname> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] {EXECUTE | ALL [PRIVILEGES]}
-       ON FUNCTION funcname ( [[argmode] [argname] argtype
+       ON FUNCTION <funcname> ( [[<argmode>] [<argname>] <argtype>
                               [, ...]] ) [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] {USAGE | ALL [PRIVILEGES]}
-       ON LANGUAGE langname [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON LANGUAGE <langname> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [ CASCADE | RESTRICT ]
 
 REVOKE [GRANT OPTION FOR] { {CREATE | USAGE} [,...] 
        | ALL [PRIVILEGES] }
-       ON SCHEMA schemaname [, ...]
-       FROM {rolename | PUBLIC} [, ...]
+       ON SCHEMA <schemaname> [, ...]
+       FROM {<rolename> | PUBLIC} [, ...]
        [CASCADE | RESTRICT]
 
 REVOKE [GRANT OPTION FOR] { CREATE | ALL [PRIVILEGES] }
-       ON TABLESPACE tablespacename [, ...]
-       FROM { rolename | PUBLIC } [, ...]
+       ON TABLESPACE <tablespacename> [, ...]
+       FROM { <rolename> | PUBLIC } [, ...]
        [CASCADE | RESTRICT]
 
-REVOKE [ADMIN OPTION FOR] parent_role [, ...] 
-       FROM member_role [, ...]
+REVOKE [ADMIN OPTION FOR] <parent_role> [, ...] 
+       FROM <member_role> [, ...]
        [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `REVOKE` command revokes previously granted privileges from one or more roles. The key word `PUBLIC` refers to the implicitly defined group of all roles.
 
@@ -66,36 +66,36 @@ If a role holds a privilege with grant option and has granted it to other roles 
 
 When revoking membership in a role, `GRANT OPTION` is instead called `ADMIN OPTION`, but the behavior is similar.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
 See [GRANT](GRANT.html).
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Revoke insert privilege for the public on table `films`:
 
-``` pre
+``` sql
 REVOKE INSERT ON films FROM PUBLIC;
 ```
 
 Revoke all privileges from role `sally` on view `topten`. Note that this actually means revoke all privileges that the current role granted (if not a superuser).
 
-``` pre
+``` sql
 REVOKE ALL PRIVILEGES ON topten FROM sally;
 ```
 
 Revoke membership in role `admins` from user `joe`:
 
-``` pre
+``` sql
 REVOKE admins FROM joe;
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 The compatibility notes of the [GRANT](GRANT.html) command also apply to `REVOKE`.
 
 Either `RESTRICT` or `CASCADE` is required according to the standard, but HAWQ assumes `RESTRICT` by default.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [GRANT](GRANT.html)

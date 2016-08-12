@@ -4,33 +4,33 @@ title: ALTER TABLESPACE
 
 Changes the definition of a tablespace.
 
-## Synopsis<a id="synopsis"></a>
+## <a id="synopsis"></a>Synopsis
 
 ``` pre
-ALTER TABLESPACE name RENAME TO newname
+ALTER TABLESPACE <name> RENAME TO <newname>
 
-ALTER TABLESPACE name OWNER TO newowner
+ALTER TABLESPACE <name> OWNER TO <newowner>
          
 ```
 
-## Description<a id="desc"></a>
+## <a id="desc"></a>Description
 
 `ALTER TABLESPACE` changes the definition of a tablespace.
 
 You must own the tablespace to use `ALTER TABLESPACE`. To alter the owner, you must also be a direct or indirect member of the new owning role. (Note that superusers have these privileges automatically.)
 
-## Parameters<a id="altertablespace__section4"></a>
+## <a id="altertablespace__section4"></a>Parameters
 
- *name*   
-The name of an existing tablespace.
+<dt> \<name\>   </dt>
+<dd>The name of an existing tablespace.</dd>
 
- *newname*   
-The new name of the tablespace. The new name cannot begin with *pg\_* (reserved for system tablespaces).
+<dt> \<newname\>   </dt>
+<dd>The new name of the tablespace. The new name cannot begin with *pg\_* (reserved for system tablespaces).</dd>
 
- *newowner*   
-The new owner of the tablespace.
+<dt> \<newowner\>   </dt>
+<dd>The new owner of the tablespace.</dd>
 
-## Examples<a id="altertablespace__section5"></a>
+## <a id="altertablespace__section5"></a>Examples
 
 Rename tablespace `index_space` to `fast_raid`:
 
@@ -44,11 +44,11 @@ Change the owner of tablespace `index_space`:
 ALTER TABLESPACE index_space OWNER TO mary;
 ```
 
-## Compatibility<a id="altertablespace__section6"></a>
+## <a id="altertablespace__section6"></a>Compatibility
 
 There is no `ALTER TABLESPACE` statement in the SQL standard.
 
-##  See Also<a id="see"></a>
+## <a id="see"></a> See Also
 
 [CREATE TABLESPACE](CREATE-TABLESPACE.html), [DROP TABLESPACE](DROP-TABLESPACE.html)
 

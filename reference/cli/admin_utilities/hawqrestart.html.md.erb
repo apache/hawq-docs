@@ -4,13 +4,13 @@ title: hawq restart
 
 Shuts down and then restarts a HAWQ system after shutdown is complete.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq restart object [-l|--logdir] [-q|--quiet] [-v|--verbose]    
+hawq restart <object> [-l|--logdir <logfile_directory>] [-q|--quiet] [-v|--verbose]    
         [-M|--mode smart | fast | immediate] [-u|--reload] [-m|--masteronly] [-R|--restrict]
-        [-t|--timeout timeout_seconds]  [-U | --special-mode maintenance]
-        [--ignore_bad-hosts] cluster | allsegments
+        [-t|--timeout <timeout_seconds>]  [-U | --special-mode maintenance]
+        [--ignore-bad-hosts cluster | allsegments]
      
 ```
 
@@ -20,93 +20,93 @@ hawq restart -? | -h | --help
 hawq restart --version
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 The `hawq restart` utility is used to shut down and restart the HAWQ server processes. It is essentially equivalent to performing a `hawq stop -M                                         smart` operation followed by `hawq                                         start`.
 
-The *object* in the command specifies what entity should be started: e.g. a cluster, a segment, the master node, standby node, or all segments in the cluster.
+The \<object\> in the command specifies what entity should be started: e.g. a cluster, a segment, the master node, standby node, or all segments in the cluster.
 
-When the `hawq restart` command runs, the utility uploads changes made to the master `pg_hba.conf` file or to *runtime* configuration parameters in the master `hawq-site.xml` file without interruption of service. Note that any active sessions will not pick up the changes until they reconnect to the database.
+When the `hawq restart` command runs, the utility uploads changes made to the master `pg_hba.conf` file or to the runtime configuration parameters in the master `hawq-site.xml` file without interruption of service. Note that any active sessions will not pick up the changes until they reconnect to the database.
 
 ## Objects
 
-cluster  
-Restart a HAWQ cluster.
+<dt>cluster  </dt>
+<dd>Restart a HAWQ cluster.</dd>
 
-master  
-Restart HAWQ master.
+<dt>master  </dt>
+<dd>Restart HAWQ master.</dd>
 
-segment  
-Restart a local segment node.
+<dt>segment  </dt>
+<dd>Restart a local segment node.</dd>
 
-standby  
-Restart a HAWQ standby.
+<dt>standby  </dt>
+<dd>Restart a HAWQ standby.</dd>
 
-allsegments  
-Restart all segments.
+<dt>allsegments  </dt>
+<dd>Restart all segments.</dd>
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
--a (do not prompt)  
-Do not prompt the user for confirmation.
+<dt>-a (do not prompt)  </dt>
+<dd>Do not prompt the user for confirmation.</dd>
 
--l --logdir *logfile\_directory*  
-Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.
+<dt>-l, -\\\-logdir \<logfile\_directory\>  </dt>
+<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
 
--q --quiet   
-Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.
+<dt>-q, -\\\-quiet   </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
 
--v --verbose  
-Displays detailed status, progress and error messages output by the utility.
+<dt>-v, -\\\-verbose  </dt>
+<dd>Displays detailed status, progress and error messages output by the utility.</dd>
 
--t --timeout *timeout\_seconds*  
-Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 60 seconds.
+<dt>-t,  -\\\-timeout \<timeout\_seconds\>  </dt>
+<dd>Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 60 seconds.</dd>
 
--M --mode smart | fast | immediate  
-Smart shutdown is the default. Shutdown fails with a warning message, if active connections are found.
+<dt>-M, -\\\-mode smart | fast | immediate  </dt>
+<dd>Smart shutdown is the default. Shutdown fails with a warning message, if active connections are found.
 
 Fast shut down interrupts and rolls back any transactions currently in progress .
 
-Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.
+Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
 
--u --reload  
-Utility mode. This mode runs on the master, only, and only allows incoming sessions that specify gp\_session\_role=utility. It allows bash scripts to reload the parameter values and connect but protects the system from normal clients who might be trying to connect to the system during startup.
+<dt>-u, -\\\-reload  </dt>
+<dd>Utility mode. This mode runs on the master, only, and only allows incoming sessions that specify gp\_session\_role=utility. It allows bash scripts to reload the parameter values and connect but protects the system from normal clients who might be trying to connect to the system during startup.</dd>
 
--R --restrict   
-Starts HAWQ in restricted mode (only database superusers are allowed to connect).
+<dt>-R, -\\\-restrict   </dt>
+<dd>Starts HAWQ in restricted mode (only database superusers are allowed to connect).</dd>
 
--U --special-mode maintenance   
-(Superuser only) Start HAWQ in \[maintenance | upgrade\] mode. In maintenance mode, the `gp_maintenance_conn` parameter is set.
+<dt>-U, -\\\-special-mode maintenance   </dt>
+<dd>(Superuser only) Start HAWQ in \[maintenance | upgrade\] mode. In maintenance mode, the `gp_maintenance_conn` parameter is set.</dd>
 
---ignore\_bad\_hosts cluster | allsegments  
-Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.
+<dt>-\\\-ignore\-bad\-hosts cluster | allsegments  </dt>
+<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
 
--? | -h | --help (help)  
-Displays the online help.
+<dt>-? , -h , -\\\-help (help)  </dt>
+<dd>Displays the online help.</dd>
 
---version (show utility version)  
-Displays the version of this utility.
+<dt>-\\\-version (show utility version)  </dt>
+<dd>Displays the version of this utility.</dd>
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Restart a HAWQ cluster:
 
-``` pre
-hawq restart cluster
+``` shell
+$ hawq restart cluster
 ```
 
 Restart a HAWQ system in restricted mode (only allow superuser connections):
 
-``` pre
-hawq restart cluster -R
+``` shell
+$ hawq restart cluster -R
 ```
 
 Start the HAWQ master instance only and connect in utility mode:
 
-``` pre
-hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
+``` shell
+$ hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
 ```
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [hawq stop](hawqstop.html#topic1), [hawq start](hawqstart.html#topic1)

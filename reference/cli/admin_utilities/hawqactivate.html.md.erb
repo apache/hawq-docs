@@ -4,19 +4,21 @@ title: hawq activate
 
 Activates a standby master host and makes it the active master for the HAWQ system.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq activate standby  [-t time | --timeout time]  
-    [-l logfile_directory] 
-hawq activate [-M [smart|fast|immediate] --mode [smart|fast|immediate] ]
-              [--ignore_bad-hosts]
-hawq activate -v | [-q]
+hawq activate standby 
+     [-M (smart|fast|immediate) | --mode (smart|fast|immediate)] 
+     [-t <time> | --timeout <time>] 
+     [-l <logfile_directory> | --logdir <logfile_directory>]
+     [(-v | --verbose) | (-q | --quiet)] 
+     [--ignore-bad-hosts]
 
-hawq activate -? | -h | --help
+hawq activate [-h | --help]
+
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 If the primary master fails, the log replication process is shut down, and the standby master can be activated in its place. The `hawq activate                                         standby` utility activates a backup, standby master host and brings it into operation as the active master instance for a HAWQ system. The activated standby master effectively becomes the HAWQ master, accepting client connections on the master port.
 
@@ -35,49 +37,49 @@ In order to use `hawq activate standby` to activate a new primary master host, t
 
 After activating a standby master, run `ANALYZE` to update the database query statistics. For example:
 
-``` pre
-psql dbname -c 'ANALYZE;'
+``` shell
+$ psql <dbname> -c 'ANALYZE;'
 ```
 
 After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the [hawq init](hawqinit.html#topic1) utility.
 
-## Options<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Options
 
--l --logdir *logfile\_directory*  
-Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.
-
--t --timeout *timeout\_seconds*  
-Seconds to wait before discontinuing the operation. If not specified, the default timeout is 60 seconds.
-
--M --mode smart | fast | immediate  
-Stop with one of the specified modes.
+<dt>-M, -\\\-mode (smart | fast | immediate) </dt>
+<dd>Stop with one of the specified modes.
 
 Smart shutdown is the default. Shutdown fails with a warning message, if active connections are found.
 
-Fast shut down interrupts and rolls back any transactions currently in progress .
+Fast shut down interrupts and rolls back any transactions currently in progress.
 
-Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.
+Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
 
---ignore\_bad\_hosts  
-Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.
+<dt>-t, -\\\-timeout \<timeout\_seconds\>  </dt>
+<dd>Seconds to wait before discontinuing the operation. If not specified, the default timeout is 60 seconds.</dd>
 
--q (no screen output)  
-Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.
+<dt>-l, -\\\-logdir \<logfile\_directory\> </dt>
+<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
 
- -v --verbose  
-Displays detailed status, progress and error messages output by the utility.
+<dt>-v, -\\\-verbose  </dt>
+<dd>Displays detailed status, progress and error messages output by the utility.</dd>
 
--? | -h | --help (help)  
-Displays the online help.
+<dt>-q, -\\\-quiet  </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
 
-## Example<a id="topic1__section5"></a>
+<dt>-\\\-ignore-bad-hosts  </dt>
+<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
+
+<dt>-h, -\\\-help (help)  </dt>
+<dd>Displays the online help.</dd>
+
+## <a id="topic1__section5"></a>Example
 
 Activate the standby master host and make it the active master instance for a HAWQ system (run from backup master host you are activating):
 
-``` pre
-hawq activate standby  /gpdata
+``` shell
+$ hawq activate standby
 ```
 
-## See Also<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>See Also
 
 [hawq init](hawqinit.html#topic1)

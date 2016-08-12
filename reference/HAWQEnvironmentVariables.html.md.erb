@@ -6,11 +6,11 @@ This topic contains a reference of the environment variables that you set for HA
 
 Set these in your user’s startup shell profile (such as `~/.bashrc` or `~/.bash_profile`), or in `/etc/profile`, if you want to set them for all users.
 
-## Required Environment Variables<a id="requiredenvironmentvariables"></a>
+## <a id="requiredenvironmentvariables"></a>Required Environment Variables
 
 **Note:** `GPHOME`, `PATH` and `LD_LIBRARY_PATH` can be set by sourcing the `greenplum_path.sh` file from your HAWQ installation directory.
 
-### GPHOME<a id="gphome"></a>
+### <a id="gphome"></a>GPHOME
 
 This is the installed location of your HAWQ software. For example:
 
@@ -19,7 +19,7 @@ GPHOME=/usr/local/hawq
 export GPHOME
 ```
 
-### PATH<a id="path"></a>
+### <a id="path"></a>PATH
 
 Your `PATH` environment variable should point to the location of the HAWQ bin directory. For example:
 
@@ -28,7 +28,7 @@ PATH=$GPHOME/bin:$PATH
 export PATH 
 ```
 
-### LD\_LIBRARY\_PATH<a id="ld_library_path"></a>
+### <a id="ld_library_path"></a>LD\_LIBRARY\_PATH
 
 The `LD_LIBRARY_PATH` environment variable should point to the location of the `HAWQ/PostgreSQL` library files. For example:
 
@@ -37,7 +37,7 @@ LD_LIBRARY_PATH=$GPHOME/lib
 export LD_LIBRARY_PATH
 ```
 
-### MASTER\_DATA\_DIRECTORY<a id="master_data_directory"></a>
+### <a id="master_data_directory"></a>MASTER\_DATA\_DIRECTORY
 
 This should point to the directory created by the `hawq init` utility in the master data directory location. For example:
 
@@ -46,57 +46,57 @@ MASTER_DATA_DIRECTORY=/data/master
 export MASTER_DATA_DIRECTORY
 ```
 
-## Optional Environment Variables<a id="optionalenvironmentvariables"></a>
+## <a id="optionalenvironmentvariables"></a>Optional Environment Variables
 
 The following are HAWQ environment variables. You may want to add the connection-related environment variables to your profile, for convenience. That way, you do not have to type so many options on the command line for client connections. Note that these environment variables should be set on the HAWQ master host only.
 
-### PGAPPNAME<a id="pgappname"></a>
+### <a id="pgappname"></a>PGAPPNAME
 
 This is the name of the application that is usually set by an application when it connects to the server. This name is displayed in the activity view and in log entries. The `PGAPPNAME` environmental variable behaves the same as the `application_name` connection parameter. The default value for `application_name` is `psql`. The name cannot be longer than 63 characters.
 
-### PGDATABASE<a id="pgdatabase"></a>
+### <a id="pgdatabase"></a>PGDATABASE
 
 The name of the default database to use when connecting.
 
-### PGHOST<a id="pghost"></a>
+### <a id="pghost"></a>PGHOST
 
 The HAWQ master host name.
 
-### PGHOSTADDR<a id="pghostaddr"></a>
+### <a id="pghostaddr"></a>PGHOSTADDR
 
 The numeric IP address of the master host. This can be set instead of, or in addition to, `PGHOST`, to avoid DNS lookup overhead.
 
-### PGPASSWORD<a id="pgpassword"></a>
+### <a id="pgpassword"></a>PGPASSWORD
 
 The password used if the server demands password authentication. Use of this environment variable is not recommended, for security reasons (some operating systems allow non-root users to see process environment variables via ps). Instead, consider using the `~/.pgpass` file.
 
-### PGPASSFILE<a id="pgpassfile"></a>
+### <a id="pgpassfile"></a>PGPASSFILE
 
 The name of the password file to use for lookups. If not set, it defaults to `~/.pgpass`.
 
 See The Password File under [Configuring Client Authentication](/20/clientaccess/client_auth.html).
 
-### PGOPTIONS<a id="pgoptions"></a>
+### <a id="pgoptions"></a>PGOPTIONS
 
 Sets additional configuration parameters for the HAWQ master server.
 
-### PGPORT<a id="pgport"></a>
+### <a id="pgport"></a>PGPORT
 
 The port number of the HAWQ server on the master host. The default port is 5432.
 
-### PGUSER<a id="pguser"></a>
+### <a id="pguser"></a>PGUSER
 
 The HAWQ user name used to connect.
 
-### PGDATESTYLE<a id="pgdatestyle"></a>
+### <a id="pgdatestyle"></a>PGDATESTYLE
 
 Sets the default style of date/time representation for a session. (Equivalent to `SET datestyle TO....`)
 
-### PGTZ<a id="pgtz"></a>
+### <a id="pgtz"></a>PGTZ
 
 Sets the default time zone for a session. (Equivalent to `SET timezone                   TO....`)
 
-### PGCLIENTENCODING<a id="pgclientencoding"></a>
+### <a id="pgclientencoding"></a>PGCLIENTENCODING
 
 Sets the default client character set encoding for a session. (Equivalent to `SET client_encoding TO....`)
 

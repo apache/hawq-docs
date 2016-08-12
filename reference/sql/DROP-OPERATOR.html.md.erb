@@ -4,38 +4,38 @@ title: DROP OPERATOR
 
 Removes an operator.
 
-## Synopsis<a id="topic1__section2"></a>
+## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DROP OPERATOR [IF EXISTS] name ( {lefttype | NONE} , 
-    {righttype | NONE} ) [CASCADE | RESTRICT]
+DROP OPERATOR [IF EXISTS] <name> ( {<lefttype> | NONE} , 
+    {<righttype> | NONE} ) [CASCADE | RESTRICT]
 ```
 
-## Description<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Description
 
 `DROP OPERATOR` drops an existing operator from the database system. To execute this command you must be the owner of the operator.
 
-## Parameters<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Parameters
 
-IF EXISTS  
-Do not throw an error if the operator does not exist. A notice is issued in this case.
+<dt>IF EXISTS  </dt>
+<dd>Do not throw an error if the operator does not exist. A notice is issued in this case.</dd>
 
- *name*   
-The name (optionally schema-qualified) of an existing operator.
+<dt>\<name\>   </dt>
+<dd>The name (optionally schema-qualified) of an existing operator.</dd>
 
- *lefttype*   
-The data type of the operator's left operand; write `NONE` if the operator has no left operand.
+<dt>\<lefttype\>  </dt>
+<dd>The data type of the operator's left operand; write `NONE` if the operator has no left operand.</dd>
 
- *righttype*   
-The data type of the operator's right operand; write `NONE` if the operator has no right operand.
+<dt>\<righttype\> </dt>
+<dd>The data type of the operator's right operand; write `NONE` if the operator has no right operand.</dd>
 
-CASCADE  
-Automatically drop objects that depend on the operator.
+<dt>CASCADE  </dt>
+<dd>Automatically drop objects that depend on the operator.</dd>
 
-RESTRICT  
-Refuse to drop the operator if any objects depend on it. This is the default.
+<dt>RESTRICT  </dt>
+<dd>Refuse to drop the operator if any objects depend on it. This is the default.</dd>
 
-## Examples<a id="topic1__section5"></a>
+## <a id="topic1__section5"></a>Examples
 
 Remove the power operator `a^b` for type `integer`:
 
@@ -55,10 +55,10 @@ Remove the right unary factorial operator `x!` for type `bigint`:
 DROP OPERATOR ! (bigint, none);
 ```
 
-## Compatibility<a id="topic1__section6"></a>
+## <a id="topic1__section6"></a>Compatibility
 
 There is no `DROP OPERATOR` statement in the SQL standard.
 
-## See Also<a id="topic1__section7"></a>
+## <a id="topic1__section7"></a>See Also
 
 [ALTER OPERATOR](ALTER-OPERATOR.html), [CREATE OPERATOR](CREATE-OPERATOR.html)

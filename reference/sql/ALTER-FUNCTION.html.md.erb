@@ -4,82 +4,82 @@ title: ALTER FUNCTION
 
 Changes the definition of a function.
 
-## Synopsis<a id="alterfunction__section2"></a>
+## <a id="alterfunction__section2"></a>Synopsis
 
-``` pre
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   action [, ... ] [RESTRICT]
+``` sql
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   <action> [, ... ] [RESTRICT]
 
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   RENAME TO new_name
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   RENAME TO <new_name>
 
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   OWNER TO new_owner
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   OWNER TO <new_owner>
 
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   SET SCHEMA new_schema
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   SET SCHEMA <new_schema>
 
 ```
 
-where *action* is one of:
+where \<action\> is one of:
 
-``` pre
-{CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT}
-{IMMUTABLE | STABLE | VOLATILE}
-{[EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER}
+```pre
+{ CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT }
+{ IMMUTABLE | STABLE | VOLATILE }
+{ [EXTERNAL] SECURITY INVOKER | [EXTERNAL] SECURITY DEFINER }
 ```
 
-## Description<a id="desc"></a>
+## <a id="desc"></a>Description
 
 `ALTER FUNCTION` changes the definition of a function. 
 
 You must own the function to use `ALTER FUNCTION`. To change a function’s schema, you must also have `CREATE` privilege on the new schema. To alter the owner, you must also be a direct or indirect member of the new owning role, and that role must have `CREATE` privilege on the function’s schema. (These restrictions enforce that altering the owner does not do anything you could not do by dropping and recreating the function. However, a superuser can alter ownership of any function anyway.)
 
-## Parameters<a id="alterfunction__section4"></a>
+## <a id="alterfunction__section4"></a>Parameters
 
- *name*
-The name (optionally schema-qualified) of an existing function.
+<dt> \<name\>  </dt>
+<dd>The name (optionally schema-qualified) of an existing function.</dd>
 
- *argmode*
-The mode of an argument: either `IN`, `OUT`, or `INOUT`. If omitted, the default is `IN`. Note that `ALTER FUNCTION` does not actually pay any attention to `OUT` arguments, since only the input arguments are needed to determine the function's identity. So it is sufficient to list the `IN` and `INOUT` arguments.
+<dt>\<argmode\>  </dt>
+<dd>The mode of an argument: either `IN`, `OUT`, or `INOUT`. If omitted, the default is `IN`. Note that `ALTER FUNCTION` does not actually pay any attention to `OUT` arguments, since only the input arguments are needed to determine the function's identity. So it is sufficient to list the `IN` and `INOUT` arguments.</dd>
 
- *argname*
-The name of an argument. Note that `ALTER FUNCTION` does not actually pay any attention to argument names, since only the argument data types are needed to determine the function's identity.
+<dt> \<argname\>  </dt>
+<dd>The name of an argument. Note that `ALTER FUNCTION` does not actually pay any attention to argument names, since only the argument data types are needed to determine the function's identity.</dd>
 
- *argtype*
-The data type(s) of the function's arguments (optionally schema-qualified), if any.
+<dt> \<argtype\>  </dt>
+<dd>The data type(s) of the function's arguments (optionally schema-qualified), if any.</dd>
 
- *new\_name*
-The new name of the function.
+<dt> \<new\_name\>  </dt>
+<dd>The new name of the function.</dd>
 
- *new\_owner*
-The new owner of the function. Note that if the function is marked `SECURITY DEFINER`, it will subsequently execute as the new owner.
+<dt> \<new\_owner\>  </dt>
+<dd>The new owner of the function. Note that if the function is marked `SECURITY DEFINER`, it will subsequently execute as the new owner.</dd>
 
- *new\_schema*
-The new schema for the function.
+<dt> \<new\_schema\>  </dt>
+<dd>The new schema for the function.</dd>
 
-CALLED ON NULL INPUT  
+<dt>CALLED ON NULL INPUT  
 RETURNS NULL ON NULL INPUT  
-STRICT  
-`CALLED ON NULL INPUT` changes the function so that it will be invoked when some or all of its arguments are null. `RETURNS NULL ON NULL                      INPUT` or `STRICT` changes the function so that it is not invoked if any of its arguments are null; instead, a null result is assumed automatically. See `CREATE FUNCTION` for more information.
+STRICT  </dt>
+<dd>`CALLED ON NULL INPUT` changes the function so that it will be invoked when some or all of its arguments are null. `RETURNS NULL ON NULL                      INPUT` or `STRICT` changes the function so that it is not invoked if any of its arguments are null; instead, a null result is assumed automatically. See `CREATE FUNCTION` for more information.</dd>
 
-IMMUTABLE  
+<dt>IMMUTABLE  
 STABLE  
-VOLATILE,
-Change the volatility of the function to the specified setting. See `CREATE FUNCTION` for details.
+VOLATILE  </dt>
+<dd>Change the volatility of the function to the specified setting. See `CREATE FUNCTION` for details.</dd>
 
-\[ EXTERNAL \] SECURITY INVOKER  
-\[ EXTERNAL \] SECURITY DEFINER  
-Change whether the function is a security definer or not. The key word `EXTERNAL` is ignored for SQL conformance. See `CREATE                      FUNCTION` for more information about this capability.
+<dt>\[ EXTERNAL \] SECURITY INVOKER  
+\[ EXTERNAL \] SECURITY DEFINER  </dt>
+<dd>Change whether the function is a security definer or not. The key word `EXTERNAL` is ignored for SQL conformance. See `CREATE                      FUNCTION` for more information about this capability.</dd>
 
-RESTRICT
-Ignored for conformance with the SQL standard.
+<dt>RESTRICT  </dt>
+<dd>Ignored for conformance with the SQL standard.</dd>
 
-## Notes<a id="notes"></a>
+## <a id="notes"></a>Notes
 
 HAWQ has limitations on the use of functions defined as `STABLE` or `VOLATILE`. See [CREATE FUNCTION](CREATE-FUNCTION.html) for more information.
 
-## Examples<a id="alterfunction__section6"></a>
+## <a id="alterfunction__section6"></a>Examples
 
 To rename the function `sqrt` for type `integer` to `square_root`:
 
@@ -93,16 +93,16 @@ To change the owner of the function `sqrt` for type `integer` to `joe`:
 ALTER FUNCTION sqrt(integer) OWNER TO joe;
 ```
 
-To change the *schema* of the function `sqrt` for type `integer` to `math`:
+To change the schema of the function `sqrt` for type `integer` to `math`:
 
 ``` pre
 ALTER FUNCTION sqrt(integer) SET SCHEMA math;
 ```
 
-## Compatibility<a id="compat"></a>
+## <a id="compat"></a>Compatibility
 
 This statement is partially compatible with the `ALTER FUNCTION` statement in the SQL standard. The standard allows more properties of a function to be modified, but does not provide the ability to rename a function, make a function a security definer, or change the owner, schema, or volatility of a function. The standard also requires the `RESTRICT` key word, which is optional in HAWQ.
 
-## See Also<a id="see"></a>
+## <a id="see"></a>See Also
 
 [CREATE AGGREGATE](CREATE-AGGREGATE.html), [DROP AGGREGATE](DROP-AGGREGATE.html)
