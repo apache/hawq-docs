@@ -114,8 +114,6 @@ User-defined type names cannot begin with the underscore character (\_) and can 
 
 Because there are no restrictions on use of a data type once it's been created, creating a base type is tantamount to granting public execute permission on the functions mentioned in the type definition. (The creator of the type is therefore required to own these functions.) This is usually not an issue for the sorts of functions that are useful in a type definition. But you might want to think twice before designing a type in a way that would require 'secret' information to be used while converting it to or from external form.
 
-Before HAWQ version 2.4, the syntax `CREATE TYPE                     name             ` did not exist. The way to create a new base type was to create its input function first. In this approach, HAWQ will first see the name of the new data type as the return type of the input function. The shell type is implicitly created in this situation, and then it can be referenced in the definitions of the remaining I/O functions. This approach still works, but is deprecated and may be disallowed in some future release. Also, to avoid accidentally cluttering the catalogs with shell types as a result of simple typos in function definitions, a shell type will only be made this way when the input function is written in C.
-
 ## <a id="topic1__section9"></a>Examples
 
 This example creates a composite type and uses it in a function definition:
