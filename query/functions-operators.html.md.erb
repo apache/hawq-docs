@@ -33,10 +33,6 @@ HAWQ does not support the following:
 -   Enhanced table functions
 -   PL/Java Type Maps
 
-**Note**: HAWQ queries employing nested user defined functions will fail when dispatched to segment node(s). HAWQ stores the system catalog, `pg_catalog`, only on the master node. User-defined functions are stored in the `pg_proc` system catalog table.  HAWQ has no built-in knowledge about how to interpret the source text of a user-defined function. Consequently, the text is not parsed by HAWQ. 
-
-This may be problematic in queries where a user-defined function includes nested functions. When a query includes procedural language functions, metadata passed to the query executor includes function invocation information.  If run on the HAWQ master node, the nested function will be recognized. If such a query is dispatched to a segment, the nested function will not be found and the query will throw an error.
-
 
 Use the `CREATE FUNCTION` statement to register user-defined functions that are used as described in [Using Functions in HAWQ](#topic27). By default, user-defined functions are declared as `VOLATILE`, so if your user-defined function is `IMMUTABLE` or `STABLE`, you must specify the correct volatility level when you register your function.
 
