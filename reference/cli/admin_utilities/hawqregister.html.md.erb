@@ -11,6 +11,10 @@ hawq register <databasename> <tablename> <hdfspath>
      [-h <hostname>] 
      [-p <port>] 
      [-U <username>] 
+     [-d <database>]
+     [-t <tablename>] 
+     [-f <filepath>] 
+     [-c <yml_config>]  
 hawq register help | -? 
 hawq register --version
 ```
@@ -50,15 +54,6 @@ The following HIVE data types cannot be converted to HAWQ equivalents: timestamp
 
 **Connection Options**
 
-<dt>\<databasename\>  </dt>
-<dd>The database to register the parquet HDFS data into.<dd>
- 
-<dt>\<tablename\> </dt>
-<dd>The HAWQ table that will store the parquet data. The table cannot use hash distribution: only tables using random distribution can be registered into HAWQ.</dd>
-
-<dt>\<hdfspath\></dt>
-<dd>The path of the file or directory containing the files to be registered.</dd>
-
 <dt>-h \<hostname\> </dt>
 <dd>Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the environment variable `$PGHOST` or defaults to `localhost`.</dd>
 
@@ -67,6 +62,20 @@ The following HIVE data types cannot be converted to HAWQ equivalents: timestamp
 
 <dt>-U \<username\> </dt> 
 <dd>The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.</dd>
+
+<dt>-d  , --database \<databasename\>  </dt>
+<dd>The database to register the parquet HDFS data into. The default is `postgres`<dd>
+ 
+<dt>-t , --tablename \<tablename\> </dt>
+<dd>The HAWQ table that will store the parquet data. The table cannot use hash distribution: only tables using random distribution can be registered into HAWQ.</dd>
+
+<dt>-f , --filepath \<hdfspath\></dt>
+<dd>The path of the file or directory in HDFS containing the files to be registered.</dd>
+
+<dt>-c , --config \<yml_config\> </dt> 
+<dd>Registers a YAML-format configuration file into HAWQ.</dd>
+
+
 
 ## <a id="topic1__section6"></a>Examples
 
