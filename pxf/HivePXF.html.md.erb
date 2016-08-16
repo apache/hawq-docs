@@ -54,7 +54,7 @@ The following PXF table definition is valid for any Hive file storage type.
 ``` sql
 CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name 
     ( column_name data_type [, ...] | LIKE other_table )
-LOCATION ('pxf://namenode[:port]/hive-table-name?<pxf parameters>[&custom-option=value...]')FORMAT 'CUSTOM' (formatter='pxfwritable_import')
+LOCATION ('pxf://namenode[:port]/hive-db-name.hive-table-name?<pxf parameters>[&custom-option=value...]')FORMAT 'CUSTOM' (formatter='pxfwritable_import')
 ```
 
 where `<pxf parameters>` is:
@@ -82,7 +82,7 @@ $ psql -d postgres
 
 ``` sql
 postgres=# CREATE EXTERNAL TABLE hivetest(id int, newid int)
-LOCATION ('pxf://namenode:51200/user/eddie/test?PROFILE=Hive')
+LOCATION ('pxf://namenode:51200/hive-db-name.test?PROFILE=Hive')
 FORMAT 'custom' (formatter='pxfwritable_import');
 ```
 
@@ -404,7 +404,7 @@ Then you would define the HAWQ external table using:
 
 ``` sql
 postgres=# create external table pxf_parquet_table (fname text, lname text, custid int, acctbalance double precision) 
-    location ('pxf://localhost:51200/hive_parquet_table?profile=Hive') 
+    location ('pxf://localhost:51200/hive-db-name.hive_parquet_table?profile=Hive') 
     format 'custom' (formatter='pxfwritable_import'); 
 ```
 
