@@ -64,6 +64,9 @@ where `<pxf parameters>` is:
  | PROFILE=profile-name
 ```
 
+
+If `hive-db-name` is omitted, pxf will default to the Hive `default` database.
+
 **Note:** The port is the connection port for the PXF service. If the port is omitted, PXF assumes that High Availability (HA) is enabled and connects to the HA name service port, 51200 by default. The HA name service port can be changed by setting the pxf\_service\_port configuration parameter.
 
 PXF has three built-in profiles for Hive tables:
