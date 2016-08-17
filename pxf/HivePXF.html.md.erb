@@ -54,7 +54,7 @@ The following PXF table definition is valid for any Hive file storage type.
 ``` sql
 CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name 
     ( column_name data_type [, ...] | LIKE other_table )
-LOCATION ('pxf://namenode[:port]/hive-table-name?<pxf parameters>[&custom-option=value...]')FORMAT 'CUSTOM' (formatter='pxfwritable_import')
+LOCATION ('pxf://namenode[:port]/hive-db-name.hive-table-name?<pxf parameters>[&custom-option=value...]')FORMAT 'CUSTOM' (formatter='pxfwritable_import')
 ```
 
 where `<pxf parameters>` is:
@@ -64,6 +64,9 @@ where `<pxf parameters>` is:
  | PROFILE=profile-name
 ```
 
+
+If `hive-db-name` is omitted, pxf will default to the Hive `default` database.
+
 **Note:** The port is the connection port for the PXF service. If the port is omitted, PXF assumes that High Availability (HA) is enabled and connects to the HA name service port, 51200 by default. The HA name service port can be changed by setting the pxf\_service\_port configuration parameter.
 
 PXF has three built-in profiles for Hive tables:
@@ -72,9 +75,8 @@ PXF has three built-in profiles for Hive tables:
 -   HiveRC
 -   HiveText
 
-The Hive profile works with any Hive storage type. Use HiveRC and HiveText to query RC and Text formats respectively. The HiveRC and HiveText profiles are faster than the generic Hive profile. When using the HiveRC and HiveText profiles, you must specify a DELIMITER option in the LOCATION clause. See [Using Profiles to Read and Write Data](ReadWritePXF.html#readingandwritingdatawithpxf) for more information on profiles.
-
-The following example creates a readable HAWQ external table representing a Hive table named `/user/eddie/test` using the PXF Hive profile:
+The Hive profile works with any Hive storage type. 
+The following example creates a readable HAWQ external table representing a Hive table named `accessories` in the `inventory` Hive database using the PXF Hive profile:
 
 ``` shell
 $ psql -d postgres
@@ -82,9 +84,13 @@ $ psql -d postgres
 
 ``` sql
 postgres=# CREATE EXTERNAL TABLE hivetest(id int, newid int)
-LOCATION ('pxf://namenode:51200/user/eddie/test?PROFILE=Hive')
+LOCATION ('pxf://namenode:51200/inventory.accessories?PROFILE=Hive')
 FORMAT 'custom' (formatter='pxfwritable_import');
 ```
+
+
+Use HiveRC and HiveText to query RC and Text formats respectively. The HiveRC and HiveText profiles are faster than the generic Hive profile. When using the HiveRC and HiveText profiles, you must specify a DELIMITER option in the LOCATION clause. See [Using Profiles to Read and Write Data](ReadWritePXF.html#readingandwritingdatawithpxf) for more information on profiles.
+
 
 ### <a id="topic_b4v_g3n_25"></a>Hive Complex Types
 
@@ -404,7 +410,7 @@ Then you would define the HAWQ external table using:
 
 ``` sql
 postgres=# create external table pxf_parquet_table (fname text, lname text, custid int, acctbalance double precision) 
-    location ('pxf://localhost:51200/hive_parquet_table?profile=Hive') 
+    location ('pxf://localhost:51200/hive-db-name.hive_parquet_table?profile=Hive') 
     format 'custom' (formatter='pxfwritable_import'); 
 ```
 
