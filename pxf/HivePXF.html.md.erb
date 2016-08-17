@@ -72,9 +72,8 @@ PXF has three built-in profiles for Hive tables:
 -   HiveRC
 -   HiveText
 
-The Hive profile works with any Hive storage type. Use HiveRC and HiveText to query RC and Text formats respectively. The HiveRC and HiveText profiles are faster than the generic Hive profile. When using the HiveRC and HiveText profiles, you must specify a DELIMITER option in the LOCATION clause. See [Using Profiles to Read and Write Data](ReadWritePXF.html#readingandwritingdatawithpxf) for more information on profiles.
-
-The following example creates a readable HAWQ external table representing a Hive table named `/user/eddie/test` using the PXF Hive profile:
+The Hive profile works with any Hive storage type. 
+The following example creates a readable HAWQ external table representing a Hive table named `accessories` in the `inventory` Hive database using the PXF Hive profile:
 
 ``` shell
 $ psql -d postgres
@@ -82,9 +81,13 @@ $ psql -d postgres
 
 ``` sql
 postgres=# CREATE EXTERNAL TABLE hivetest(id int, newid int)
-LOCATION ('pxf://namenode:51200/hive-db-name.test?PROFILE=Hive')
+LOCATION ('pxf://namenode:51200/inventory.accessories?PROFILE=Hive')
 FORMAT 'custom' (formatter='pxfwritable_import');
 ```
+
+
+Use HiveRC and HiveText to query RC and Text formats respectively. The HiveRC and HiveText profiles are faster than the generic Hive profile. When using the HiveRC and HiveText profiles, you must specify a DELIMITER option in the LOCATION clause. See [Using Profiles to Read and Write Data](ReadWritePXF.html#readingandwritingdatawithpxf) for more information on profiles.
+
 
 ### <a id="topic_b4v_g3n_25"></a>Hive Complex Types
 
