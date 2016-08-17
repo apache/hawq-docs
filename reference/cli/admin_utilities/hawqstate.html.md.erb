@@ -9,10 +9,8 @@ Shows the status of a running HAWQ system.
 ``` pre
 hawq state 
      [-b]
-     [-d <master_data_dir> | --datadir <master_data_dir>]
      [-l <logfile_directory> | --logdir <logfile_directory>]
      [(-v | --verbose) | (-q | --quiet)]  
-     [--hawqhome <hawq_home_dir>]
      
 hawq state [-h | --help]
 ```
@@ -31,12 +29,6 @@ The `hawq state` utility displays information about a running HAWQ instance. A H
 
 <dt>-b (brief status)  </dt>
 <dd>Display a brief summary of the state of the HAWQ system. This is the default mode.</dd>
-
-<dt>-d, -\\\-datadir \<master\_data\_dir\>  </dt>
-<dd>Status of the master data directory.</dd>
-
-<dt>-\\\-hawqhome \<hawq\_home\_dir\>  </dt>
-<dd>Display details of the designated home data directory if`$GPHOME` is not defined.` $GPHOME` is used by default in a standard installation.</dd>
 
 <dt>-l, -\\\-logdir \<logfile\_directory\>  </dt>
 <dd>Specifies the directory to check for logfiles. The default is `$GPHOME/hawqAdminLogs`. 
