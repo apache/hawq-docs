@@ -228,7 +228,7 @@ The following storage options are available:
 
 **bucketnum** — Set to the number of hash buckets to be used in creating a hash-distributed table, specified as an integer greater than 0 and no more than the value of `default_hash_table_bucket_number`. The default when the table is created is 6 times the segment count. However, explicitly setting the bucket number when creating a hash table is recommended.
 
-**ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. Heap-storage tables can only be row-oriented.
+**ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. 
 
 **COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. `ZLIB` provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
 
@@ -328,8 +328,8 @@ Using `SNAPPY` compression with parquet files is recommended for best performanc
 
 **Memory occupation**: When inserting or loading data to a parquet table, the whole rowgroup is stored in physical memory until the size exceeds the threshold or the end of the `INSERT` operation. Once either occurs, the entire rowgroup is flushed to disk. Also, at the beginning of the `INSERT` operation, each column is pre-allocated a page buffer. The column pre-allocated page buffer size should be `min(pageSizeLimit,                rowgroupSizeLimit/estimatedColumnWidth/estimatedRecordWidth)` for the first rowgroup. For the following rowgroup, it should be `min(pageSizeLimit,                actualColumnChunkSize in last rowgroup * 1.05)`, of which 1.05 is the estimated scaling factor. When reading data from a parquet table, the requested columns of the row group are loaded into memory. Memory is allocated 8 MB by default. Ensure that memory occupation does not exceed physical memory when setting `ROWGROUPSIZE` or `PAGESIZE`, otherwise you may encounter an out of memory error. 
 
-**Batch vs. individual inserts**
-Only batch loading should be used with parquet files. Repeated individual inserts can result in bloated footers.
+**Bulk vs. trickle loads**
+Only bulk loads are recommended for use with parquet tables. Trickle loads can result in bloated footers and larger data files.
 
 ## <a id="parquetexamples"></a>Parquet Examples
 
