@@ -17,7 +17,7 @@ This document contains instructions for building the local Apache HAWQ (incubati
 
 Bookbinder is meant to be used from within a project called a **book**. The book includes a configuration file that describes which documentation repositories to use as source materials. Bookbinder provides a set of scripts to aggregate those repositories and publish them to various locations.
 
-For Apache HAWQ (incubating), a preconfigured **book** is provided in the directory `/hawq-book`.  You can use this configuration to build HTML for Apache HAWQ (incubating) on your local system.
+For Apache HAWQ (incubating), a preconfigured **book** is provided in a separate branch named `book`.  You can use this configuration to build HTML for Apache HAWQ (incubating) on your local system.
 
 <a name="prereq"></a>
 ## Prerequisites
@@ -27,10 +27,10 @@ For Apache HAWQ (incubating), a preconfigured **book** is provided in the direct
 <a name="building"></a>
 ## Building the Documentation
 
-1. Begin by moving or copying the `/hawq-book directory` to a directory that is parallel to `incubator-hawq/docs-apache-hawq-md`. For example:
+1. Begin by cloning the `book` branch of this repository to a new directory that is parallel to `asf/incubator-hawq-docs`. For example:
 
-        $ cd /repos/incubator-hawq/docs-apache-hawq-md
-        $ cp -r hawq-book ..
+        $ cd /repos/asf/incubator-hawq-docs
+        $ git clone --branch book  http://git-wip-us.apache.org/repos/asf/incubator-hawq-docs.git ../hawq-book
         $ cd ../hawq-book
 
 2. The GemFile in the book directory already defines the `gem "bookbindery"` dependency. Make sure you are in the relocated book directory and enter:
