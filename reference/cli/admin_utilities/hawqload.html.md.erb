@@ -1,0 +1,420 @@
+---
+title: hawq load
+---
+
+Acts as an interface to the external table parallel loading feature. Executes a load specification defined in a YAML-formatted control file to invoke the HAWQ parallel file server (`gpfdist`).
+
+## <a id="topic1__section2"></a>Synopsis
+
+``` pre
+hawq load -f <control_file> [-l <log_file>]   
+  [--gpfdist_timeout <seconds>] 
+  [[-v | -V] 
+  [-q]]
+  [-D]
+  [<connection_options>]
+
+hawq load -? 
+
+hawq load --version
+```
+where:
+
+``` pre
+<connection_options> =
+  [-h <host>] 
+  [-p <port>] 
+  [-U <username>] 
+  [-d <database>]
+  [-W]
+```
+
+## <a id="topic1__section3"></a>Prerequisites
+
+The client machine where `hawq load` is executed must have the following:
+
+-   Python 2.6.2 or later, `pygresql` (the Python interface to PostgreSQL), and `pyyaml`. Note that Python and the required Python libraries are included with the HAWQ server installation, so if you have HAWQ installed on the machine where `hawq load` is running, you do not need a separate Python installation.
+    **Note:** HAWQ Loaders for Windows supports only Python 2.5 (available from [www.python.org](http://python.org)).
+
+-   The [gpfdist](gpfdist.html#topic1) parallel file distribution program installed and in your `$PATH`. This program is located in `$GPHOME/bin` of your HAWQ server installation.
+-   Network access to and from all hosts in your HAWQ array (master and segments).
+-   Network access to and from the hosts where the data to be loaded resides (ETL servers).
+
+## <a id="topic1__section4"></a>Description
+
+`hawq load` is a data loading utility that acts as an interface to HAWQ's external table parallel loading feature. Using a load specification defined in a YAML formatted control file, `hawq                     load` executes a load by invoking the HAWQ parallel file server ([gpfdist](gpfdist.html#topic1)), creating an external table definition based on the source data defined, and executing an `INSERT`, `UPDATE` or `MERGE` operation to load the source data into the target table in the database.
+
+The operation, including any SQL commands specified in the `SQL` collection of the YAML control file (see [Control File Format](#topic1__section7)), are performed as a single transaction to prevent inconsistent data when performing multiple, simultaneous load operations on a target table.
+
+## <a id="args"></a>Arguments
+
+<dt>-f &lt;control\_file&gt;  </dt>
+<dd>A YAML file that contains the load specification details. See [Control File Format](#topic1__section7).</dd>
+
+## <a id="topic1__section5"></a>Options
+
+<dt>-\\\-gpfdist\_timeout &lt;seconds&gt;  </dt>
+<dd>Sets the timeout for the `gpfdist` parallel file distribution program to send a response. Enter a value from `0` to `30` seconds (entering "`0`" to disables timeouts). Note that you might need to increase this value when operating on high-traffic networks.</dd>
+
+<dt>-l &lt;log\_file&gt;  </dt>
+<dd>Specifies where to write the log file. Defaults to `~/hawq/Adminlogs/hawq_load_YYYYMMDD`. For more information about the log file, see [Log File Format](#topic1__section9).</dd>
+
+<dt>-q (no screen output)  </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
+
+<dt>-D (debug mode)  </dt>
+<dd>Check for error conditions, but do not execute the load.</dd>
+
+<dt>-v (verbose mode)  </dt>
+<dd>Show verbose output of the load steps as they are executed.</dd>
+
+<dt>-V (very verbose mode)  </dt>
+<dd>Shows very verbose output.</dd>
+
+<dt>-? (show help)  </dt>
+<dd>Show help, then exit.</dd>
+
+<dt>-\\\-version  </dt>
+<dd>Show the version of this utility, then exit.</dd>
+
+**Connection Options**
+
+<dt>-d &lt;database&gt;  </dt>
+<dd>The database to load into. If not specified, reads from the load control file, the environment variable `$PGDATABASE` or defaults to the current system user name.</dd>
+
+<dt>-h &lt;hostname&gt;  </dt>
+<dd>Specifies the host name of the machine on which the HAWQ master database server is running. If not specified, reads from the load control file, the environment variable `$PGHOST` or defaults to `localhost`.</dd>
+
+<dt>-p &lt;port&gt;  </dt>
+<dd>Specifies the TCP port on which the HAWQ master database server is listening for connections. If not specified, reads from the load control file, the environment variable `$PGPORT` or defaults to 5432.</dd>
+
+<dt>-U &lt;username&gt;  </dt>
+<dd>The database role name to connect as. If not specified, reads from the load control file, the environment variable `$PGUSER` or defaults to the current system user name.</dd>
+
+<dt>-W (force password prompt)  </dt>
+<dd>Force a password prompt. If not specified, reads the password from the environment variable `$PGPASSWORD` or from a password file specified by `$PGPASSFILE` or in `~/.pgpass`. If these are not set, then `hawq                                 load` will prompt for a password even if `-W` is not supplied.</dd>
+
+## <a id="topic1__section7"></a>Control File Format
+
+The `hawq load` control file uses the [YAML 1.1](http://yaml.org/spec/1.1/) document format and then implements its own schema for defining the various steps of a HAWQ load operation. The control file must be a valid YAML document.
+
+The `hawq load` program processes the control file document in order and uses indentation (spaces) to determine the document hierarchy and the relationships of the sections to one another. The use of white space is significant. White space should not be used simply for formatting purposes, and tabs should not be used at all.
+
+The basic structure of a load control file is:
+
+``` pre
+---
+VERSION: 1.0.0.1
+DATABASE: db_name
+USER: db_username
+HOST: master_hostname
+PORT: master_port
+GPLOAD:
+   INPUT:
+    - SOURCE:
+         LOCAL_HOSTNAME:
+           - hostname_or_ip
+         PORT: http_port
+       | PORT_RANGE: [start_port_range, end_port_range]
+         FILE: 
+           - /path/to/input_file
+         SSL: true | false
+         CERTIFICATES_PATH: /path/to/certificates
+    - COLUMNS:
+           - field_name: data_type
+    - TRANSFORM: 'transformation'
+    - TRANSFORM_CONFIG: 'configuration-file-path' 
+    - MAX_LINE_LENGTH: integer 
+    - FORMAT: text | csv
+    - DELIMITER: 'delimiter_character'
+    - ESCAPE: 'escape_character' | 'OFF'
+    - NULL_AS: 'null_string'
+    - FORCE_NOT_NULL: true | false
+    - QUOTE: 'csv_quote_character'
+    - HEADER: true | false
+    - ENCODING: database_encoding
+    - ERROR_LIMIT: integer
+    - ERROR_TABLE: schema.table_name
+   OUTPUT:
+    - TABLE: schema.table_name
+    - MODE: insert | update | merge
+    - MATCH_COLUMNS:
+           - target_column_name
+    - UPDATE_COLUMNS:
+           - target_column_name
+    - UPDATE_CONDITION: 'boolean_condition'
+    - MAPPING:
+              target_column_name: source_column_name | 'expression'
+   PRELOAD:
+    - TRUNCATE: true | false
+    - REUSE_TABLES: true | false
+   SQL:
+    - BEFORE: "sql_command"
+    - AFTER: "sql_command"
+```
+
+**Control File Schema Elements**  
+
+The control file contains the schema elements for:
+
+-   Version
+-   Database
+-   User
+-   Host
+-   Port
+-   GPLOAD file
+
+<dt>VERSION  </dt>
+<dd>Optional. The version of the `hawq load` control file schema, for example: 1.0.0.1.</dd>
+
+<dt>DATABASE  </dt>
+<dd>Optional. Specifies which database in HAWQ to connect to. If not specified, defaults to `$PGDATABASE` if set or the current system user name. You can also specify the database on the command line using the `-d` option.</dd>
+
+<dt>USER  </dt>
+<dd>Optional. Specifies which database role to use to connect. If not specified, defaults to the current user or `$PGUSER` if set. You can also specify the database role on the command line using the `-U` option.
+
+If the user running `hawq load` is not a HAWQ superuser, then the server configuration parameter `gp_external_grant_privileges` must be set to `on` for the load to be processed.</dd>
+
+<dt>HOST  </dt>
+<dd>Optional. Specifies HAWQ master host name. If not specified, defaults to localhost or `$PGHOST` if set. You can also specify the master host name on the command line using the `-h` option.</dd>
+
+<dt>PORT  </dt>
+<dd>Optional. Specifies HAWQ master port. If not specified, defaults to 5432 or `$PGPORT` if set. You can also specify the master port on the command line using the `-p` option.</dd>
+
+<dt>GPLOAD  </dt>
+<dd>Required. Begins the load specification section. A `GPLOAD` specification must have an `INPUT` and an `OUTPUT` section defined.</dd>
+
+<dt>INPUT  </dt>
+<dd>Required element. Defines the location and the format of the input data to be loaded. `hawq load` will start one or more instances of the [gpfdist](gpfdist.html#topic1) file distribution program on the current host and create the required external table definition(s) in HAWQ that point to the source data. Note that the host from which you run `hawq load` must be accessible over the network by all HAWQ hosts (master and segments).</dd>
+
+<dt>SOURCE  </dt>
+<dd>Required. The `SOURCE` block of an `INPUT` specification defines the location of a source file. An `INPUT` section can have more than one `SOURCE` block defined. Each `SOURCE` block defined corresponds to one instance of the [gpfdist](gpfdist.html#topic1) file distribution program that will be started on the local machine. Each `SOURCE` block defined must have a `FILE` specification.</dd>
+
+<dt>LOCAL\_HOSTNAME  </dt>
+<dd>Optional. Specifies the host name or IP address of the local machine on which `hawq                                                   load` is running. If this machine is configured with multiple network interface cards (NICs), you can specify the host name or IP of each individual NIC to allow network traffic to use all NICs simultaneously. The default is to use the local machine's primary host name or IP only.</dd>
+
+<dt>PORT  </dt>
+<dd>Optional. Specifies the specific port number that the [gpfdist](gpfdist.html#topic1) file distribution program should use. You can also supply a `PORT_RANGE` to select an available port from the specified range. If both `PORT` and `PORT_RANGE` are defined, then `PORT` takes precedence. If neither `PORT` or `PORT_RANGE` are defined, the default is to select an available port between 8000 and 9000.
+
+If multiple host names are declared in `LOCAL_HOSTNAME`, this port number is used for all hosts. This configuration is desired if you want to use all NICs to load the same file or set of files in a given directory location.</dd>
+
+<dt>PORT\_RANGE  </dt>
+<dd>Optional. Can be used instead of `PORT` to supply a range of port numbers from which `hawq load` can choose an available port for this instance of the [gpfdist](gpfdist.html#topic1) file distribution program.</dd>
+
+<dt>FILE  </dt>
+<dd>Required. Specifies the location of a file, named pipe, or directory location on the local file system that contains data to be loaded. You can declare more than one file so long as the data is of the same format in all files specified.
+
+If the files are compressed using `gzip` or `bzip2` (have a `.gz` or `.bz2` file extension), the files will be uncompressed automatically (provided that `gunzip` or `bunzip2` is in your path).
+
+When specifying which source files to load, you can use the wildcard character (`*`) or other C-style pattern matching to denote multiple files. The files specified are assumed to be relative to the current directory from which `hawq                                                   load` is executed (or you can declare an absolute path).</dd>
+
+<dt>SSL  </dt>
+<dd>Optional. Specifies usage of SSL encryption.</dd>
+
+<dt>CERTIFICATES\_PATH  </dt>
+<dd>Required when SSL is `true`; cannot be specified when SSL is `false` or unspecified. The location specified in `CERTIFICATES_PATH` must contain the following files:
+
+-   The server certificate file, `server.crt`
+-   The server private key file, `server.key`
+-   The trusted certificate authorities, `root.crt`
+
+The root directory (`/`) cannot be specified as `CERTIFICATES_PATH`.</dd>
+
+<dt>COLUMNS  </dt>
+<dd>Optional. Specifies the schema of the source data file(s) in the format of `field_name:data_type`. The `DELIMITER` character in the source file is what separates two data value fields (columns). A row is determined by a line feed character (`0x0a`).
+
+If the input `COLUMNS` are not specified, then the schema of the output `TABLE` is implied, meaning that the source data must have the same column order, number of columns, and data format as the target table.
+
+The default source-to-target mapping is based on a match of column names as defined in this section and the column names in the target `TABLE`. This default mapping can be overridden using the `MAPPING` section.</dd>
+
+<dt>TRANSFORM  </dt>
+<dd>Optional. Specifies the name of the input XML transformation passed to `hawq                                                   load`. <span class="ph">For more information about XML transformations, see [&quot;Loading and Unloading Data.&quot;](../../../datamgmt/load/g-loading-and-unloading-data.html#topic1).</span></dd>
+
+<dt>TRANSFORM\_CONFIG  </dt>
+<dd>Optional. Specifies the location of the XML transformation configuration file that is specified in the `TRANSFORM` parameter, above.</dd>
+
+<dt>MAX\_LINE\_LENGTH  </dt>
+<dd>Optional. An integer that specifies the maximum length of a line in the XML transformation data passed to `hawq load`.</dd>
+
+<dt>FORMAT  </dt>
+<dd>Optional. Specifies the format of the source data file(s) - either plain text (`TEXT`) or comma separated values (`CSV`) format. Defaults to `TEXT` if not specified.<span class="ph"> For more information about the format of the source data, see [&quot;Loading and Unloading Data&quot;](../../../datamgmt/load/g-loading-and-unloading-data.html#topic1) .</span></dd>
+
+<dt>DELIMITER  </dt>
+<dd>Optional. Specifies a single ASCII character that separates columns within each row (line) of data. The default is a tab character in TEXT mode, a comma in CSV mode.You can also specify a non-printable ASCII character via an escape sequence\\ using the decimal representation of the ASCII character. For example, `\014` represents the shift out character..</dd>
+
+<dt>ESCAPE  </dt>
+<dd>Specifies the single character that is used for C escape sequences (such as `\n`, `\t`, `\100`, and so on) and for escaping data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is a \\ (backslash) for text-formatted files and a `"` (double quote) for csv-formatted files, however it is possible to specify another character to represent an escape. It is also possible to disable escaping in text-formatted files by specifying the value `'OFF'` as the escape value. This is very useful for data such as text-formatted web log data that has many embedded backslashes that are not intended to be escapes.</dd>
+
+<dt>NULL\_AS  </dt>
+<dd>Optional. Specifies the string that represents a null value. The default is `\N` (backslash-N) in `TEXT` mode, and an empty value with no quotations in `CSV` mode. You might prefer an empty string even in `TEXT` mode for cases where you do not want to distinguish nulls from empty strings. Any source data item that matches this string will be considered a null value.</dd>
+
+<dt>FORCE\_NOT\_NULL  </dt>
+<dd>Optional. In CSV mode, processes each specified column as though it were quoted and hence not a NULL value. For the default null string in CSV mode (nothing between two delimiters), this causes missing values to be evaluated as zero-length strings.</dd>
+
+<dt>QUOTE  </dt>
+<dd>Required when `FORMAT` is `CSV`. Specifies the quotation character for `CSV` mode. The default is double-quote (`"`).</dd>
+
+<dt>HEADER  </dt>
+<dd>Optional. Specifies that the first line in the data file(s) is a header row (contains the names of the columns) and should not be included as data to be loaded. If using multiple data source files, all files must have a header row. The default is to assume that the input files do not have a header row.</dd>
+
+<dt>ENCODING  </dt>
+<dd>Optional. Character set encoding of the source data. Specify a string constant (such as `'SQL_ASCII'`), an integer encoding number, or `'DEFAULT'` to use the default client encoding. If not specified, the default client encoding is used.</dd>
+
+<dt>ERROR\_LIMIT  </dt>
+<dd>Optional. Sets the error limit count for HAWQ segment instances during input processing. Error rows will be written to the table specified in `ERROR_TABLE`. The value of ERROR\_LIMIT must be 2 or greater.</dd>
+
+<dt>ERROR\_TABLE  </dt>
+<dd>Optional when `ERROR_LIMIT` is declared. Specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the `ERROR_TABLE` specified already exists, it will be used. If it does not exist, it will be automatically generated.
+
+For more information about handling load errors, see "[Loading and Unloading Data](../../../datamgmt/load/g-loading-and-unloading-data.html#topic1)".</dd>
+
+<dt>OUTPUT   </dt>
+<dd>Required element. Defines the target table and final data column values that are to be loaded into the database.</dd>
+
+<dt>TABLE  </dt>
+<dd>Required. The name of the target table to load into.</dd>
+
+<dt>MODE  </dt>
+<dd>Optional. Defaults to `INSERT` if not specified. There are three available load modes:</dd>
+
+<dt>INSERT  </dt>
+<dd>Loads data into the target table using the following method:
+
+``` pre
+INSERT INTO target_table SELECT * FROM input_data;
+```
+</dd>
+
+<dt>UPDATE</dt>
+<dd>Updates the `UPDATE_COLUMNS` of the target table where the rows have `MATCH_COLUMNS` attribute values equal to those of the input data, and the optional `UPDATE_CONDITION` is true.</dd>
+
+<dt>MERGE</dt>
+<dd>Inserts new rows and updates the `UPDATE_COLUMNS` of existing rows where `MATCH_COLUMNS` attribute values are equal to those of the input data, and the optional `UPDATE_CONDITION` is true. New rows are identified when the `MATCH_COLUMNS` value in the source data does not have a corresponding value in the existing data of the target table. In those cases, the **entire row** from the source file is inserted, not only the `MATCH` and `UPDATE` columns. If there are multiple new `MATCH_COLUMNS` values that are the same, only one new row for that value will be inserted. Use `UPDATE_CONDITION` to filter out the rows to discard.</dd>
+
+<dt>MATCH\_COLUMNS  </dt>
+<dd>Required if `MODE` is `UPDATE` or `MERGE`. Specifies the column(s) to use as the join condition for the update. The attribute value in the specified target column(s) must be equal to that of the corresponding source data column(s) in order for the row to be updated in the target table.</dd>
+
+<dt>UPDATE\_COLUMNS  </dt>
+<dd>Required if `MODE` is `UPDATE` or `MERGE`. Specifies the column(s) to update for the rows that meet the `MATCH_COLUMNS` criteria and the optional `UPDATE_CONDITION`.</dd>
+
+<dt>UPDATE\_CONDITION  </dt>
+<dd>Optional. Specifies a Boolean condition (similar to what you would declare in a `WHERE` clause) that must be met for a row in the target table to be updated (or inserted in the case of a `MERGE`).</dd>
+
+<dt>MAPPING  </dt>
+<dd>Optional. If a mapping is specified, it overrides the default source-to-target column mapping. The default source-to-target mapping is based on a match of column names as defined in the source `COLUMNS` section and the column names of the target `TABLE`. A mapping is specified as either:
+
+`target_column_name:                                                   source_column_name`
+
+or
+
+`target_column_name:                                                   'expression'`
+
+Where &lt;expression&gt; is any expression that you would specify in the `SELECT` list of a query, such as a constant value, a column reference, an operator invocation, a function call, and so on.</dd>
+
+<dt>PRELOAD  </dt>
+<dd>Optional. Specifies operations to run prior to the load operation. Currently, the only preload operation is `TRUNCATE`.</dd>
+
+<dt>TRUNCATE  </dt>
+<dd>Optional. If set to true, `hawq load` will remove all rows in the target table prior to loading it.</dd>
+
+<dt>REUSE\_TABLES  </dt>
+<dd>Optional. If set to true, `hawq load` will not drop the external table objects and staging table objects it creates. These objects will be reused for future load operations that use the same load specifications. Reusing objects improves performance of trickle loads (ongoing small loads to the same target table).</dd>
+
+<dt>SQL  </dt>
+<dd>Optional. Defines SQL commands to run before and/or after the load operation. Commands that contain spaces or special characters must be enclosed in quotes. You can specify multiple `BEFORE` and/or `AFTER` commands. List commands in the desired order of execution.</dd>
+
+<dt>BEFORE  </dt>
+<dd>Optional. A SQL command to run before the load operation starts. Enclose commands in quotes.</dd>
+
+<dt>AFTER  </dt>
+<dd>Optional. A SQL command to run after the load operation completes. Enclose commands in quotes.</dd>
+
+## Notes
+
+If your database object names were created using a double-quoted identifier (delimited identifier), you must specify the delimited name within single quotes in the `hawq load` control file. For example, if you create a table as follows:
+
+``` sql
+CREATE TABLE "MyTable" ("MyColumn" text);
+```
+
+Your YAML-formatted `hawq load` control file would refer to the above table and column names as follows:
+
+``` pre
+- COLUMNS:
+   - '"MyColumn"': text
+OUTPUT:
+   - TABLE: public.'"MyTable"'
+```
+
+## <a id="topic1__section9"></a>Log File Format
+
+Log files output by `hawq load` have the following format:
+
+``` pre
+timestamp|level|message
+```
+
+Where &lt;timestamp&gt; takes the form: `YYYY-MM-DD                     HH:MM:SS`, &lt;level&gt; is one of `DEBUG`, `LOG`, `INFO`, `ERROR`, and &lt;message&gt; is a normal text message.
+
+Some `INFO` messages that may be of interest in the log files are (where *\#* corresponds to the actual number of seconds, units of data, or failed rows):
+
+``` pre
+INFO|running time: #.## seconds
+INFO|transferred #.# kB of #.# kB.
+INFO|hawq load succeeded
+INFO|hawq load succeeded with warnings
+INFO|hawq load failed
+INFO|1 bad row
+INFO|# bad rows
+```
+
+## <a id="topic1__section10"></a>Examples
+
+Run a load job as defined in `my_load.yml`:
+
+``` shell
+$ hawq load -f my_load.yml
+```
+
+Example load control file:
+
+``` pre
+---
+VERSION: 1.0.0.1
+DATABASE: ops
+USER: gpadmin
+HOST: mdw-1
+PORT: 5432
+GPLOAD:
+   INPUT:
+    - SOURCE:
+         LOCAL_HOSTNAME:
+           - etl1-1
+           - etl1-2
+           - etl1-3
+           - etl1-4
+         PORT: 8081
+         FILE: 
+           - /var/load/data/*
+    - COLUMNS:
+           - name: text
+           - amount: float4
+           - category: text
+           - desc: text
+           - date: date
+    - FORMAT: text
+    - DELIMITER: '|'
+    - ERROR_LIMIT: 25
+    - ERROR_TABLE: payables.err_expenses
+   OUTPUT:
+    - TABLE: payables.expenses
+    - MODE: INSERT
+   SQL:
+   - BEFORE: "INSERT INTO audit VALUES('start', current_timestamp)"
+   - AFTER: "INSERT INTO audit VALUES('end', 
+current_timestamp)"
+```
+
+## <a id="topic1__section11"></a>See Also
+
+[gpfdist](gpfdist.html#topic1), [CREATE EXTERNAL TABLE](../../sql/CREATE-EXTERNAL-TABLE.html#topic1)

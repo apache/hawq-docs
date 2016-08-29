@@ -1,0 +1,31 @@
+---
+title: DROP USER
+---
+
+Removes a database role.
+
+## <a id="topic1__section2"></a>Synopsis
+
+``` pre
+DROP USER [IF EXISTS] <name> [, ...]
+```
+
+## <a id="topic1__section3"></a>Description
+
+`DROP USER` is an obsolete command, though still accepted for backwards compatibility. Groups (and users) have been superseded by the more general concept of roles. See [DROP ROLE](DROP-ROLE.html) for more information.
+
+## <a id="topic1__section4"></a>Parameters
+
+<dt>IF EXISTS  </dt>
+<dd>Do not throw an error if the role does not exist. A notice is issued in this case.</dd>
+
+<dt>\<name\>  </dt>
+<dd>The name of an existing role.</dd>
+
+## <a id="topic1__section5"></a>Compatibility
+
+There is no `DROP USER` statement in the SQL standard. The SQL standard leaves the definition of users to the implementation.
+
+## <a id="topic1__section6"></a>See Also
+
+[DROP ROLE](DROP-ROLE.html)

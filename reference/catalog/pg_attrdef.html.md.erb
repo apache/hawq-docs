@@ -1,0 +1,19 @@
+---
+title: pg_attrdef
+---
+
+The `pg_attrdef` table stores column default values. The main information about columns is stored in [pg\_attribute](pg_attribute.html#topic1). Only columns that explicitly specify a default value (when the table is created or the column is added) will have an entry here.
+
+<a id="topic1__fz143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_attrdef</span>
+
+| column    | type     | references           | description                                                                                           |
+|-----------|----------|----------------------|-------------------------------------------------------------------------------------------------------|
+| `adrelid` | oid      | pg\_class.oid        | The table this column belongs to                                                                      |
+| `adnum`   | smallint | pg\_attribute.attnum | The number of the column                                                                              |
+| `adbin `  | text     |                      | The internal representation of the column default value                                               |
+| `adsrc`   | text     |                      | A human-readable representation of the default value. This field is historical, and is best not used. |
+
+
+
+

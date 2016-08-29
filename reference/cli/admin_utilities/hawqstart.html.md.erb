@@ -1,0 +1,119 @@
+---
+title: hawq start
+---
+
+Starts a HAWQ system.
+
+## <a id="topic1__section2"></a>Synopsis
+
+``` pre
+hawq start <object> [-l| --logdir <logfile_directory>] [-q| --quiet] 
+        [-v|--verbose] [-m|--masteronly]  [-t|--timeout <timeout_seconds>] 
+        [-R | --restrict] [-U | --special-mode maintenance]
+        [--ignore-bad-hosts cluster | allsegments]
+     
+```
+
+``` pre
+hawq start -? | -h | --help 
+
+hawq start --version
+```
+
+## <a id="topic1__section3"></a>Description
+
+The `hawq start` utility is used to start the HAWQ server processes. When you start a HAWQ system, you are actually starting several `postgres` database server listener processes at once (the master and all of the segment instances). The `hawq start` utility handles the startup of the individual instances. Each instance is started in parallel.
+
+The *object* in the command specifies what entity should be started: e.g. a cluster, a segment, the master node, standby node, or all segments in the cluster.
+
+The first time an administrator runs `hawq start cluster`, the utility creates a static hosts cache file named `$GPHOME/etc/slaves` to store the segment host names. Subsequently, the utility uses this list of hosts to start the system more efficiently. The utility will create a new hosts cache file at each startup.
+
+The `hawq start master` command starts only the HAWQ master, without segment or standby nodes. These can be started later, using `hawq start segment` and/or `hawq                                         start standby`.
+
+**Note:** Typically you should always use `hawq start cluster` or `hawq restart cluster` to start the cluster. If you do end up using `hawq start                                         standby|master|segment` to start nodes individually, make sure you always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
+
+Before you can start a HAWQ system, you must have initialized the system or node by using `hawq init <object>` first.
+
+## Objects
+
+<dt>cluster  </dt>
+<dd>Start a HAWQ cluster.</dd>
+
+<dt>master  </dt>
+<dd>Start HAWQ master.</dd>
+
+<dt>segment  </dt>
+<dd>Start a local segment node.</dd>
+
+<dt>standby  </dt>
+<dd>Start a HAWQ standby.</dd>
+
+<dt>allsegments  </dt>
+<dd>Start all segments.</dd>
+
+## <a id="topic1__section4"></a>Options
+
+<dt>-l , -\\\-logdir \<logfile\_directory\>  </dt>
+<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
+
+<dt>-q , -\\\-quiet   </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
+
+<dt>-v , -\\\-verbose  </dt>
+<dd>Displays detailed status, progress and error messages output by the utility.</dd>
+
+<dt>-m , -\\\-masteronly  </dt>
+<dd>Optional. Starts the HAWQ master instance only, in utility mode, which may be useful for maintenance tasks. This mode only allows connections to the master in utility mode. For example:
+
+``` shell
+$ PGOPTIONS='-c gp_role=utility' psql
+```
+</dd>
+
+<dt>-R , -\\\-restrict (restricted mode)  </dt>
+<dd>Starts HAWQ in restricted mode (only database superusers are allowed to connect).</dd>
+
+<dt>-t , -\\\-timeout \<timeout\_seconds\>  </dt>
+<dd>Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 60 seconds.</dd>
+
+<dt>-U , -\\\-special-mode maintenance   </dt>
+<dd>(Superuser only) Start HAWQ in \[maintenance | upgrade\] mode. In maintenance mode, the `gp_maintenance_conn` parameter is set.</dd>
+
+<dt>-\\\-ignore-bad-hosts cluster | allsegments  </dt>
+<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
+
+<dt>-? , -h , -\\\-help (help)  </dt>
+<dd>Displays the online help.</dd>
+
+<dt>--version (show utility version)  </dt>
+<dd>Displays the version of this utility.</dd>
+
+## <a id="topic1__section5"></a>Examples
+
+Start a HAWQ system:
+
+``` shell
+$ hawq start cluster
+```
+
+Start a HAWQ master in maintenance mode:
+
+``` shell
+$ hawq start master -m
+```
+
+Start a HAWQ system in restricted mode (only allow superuser connections):
+
+``` shell
+$ hawq start cluster -R
+```
+
+Start the HAWQ master instance only and connect in utility mode:
+
+``` shell
+$ hawq start master -m PGOPTIONS='-c gp_session_role=utility' psql
+```
+
+## <a id="topic1__section6"></a>See Also
+
+[hawq stop](hawqstop.html#topic1), [hawq init](hawqinit.html#topic1)

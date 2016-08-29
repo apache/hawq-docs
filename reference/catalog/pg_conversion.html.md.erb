@@ -1,0 +1,22 @@
+---
+title: pg_conversion
+---
+
+The `pg_conversion` system catalog table describes the available encoding conversion procedures as defined by `CREATE CONVERSION`.
+
+<a id="topic1__gi143898"></a>
+<span class="tablecap">Table 1. pg\_catalog.pg\_conversion</span>
+
+| column           | type    | references        | description                                                      |
+|------------------|---------|-------------------|------------------------------------------------------------------|
+| `conname`        | name    |                   | Conversion name (unique within a namespace).                     |
+| `connamespace`   | oid     | pg\_namespace.oid | The OID of the namespace (schema) that contains this conversion. |
+| `conowner`       | oid     | pg\_authid.oid    | Owner of the conversion.                                         |
+| `conforencoding` | integer |                   | Source encoding ID.                                              |
+| `contoencoding`  | integer |                   | Destination encoding ID.                                         |
+| `conproc`        | regproc | pg\_proc.oid      | Conversion procedure.                                            |
+| `condefault`     | boolean |                   | True if this is the default conversion.                          |
+
+
+
+

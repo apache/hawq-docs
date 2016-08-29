@@ -1,0 +1,37 @@
+---
+title: GPORCA Limitations
+---
+
+<span class="shortdesc">There are limitations in HAWQ when GPORCA is enabled. GPORCA and the legacy query optimizer currently coexist in HAWQ because GPORCA does not support all HAWQ features. </span>
+
+
+## <a id="topic_kgn_vxl_vp"></a>Unsupported SQL Query Features
+
+These HAWQ features are unsupported when GPORCA is enabled:
+
+-   Indexed expressions
+-   `PERCENTILE` window function
+-   External parameters
+-   SortMergeJoin (SMJ)
+-   Ordered aggregations
+-   These analytics extensions:
+    -   CUBE
+    -   Multiple grouping sets
+-   These scalar operators:
+    -   `ROW`
+    -   `ROWCOMPARE`
+    -   `FIELDSELECT`
+-   Multiple `DISTINCT` qualified aggregate functions
+-   Inverse distribution functions
+
+## <a id="topic_u4t_vxl_vp"></a>Performance Regressions
+
+When GPORCA is enabled in HAWQ, the following features are known performance regressions:
+
+-   Short running queries - For GPORCA, short running queries might encounter additional overhead due to GPORCA enhancements for determining an optimal query execution plan.
+-   `ANALYZE` - For GPORCA, the `ANALYZE` command generates root partition statistics for partitioned tables. For the legacy optimizer, these statistics are not generated.
+-   DML operations - For GPORCA, DML enhancements including the support of updates on partition and distribution keys might require additional overhead.
+
+Also, enhanced functionality of the features from previous versions could result in additional time required when GPORCA executes SQL statements with the features.
+
+

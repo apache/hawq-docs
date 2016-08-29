@@ -1,0 +1,21 @@
+---
+title: Working with File-Based External Tables
+---
+
+External tables provide access to data stored in data sources outside of HAWQ as if the data were stored in regular database tables. Data can be read from or written to external tables.
+
+An external table is a HAWQ database table backed with data that resides outside of the database. An external table is either readable or writable. It can be used like a regular database table in SQL commands such as `SELECT` and `INSERT` and joined with other tables. External tables are most often used to load and unload database data.
+
+Web-based external tables provide access to data served by an HTTP server or an operating system process. See [Creating and Using Web External Tables](g-creating-and-using-web-external-tables.html#topic31) for more about web-based tables.
+
+-   **[Accessing File-Based External Tables](../../datamgmt/load/g-external-tables.html)**
+
+    External tables enable accessing external files as if they are regular database tables. They are often used to move data into and out of a HAWQ database.
+
+-   **[gpfdist Protocol](../../datamgmt/load/g-gpfdist-protocol.html)**
+
+-   **[gpfdists Protocol](../../datamgmt/load/g-gpfdists-protocol.html)**
+
+-   **[Handling Errors in External Table Data](../../datamgmt/load/g-handling-errors-ext-table-data.html)**
+
+
