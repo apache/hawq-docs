@@ -1,10 +1,10 @@
-book_repo: incubator-hawq/docs-book-hawq
+book_repo: asf/hawq-book
 
 public_host: http://localhost:9292/
 
 sections:
  - repository:
-     name: incubator-hawq/docs-apache-hawq-md
+     name: asf/incubator-hawq-docs
      ref: develop
    directory: 20
    subnav_template: apache-hawq-nav
