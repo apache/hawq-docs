@@ -27,10 +27,10 @@ For Apache HAWQ (incubating), a preconfigured **book** is provided in a separate
 <a name="building"></a>
 ## Building the Documentation
 
-1. Begin by cloning the `book` branch of this repository to a new directory that is parallel to `apache/incubator-hawq-docs`. For example:
+1. Begin by cloning the `book` branch of this repository to a new directory that is parallel to `asf/incubator-hawq-docs`. For example:
 
-        $ cd /repos/apache/incubatoro-hawq-docs
-        $ git clone --branch book git@github.com:apache/incubator-hawq-docs.git ../hawq-book
+        $ cd /repos/asf/incubator-hawq-docs
+        $ git clone --branch book  http://git-wip-us.apache.org/repos/asf/incubator-hawq-docs.git ../hawq-book
         $ cd ../hawq-book
 
 2. The GemFile in the book directory already defines the `gem "bookbindery"` dependency. Make sure you are in the relocated book directory and enter:
