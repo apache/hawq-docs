@@ -41,14 +41,6 @@ export LD_LIBRARY_PATH
 
 The following are HAWQ environment variables. You may want to add the connection-related environment variables to your profile, for convenience. That way, you do not have to type so many options on the command line for client connections. Note that these environment variables should be set on the HAWQ master host only.
 
-### <a id="master_data_directory"></a>MASTER\_DATA\_DIRECTORY
-
-This variable is only needed for legacy compatibility. The master data directory is now set in hawq-site.xml, by using the `hawq config` command. If used, this variable should point to the directory created by the `hawq init` utility in the master data directory location. For example:
-
-``` pre
-MASTER_DATA_DIRECTORY=/data/master
-export MASTER_DATA_DIRECTORY
-```
 
 ### <a id="pgappname"></a>PGAPPNAME
 
