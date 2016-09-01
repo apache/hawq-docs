@@ -12,7 +12,7 @@ To enable the HDFS NameNode HA feature for use with HAWQ, you need to perform th
 1. Collect information about the target filespace.
 1. Stop the HAWQ cluster and backup the catalog (**Note:** Ambari users must perform this manual step.)
 1. Move the filespace location using the command line tool (**Note:** Ambari users must perform this manual step.)
-1. Reconfigure $\{GPHOME\}/etc/hdfs-client.xml and $\{GPHOME\}/etc/hawq-site.xml files. Then, synchronize updated configuration files to all HAWQ nodes.
+1. Reconfigure `${GPHOME}/etc/hdfs-client.xml` and `${GPHOME}/etc/hawq-site.xml` files. Then, synchronize updated configuration files to all HAWQ nodes.
 1. Start the HAWQ cluster and resynchronize the standby master after moving the filespace.
 
 
@@ -76,26 +76,24 @@ To move the filespace location to a HA-enabled HDFS location, you must move the 
 When you enable HA HDFS, you are changing the HAWQ catalog and persistent tables. You cannot perform transactions while persistent tables are being updated. Therefore, before you move the filespace location, back up the catalog. This is to ensure that you do not lose data due to a hardware failure or during an operation \(such as killing the HAWQ process\). 
 
 
-1. If you defined a custom port for HAWQ master, export the PGPORT environment variable. For example:
+1. If you defined a custom port for HAWQ master, export the `PGPORT` environment variable. For example:
 
 	```shell
 	export PGPORT=9000
 	```
 
-1. If you have not configured it already, export the MASTER\_DATA\_DIRECTORY environment variable.
+1. Save the HAWQ master data directory, found in the `hawq_master_directory` property value from `hawq-site.xml` to an environment variable.
  
 	```bash
-	export MASTER_DATA_DIRECTORY=/path/to/master/catalog
+	export MDATA_DIR=/path/to/hawq_master_directory
 	```
-
-	See [Environment Variables](/20/reference/HAWQEnvironmentVariables.html) for more information on environment variables.
 
 1.  Disconnect all workload connections. Check the active connection with:
 
     ```shell
     $ psql -p ${PGPORT} -c "select * from pg_catalog.pg_stat_activity" -d template1
     ```
-    where $\{PGPORT\} corresponds to the port number you optionally customized for HAWQ master. 
+    where `${PGPORT}` corresponds to the port number you optionally customized for HAWQ master. 
     
 
 2.  Issue a checkpoint: 
@@ -113,7 +111,7 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
 4.  Copy the master data directory to a backup location:
 
     ```shell
-    $ cp -r ${MASTER_DATA_DIRECTORY} /catalog/backup/location
+    $ cp -r ${MDATA_DIR} /catalog/backup/location
     ```
 	The master data directory contains the catalog. Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. Make sure you back this directory up.
 
@@ -123,7 +121,7 @@ When you enable HA HDFS, you are changing the HAWQ catalog and persistent table
 
 HAWQ provides the command line tool, `hawq filespace`, to move the location of the filespace.
 
-1. If you defined a custom port for HAWQ master, export the PGPORT environment variable. For example:
+1. If you defined a custom port for HAWQ master, export the `PGPORT` environment variable. For example:
 
 	```shell
 	export PGPORT=9000
@@ -139,7 +137,7 @@ HAWQ provides the command line tool, `hawq filespace`, to move the location of t
 
 Non-fatal error can occur if you provide invalid input or if you have not stopped HAWQ before attempting a filespace location change. Check that you have followed the instructions from the beginning, or correct the input error before you re-run `hawq filespace`.
 
-Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. When a fatal error occurs, you will see the message, "PLEASE RESTORE MASTER DATA DIRECTORY" in the output. If this occurs, shut down the database and restore the `${MASTER_DATA_DIRECTORY}` that you backed up in Step 4.
+Fatal errors can occur due to hardware failure or if you fail to kill a HAWQ process before attempting a filespace location change. When a fatal error occurs, you will see the message, "PLEASE RESTORE MASTER DATA DIRECTORY" in the output. If this occurs, shut down the database and restore the `${MDATA_DIR}` that you backed up in Step 4.
 
 ### <a id="configuregphomeetchdfsclientxml"></a>Step 5: Update HAWQ to Use NameNode HA by Reconfiguring hdfs-client.xml and hawq-site.xml 
 
