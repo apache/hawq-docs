@@ -7,9 +7,9 @@ Exchanges SSH public keys between hosts.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq ssh-exkeys -f <hostfile_exkeys> | - h <hostname> [-h <hostname> ...]
+hawq ssh-exkeys -f <hostfile_exkeys> | - h <hostname> [-h <hostname> ...] [-p <password>]
 
-hawq ssh-exkeys -e <hostfile_exkeys> -x <hostfile_hawqexpand>
+hawq ssh-exkeys -e <hostfile_exkeys> -x <hostfile_hawqexpand>  [-p <password>]
 
 hawq ssh-exkeys --version
 
@@ -44,6 +44,9 @@ The `hawq ssh-exkeys` utility performs key exchange using the following steps:
 
 <dt>-h \<hostname\>  </dt>
 <dd>Specifies a single host name (or host address) that will participate in the SSH key exchange. You can use the `-h` option multiple times to specify multiple host names and host addresses.</dd>
+
+<dt>-p \<password\>  </dt>
+<dd>Specifies the password used to log in to the hosts. The hosts should share the same password.</dd>
 
 <dt>-\\\-version  </dt>
 <dd>Displays the version of this utility.</dd>
