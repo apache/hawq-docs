@@ -20,7 +20,7 @@ There are several recommendations to keep in mind when modifying the size of you
 
 ## <a id="task_hawq_expand"></a>Adding a New Node to an Existing HAWQ Cluster 
 
-The following procedure describes the steps required to add a node to an existing HAWQ cluster.  First ensure that the new node has been configured per the instructions in [Apache HAWQ System Requirements](/20/requirements/system-requirements.html) and [Select HAWQ Host Machines](/20/install/select-hosts.html).
+The following procedure describes the steps required to add a node to an existing HAWQ cluster.  First ensure that the new node has been configured per the instructions found in [Apache HAWQ System Requirements](/20/requirements/system-requirements.html) and [Select HAWQ Host Machines](/20/install/select-hosts.html).
 
 For example purposes in this procedure, we are adding a new node named `sdw4`.
 
@@ -71,7 +71,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
         $ hawq ssh-exkeys -e hawq_hosts -x new_hosts
         ```
 
-    8.  (Optional) Turn off temporary password-based authentication as described in [Apache HAWQ System Requirements](/20/requirements/system-requirements.html#topic_pwdlessssh).
+    8.  (Optional) If you enabled temporary password-based authentication while preparing/configuring your new HAWQ host system, turn off password-based authentication as described in [Apache HAWQ System Requirements](/20/requirements/system-requirements.html#topic_pwdlessssh).
 
     8.  After setting up passwordless ssh, you can execute the following hawq command to check the target machine's configuration.
 
