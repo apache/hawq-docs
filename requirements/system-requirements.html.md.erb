@@ -173,6 +173,51 @@ If this system uses YARN for resource management, you would set `yarn.nodemanage
 
 If this system uses the default HAWQ resource manager, you would set `hawq_rm_memory_limit_perseg` = `RAM - NON_HAWQ_MEMORY` = 8 GB - 7GB = 1.
 
+## <a id="topic_pwdlessssh"></a>Passwordless SSH Configuration
+
+HAWQ hosts will be configured to use passwordless SSH for intra-cluster communications during the installation process. Temporary password-based authentication must be enabled on each HAWQ host in preparation for this configuration.
+
+1. Install the SSH server if not already configured on the HAWQ system:
+    
+    ``` shell
+    $ yum list installed | grep openssh-server
+    $ yum -y install openssh-server
+    ```
+    
+2. Update the host's SSH configuration to allow password-based authentication. Edit the SSH config file and change the `PasswordAuthentication` configuration value from `no` to `yes`:
+    
+    ``` shell
+    $ sudo vi /etc/ssh/sshd_config
+    ```
+    
+    ```
+    PasswordAuthentication yes
+    ```
+
+3. Restart SSH:
+    
+    ``` shell
+    $ sudo /etc/init.d/sshd restart
+    ```
+
+*After installation is complete*, you may choose to turn off the temporary password-based authentication configured in the previous steps:
+
+1. Open the SSH `/etc/ssh/sshd_config` file in a text editor and update/uncomment the following configuration options.
+    
+    ```
+    RSAAuthentication yes
+    PasswordAuthentication no
+    PubkeyAuthentication yes
+    AuthorizedKeyFile  .ssh/authorized_keys
+    ```
+
+2.  Restart SSH:
+    
+    ``` shell
+    $ sudo /etc/init.d/sshd restart
+    ```
+ 
+
 ## <a id="topic_bsm_hhv_2v"></a>Disk Requirements
 
 -   2GB per host for HAWQ installation. 

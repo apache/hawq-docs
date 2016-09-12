@@ -114,10 +114,11 @@ $ ssh -i my-test.pem user1@192.0.2.0
 
 After launching your HAWQ instance, you will connect to and configure the instance. The  *Instances* page of the EC2 Console lists the running instances and their associated network access information.
 
-Before installing HAWQ, set up the EC2 instances as you would local host server machines. Configure the host operating system, configure host network information (for example, update the `/etc/hosts` file), set operating system parameters, and install operating system packages. For information about how to prepare your operating system environment for HAWQ, see [Select HAWQ Host Machines](../install/select-hosts.html).
+Before installing HAWQ, set up the EC2 instances as you would local host server machines. Configure the host operating system, configure host network information (for example, update the `/etc/hosts` file), set operating system parameters, and install operating system packages. For information about how to prepare your operating system environment for HAWQ, see [Apache HAWQ System Requirements](../requirements/system-requirements.html) and [Select HAWQ Host Machines](../install/select-hosts.html).
 
-?? PACKAGES, KERNEL VERSION, KERNEL SETTINGS, BEST PRACTICES HERE OR WILL THEY BE THE SAME AS FOR PHYSICAL DEVICE?? 
+###Passwordless SSH Configuration<a id="topic_pwdlessssh_cc"></a>
 
+HAWQ hosts will be configured during the installation process to use passwordless SSH for intra-cluster communications. Temporary password-based authentication must be enabled on each HAWQ host in preparation for this configuration. Password authentication is typically disabled by default in cloud images. Update the cloud configuration in `/etc/cloud/cloud.cfg` to enable password authentication in your AMI(s). Set `ssh_pwauth: True` in this file.
   
 ##References<a id="topic_hgz_zwy_bv"></a>
 

@@ -160,6 +160,8 @@ There are several recommendations to keep in mind when modifying the size of you
 -  If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
 ### Procedure
+First ensure that the new node(s) has been configured per the instructions in [Apache HAWQ System Requirements](/20/requirements/system-requirements.html) and [Select HAWQ Host Machines](/20/install/select-hosts.html).
+
 1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
 2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 3.  Click **HAWQ** in the list of installed services.
@@ -201,6 +203,8 @@ There are several recommendations to keep in mind when modifying the size of you
 
     **Note:** The redistribution of table data can take a significant amount of time.
 22.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
+
+23.  (Optional.) Turn off temporary password-based authentication as described in [Apache HAWQ System Requirements](/20/requirements/system-requirements.html#topic_pwdlessssh).
 
 #### <a id="manual-config-steps"></a>Manually Updating the HAWQ Configuration
 If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
