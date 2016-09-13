@@ -218,6 +218,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[gp\_statistics\_use\_fkeys](../../reference/guc/parameter_definitions.html#gp_statistics_use_fkeys)**
 
+-   **[gp\_vmem\_idle\_resource\_timeout](../../reference/guc/parameter_definitions.html#gp_vmem_idle_resource_timeout)**
+
 -   **[gp\_vmem\_protect\_segworker\_cache\_limit](../../reference/guc/parameter_definitions.html#gp_vmem_protect_segworker_cache_limit)**
 
 -   **[gp\_workfile\_checksumming](../../reference/guc/parameter_definitions.html#gp_workfile_checksumming)**
@@ -1658,6 +1660,15 @@ When enabled, allows the legacy query optimizer (planner) to use foreign key inf
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | Boolean     | on      | master, session, reload |
+
+## <a name="gp_vmem_idle_resource_timeout"></a>gp\_vmem\_idle\_resource\_timeout
+
+Sets the time in milliseconds a session can be idle before gangs on the segment databases are released to free up resources.
+
+| Value Range    | Default | Set Classifications     |
+|----------------|---------|-------------------------|
+| number of milliseconds | 18000  | master, session, reload |
+
 
 ## <a name="gp_vmem_protect_segworker_cache_limit"></a>gp\_vmem\_protect\_segworker\_cache\_limit
 
