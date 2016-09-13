@@ -179,10 +179,10 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
 14. To maintain optimal cluster performance, rebalance HDFS data by running the following command:
 15. 
     ```shell
-    $ sudo -u hdfs hdfs balancer -threshold threshhold_value
+    $ sudo -u hdfs hdfs balancer -threshold threshold_value
     ```
     
-    where *threshhold\_value* represents how much a DataNode's disk usage, in percentage, can differ from overall disk usage in the cluster. Adjust the threshold value according to the needs of your production data and disk. The smaller the value, the longer the rebalance time.
+    where *threshold\_value* represents how much a DataNode's disk usage, in percentage, can differ from overall disk usage in the cluster. Adjust the threshold value according to the needs of your production data and disk. The smaller the value, the longer the rebalance time.
 >
     **Note:** If you do not specify a threshold, then a default value of 20 is used. If the balancer detects that a DataNode is using less than a 20% difference of the cluster's overall disk usage, then data on that node will not be rebalanced. For example, if disk usage across all DataNodes in the cluster is 40% of the cluster's total disk-storage capacity, then the balancer script ensures that a DataNode's disk usage is between 20% and 60% of that DataNode's disk-storage capacity. DataNodes whose disk usage falls within that percentage range will not be rebalanced.
 

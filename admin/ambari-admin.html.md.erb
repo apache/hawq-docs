@@ -408,7 +408,7 @@ This alert is triggered when any of the HAWQ Segments fail to register with the 
 
 * Percent HAWQ Segment Status Available:
 This Alert monitors the percentage of HAWQ segments available versus total segments. 
-   Alerts for **WARN**, and **CRITICAL** are displayed when the number of unresponsive HAWQ segments in the cluster is greater than the specified threshhold. Otherwise, the status will show as **OK**.
+   Alerts for **WARN**, and **CRITICAL** are displayed when the number of unresponsive HAWQ segments in the cluster is greater than the specified threshold. Otherwise, the status will show as **OK**.
 
 * PXF Process Alerts:
 PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network. If PXF Alerts are enabled, the Alert status is shown on the PXF Status page.
@@ -423,10 +423,10 @@ To customize the interval, perform the following steps:
 3.  Enter a number for how often to check status for the selected Alert, then click **Save**. The interval must be specified in whole minutes.
 
 
-#### Setting the Available HAWQ Segment Threshhold
+#### Setting the Available HAWQ Segment Threshold
 HAWQ monitors the percentage of available HAWQ segments and can send an alert when a specified percent of unresponsive segments is reached. 
 
-To set the threshhold for the unresponsive segments that will trigger an alert:
+To set the threshold for the unresponsive segments that will trigger an alert:
 
    1.  Click on **Percent HAWQ Segments Available**. 
    2.  Click **Edit**. Enter the percentage of total segments to create a **Warning** alert (default is 10 percent of the total segments) or **Critical** alert (default is 25 percent of total segments).

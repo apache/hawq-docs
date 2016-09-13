@@ -110,7 +110,7 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[gp\_autostats\_mode](../../reference/guc/parameter_definitions.html#gp_autostats_mode)**
 
--   **[gp\_autostats\_on\_change\_threshhold](../../reference/guc/parameter_definitions.html#topic_imj_zhf_gw)**
+-   **[gp\_autostats\_on\_change\_threshold](../../reference/guc/parameter_definitions.html#topic_imj_zhf_gw)**
 
 -   **[gp\_backup\_directIO](../../reference/guc/parameter_definitions.html#gp_backup_directIO)**
 
@@ -1111,7 +1111,7 @@ Automatic statistics collection is triggered if data is inserted directly in a l
 </tbody>
 </table>
 
-## <a name="topic_imj_zhf_gw"></a>gp\_autostats\_on\_change\_threshhold
+## <a name="topic_imj_zhf_gw"></a>gp\_autostats\_on\_change\_threshold
 
 Specifies the threshold for automatic statistics collection when `gp_autostats_mode` is set to `on_change`. When a triggering table operation affects a number of rows exceeding this threshold, `ANALYZE         `is added and statistics are collected for the table.
 
