@@ -25,9 +25,9 @@ hawq check -?
 
 ## <a id="topic1__section3"></a>Description
 
-The `hawq check` utility determines the platform on which you are running HAWQ and validates various platform-specific configuration settings as well as HAWQ and HDFS-specific configuration settings. In order to perform HAWQ configuration checks, make sure HAWQ has been already started and `hawq config` works. For HDFS checks, you should either set the HADOOP\_HOME environment variable or give the hadoop installation location using `--hadoop` option.
+The `hawq check` utility determines the platform on which you are running HAWQ and validates various platform-specific configuration settings as well as HAWQ and HDFS-specific configuration settings. In order to perform HAWQ configuration checks, make sure HAWQ has been already started and `hawq config` works. For HDFS checks, you should either set the HADOOP\_HOME environment variable or provide the hadoop installation location using `--hadoop` option.
 
-The `hawq check` utility can use a host file or a file previously created with the `--zipout `option to validate platform settings. If `GPCHECK_ERROR` displays, one or more validation checks failed. You can also use `hawq check` to gather and view platform settings on hosts without running validation checks. When running checks, `hawq check` compares your actual configuration setting with an expected value listed in a config file (`$GPHOME/etc/hawq check.cnf` by default). You must modify your configuration values for "mount.points" and "diskusage.monitor.mounts" to reflect the actual mount points you want to check, as a comma-separated list. Otherwise, the utility only checks the root directory, which may not be helpful.
+The `hawq check` utility can use a host file or a file previously created with the `--zipout `option to validate platform settings. If `GPCHECK_ERROR` displays, one or more validation checks failed. You can also use `hawq check` to gather and view platform settings on hosts without running validation checks. When running checks, `hawq check` compares your actual configuration setting with an expected value listed in a config file (`$GPHOME/etc/hawq_check.cnf` by default). You must modify your configuration values for "mount.points" and "diskusage.monitor.mounts" to reflect the actual mount points you want to check, as a comma-separated list. Otherwise, the utility only checks the root directory, which may not be helpful.
 
 An example is shown below:
 
@@ -54,7 +54,7 @@ diskusage.monitor.mounts = /,/data1,/data2
 <dd>The name of a configuration file to use instead of the default file `$GPHOME/etc/hawq_check.cnf`.</dd>
 
 <dt>-\\\-hadoop, -\\\-hadoop-home \<hadoop\_home\>  </dt>
-<dd>Use this option to specify your hadoop installation location so that `hawq check` can validate HDFS settings. This option is not needed if `HADOOP_HOME` environment variable is set.</dd>
+<dd>Use this option to specify the full path to your hadoop installation location so that `hawq check` can validate HDFS settings. This option is not needed if the `HADOOP_HOME` environment variable is set.</dd>
 
 <dt>-\\\-stdout  </dt>
 <dd>Send collected host information from `hawq check` to standard output. No checks or validations are performed.</dd>
@@ -82,25 +82,25 @@ diskusage.monitor.mounts = /,/data1,/data2
 
 ## <a id="topic1__section5"></a>Examples
 
-Verify and validate the HAWQ platform settings by entering a host file and specifying the hadoop location:
+Verify and validate the HAWQ platform settings by entering a host file and specifying the full hadoop install path:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/
+$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop
 ```
 
 Verify and validate the HAWQ platform settings with HDFS HA enabled, YARN HA enabled and Kerberos enabled:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/ --hdfs-ha --yarn-ha --kerberos
+$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop --hdfs-ha --yarn-ha --kerberos
 ```
 
 Verify and validate the HAWQ platform settings with HDFS HA enabled, and Kerberos enabled:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/ --hdfs-ha --kerberos
+$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop --hdfs-ha --kerberos
 ```
 
-Save HAWQ platform settings to a zip file, when HADOOP\_HOME environment variable is set:
+Save HAWQ platform settings to a zip file, when the $HADOOP\_HOME environment variable is set:
 
 ``` shell
 $ hawq check -f hostfile_hawq_check --zipout  
@@ -115,7 +115,7 @@ $ hawq check --zipin hawq_check_timestamp.tar.gz
 View collected HAWQ platform settings:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop ~/hadoop-2.0.0/ --stdout
+$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop --stdout
 ```
 
 ## <a id="topic1__section6"></a>See Also
