@@ -7,9 +7,9 @@ Verifies and validates HAWQ platform settings.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-hawq check -f <hostfile_hawq_check>
+hawq check -f <hostfile_hawq_check> | (-h <hostname> | --host <hostname>)
+    --hadoop <hadoop_home> | --hadoop-home <hadoop_home>
     [--config <config_file>] 
-    [--hadoop <hadoop_home> | --hadoop-home <hadoop_home>]
     [--stdout | --zipout]
     [--kerberos] 
     [--hdfs-ha] 
@@ -42,6 +42,9 @@ diskusage.monitor.mounts = /,/data1,/data2
 
 <dt>-f \<hostfile\_hawq\_check\>  </dt>
 <dd>The name of a file that contains a list of hosts that `hawq check` uses to validate platform-specific settings. This file should contain a single host name for all hosts in your HAWQ system (master, standby master, and segments).</dd>
+
+<dt>-h, -\\\-host \<hostname\>  </dt>
+<dd>Specifies a single host on which platform-specific settings will be validated.</dd>
 
 <dt>-\\\-zipin \<hawq\_check\_zipfile\>  </dt>
 <dd>Use this option to decompress and check a .zip file created with the `--zipout` option. If you specify the `--zipin` option, `hawq check` performs validation tasks against the specified file.</dd>
@@ -85,19 +88,19 @@ diskusage.monitor.mounts = /,/data1,/data2
 Verify and validate the HAWQ platform settings by entering a host file and specifying the full hadoop install path:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop
+$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/<version>/hadoop
 ```
 
 Verify and validate the HAWQ platform settings with HDFS HA enabled, YARN HA enabled and Kerberos enabled:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop --hdfs-ha --yarn-ha --kerberos
+$ hawq check -f hostfile_hawq_check --hadoop /usr/local/hadoop-<version> --hdfs-ha --yarn-ha --kerberos
 ```
 
 Verify and validate the HAWQ platform settings with HDFS HA enabled, and Kerberos enabled:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop --hdfs-ha --kerberos
+$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/<version>/hadoop --hdfs-ha --kerberos
 ```
 
 Save HAWQ platform settings to a zip file, when the `$HADOOP_HOME` environment variable is set:
@@ -115,7 +118,7 @@ $ hawq check --zipin hawq_check_timestamp.tar.gz
 View collected HAWQ platform settings:
 
 ``` shell
-$ hawq check -f hostfile_hawq_check --hadoop /usr/hdp/version/hadoop --stdout
+$ hawq check -f hostfile_hawq_check --hadoop /usr/local/hadoop-<version> --stdout
 ```
 
 ## <a id="topic1__section6"></a>See Also
