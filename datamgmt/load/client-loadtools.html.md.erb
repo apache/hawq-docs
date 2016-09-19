@@ -6,26 +6,38 @@ HAWQ supports data loading from Red Hat Enterprise Linux 5, 6, and 7 and Windows
 This topic presents the instructions to install the HAWQ Load Tools on your client machine. It also includes the information necessary to configure HAWQ databases to accept remote client connections.
 
 ## <a id="installloadrunrhel"></a>RHEL Load Tools
-### <a id="installloadrunux"></a>Running the RHEL Installer
 
-1. Download the `greenplum-loaders-4.3.x.x-build-n-RHEL5.zip` installer package from [Pivotal Network](https://network.pivotal.io/products/pivotal-gpdb). Make note of the directory to which the file was downloaded.
+The RHEL Load Tools are provided in the HAWQ installation package. 
+
+
+### <a id="installloadrunux"></a>Installing the RHEL Loader
+
+1. Download the `hdb-2.0.1.0-nnnnn.tar.gz` installer package from [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb). Make note of the directory to which the file was downloaded.
  
-2. Unzip the run the installer. `sudo` privileges are required if you plan to accept the default install location of `/usr/local/greenplum-loaders-4.3.x.x-build-n`.
+2. Refer to the HAWQ command line install instructions to set up your HDB repository and install the HAWQ binary.
 
-    ``` shell
-    $ unzip greenplum-loaders-4.3.x.x-build-n-RHEL5-x86_64.zip
-    $ /bin/bash greenplum-loaders-4.3.x.x-build-n-RHEL5-x86_64.bin
-    ```
-    
-    The installer will prompt you to accept the license agreement and to provide an installation path. Enter an absolute path if you choose not to accept the default install location.
+### <a id="installrhelloadabout"></a>About the RHEL Loader Installation
+
+The files/directories of interest in a HAWQ RHEL Load Tools installation include:
+
+`bin/` — data loading command-line tools (`gpfdist` and `hawq load`)   
+`greenplum_path.sh0` — environment set up file
+
+### <a id="installloadrhelcfgenv"></a>Configuring the RHEL Load Environment
+
+A `greenplum_path.sh` file is located in the HAWQ base install directory following installation. Source `greenplum_path.sh` before running the HAWQ RHEL Load Tools to set up your HAWQ environment:
+
+``` shell
+$ . /usr/local/hawq/greenplum_path.sh
+```
 
 
 ## <a id="installloadrunwin"></a>Windows Load Tools
 
 ### <a id="installpythonwin"></a>Installing Python 2.5
-The HAWQ Load Tools for Windows requires that the 32-bit version of Python 2.5 be installed on your machine. 
+The HAWQ Load Tools for Windows requires that the 32-bit version of Python 2.5 be installed on your system. 
 
-**Note**: The 64-bit version of Python is not compatible with the HAWQ Load Tools for Windows.
+**Note**: The 64-bit version of Python is **not** compatible with the HAWQ Load Tools for Windows.
 
 1. Download the [Python 2.5 installer for Windows](https://www.python.org/downloads/).  Make note of the directory to which it was downloaded.
 
@@ -38,7 +50,7 @@ The HAWQ Load Tools for Windows requires that the 32-bit version of Python 2.5 b
 
 ### <a id="installloadrunwin"></a>Running the Windows Installer
 
-1. Download the `greenplum-loaders-4.3.x.x-build-n-WinXP-x86_32.msi` installer package from [Pivotal Network](https://network.pivotal.io/products/pivotal-gpdb). Make note of the directory to which it was downloaded.
+1. Download the `greenplum-loaders-4.3.x.x-build-n-WinXP-x86_32.msi` installer package from [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb). Make note of the directory to which it was downloaded.
  
 2. Double-click the `greenplum-loaders-4.3.x.x-build-n-WinXP-x86_32.msi` file to launch the installer.
 3. Click **Next** on the **Welcome** screen.
@@ -49,27 +61,23 @@ The HAWQ Load Tools for Windows requires that the 32-bit version of Python 2.5 b
 8. Click **Finish** to exit the installer.
 
     
-## <a id="installloadabout"></a>About the Loader Installation
-Your HAWQ Load Tools installation includes the following files and directories:
+### <a id="installloadabout"></a>About the Windows Loader Installation
+Your HAWQ Windows Load Tools installation includes the following files and directories:
 
-`bin` — data loading command-line tools (`gpfdist` and `gpload`)  
-`ext` — external dependent components (python)  
-`lib` - data loading library files  
-`greenplum_loaders_path.[sh | bat]` — environment set up file
-
+`bin/` — data loading command-line tools (`gpfdist` and `gpload`)   
+`lib/` — data loading library files  
+`greenplum_loaders_path.bat` — environment set up file
 
 
-## <a id="installloadcfgenv"></a>Configuring the Load Environment
+### <a id="installloadcfgenv"></a>Configuring the Windows Load Environment
 
-?? NEED TO VERIFY RHEL/WIN HAVE SAME env varb NAMES ??
-
-A `greenplum_loaders_path.[sh | bat]` file is provided in your load tools base install directory following installation. This file sets the following environment variables:
+A `greenplum_loaders_path.bat` file is provided in your load tools base install directory following installation. This file sets the following environment variables:
 
 - `GPHOME_LOADERS` - base directory of loader installation
 - `PATH` - adds the loader and component program directories
-- *`LIBRARY_PATH`* (OS-specific name) - adds the loader and component library directories
+- `PYTHONPATH` - adds component library directories
 
-Source `greenplum_loaders.sh` or execute `greenplum_loaders.bat` to set up your HAWQ environment before running the HAWQ Load Tools.
+Execute `greenplum_loaders_path.bat` to set up your HAWQ environment before running the HAWQ Windows Load Tools.
  
 
 ## <a id="installloadenableclientconn"></a>Enabling Remote Client Connections
