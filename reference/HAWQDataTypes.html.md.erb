@@ -27,7 +27,7 @@ The following data types are specified by SQL:
 -   timestamp (with or without time zone)
 -   varchar
 
-**Note**: HAWQ supports the array data type for append-only tables; parquet table storage does *not* support the array type. 
+**Note**(\*): HAWQ supports the array data type for append-only tables; parquet table storage does *not* support the array type. 
 
 Each data type has an external representation determined by its input and output functions. Many of the built-in types have obvious external formats. However, several types are unique to HAWQ, such as geometric paths, or have several possibilities for formats, such as the date and time types. Some of the input and output functions are not invertible. That is, the result of an output function may lose accuracy when compared to the original input.
 
@@ -74,6 +74,8 @@ Each data type has an external representation determined by its input and output
 
  
 For variable length data types (such as char, varchar, text, xml, etc.) if the data is greater than or equal to 127 bytes, the storage overhead is 4 bytes instead of 1.
+
+**Note**: Use these documented built-in types when creating user tables.  Any other data types that might be visible in the source code are for internal use only.
 
 ## <a id="timezones"></a>Time Zones
 

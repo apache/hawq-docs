@@ -29,9 +29,7 @@ Instance store-backed storage is generally better performing than EBS and recomm
 **Note** EC2 *instance store* provides temporary block-level storage. This storage is located on disks that are physically attached to the host computer. While instance store provides high performance, powering off the instance causes data loss. Soft reboots preserve instance store data. 
      
 Virtual devices for instance store volumes for HAWQ EC2 instance store instances are named `ephemeralN` (where *N* varies based on instance type). CentOS instance store block device are named `/dev/xvdletter` (where *letter* is a lower case letter of the alphabet).
-
-?? DO WE RECOMMEND EBS-backed VOLUMES FOR ANYTHING?  I.E. BACKUPS, ...??)
-       
+  
 
 ### <a id="topic_cfgplacegrp"></a>Configure Placement Group 
 
@@ -75,23 +73,13 @@ Ensure your Ambari and HAWQ master instances are each assigned a public IP addre
 
 A security group is a set of rules that control network traffic to and from your HAWQ instance.  One or more rules may be associated with a security group, and one or more security groups may be associated with an instance.
 
-To configure HAWQ communication between nodes in the HAWQ cluster, include and open the following ports in the appropriate security group for the HAWQ master and segment nodes:
-
-?? PROVIDE SPECIFIC type/protocol/portrange/source settings from EC2 console ??
+To configure HAWQ communication between nodes in the HAWQ cluster, include and open the following ports in the appropriate security group for the HAWQ master and segment nodes.
 
 | Port  | Application |
 |-------|-------------------------------------|
 | 22    | ssh - secure connect to other hosts |
-| XX  | XX |  
-
-UDP access within the VPC should be enabled by default.
-
-
-?? DIFFENT SECURITY GROUP FOR AMBARI NODE ??
 
 To allow access to/from a source external to the Ambari management node, include and open the following ports in an appropriate security group for your Ambari node:
-
-?? PROVIDE SPECIFIC type/protocol/portrange/source settings from EC2 console ??
 
 | Port  | Application |
 |-------|-------------------------------------|
@@ -115,8 +103,6 @@ $ ssh -i my-test.pem user1@192.0.2.0
 After launching your HAWQ instance, you will connect to and configure the instance. The  *Instances* page of the EC2 Console lists the running instances and their associated network access information.
 
 Before installing HAWQ, set up the EC2 instances as you would local host server machines. Configure the host operating system, configure host network information (for example, update the `/etc/hosts` file), set operating system parameters, and install operating system packages. For information about how to prepare your operating system environment for HAWQ, see [Select HAWQ Host Machines](../install/select-hosts.html).
-
-?? PACKAGES, KERNEL VERSION, KERNEL SETTINGS, BEST PRACTICES HERE OR WILL THEY BE THE SAME AS FOR PHYSICAL DEVICE?? 
 
   
 ##References<a id="topic_hgz_zwy_bv"></a>
