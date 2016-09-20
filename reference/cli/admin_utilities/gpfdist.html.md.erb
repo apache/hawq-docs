@@ -31,7 +31,7 @@ For readable external tables, if load files are compressed using `gzip` or `bzip
 
 **Note:** Currently, readable external tables do not support compression on Windows platforms, and writable external tables do not support compression on any platforms.
 
-Most likely, you will want to run `gpfdist` on your ETL machines rather than the hosts where HAWQ is installed. To install `gpfdist` on another host, simply copy the utility over to that host and add `gpfdist` to your `$PATH`.
+To run `gpfdist` on your ETL machines, refer to [Client-Based HAWQ Load Tools](../../../datamgmt/load/client-loadtools.html) for more information.
 
 **Note:** When using IPv6, always enclose the numeric IP address in brackets.
 
