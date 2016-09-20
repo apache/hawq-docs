@@ -22,7 +22,7 @@ Requirements for running `hawq register` on the client server are:
 -   The target table DDL is configured with the correct data type mapping.
 
 
-##Registering HDFS File Data to an Existing Table
+##Registering HDFS File Data to an Existing Table<a id="topic1__section2"></a>
 
 Files or folders in HDFS can be registered into an existing table, allowing them to be managed as a HAWQ internal table. When registering files, you can optionally specify the maximum amount of data to be loaded, in bytes, using the --eof option. If registering a folder, the actual file sizes are used. You cannot register empty tables.
 
@@ -68,7 +68,7 @@ then running
 select relname from pg_class where oid = segrelid
 ```
 
-##Registering Data Using Information from a .yml Configuration File 
+##Registering Data Using Information from a .yml Configuration File<a id="topic1__section3"></a>
  
 The `hawq register` command can register HDFS files  by using metadata loaded from a .yml configuration file by using the `-c <yml_config\>` option. Both AO and Parquet tables can be registered. Tables need not exist in HAWQ before being registered. This function can be useful in disaster recovery, allowing information created by the `hawq extract` command to be used to either re-create HAWQ tables or to roll back data to a previous state.
 
@@ -115,7 +115,7 @@ select count(*) from paq2;
 ```
 
 
-##Data Type Mapping<a id="topic1__section7"></a>
+##Data Type Mapping<a id="topic1__section4"></a>
 
 HAWQ and parquet tables and HIVE and HAWQ tables use different data types. Mapping must be used for metadata compatibility. You are responsible for making sure your implementation is mapped to the appropriate data type before running `hawq register`. The tables below show equivalent data types, if available.
 
