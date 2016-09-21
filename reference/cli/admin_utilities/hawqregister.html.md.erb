@@ -8,12 +8,13 @@ AO or Parquet-formatted data in HDFS into a corresponding table in HAWQ.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
+Usage 1:
 hawq register [<connection_options>] [-f <hdfsfilepath>] [-e <Eof>] <tablename>
 
+Usage 2:
 hawq register [<connection_options>] [-c <configfilepath>][--force] [--repair] <tablename>
 
 Connection Options:
- 
      [-h <hostname>] 
      [-p <port>] 
      [-U <username>] 
@@ -32,7 +33,7 @@ hawq register --version
 
 ## <a id="topic1__section3"></a>Prerequisites
 
-The client machine where `hawq register` is executed must have the following:
+The client machine where `hawq register` is executed must meet the following conditions:
 
 -   Network access to and from all hosts in your HAWQ cluster (master and segments) and the hosts where the data to be loaded is located.
 -   The Hadoop client must be configured and the hdfs filepath specified.
@@ -56,7 +57,7 @@ Two usage models are available.
 
 `hawq register [-h hostname] [-p port] [-U username] [-d databasename] [-f filepath] [-e eof]<tablename>`
 
-Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet tables, so the data is mapped. You must verify that the structure of the parquet files and the HAWQ table are compatible before running `hawq register`. You cannot register empty tables.
+Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet tables, so the data is mapped. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. You cannot register empty tables.
 
 ####Limitations
 Only HAWQ or Hive-generated Parquet tables are supported.
@@ -72,8 +73,8 @@ The register process behaves differently, according to different conditions.
 
 -  Existing tables have files appended to the existing HAWQ table.
 -  If a table does not exist, it is created and registered into HAWQ. 
--  If the --force option is used, the data in existing catalog tables is erased and re-registered.
--  If the --repair option is used, data is rolled back to a previous state, as specified in the .yml file. Both the file on HDFS and its metadata are erased.
+-  If the -\-force option is used, the data in existing catalog tables is erased and re-registered.
+-  If the -\-repair option is used, data is rolled back to a previous state, as specified in the .yml file. Both the file on HDFS and its metadata are erased.
 
 
 
@@ -105,29 +106,29 @@ The following HIVE data types cannot be converted to HAWQ equivalents: timestamp
 <dt>-U \<username\> </dt> 
 <dd>The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.</dd>
 
-<dt>-d  , --database \<databasename\>  </dt>
-<dd>The database to register the parquet HDFS data into. The default is `postgres`<dd>
+<dt>-d  , -\-database \<databasename\>  </dt>
+<dd>The database to register the Parquet HDFS data into. The default is `postgres`<dd>
  
-<dt>-t , --tablename \<tablename\> </dt>
-<dd>The HAWQ table that will store the parquet data. If the --config option is not supplied, the table cannot use hash distribution. Random table distribution is strongly preferred. If hash distribution must be used, make sure that the distribution policy for the data files described in the .yml file is consistent with the table being registered into.</dd>
+<dt>-t , -\-tablename \<tablename\> </dt>
+<dd>The HAWQ table that will store the Parquet data. If the --config option is not supplied, the table cannot use hash distribution. Random table distribution is strongly preferred. If hash distribution must be used, make sure that the distribution policy for the data files described in the .yml file is consistent with the table being registered into.</dd>
 
-<dt>-f , --filepath \<hdfspath\></dt>
+<dt>-f , -\-filepath \<hdfspath\></dt>
 <dd>The path of the file or directory in HDFS containing the files to be registered.</dd>
 
 ####Miscellaneous Options
 
 The following options are used with specific use models.
 
-<dt>-e , \--eof \<eof\></dt>
+<dt>-e , -\\\-eof \<eof\></dt>
 <dd>Specify the end of the file to be registered. \<eof\> represents the valid content length of the file, in bytes to be used, a value between 0 the end-of-file value. If this option is not included, the actual file size, or size of files within a folder, is used. Used with Use Model 1.</dd>
 
-<dt>--force</dt>
+<dt>-F , -\\\-force</dt>
 <dd>Used for disaster recovery of a cluster. Clears all HDFS-related catalog contents in `pg_aoseg.pg_paqseg_$relid `and re-registers files to a specified table. The HDFS files are not removed or modified. To use this option for recovery, the two clusters must exist on the same server and data is periodically imported to the cluster to be recovered. Used with Use Model 2.</dd>
 
-<dt>--repair </dt> 
+<dt>  -R , -\\\-repair </dt> 
 <dd>Changes both the file folder and catalog table values of `pg_aoseg.pg_paqseg_$relid` to the state specified by a YAML-format configuration file. Used with Use Model 2.</dd>
 
-<dt>-c , --config \<yml_config\> </dt> 
+<dt>-c , -\\\-config \<yml_config\> </dt> 
 <dd>Registers files specified by YAML-format configuration files into HAWQ. Used with Use Model 2.</dd>
 
 
@@ -164,7 +165,7 @@ select count(*) from paq2;
 
 ##Data Type Mapping<a id="topic1__section7"></a>
 
-HAWQ and parquet tables and HIVE and HAWQ tables use different data types. Mapping must be used for compatibility. You are responsible for making sure your implementation is mapped to the appropriate data type before running `hawq register`. The tables below show equivalent data types, if available.
+HAWQ and Parquet tables and HIVE and HAWQ tables use different data types. Mapping must be used for compatibility. You are responsible for making sure your implementation is mapped to the appropriate data type before running `hawq register`. The tables below show equivalent data types, if available.
 
 <span class="tablecap">Table 1. HAWQ to Parquet Mapping</span>
 
@@ -253,6 +254,9 @@ group {
 | char | char |
 | varchar  | varchar  |
 
+## See Also
+
+[hawq extract](hawqextract.html#topic1)
 
 
 

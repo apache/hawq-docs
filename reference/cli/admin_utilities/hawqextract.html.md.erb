@@ -4,7 +4,7 @@ title: hawq extract
 
 Extracts the metadata of a specified table into a YAML file.
 
-## Synopsis
+##  <a id="topic1__section2"></a>Synopsis
 
 ``` pre
 hawq extract [<connection_options>] [-o <output_file>] <tablename>
@@ -24,9 +24,9 @@ where:
   [-W]
 ```
 
-## Description
+##  <a id="topic1__section3 <a id="topic1__section4"></a>Description
 
-`hawq extract` is a utility that extracts a table's metadata into a YAML formatted file. HAWQ's InputFormat uses this YAML-formatted file to read a HAWQ file stored on HDFS directly into the MapReduce program.
+`hawq extract` is a utility that extracts a table's metadata into a YAML formatted file. HAWQ's InputFormat uses this YAML-formatted file to read a HAWQ file stored on HDFS directly into the MapReduce program. The YAML configuration file can also be used provide the metadata for registering files into HAWQ with the `hawq register` command.
 
 **Note:**
 `hawq extract` is bound by the following rules:
@@ -35,12 +35,12 @@ where:
 -   `hawq extract` only supports AO and Parquet tables.
 -   `hawq extract` supports partitioned tables, but does not support sub-partitions.
 
-## Arguments
+##  <a id="topic1__section5"></a>Arguments
 
 <dt>&lt;tablename&gt;  </dt>
 <dd>Name of the table that you need to extract metadata. You can use the format *namespace\_name.table\_name*.</dd>
 
-## Options
+##  <a id="topic1__section6"></a>Options
 
 <dt>-o &lt;output\_file&gt;  </dt>
 <dd>Is the name of a file that `hawq extract` uses to write the metadata. If you do not specify a name, `hawq extract` writes to `stdout`.</dd>
@@ -71,7 +71,7 @@ where:
 <dt>-W (force password prompt)  </dt>
 <dd>Force a password prompt. If not specified, reads the password from the environment variable `$PGPASSWORD` or from a password file specified by `$PGPASSFILE` or in `~/.pgpass`.</dd>
 
-## Metadata File Format
+##  <a id="topic1__section7"></a>Metadata File Format
 
 `hawq extract` exports the table metadata into a file using YAML 1.1 document format. The file contains various key information about the table, such as table schema, data file locations and sizes, partition constraints and so on.
 
@@ -135,7 +135,7 @@ Parquet_FileLocations:
       size: long
 ```
 
-## Example - Extracting an AO table
+##  <a id="topic1__section8"></a>Example - Extracting an AO table
 
 Extract the `rank` table's metadata into a file named `rank_table.yaml`:
 
@@ -209,7 +209,7 @@ AO_FileLocations:
     Version: 1.0.0
 ```
 
-## Example - Extracting a Parquet table
+##  <a id="topic1__section9"></a>Example - Extracting a Parquet table
 
 Extract the `orders` table's metadata into a file named `orders.yaml`:
 
@@ -289,5 +289,6 @@ Parquet_FileLocations:
 ## See Also
 
 [hawq load](hawqload.html#topic1)
+[hawq register](hawqregister.html#topic1)
 
 
