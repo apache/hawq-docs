@@ -22,9 +22,9 @@ Connection Options:
      
 Misc. Options:
      [-f <filepath>] 
-	  [-e <eof>]
- 	  [--force] 
- 	  [--repair]
+	 [-e <eof>]
+ 	 [--force] 
+ 	 [--repair]
      [-c <yml_config>]  
 hawq register help | -? 
 hawq register --version
@@ -54,7 +54,7 @@ Two usage models are available.
 
 `hawq register [-h hostname] [-p port] [-U username] [-d databasename] [-f filepath] [-e eof]<tablename>`
 
-Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so the data is mapped. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. 
+Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so the data is mapped. Refer to the section [Data Type Mapping](hawqregister.html#topic1__section7) below. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. 
 
 ####Limitations
 Only HAWQ or Hive-generated Parquet tables are supported.
@@ -191,10 +191,10 @@ group {
 <dt>-U , -\\\-user \<username\> </dt> 
 <dd>The database role name to connect as. If not specified, reads from the environment variable `$PGUSER` or defaults to the current system user name.</dd>
 
-<dt>-d  , -\-database \<databasename\>  </dt>
+<dt>-d  , -\\\-database \<databasename\>  </dt>
 <dd>The database to register the Parquet HDFS data into. The default is `postgres`<dd>
 
-<dt>-f , -\-filepath \<hdfspath\></dt>
+<dt>-f , -\\\-filepath \<hdfspath\></dt>
 <dd>The path of the file or directory in HDFS containing the files to be registered.</dd>
  
 <dt>\<tablename\> </dt>
