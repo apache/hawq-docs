@@ -161,7 +161,7 @@ where \<storage\_parameter\> for a partition is:
 
 `CREATE TABLE` creates a new, initially empty table in the current database. The table is owned by the user issuing the command. If a schema name is given then the table is created in the specified schema. Otherwise it is created in the current schema. Temporary tables exist in a special schema, so a schema name may not be given when creating a temporary table. The name of the table must be distinct from the name of any other table, external table, sequence, or view in the same schema.
 
-The optional constraint clauses specify conditions that new or updated rows must satisfy for an insert or update operation to succeed. A constraint is an SQL object that helps define the set of valid values in the table in various ways. Constraints apply to tables, not to partitions. You cannot add a constraint to a partition or subpartition.
+The optional constraint clauses specify conditions that new rows must satisfy for an insert operation to succeed. A constraint is an SQL object that helps define the set of valid values in the table in various ways. Constraints apply to tables, not to partitions. You cannot add a constraint to a partition or subpartition.
 
 There are two ways to define constraints: table constraints and column constraints. A column constraint is defined as part of a column definition. A table constraint definition is not tied to a particular column, and it can encompass more than one column. Every column constraint can also be written as a table constraint; a column constraint is only a notational convenience for use when the constraint only affects one column.
 
@@ -213,7 +213,7 @@ Note also that unlike `INHERITS`, copied columns and constraints are not merged 
 <dd>Specifies if the column is or is not allowed to contain null values. `NULL` is the default.</dd>
 
 <dt>CHECK ( \<expression\> )  </dt>
-<dd>The `CHECK` clause specifies an expression producing a Boolean result which new or updated rows must satisfy for an insert or update operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert or update operation produce a `FALSE` result an error exception is raised and the insert or update does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
+<dd>The `CHECK` clause specifies an expression producing a Boolean result which new rows must satisfy for an insert operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert operation produce a `FALSE` result an error exception is raised and the insert does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
 
 <dt>WITH ( \<storage\_option\>=\<value\> )  </dt>
 <dd>The `WITH` clause can be used to set storage options for the table or its indexes. Note that you can also set storage parameters on a particular partition or subpartition by declaring the `WITH` clause in the partition specification.

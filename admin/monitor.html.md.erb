@@ -78,7 +78,7 @@ HAWQ tracks various metadata information in its system catalogs about the object
 
 #### <a id="topic25"></a>Viewing the Last Operation Performed 
 
-You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last vacuumed and analyzed:
+You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last analyzed:
 
 ```sql
 => SELECT schemaname as schema, objname as table,

@@ -16,7 +16,7 @@ The following views can help identify tables that need routine table maintenance
 
 -   [hawq\_stats\_missing](#topic4)
 
-The `VACUUM` command reclaims disk space occupied by deleted or obsolete rows. Because of the MVCC transaction concurrency model used in HAWQ, data rows that are deleted or updated still occupy physical space on disk even though they are not visible to any new transactions. Expired rows increase table size on disk and eventually slow down scans of the table.
+The `VACUUM` command is applicable only to system catalog tables. The `VACUUM` command reclaims disk space occupied by deleted or obsolete rows. Because of the MVCC transaction concurrency model used in HAWQ, data rows that are deleted or updated still occupy physical space on disk even though they are not visible to any new transactions. Expired rows increase table size on disk and eventually slow down scans of the table.
 
 **Note:** VACUUM FULL is not recommended in HAWQ. See [VACUUM](../sql/VACUUM.html#topic1).
 

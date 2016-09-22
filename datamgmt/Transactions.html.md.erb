@@ -24,7 +24,7 @@ HAWQ accepts the standard SQL transaction levels as follows:
 
 The following information describes the behavior of the HAWQ transaction levels:
 
--   **read committed/read uncommitted** — Provides fast, simple, partial transaction isolation. With read committed and read uncommitted transaction isolation, `SELECT`, `UPDATE`, and `DELETE` transactions operate on a snapshot of the database taken when the query started.
+-   **read committed/read uncommitted** — Provides fast, simple, partial transaction isolation. With read committed and read uncommitted transaction isolation, `SELECT` transactions operate on a snapshot of the database taken when the query started.
 
 A `SELECT` query:
 
@@ -33,9 +33,9 @@ A `SELECT` query:
 -   Does not see uncommitted data outside the transaction.
 -   Can possibly see changes that concurrent transactions made if the concurrent transaction is committed after the initial read in its own transaction.
 
-Successive `SELECT` queries in the same transaction can see different data if other concurrent transactions commit changes before the queries start. `UPDATE` and `DELETE` commands find only rows committed before the commands started.
+Successive `SELECT` queries in the same transaction can see different data if other concurrent transactions commit changes before the queries start.
 
-Read committed or read uncommitted transaction isolation allows concurrent transactions to modify or lock a row before `UPDATE` or `DELETE` finds the row. Read committed or read uncommitted transaction isolation may be inadequate for applications that perform complex queries and updates and require a consistent view of the database.
+Read committed or read uncommitted transaction isolation may be inadequate for applications that perform complex queries and require a consistent view of the database.
 
 -   **serializable/repeatable read** — Provides strict transaction isolation in which transactions execute as if they run one after another rather than concurrently. Applications on the serializable or repeatable read level must be designed to retry transactions in case of serialization failures.
 
@@ -49,9 +49,7 @@ A `SELECT` query:
 
     Successive `SELECT` commands within a single transaction always see the same data.
 
-    `UPDATE`, `DELETE, SELECT FOR UPDATE,` and `SELECT FOR SHARE` commands find only rows committed before the command started. If a concurrent transaction has already updated, deleted, or locked a target row when the row is found, the serializable or repeatable read transaction waits for the concurrent transaction to update the row, delete the row, or roll back.
-
-    If the concurrent transaction updates or deletes the row, the serializable or repeatable read transaction rolls back. If the concurrent transaction rolls back, then the serializable or repeatable read transaction updates or deletes the row.
+    `SELECT FOR UPDATE` and `SELECT FOR SHARE` commands find only rows committed before the command started. If a concurrent transaction has already locked a target row when the row is found, the serializable or repeatable read transaction waits for the concurrent transaction to update the row, delete the row, or roll back.
 
 The default transaction isolation level in HAWQ is *read committed*. To change the isolation level for a transaction, declare the isolation level when you `BEGIN` the transaction or use the `SET TRANSACTION` command after the transaction starts.
 

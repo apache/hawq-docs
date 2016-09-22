@@ -40,15 +40,17 @@ To insert data into a partitioned table, you specify the root partitioned table,
 
 To insert large amounts of data, use external tables or the `COPY` command. These load mechanisms are more efficient than `INSERT` for inserting large quantities of rows. See [Loading and Unloading Data](load/g-loading-and-unloading-data.html#topic1) for more information about bulk data loading.
 
-## <a id="topic9"></a>Vacuuming the Database
+## <a id="topic9"></a>Vacuuming the System Catalog Tables
 
-Deleted or updated data rows occupy physical space on disk even though new transactions cannot see them. Periodically running the `VACUUM` command removes these expired rows. For example:
+Only HAWQ system catalog tables use multiple version concurrency control. Deleted or updated data rows in the catalog tables occupy physical space on disk even though new transactions cannot see them. Periodically running the `VACUUM` command removes these expired rows. 
+
+Periodically running the `VACUUM` command on system catalog tables removes these expired rows. The `VACUUM` command also collects table-level statistics such as the number of rows and pages.
+
+For example:
 
 ``` sql
 VACUUM mytable;
 ```
-
-The `VACUUM` command collects table-level statistics such as the number of rows and pages. Vacuum all tables after loading data.
 
 ### <a id="topic10"></a>Configuring the Free Space Map
 
