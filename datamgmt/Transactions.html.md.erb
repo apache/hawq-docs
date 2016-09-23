@@ -49,8 +49,6 @@ A `SELECT` query:
 
     Successive `SELECT` commands within a single transaction always see the same data.
 
-    `SELECT FOR UPDATE` and `SELECT FOR SHARE` commands find only rows committed before the command started. If a concurrent transaction has already locked a target row when the row is found, the serializable or repeatable read transaction waits for the concurrent transaction to update the row, delete the row, or roll back.
-
 The default transaction isolation level in HAWQ is *read committed*. To change the isolation level for a transaction, declare the isolation level when you `BEGIN` the transaction or use the `SET TRANSACTION` command after the transaction starts.
 
 
