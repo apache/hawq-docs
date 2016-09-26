@@ -81,7 +81,9 @@ Data is registered according to the following conditions:
 -  If the --repair option is used, data is rolled back to a previous state, as specified in the .yml file. Any files generated after the checkpoint specified in the .yml file will be erased. Both the file on HDFS and its metadata are erased.
 
 Tables using random distribution are preferred for registering into HAWQ. If hash tables are to be  registered, the distribution policy in the .yml file must match that of the table being registered into. 
-In registering hash tables, the size of the registered file should be identical to or a multiple of the hash table bucket number.
+
+In registering hash tables, the size of the registered file should be identical to or a multiple of the hash table bucket number. When registering hash distributed tables using a .yml file, the order of the files in the .yml file should reflect the hash distribution.
+
 
 ###Example: Registration using a .yml Configuration File
 
