@@ -61,14 +61,14 @@ The following table summarizes external mapping rules for Hive primitive types.
 
 ### <a id="topic_b4v_g3n_25"></a>Complex Data Types
 
-Hive supports complex data types including array, struct, map, and union. PXF maps each of these complex types to `text`.  While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract components of complex data types.
+Hive supports complex data types including array, struct, map, and union. PXF maps each of these complex types to `text`.  While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract subcomponents of these complex data types.
 
-A complex data type example is provided later in this section.
+A complex data type example is provided later in this topic.
 
 
 ## <a id="hive_sampledataset"></a>Sample Data Set
 
-Examples used in this section will operate on a common data set. This simple data set models a retail sales operation and includes fields with the following names and data types:
+Examples used in this topic will operate on a common data set. This simple data set models a retail sales operation and includes fields with the following names and data types:
 
 - location - text
 - month - text
@@ -117,10 +117,10 @@ hive> CREATE TABLE sales_info (location string, month string,
 
 Notice:
 
-- The `STORED AS textfile` subclause instructs Hive to create the table in TextFile (the default) format.  Hive textfile format supports comma-, tab-, and space-separated values, as well as data specified in JSON notation.
+- The `STORED AS textfile` subclause instructs Hive to create the table in Textfile (the default) format.  Hive Textfile format supports comma-, tab-, and space-separated values, as well as data specified in JSON notation.
 - The `DELIMITED FIELDS TERMINATED BY` subclause identifies the field delimiter within a data record (line). The `sales_info` table field delimiter is a comma (`,`).
 
-Load the `pxf_hive_datafile.txt` sample data file into the newly-created `sales_info` table:
+Load the `pxf_hive_datafile.txt` sample data file into the `sales_info` table you just created:
 
 ``` sql
 hive> LOAD DATA local INPATH '/tmp/pxf_hive_datafile.txt' 
@@ -136,6 +136,8 @@ hive> SELECT * FROM sales_info;
 In examples later in this section, you will access the `sales_info` Hive table directly via PXF. You will also insert `sales_info` data into tables of other Hive file format types, and use PXF to access those directly as well.
 
 ## <a id="topic_p2s_lvl_25"></a>Querying External Hive Data
+
+The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`.
 
 Use the following syntax to create a HAWQ external table representing Hive data:
 
@@ -160,7 +162,7 @@ Hive-plug-in-specific keywords and values used in the `CREATE EXTERNAL TABLE` ca
 | FORMAT (`HiveText` and `HiveRC` profiles) | The `FORMAT` clause must specify `TEXT`. The `delimiter` must be specified a second time in `delim`. |
 
 
-## <a id="profile_hive"></a>Example: Hive Profile 
+### <a id="profile_hive"></a>Hive Profile 
 
 The `Hive` profile works with any Hive file format table.
 
@@ -190,7 +192,7 @@ postgres=# select * from salesinfo_hiveprofile;
 
 ```
 
-## <a id="profile_hivetext"></a>Example: HiveText Profile
+### <a id="profile_hivetext"></a>HiveText Profile
 
 Use the `HiveText` profile to query text formats. The `HiveText` profile is more performant than the `Hive` profile. 
 
@@ -214,7 +216,7 @@ Notice:
 Query the external table:
 
 ``` sql
-postgres=# select * from salesinfo_hivetextprofile where location="Beijing"; 
+postgres=# SELECT * FROM salesinfo_hivetextprofile where location="Beijing"; 
 ```
 
 ``` shell                     
@@ -225,9 +227,9 @@ postgres=# select * from salesinfo_hivetextprofile where location="Beijing";
 (2 rows)
 ```
 
-## <a id="profile_hiverc"></a>Example: HiveRC Profile
+### <a id="profile_hiverc"></a>HiveRC Profile
 
-### <a id="profile_hiverc_rcfiletbl"></a>RCFile Format Hive Table
+#### <a id="profile_hiverc_rcfiletbl"></a>RCFile Format Hive Table
 
 The RCFile Hive format is used for row columnar formatted data. Create a Hive table with RCFile format:
 
@@ -253,7 +255,7 @@ A copy of the sample data set is now stored in RCFile format in `sales_info_rcfi
 ``` sql
 hive> SELECT * FROM sales_info_rcfile;
 ```
-### <a id="profile_hiverc_pxfquery"></a>PXF Query
+#### <a id="profile_hiverc_pxfquery"></a>PXF Query
 
 Use the `HiveRC` profile to query RCFile-formatted data in Hive tables. The `HiveRC` profile is more performant than the `Hive` profile. 
 
@@ -272,7 +274,7 @@ postgres=# CREATE EXTERNAL TABLE salesinfo_hivercprofile(location text, month te
 Query the external table:
 
 ``` sql
-postgres=# select location, total_sales from salesinfo_hivercprofile; 
+postgres=# SELECT location, total_sales FROM salesinfo_hivercprofile; 
 ```
 
 ``` shell                     
@@ -285,22 +287,39 @@ postgres=# select location, total_sales from salesinfo_hivercprofile;
  ...
 ```
 
-## <a id="profileperf"></a>Profile Performance Considerations
+### <a id="topic_dbb_nz3_ts"></a>Accessing Parquet-Format Hive Tables
+
+The PXF `Hive` profile supports both non-partitioned and partitioned Hive tables that use the Parquet storage format in HDFS. Simply map the table columns using equivalent HAWQ data types. For example, if a Hive table is created using:
+
+``` sql
+hive> CREATE TABLE hive_parquet_table (fname string, lname string, custid int, acctbalance double) 
+        STORED AS parquet;
+```
+
+Define the HAWQ external table using:
+
+``` sql
+postgres=# CREATE EXTERNAL TABLE pxf_parquet_table (fname text, lname text, custid int, acctbalance double precision) 
+    LOCATION ('pxf://namenode:51200/hive-db-name.hive_parquet_table?profile=Hive') 
+    FORMAT 'CUSTOM' (formatter='pxfwritable_import'); 
+```
+
+### <a id="profileperf"></a>Profile Performance Considerations
 
 The `HiveRC` and `HiveText` profiles are faster than the generic `Hive` profile.
 
 ?? MORE HERE. ??
 
-## <a id="complex_dt_example"></a>Example: Complex Data Types
+### <a id="complex_dt_example"></a>Complex Data Types Example
 
-Prepare a sample data set for use. This data set will employ the array and map complex types, specifically an array of integers and a key/value pair map. 
+Prepare a sample data set for use. This data set will employ the array and map complex types, specifically an array of integers and a string key/value pair map. 
 
 The data set includes fields with the following names and data types:
 
 - index - int
 - name - string
 - intarray - array of integers
-- propmap - map of string keys and string value pairs
+- propmap - map of string key and value pairs
 
 When specifying an array field in a Hive table, you must identify the terminator for each item in the collection. Similarly, the map key termination character must also be specified.
 
@@ -332,20 +351,20 @@ $ HADOOP_USER_NAME=hdfs hive
 ```
 
 ``` sql
-CREATE TABLE table_complextypes( index int, name string, intarray ARRAY<INT>, propmap MAP<string, string>) 
-  ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
-  COLLECTION ITEMS TERMINATED BY '%' 
-  MAP KEYS TERMINATED BY ':' 
-  STORED AS TEXTFILE;
+postgres=# CREATE TABLE table_complextypes( index int, name string, intarray ARRAY<int>, propmap MAP<string, string>) 
+             ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' 
+             COLLECTION ITEMS TERMINATED BY '%' 
+             MAP KEYS TERMINATED BY ':' 
+             STORED AS TEXTFILE;
 ```
 
 Notice:
 
-- The `FIELDS TERMINATED BY` identifies a comma as the field terminator.
-- The `COLLECTION ITEMS TERMINATED BY` specifies the percent sign as the collection items (array item, map key/value pair) terminator.
-- The `MAP KEYS TERMINATED BY` ientifies a colon as the terminator for map keys.
+- `FIELDS TERMINATED BY` identifies a comma as the field terminator.
+- The `COLLECTION ITEMS TERMINATED BY` subclause specifies the percent sign as the collection items (array item, map key/value pair) terminator.
+- `MAP KEYS TERMINATED BY` identifies a colon as the terminator for map keys.
 
-Load the `pxf_hive_complex.txt` sample data file into the newly-created `table_complextypes` table:
+Load the `pxf_hive_complex.txt` sample data file into the `table_complextypes` table you just created:
 
 ``` sql
 hive> LOAD DATA local INPATH '/tmp/pxf_hive_complex.txt' INTO TABLE table_complextypes;
@@ -364,7 +383,7 @@ hive> SELECT * FROM table_complextypes;
 ...
 ```
 
-Use the PXF `Hive` profile to create a queryable HAWQ external table representing the Hive table_complextypes:
+Use the PXF `Hive` profile to create a queryable HAWQ external table representing the Hive `table_complextypes`:
 
 ``` sql
 postgres=# CREATE EXTERNAL TABLE complextypes_hiveprofile(index int, name text, intarray text, propmap text)
@@ -372,12 +391,12 @@ postgres=# CREATE EXTERNAL TABLE complextypes_hiveprofile(index int, name text, 
              FORMAT 'CUSTOM' (formatter='pxfwritable_import');
 ```
 
-Notice that the integer array and map complex types are mapped to PXF type text.
+Notice that the integer array and map complex types are mapped to type text.
 
 Query the external table:
 
 ``` sql
-select * from complextypes_hiveprofile; 
+postgres=# SELECT * FROM complextypes_hiveprofile; 
 ```
 
 ``` shell                      
@@ -396,6 +415,7 @@ select * from complextypes_hiveprofile;
 (10 rows)
 ```
 
+`intarray` and `propmap` are each text strings.
 
 ## <a id="hcatalog"></a>Using PXF and HCatalog to Query Hive
 
@@ -458,9 +478,11 @@ To obtain a description of a Hive table with HCatalog integration, you can use t
     
     ``` sql
     postgres=# \d hcatalog.default.sales_info_rcfile;
-
+    ```
+    
+    ``` shell
     PXF Hive Table "default.sales_info_rcfile"
-              Column      |  Type  
+          Column      |  Type  
     ------------------+--------
      location         | text
      month            | text
@@ -472,12 +494,12 @@ To obtain a description of a Hive table with HCatalog integration, you can use t
 
 **Note:** When using `\d` or `\d+` commands in the `psql` HAWQ client, `hcatalog` will not be listed as a database. If you use other `psql` compatible clients, `hcatalog` will be listed as a database with a size value of `-1` since `hcatalog` is not a real database in HAWQ.
 
-Alternatively, you can use the `pxf\_get\_item\_fields` user-defined function (UDF) to obtain Hive table descriptions from other client interfaces or third-party applications. The UDF takes a PXF profile and a table pattern string as its input parameters.  **Note:** The only supported input profile at this time is `'Hive'`.
+Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF) to obtain Hive table descriptions from other client interfaces or third-party applications. The UDF takes a PXF profile and a table pattern string as its input parameters.  **Note:** The only supported input profile at this time is `'Hive'`.
 
 - The following statement returns a description of a specific table. The description includes path, itemname (table), fieldname, and fieldtype.
 
     ``` sql
-    postgres=# select * from pxf_get_item_fields('Hive','default.sales_info_rcfile');
+    postgres=# SELECT * FROM pxf_get_item_fields('Hive','default.sales_info_rcfile');
     ```
     
     ``` pre
@@ -492,32 +514,32 @@ Alternatively, you can use the `pxf\_get\_item\_fields` user-defined function (U
 - The following statement returns table descriptions from the default database.
 
     ``` sql
-    postgres=# select * from pxf_get_item_fields('Hive','default.*');
+    postgres=# SELECT * FROM pxf_get_item_fields('Hive','default.*');
     ```
 
 - The following statement returns a description of the entire schema.
 
     ``` sql
-    postgres=# select * from pxf_get_item_fields('Hive', '*.*');
+    postgres=# SELECT * FROM pxf_get_item_fields('Hive', '*.*');
     ```
 
 ### <a id="topic_r5k_pst_25"></a>Limitations
 
 HCatalog integration has the following limitations:
 
--   HCatalog integration queries and describe commands do not support complex types; only primitive types are supported. Use PXF external tables to query complex types in Hive. (See [Hive Complex Types](#topic_b4v_g3n_25) for example.)
--   Even for primitive types, HCatalog metadata descriptions produced by `\d` and` \d+` are converted to HAWQ types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Types](../reference/HAWQDataTypes.html) for a list of data types in HAWQ.)
+-   HCatalog integration queries and describe commands do not support complex types; only primitive types are supported. Use PXF external tables to query complex types in Hive. (See [Complex Types Example](#complex_dt_example).)
+-   Even for primitive types, HCatalog metadata descriptions produced by `\d` and` \d+` are converted to HAWQ types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
 -   HAWQ reserves the database name `hcatalog` for system use. You cannot connect to or alter the system `hcatalog` database.
 
 ## <a id="partitionfiltering"></a>Partition Filtering
 
-The PXF Hive plug-in supports the Hive partitioning feature and directory structure. This enables partition exclusion on selected HDFS files comprising the Hive table. To use the partition filtering feature to reduce network traffic and I/O, run a PXF query using a WHERE clause that refers to a specific partition in the partitioned Hive table.
+The PXF Hive plug-in supports the Hive partitioning feature and directory structure. This enables partition exclusion on selected HDFS files comprising the Hive table. To use the partition filtering feature to reduce network traffic and I/O, run a PXF query using a `WHERE` clause that refers to a specific partition in the partitioned Hive table.
 
-To take advantage of PXF partition filtering push-down, the Hive and PXF partition field names should be the same. Otherwise, PXF ignores Partition filtering and the filtering is performed on the HAWQ side, impacting performance.
+To take advantage of PXF partition filtering push-down, the Hive and PXF partition field names should be the same. Otherwise, PXF ignores partition filtering and the filtering is performed on the HAWQ side, impacting performance.
 
 **Note:** The Hive plug-in only filters on partition columns, not on other table attributes.
 
-### <a id="example2"></a>Example
+### <a id="example2"></a>Create Partitioned Hive Table
 
 Create a Hive table `sales_part` with two partition columns, `delivery_state` and `delivery_city:`
 
@@ -530,13 +552,13 @@ hive> CREATE TABLE sales_part (name string, type string, supplier_key int, price
 Load data into this Hive table and add some partitions:
 
 ``` sql
-INSERT INTO TABLE sales_part PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Fresno') VALUES ('block', 'widget', 33, 15.17);
-INSERT INTO TABLE sales_part PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Sacramento') VALUES ('cube', 'widget', 11, 1.17);
-INSERT INTO TABLE sales_part PARTITION(delivery_state = 'NEVADA', delivery_city = 'Reno') VALUES ('dowel', 'widget', 51, 31.82);
-INSERT INTO TABLE sales_part PARTITION(delivery_state = 'NEVADA', delivery_city = 'Las Vegas') VALUES ('px49', 'pipe', 52, 99.82);
+hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Fresno') VALUES ('block', 'widget', 33, 15.17);
+hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Sacramento') VALUES ('cube', 'widget', 11, 1.17);
+hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'NEVADA', delivery_city = 'Reno') VALUES ('dowel', 'widget', 51, 31.82);
+hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'NEVADA', delivery_city = 'Las Vegas') VALUES ('px49', 'pipe', 52, 99.82);
 ```
 
-The Hive storage directory structure appears as follows:
+The Hive storage directory structure for the `sales_part` table appears as follows:
 
 ``` pre
 $ sudo -u hdfs hdfs dfs -ls -R /apps/hive/warehouse/sales_part
@@ -546,7 +568,7 @@ $ sudo -u hdfs hdfs dfs -ls -R /apps/hive/warehouse/sales_part
 /apps/hive/warehouse/sales_part/delivery_state=NEVADA/delivery_city=’Las Vegas’/
 ```
 
-To define a HAWQ PXF table that will read this Hive table and take advantage of partition filter push-down, define the fields corresponding to the Hive partition fields at the end of the attribute list. In HiveQL, a `select                         *` statement on a partitioned table shows the partition fields at the end of the record.
+To define a HAWQ PXF table that will read this Hive table and take advantage of partition filter push-down, define the fields corresponding to the Hive partition fields at the end of the `CREATE EXTERNAL TABLE` attribute list. In HiveQL, a `SELECT *` statement on a partitioned table shows the partition fields at the end of the record.
 
 ``` sql
 postgres=# CREATE EXTERNAL TABLE pxf_sales_part(
@@ -563,7 +585,7 @@ FORMAT 'custom' (FORMATTER='pxfwritable_import');
 postgres=# SELECT * FROM pxf_sales_part;
 ```
 
-### <a id="example3"></a>Example
+### <a id="example3"></a>Query Without Pushdown
 
 In the following example, the HAWQ query filters the `delivery_city` partition `Sacramento`. The filter on  `item_name` is not pushed down, since it is not a partition column. It is performed on the HAWQ side after all the data on `Sacramento` is transferred for processing.
 
@@ -571,7 +593,7 @@ In the following example, the HAWQ query filters the `delivery_city` partition `
 postgres=# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND item_name = 'cube';
 ```
 
-### <a id="example4"></a>Example
+### <a id="example4"></a>Query With Pushdown
 
 The following HAWQ query reads all the data under `delivery_state` partition `CALIFORNIA`, regardless of the city.
 
@@ -584,8 +606,6 @@ postgres=# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
 This topic describes a difference in query results between Hive and PXF queries when Hive tables use a default partition. When dynamic partitioning is enabled in Hive, a partitioned table may store data in a default partition. Hive creates a default partition when the value of a partitioning column does not match the defined type of the column (for example, when a NULL value is used for any partitioning column). In Hive, any query that includes a filter on a partition column *excludes* any data that is stored in the table's default partition.
 
 Similar to Hive, PXF represents a table's partitioning columns as columns that are appended to the end of the table. However, PXF translates any column value in a default partition to a NULL value. This means that a HAWQ query that includes an IS NULL filter on a partitioning column can return different results than the same Hive query.
-
-### <a id="topic_g4r_4wh_1s"></a>Example
 
 Consider a Hive partitioned table that is created with the statement:
 
@@ -603,32 +623,15 @@ The table is loaded with five rows that contain the following data:
 5.0    2013-12-06
 ```
 
-In this case, the insertion of row 4 creates a Hive default partition, because the partition column "date" contains a null value.
+The insertion of row 4 creates a Hive default partition, because the partition column `xdate` contains a null value.
 
-In Hive, any query that filters on the partition column omits data in the default partition. For example the following query returns no rows:
+In Hive, any query that filters on the partition column omits data in the default partition. For example, the following query returns no rows:
 
 ``` sql
-hive> select * from sales where xdate is null;
+hive> SELECT * FROM sales WHERE xdate is null;
 ```
 
 However, if you map this table as a PXF external table in HAWQ, all default partition values are translated into actual NULL values. In HAWQ, executing the same query against the PXF table returns row 4 as the result, because the filter matches the NULL value.
 
 Keep this behavior in mind when executing IS NULL queries on Hive partitioned tables.
-
-## <a id="topic_dbb_nz3_ts"></a>Accessing Hive Tables in Parquet Format
-
-The PXF Hive profile supports both non-partitioned and partitioned Hive tables that use the Parquet storage format in HDFS. Simply map the table columns using equivalent HAWQ data types. For example, if a Hivw table is created using:
-
-``` sql
-hive> CREATE TABLE hive_parquet_table (fname string, lname string, custid int, acctbalance double) 
-        STORED AS parquet;
-```
-
-Define the HAWQ external table using:
-
-``` sql
-postgres=# CREATE EXTERNAL TABLE pxf_parquet_table (fname text, lname text, custid int, acctbalance double precision) 
-    LOCATION ('pxf://namenode:51200/hive-db-name.hive_parquet_table?profile=Hive') 
-    FORMAT 'CUSTOM' (formatter='pxfwritable_import'); 
-```
 
