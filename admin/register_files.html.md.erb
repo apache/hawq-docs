@@ -18,14 +18,13 @@ Requirements for running `hawq register` on the client server are:
 -   The files to be registered and the HAWQ table must be located in the same HDFS cluster.
 -   The target table DDL is configured with the correct data type mapping.
 
-
 ##Registering Externally Generated HDFS File Data to an Existing Table<a id="topic1__section2"></a>
 
-Files or folders in HDFS can be registered into an existing table, allowing them to be managed as a HAWQ internal table. When registering files, you can optionally specify the maximum amount of data to be loaded, in bytes, using the --eof option. If registering a folder, the actual file sizes are used. 
+Files or folders in HDFS can be registered into an existing table, allowing them to be managed as a HAWQ internal table. When registering files, you can optionally specify the maximum amount of data to be loaded, in bytes, using the `--eof` option. If registering a folder, the actual file sizes are used. 
 
 Only HAWQ or Hive-generated Parquet tables are supported. Partitioned tables are not supported. Attempting to register these tables will result in an error.
 
-Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so the data must be mapped. You must verify that the structure of the parquet files and the HAWQ table are compatible before running `hawq register`. 
+Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so data must be mapped. You must verify that the structure of the parquet files and the HAWQ table are compatible before running `hawq register`. 
 
 We recommand creating a copy of the Parquet file to be registered before running ```hawq register```
 You can then then run ```hawq register``` on the copy,  leaving the original file available for additional Hive queries or if a data mapping error is encountered.
