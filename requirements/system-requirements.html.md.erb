@@ -178,43 +178,40 @@ If this system uses the default HAWQ resource manager, you would set `hawq_rm_me
 HAWQ hosts will be configured to use passwordless SSH for intra-cluster communications during the installation process. Temporary password-based authentication must be enabled on each HAWQ host in preparation for this configuration.
 
 1. Install the SSH server if not already configured on the HAWQ system:
-    
+
     ``` shell
     $ yum list installed | grep openssh-server
     $ yum -y install openssh-server
     ```
-    
+
 2. Update the host's SSH configuration to allow password-based authentication. Edit the SSH config file and change the `PasswordAuthentication` configuration value from `no` to `yes`:
-    
+
     ``` shell
     $ sudo vi /etc/ssh/sshd_config
     ```
-    
+
     ```
     PasswordAuthentication yes
     ```
 
 3. Restart SSH:
-    
+
     ``` shell
-    $ sudo /etc/init.d/sshd restart
+    $ sudo service sshd restart
     ```
 
 *After installation is complete*, you may choose to turn off the temporary password-based authentication configured in the previous steps:
 
-1. Open the SSH `/etc/ssh/sshd_config` file in a text editor and update/uncomment the following configuration options.
+1. Open the SSH `/etc/ssh/sshd_config` file in a text editor and update the configuration option you enabled in step 2 above:
     
     ```
-    RSAAuthentication yes
     PasswordAuthentication no
-    PubkeyAuthentication yes
-    AuthorizedKeyFile  .ssh/authorized_keys
     ```
 
 2.  Restart SSH:
     
     ``` shell
-    $ sudo /etc/init.d/sshd restart
+    $ sudo service sshd restart
     ```
  
 
