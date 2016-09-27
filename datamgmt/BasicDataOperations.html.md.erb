@@ -44,7 +44,7 @@ To insert large amounts of data, use external tables or the `COPY` command. Thes
 
 Only HAWQ system catalog tables use multiple version concurrency control. Deleted or updated data rows in the catalog tables occupy physical space on disk even though new transactions cannot see them. Periodically running the `VACUUM` command removes these expired rows. 
 
-Periodically running the `VACUUM` command on system catalog tables removes these expired rows. The `VACUUM` command also collects table-level statistics such as the number of rows and pages.
+The `VACUUM` command also collects table-level statistics such as the number of rows and pages.
 
 For example:
 
