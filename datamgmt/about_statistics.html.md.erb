@@ -20,7 +20,7 @@ Calculating statistics consumes time and resources, so HAWQ produces estimates b
 
 ### <a id="tablesize"></a>Table Size
 
-The query planner seeks to minimize the disk I/O and network traffic required to execute a query, using estimates of the number of rows that must be processed and the number of disk pages the query must access. The data from which these estimates are derived are the `pg_class` system table columns `reltuples` and `relpages`, which contain the number of rows and pages at the time a `VACUUM` or `ANALYZE` command was last run. As rows are added or deleted, the numbers become less accurate. However, an accurate count of disk pages is always available from the operating system, so as long as the ratio of `reltuples` to `relpages` does not change significantly, the optimizer can produce an estimate of the number of rows that is sufficiently accurate to choose the correct query execution plan.
+The query planner seeks to minimize the disk I/O and network traffic required to execute a query, using estimates of the number of rows that must be processed and the number of disk pages the query must access. The data from which these estimates are derived are the `pg_class` system table columns `reltuples` and `relpages`, which contain the number of rows and pages at the time a `VACUUM` or `ANALYZE` command was last run. As rows are added, the numbers become less accurate. However, an accurate count of disk pages is always available from the operating system, so as long as the ratio of `reltuples` to `relpages` does not change significantly, the optimizer can produce an estimate of the number of rows that is sufficiently accurate to choose the correct query execution plan.
 
 In append-optimized tables, the number of tuples is kept up-to-date in the system catalogs, so the `reltuples` statistic is not an estimate. Non-visible tuples in the table are subtracted from the total. The `relpages` value is estimated from the append-optimized block sizes.
 
@@ -122,8 +122,6 @@ If a sample table is created, the number of rows in the sample is calculated to 
 
 Running `ANALYZE` with no arguments updates statistics for all tables in the database. This could take a very long time, so it is better to analyze tables selectively after data has changed. You can also analyze a subset of the columns in a table, for example columns used in joins, `WHERE` clauses, `SORT` clauses, `GROUP BY` clauses, or `HAVING` clauses.
 
-Analyzing a severely bloated table can generate poor statistics if the sample contains empty pages, so it is good practice to vacuum a bloated table before analyzing it.
-
 See the SQL Command Reference for details of running the `ANALYZE` command.
 
 Refer to the Management Utility Reference for details of running the `analyzedb` command.
@@ -150,7 +148,7 @@ Set the system default statistics target to a different value by setting the `de
 $ hawq config -c default_statistics_target -v 50
 ```
 
-The statististics target for individual columns can be set with the `ALTER             TABLE` command. For example, some queries can be improved by increasing the target for certain columns, especially columns that have irregular distributions. You can set the target to zero for columns that never contribute to query otpimization. When the target is 0, `ANALYZE` ignores the column. For example, the following `ALTER TABLE` command sets the statistics target for the `notes` column in the `emp` table to zero:
+The statististics target for individual columns can be set with the `ALTER             TABLE` command. For example, some queries can be improved by increasing the target for certain columns, especially columns that have irregular distributions. You can set the target to zero for columns that never contribute to query optimization. When the target is 0, `ANALYZE` ignores the column. For example, the following `ALTER TABLE` command sets the statistics target for the `notes` column in the `emp` table to zero:
 
 ``` sql
 ALTER TABLE emp ALTER COLUMN notes SET STATISTICS 0;
@@ -168,7 +166,7 @@ Automatic statistics collection has three modes:
 
 -   `none` disables automatic statistics collection.
 -   `on_no_stats` triggers an analyze operation for a table with no existing statistics when any of the commands `CREATE TABLE AS SELECT`, `INSERT`, or `COPY` are executed on the table.
--   `on_change` triggers an analyze operation when any of the commands `CREATE TABLE AS SELECT`, `UPDATE`, `DELETE`, `INSERT`, or `COPY` are executed on the table and the number of rows affected exceeds the threshold defined by the `gp_autostats_on_change_threshold` configuration parameter.
+-   `on_change` triggers an analyze operation when any of the commands `CREATE TABLE AS SELECT`, `INSERT`, or `COPY` are executed on the table and the number of rows affected exceeds the threshold defined by the `gp_autostats_on_change_threshold` configuration parameter.
 
 The automatic statistics collection mode is set separately for commands that occur within a procedural language function and commands that execute outside of a function:
 

@@ -12,7 +12,7 @@ DROP TABLE [IF EXISTS] <name> [, ...] [CASCADE | RESTRICT]
 
 ## <a id="topic1__section3"></a>Description
 
-`DROP TABLE` removes tables from the database. Only its owner may drop a table. To empty a table of rows without removing the table definition, use `DELETE` or `TRUNCATE`.
+`DROP TABLE` removes tables from the database. Only its owner may drop a table. To empty a table of rows without removing the table definition, use `TRUNCATE`.
 
 `DROP TABLE` always removes any indexes, rules, and constraints that exist for the target table. However, to drop a table that is referenced by a view, `CASCADE` must be specified. `CASCADE` will remove a dependent view entirely.
 

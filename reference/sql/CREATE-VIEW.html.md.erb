@@ -77,7 +77,7 @@ names, rank WHERE rank < '11' AND names.id=rank.id;
 
 The SQL standard specifies some additional capabilities for the `CREATE           VIEW` statement that are not in HAWQ. The optional clauses for the full SQL command in the standard are:
 
--   **CHECK OPTION** — This option has to do with updatable views. All `INSERT` and `UPDATE` commands on the view will be checked to ensure data satisfy the view-defining condition (that is, the new data would be visible through the view). If they do not, the update will be rejected.
+-   **CHECK OPTION** — This option has to do with updatable views. All `INSERT` commands on the view will be checked to ensure data satisfy the view-defining condition (that is, the new data would be visible through the view). If they do not, the insert will be rejected.
 -   **LOCAL** — Check for integrity on this view.
 -   **CASCADED** — Check for integrity on this view and on any dependent view. `CASCADED` is assumed if neither `CASCADED` nor `LOCAL` is specified.
 

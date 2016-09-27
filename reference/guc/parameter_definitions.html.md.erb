@@ -1076,10 +1076,6 @@ The `on_change` option triggers statistics collection only when the number of ro
 
 `CREATE TABLE AS SELECT`
 
-`UPDATE`
-
-`DELETE`
-
 `INSERT`
 
 `COPY`
@@ -2391,7 +2387,7 @@ The maximum value is INT\_MAX/1024. If an invalid value is specified, the defaul
 
 ## <a name="log_statement"></a>log\_statement
 
-Controls which SQL statements are logged. DDL logs all data definition commands like CREATE, ALTER, and DROP commands. MOD logs all DDL statements, plus INSERT, UPDATE, DELETE, TRUNCATE, and COPY FROM. PREPARE and EXPLAIN ANALYZE statements are also logged if their contained command is of an appropriate type.
+Controls which SQL statements are logged. DDL logs all data definition commands like CREATE, ALTER, and DROP commands. MOD logs all DDL statements, plus INSERT, TRUNCATE, and COPY FROM. PREPARE and EXPLAIN ANALYZE statements are also logged if their contained command is of an appropriate type.
 
 <table>
 <colgroup>

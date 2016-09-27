@@ -23,7 +23,7 @@ HAWQ uses the partition criteria defined during table creation to create each pa
 
 The HAWQ system catalog stores partition hierarchy information so that rows inserted into the top-level parent table propagate correctly to the child table partitions. To change the partition design or table structure, alter the parent table using `ALTER TABLE` with the `PARTITION` clause.
 
-To insert data into a partitioned table, you specify the root partitioned table, the table created with the `CREATE TABLE` command. You also can specify a leaf child table of the partitioned table in an `INSERT` command. An error is returned if the data is not valid for the specified leaf child table. Specifying a child table that is not a leaf child table in the `INSERT` command is not supported. Execution of other DML commands such as `UPDATE` and `DELETE` on any child table of a partitioned table is not supported. These commands must be executed on the root partitioned table, the table created with the `CREATE TABLE` command.
+To insert data into a partitioned table, you specify the root partitioned table, the table created with the `CREATE TABLE` command. You also can specify a leaf child table of the partitioned table in an `INSERT` command. An error is returned if the data is not valid for the specified leaf child table. Specifying a child table that is not a leaf child table in the `INSERT` command is not supported.
 
 ## <a id="topic65"></a>Deciding on a Table Partitioning Strategy 
 
@@ -258,7 +258,7 @@ WHERE tablename='sales';
 
 The following table and views show information about partitioned tables.
 
--   *pg\_partition*- Tracks partitioned tables and their inheritance level relationships.
+-   *pg\_partition* - Tracks partitioned tables and their inheritance level relationships.
 -   *pg\_partition\_templates* - Shows the subpartitions created using a subpartition template.
 -   *pg\_partition\_columns* - Shows the partition key columns used in a partition design.
 

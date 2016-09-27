@@ -42,7 +42,7 @@ The client machine where `hawq load` is executed must have the following:
 
 ## <a id="topic1__section4"></a>Description
 
-`hawq load` is a data loading utility that acts as an interface to HAWQ's external table parallel loading feature. Using a load specification defined in a YAML formatted control file, `hawq                     load` executes a load by invoking the HAWQ parallel file server ([gpfdist](gpfdist.html#topic1)), creating an external table definition based on the source data defined, and executing an `INSERT`, `UPDATE` or `MERGE` operation to load the source data into the target table in the database.
+`hawq load` is a data loading utility that acts as an interface to HAWQ's external table parallel loading feature. Using a load specification defined in a YAML formatted control file, `hawq                     load` executes a load by invoking the HAWQ parallel file server ([gpfdist](gpfdist.html#topic1)), creating an external table definition based on the source data defined, and executing an `INSERT` operation to load the source data into the target table in the database.
 
 The operation, including any SQL commands specified in the `SQL` collection of the YAML control file (see [Control File Format](#topic1__section7)), are performed as a single transaction to prevent inconsistent data when performing multiple, simultaneous load operations on a target table.
 
