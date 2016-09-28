@@ -29,7 +29,6 @@ Instance store-backed storage is generally better performing than EBS and recomm
 **Note** EC2 *instance store* provides temporary block-level storage. This storage is located on disks that are physically attached to the host computer. While instance store provides high performance, powering off the instance causes data loss. Soft reboots preserve instance store data. 
      
 Virtual devices for instance store volumes for HAWQ EC2 instance store instances are named `ephemeralN` (where *N* varies based on instance type). CentOS instance store block device are named `/dev/xvdletter` (where *letter* is a lower case letter of the alphabet).
-  
 
 ### <a id="topic_cfgplacegrp"></a>Configure Placement Group 
 
