@@ -23,7 +23,7 @@ HAWQ uses the partition criteria defined during table creation to create each pa
 
 The HAWQ system catalog stores partition hierarchy information so that rows inserted into the top-level parent table propagate correctly to the child table partitions. To change the partition design or table structure, alter the parent table using `ALTER TABLE` with the `PARTITION` clause.
 
-To insert data into a partitioned table, you specify the root partitioned table, the table created with the `CREATE TABLE` command. You also can specify a leaf child table of the partitioned table in an `INSERT` command. An error is returned if the data is not valid for the specified leaf child table. Specifying a child table that is not a leaf child table in the `INSERT` command is not supported. Execution of other DML commands such as `UPDATE` and `DELETE` on any child table of a partitioned table is not supported. These commands must be executed on the root partitioned table, the table created with the `CREATE TABLE` command.
+To insert data into a partitioned table, you specify the root partitioned table, the table created with the `CREATE TABLE` command. You also can specify a leaf child table of the partitioned table in an `INSERT` command. An error is returned if the data is not valid for the specified leaf child table. Specifying a child table that is not a leaf child table in the `INSERT` command is not supported.
 
 ## <a id="topic65"></a>Deciding on a Table Partitioning Strategy 
 
@@ -37,7 +37,7 @@ Not all tables are good candidates for partitioning. If the answer is *yes* to a
 
 Do not create more partitions than are needed. Creating too many partitions can slow down management and maintenance jobs, such as vacuuming, recovering segments, expanding the cluster, checking disk usage, and others.
 
-Partitioning does not improve query performance unless the query optimizer can eliminate partitions based on the query predicates. Queries that scan every partition run slower than if the table were not partitioned, so avoid partitioning if few of your queries achieve partition elimination. Check the explain plan for queries to make sure that partitions are eliminated. See [Query Profiling](/20/query/query-profiling.html) for more about partition elimination.
+Partitioning does not improve query performance unless the query optimizer can eliminate partitions based on the query predicates. Queries that scan every partition run slower than if the table were not partitioned, so avoid partitioning if few of your queries achieve partition elimination. Check the explain plan for queries to make sure that partitions are eliminated. See [Query Profiling](../query/query-profiling.html) for more about partition elimination.
 
 Be very careful with multi-level partitioning because the number of partition files can grow very quickly. For example, if a table is partitioned by both day and city, and there are 1,000 days of data and 1,000 cities, the total number of partitions is one million. Column-oriented tables store each column in a physical table, so if this table has 100 columns, the system would be required to manage 100 million files for the table.
 
@@ -258,7 +258,7 @@ WHERE tablename='sales';
 
 The following table and views show information about partitioned tables.
 
--   *pg\_partition*- Tracks partitioned tables and their inheritance level relationships.
+-   *pg\_partition* - Tracks partitioned tables and their inheritance level relationships.
 -   *pg\_partition\_templates* - Shows the subpartitions created using a subpartition template.
 -   *pg\_partition\_columns* - Shows the partition key columns used in a partition design.
 

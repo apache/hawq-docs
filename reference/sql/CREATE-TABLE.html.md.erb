@@ -161,7 +161,7 @@ where \<storage\_parameter\> for a partition is:
 
 `CREATE TABLE` creates a new, initially empty table in the current database. The table is owned by the user issuing the command. If a schema name is given then the table is created in the specified schema. Otherwise it is created in the current schema. Temporary tables exist in a special schema, so a schema name may not be given when creating a temporary table. The name of the table must be distinct from the name of any other table, external table, sequence, or view in the same schema.
 
-The optional constraint clauses specify conditions that new or updated rows must satisfy for an insert or update operation to succeed. A constraint is an SQL object that helps define the set of valid values in the table in various ways. Constraints apply to tables, not to partitions. You cannot add a constraint to a partition or subpartition.
+The optional constraint clauses specify conditions that new rows must satisfy for an insert operation to succeed. A constraint is an SQL object that helps define the set of valid values in the table in various ways. Constraints apply to tables, not to partitions. You cannot add a constraint to a partition or subpartition.
 
 There are two ways to define constraints: table constraints and column constraints. A column constraint is defined as part of a column definition. A table constraint definition is not tied to a particular column, and it can encompass more than one column. Every column constraint can also be written as a table constraint; a column constraint is only a notational convenience for use when the constraint only affects one column.
 
@@ -213,7 +213,7 @@ Note also that unlike `INHERITS`, copied columns and constraints are not merged 
 <dd>Specifies if the column is or is not allowed to contain null values. `NULL` is the default.</dd>
 
 <dt>CHECK ( \<expression\> )  </dt>
-<dd>The `CHECK` clause specifies an expression producing a Boolean result which new or updated rows must satisfy for an insert or update operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert or update operation produce a `FALSE` result an error exception is raised and the insert or update does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
+<dd>The `CHECK` clause specifies an expression producing a Boolean result which new rows must satisfy for an insert operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert operation produce a `FALSE` result an error exception is raised and the insert does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
 
 <dt>WITH ( \<storage\_option\>=\<value\> )  </dt>
 <dd>The `WITH` clause can be used to set storage options for the table or its indexes. Note that you can also set storage parameters on a particular partition or subpartition by declaring the `WITH` clause in the partition specification.
@@ -228,7 +228,7 @@ The following storage options are available:
 
 **bucketnum** — Set to the number of hash buckets to be used in creating a hash-distributed table, specified as an integer greater than 0 and no more than the value of `default_hash_table_bucket_number`. The default when the table is created is 6 times the segment count. However, explicitly setting the bucket number when creating a hash table is recommended.
 
-**ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. Heap-storage tables can only be row-oriented.
+**ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. 
 
 **COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. `ZLIB` provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
 
@@ -328,8 +328,8 @@ Using `SNAPPY` compression with parquet files is recommended for best performanc
 
 **Memory occupation**: When inserting or loading data to a parquet table, the whole rowgroup is stored in physical memory until the size exceeds the threshold or the end of the `INSERT` operation. Once either occurs, the entire rowgroup is flushed to disk. Also, at the beginning of the `INSERT` operation, each column is pre-allocated a page buffer. The column pre-allocated page buffer size should be `min(pageSizeLimit,                rowgroupSizeLimit/estimatedColumnWidth/estimatedRecordWidth)` for the first rowgroup. For the following rowgroup, it should be `min(pageSizeLimit,                actualColumnChunkSize in last rowgroup * 1.05)`, of which 1.05 is the estimated scaling factor. When reading data from a parquet table, the requested columns of the row group are loaded into memory. Memory is allocated 8 MB by default. Ensure that memory occupation does not exceed physical memory when setting `ROWGROUPSIZE` or `PAGESIZE`, otherwise you may encounter an out of memory error. 
 
-**Batch vs. individual inserts**
-Only batch loading should be used with parquet files. Repeated individual inserts can result in bloated footers.
+**Bulk vs. trickle loads**
+Only bulk loads are recommended for use with parquet tables. Trickle loads can result in bloated footers and larger data files.
 
 ## <a id="parquetexamples"></a>Parquet Examples
 

@@ -16,7 +16,6 @@ HAWQ provides storage orientation models of either row-oriented or Parquet table
 
 Row-oriented storage provides the best options for the following situations:
 
--   **Updates of table data.** Where you load and update the table data frequently.
 -   **Frequent INSERTs.** Where rows are frequently inserted into the table
 -   **Number of columns requested in queries.** Where you typically request all or the majority of columns in the `SELECT` list or `WHERE` clause of your queries, choose a row-oriented model. 
 -   **Number of columns in the table.** Row-oriented storage is most efficient when many columns are required at the same time, or when the row-size of a table is relatively small. 
@@ -63,12 +62,10 @@ The`DROP TABLE`command removes tables from the database. For example:
 DROP TABLE mytable;
 ```
 
-To empty a table of rows without removing the table definition, use `DELETE` or `TRUNCATE`. For example:
+`DROP TABLE` always removes any indexes, rules, triggers, and constraints that exist for the target table. Specify `CASCADE`to drop a table that is referenced by a view. `CASCADE` removes dependent views.
+
+To empty a table of rows without removing the table definition, use `TRUNCATE`. For example:
 
 ``` sql
-DELETE FROM mytable;
-
 TRUNCATE mytable;
 ```
-
-`DROP TABLE`always removes any indexes, rules, triggers, and constraints that exist for the target table. Specify `CASCADE`to drop a table that is referenced by a view. `CASCADE` removes dependent views.

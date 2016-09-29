@@ -170,6 +170,7 @@ The parameters in this topic control the configuration of the HAWQ array and its
 -   [gp\_enable\_direct\_dispatch](parameter_definitions.html#gp_enable_direct_dispatch)
 -   [gp\_segment\_connect\_timeout](parameter_definitions.html#gp_segment_connect_timeout)
 -   [gp\_set\_proc\_affinity](parameter_definitions.html#gp_set_proc_affinity)
+-   [gp\_vmem\_idle\_resource\_timeout](parameter_definitions.html#gp_vmem_idle_resource_timeout)
 
 ### <a id="topic52"></a>Fault Operation Parameters
 
@@ -343,7 +344,7 @@ These parameters adjust the amount of data sampled by an `ANALYZE` operation. Ad
 
 ### <a id="topic_qvz_nz3_yv"></a>Automatic Statistics Collection
 
-When automatic statistics collection is enabled, you can run `ANALYZE` automatically in the same transaction as an `INSERT`, `UPDATE`, `DELETE`, `COPY` or `CREATE TABLE...AS SELECT` statement when a certain threshold of rows is affected (`on_change`), or when a newly generated table has no statistics (`on_no_stats`). To enable this feature, set the following server configuration parameters in your HAWQ `hawq-site.xml` file by using the `hawq config` utility and restart HAWQ:
+When automatic statistics collection is enabled, you can run `ANALYZE` automatically in the same transaction as an `INSERT`, `COPY` or `CREATE TABLE...AS SELECT` statement when a certain threshold of rows is affected (`on_change`), or when a newly generated table has no statistics (`on_no_stats`). To enable this feature, set the following server configuration parameters in your HAWQ `hawq-site.xml` file by using the `hawq config` utility and restart HAWQ:
 
 -   [gp\_autostats\_mode](parameter_definitions.html#gp_autostats_mode)
 -   [log\_autostats](parameter_definitions.html#log_autostats)

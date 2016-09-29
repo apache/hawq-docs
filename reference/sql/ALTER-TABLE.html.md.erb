@@ -314,7 +314,7 @@ When a column is added with `ADD COLUMN`, all existing rows in the table are ini
 
 You can specify multiple changes in a single `ALTER TABLE` command, which will be done in a single pass over the table.
 
-The `DROP COLUMN` form does not physically remove the column, but simply makes it invisible to SQL operations. Subsequent insert and update operations in the table will store a null value for the column. Thus, dropping a column is quick but it will not immediately reduce the on-disk size of your table, as the space occupied by the dropped column is not reclaimed. The space will be reclaimed over time as existing rows are updated.
+The `DROP COLUMN` form does not physically remove the column, but simply makes it invisible to SQL operations. Subsequent insert operations in the table will store a null value for the column. Thus, dropping a column is quick but it will not immediately reduce the on-disk size of your table, as the space occupied by the dropped column is not reclaimed.
 
 The fact that `ALTER TYPE` requires rewriting the whole table is sometimes an advantage, because the rewriting process eliminates any dead space in the table. For example, to reclaim the space occupied by a dropped column immediately, the fastest way is: `ALTER TABLE <table> ALTER COLUMN <anycol> TYPE <sametype>;` Where \<anycol\> is any remaining table column and \<sametype\> is the same type that column already has. This results in no semantically-visible change in the table, but the command forces rewriting, which gets rid of no-longer-useful data.
 

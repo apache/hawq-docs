@@ -12,7 +12,7 @@ The `CREATE TABLE` command creates a table and defines its structure. When you c
 -   Any table constraints to limit the data that a column or table can contain. See [Setting Table Constraints](#topic28).
 -   The distribution policy of the table, which determines how HAWQ divides data is across the segments. See [Choosing the Table Distribution Policy](#topic34).
 -   The way the table is stored on disk.
--   The table partitioning strategy for large tables, which specifies how the data should be divided. See [Creating and Managing Databases](/20/ddl/ddl-database.html).
+-   The table partitioning strategy for large tables, which specifies how the data should be divided. See [Creating and Managing Databases](../ddl/ddl-database.html).
 
 ### <a id="topic27"></a>Choosing Column Data Types 
 
@@ -68,7 +68,7 @@ All HAWQ tables are distributed. The default is `DISTRIBUTED RANDOMLY` \(round-r
 
 Randomly distributed tables have benefits over hash distributed tables. For example, after expansion, HAWQ's elasticity feature lets it automatically use more resources without needing to redistribute the data. For extremely large tables, redistribution is very expensive. Also, data locality for randomly distributed tables is better, especially after the underlying HDFS redistributes its data during rebalancing or because of data node failures. This is quite common when the cluster is large.
 
-However, hash distributed tables can be faster than randomly distributed tables. For example, for TPCH queries, where there are several queries, HASH distributed tables can have performance benefits. Choose a distribution policy that best suits your application scenario. When you `CREATE TABLE`, you can also specify the `bucketnum` option. The `bucketnum` determines the number of hash buckets used in creating a hash-distributed table or for pxf external table intermediate processing. The number of buckets also affects how many virtual segments will be created when processing this data. The bucketnumber of a gpfdist external table is the number of gpfdist location, and the bucketnumber of a command external table is `ON #num`.
+However, hash distributed tables can be faster than randomly distributed tables. For example, for TPCH queries, where there are several queries, HASH distributed tables can have performance benefits. Choose a distribution policy that best suits your application scenario. When you `CREATE TABLE`, you can also specify the `bucketnum` option. The `bucketnum` determines the number of hash buckets used in creating a hash-distributed table or for PXF external table intermediate processing. The number of buckets also affects how many virtual segments will be created when processing this data. The bucketnumber of a gpfdist external table is the number of gpfdist location, and the bucketnumber of a command external table is `ON #num`. PXF external tables use the `default_hash_table_bucket_number` parameter to control virtual segments. 
 
 HAWQ's elastic execution runtime is based on virtual segments, which are allocated on demand, based on the cost of the query. Each node uses one physical segment and a number of dynamically allocated virtual segments distributed to different hosts, thus simplifying performance tuning. Large queries use large numbers of virtual segments, while smaller queries use fewer virtual segments. Tables do not need to be redistributed when nodes are added or removed.
 
@@ -126,7 +126,7 @@ For hash tables, the `SELECT INTO` function always uses random distribution.
 
 `CREATE TABLE`'s optional clause `DISTRIBUTED BY` specifies the distribution policy for a table. The default is a random distribution policy. You can also choose to distribute data as a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. HASH distributed tables are created with the number of hash buckets specified by the `default_hash_table_bucket_number` parameter.
 
-Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments in the next section and in [Query Performance](/20/query/query-performance.html#topic38).
+Policies for different application scenarios can be specified to optimize performance. The number of virtual segments used for query execution can now be tuned using the `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, in connection with the `default_hash_table_bucket_number` parameter, which sets the default `bucketnum`. For more information, see the guidelines for Virtual Segments in the next section and in [Query Performance](../query/query-performance.html#topic38).
 
 #### <a id="topic_wff_mqm_gv"></a>Performance Tuning 
 

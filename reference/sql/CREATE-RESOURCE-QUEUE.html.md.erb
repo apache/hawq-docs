@@ -18,7 +18,7 @@ where \<queue\_attribute\> is:
     CORE_LIMIT_CLUSTER=<percentage>
     [ACTIVE_STATEMENTS=<integer>]
     [ALLOCATION_POLICY='even']
-    [VSEGMENT_RESOURCE_QUOTA='mem:<memory_units>']
+    [VSEG_RESOURCE_QUOTA='mem:<memory_units>']
     [RESOURCE_OVERCOMMIT_FACTOR=<double>]
     [NVSEG_UPPER_LIMIT=<integer>]
     [NVSEG_LOWER_LIMIT=<integer>]
@@ -77,7 +77,7 @@ Setting the allocation policy to `even` means resources are always evenly dispat
 For each query resource allocation request, the HAWQ resource manager determines the minimum and maximum size of a virtual segment based on multiple factors including query cost, user configuration, table properties, and so on. For example, a hash distributed table requires fixed size of virtual segments. With an even allocation policy, the HAWQ resource manager uses the minimum virtual segment size requirement and evenly dispatches resources to each query resource allocation request in the resource queue.</dd>
 
 <dt>VSEG\_RESOURCE\_QUOTA='mem:{128mb | 256mb | 512mb | 1024mb | 2048mb | 4096mb | 8192mb | 16384mb | 1gb | 2gb | 4gb | 8gb | 16gb}' </dt>
-<dd>Optional. This quota defines how resources are split across multiple virtual segments. For example, when the HAWQ resource manager determines that 256GB memory and 128 vcores should be allocated to the current resource queue, there are multiple solutions on how to divide the resources across virtual segments. For example, you could use a) 2GB/1 vcore \* 128 virtual segments or b) 1GB/0.5 vcore \* 256 virtual segments. Therefore, you can use this attribute to make the HAWQ resource manager calculate the number of virtual segments based on how to divide the memory. For example, if `VSEGMENT_RESOURCE_QUOTA``='mem:512mb'`, then the resource queue will use 512MB/0.25 vcore \* 512 virtual segments. The default value is '`mem:256mb`'.
+<dd>Optional. This quota defines how resources are split across multiple virtual segments. For example, when the HAWQ resource manager determines that 256GB memory and 128 vcores should be allocated to the current resource queue, there are multiple solutions on how to divide the resources across virtual segments. For example, you could use a) 2GB/1 vcore \* 128 virtual segments or b) 1GB/0.5 vcore \* 256 virtual segments. Therefore, you can use this attribute to make the HAWQ resource manager calculate the number of virtual segments based on how to divide the memory. For example, if `VSEG_RESOURCE_QUOTA``='mem:512mb'`, then the resource queue will use 512MB/0.25 vcore \* 512 virtual segments. The default value is '`mem:256mb`'.
 
 **Note:** To avoid resource fragmentation, make sure that the segment resource capacity configured for HAWQ (in HAWQ Standalone mode: `hawq_rm_memory_limit_perseg`; in YARN mode: `yarn.nodemanager.resource.memory-mb` must be a multiple of the resource quotas for all virtual segments and CPU to memory ratio must be a multiple of the amount configured for `yarn.scheduler.minimum-allocation-mb`.</dd>
 
@@ -108,11 +108,11 @@ By default, both limits are set to **-1**, which means the limits are disabled. 
 
 ## <a id="topic1__section5"></a>Notes
 
-To check on the configuration of a resource queue, you can query the `pg_resqueue` catalog table. To see the runtime status of all resource queues, you can use the `pg_resqueue_status`. See [Checking Existing Resource Queues](/20/resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
+To check on the configuration of a resource queue, you can query the `pg_resqueue` catalog table. To see the runtime status of all resource queues, you can use the `pg_resqueue_status`. See [Checking Existing Resource Queues](../../resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
 
 `CREATE RESOURCE QUEUE` cannot be run within a transaction.
 
-To see the status of a resource queue, see [Checking Existing Resource Queues](/20/resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
+To see the status of a resource queue, see [Checking Existing Resource Queues](../../resourcemgmt/ResourceQueues.html#topic_lqy_gls_zt).
 
 ## <a id="topic1__section6"></a>Examples
 

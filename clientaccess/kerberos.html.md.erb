@@ -2,11 +2,13 @@
 title: Using Kerberos Authentication
 ---
 
+**Note:** The following steps for enabling Kerberos *are not required* if you install HAWQ using Ambari.
+
 You can control access to HAWQ with a Kerberos authentication server.
 
-HAWQ supports the Generic Security Service Application Program Interface \(GSSAPI\) with Kerberos authentication. GSSAPI provides automatic authentication \(single sign-on\) for systems that support it. You specify the HAWQ users \(roles\) that require Kerberos authentication in the HAWQ configuration file pg\_hba.conf. The login fails if Kerberos authentication is not available when a role attempts to log in to HAWQ.
+HAWQ supports the Generic Security Service Application Program Interface \(GSSAPI\) with Kerberos authentication. GSSAPI provides automatic authentication \(single sign-on\) for systems that support it. You specify the HAWQ users \(roles\) that require Kerberos authentication in the HAWQ configuration file `pg_hba.conf`. The login fails if Kerberos authentication is not available when a role attempts to log in to HAWQ.
 
-Kerberos provides a secure, encrypted authentication service. It does not encrypt data exchanged between the client and database and provides no authorization services. To encrypt data exchanged over the network, you must use an SSL connection. To manage authorization for access to HAWQ databases and objects such as schemas and tables, you use settings in the pg\_hba.conf file and privileges given to HAWQ users and roles within the database. For information about managing authorization privileges, see [Managing Roles and Privileges](roles_privs.html).
+Kerberos provides a secure, encrypted authentication service. It does not encrypt data exchanged between the client and database and provides no authorization services. To encrypt data exchanged over the network, you must use an SSL connection. To manage authorization for access to HAWQ databases and objects such as schemas and tables, you use settings in the `pg_hba.conf` file and privileges given to HAWQ users and roles within the database. For information about managing authorization privileges, see [Managing Roles and Privileges](roles_privs.html).
 
 For more information about Kerberos, see [http://web.mit.edu/kerberos/](http://web.mit.edu/kerberos/).
 
@@ -54,7 +56,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
     sudo yum install krb5-libs krb5-server krb5-workstation
     ```
 
-2.  Edit the /etc/krb5.conf configuration file. The following example shows a Kerberos server with a default `KRB.EXAMPLE.COM` realm.
+2.  Edit the `/etc/krb5.conf` configuration file. The following example shows a Kerberos server with a default `KRB.EXAMPLE.COM` realm.
 
     ```
     [logging]
@@ -104,7 +106,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
     kdb5_util create -s
     ```
 
-    The `kdb5_util`create option creates the database to store keys for the Kerberos realms that are managed by this KDC server. The -s option creates a stash file. Without the stash file, every time the KDC server starts it requests a password.
+    The `kdb5_util`create option creates the database to store keys for the Kerberos realms that are managed by this KDC server. The `-s` option creates a stash file. Without the stash file, every time the KDC server starts it requests a password.
 
 4.  Add an administrative user to the KDC database with the `kadmin.local` utility. Because it does not itself depend on Kerberos authentication, the `kadmin.local` utility allows you to add an initial administrative user to the local Kerberos server. To add the user `gpadmin` as an administrative user to the KDC database, run the following command:
 
@@ -114,7 +116,7 @@ Follow these steps to install and configure a Kerberos Key Distribution Center \
 
     Most users do not need administrative access to the Kerberos server. They can use `kadmin` to manage their own principals \(for example, to change their own password\). For information about `kadmin`, see the [Kerberos documentation](http://web.mit.edu/kerberos/krb5-latest/doc/).
 
-5.  If needed, edit the /var/kerberos/krb5kdc/kadm5.acl file to grant the appropriate permissions to `gpadmin`.
+5.  If needed, edit the `/var/kerberos/krb5kdc/kadm5.acl` file to grant the appropriate permissions to `gpadmin`.
 6.  Start the Kerberos daemons:
 
     ```
@@ -183,7 +185,7 @@ Install the Kerberos client libraries on the HAWQ master and configure the Kerbe
     sudo kdestroy
     ```
 
-5.  Use the Kerberos utility `kinit` to request a ticket using the keytab file on the HAWQ master for `gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM`. The -t option specifies the keytab file on the HAWQ master.
+5.  Use the Kerberos utility `kinit` to request a ticket using the keytab file on the HAWQ master for `gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM`. The `-t` option specifies the keytab file on the HAWQ master.
 
     ```
     # kinit -k -t gpdb-kerberos.keytab gpadmin/kerberos-gpdb@KRB.EXAMPLE.COM
@@ -246,13 +248,13 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
     $ psql -U "adminuser/mdw.proddb" -h mdw.proddb
     ```
 
-    If the default user is `adminuser`, the pg\_ident.conf file and the pg\_hba.conf file can be configured so that the `adminuser` can log in to the database as the Kerberos principal `adminuser/mdw.proddb` without specifying the `-U` option:
+    If the default user is `adminuser`, the `pg_ident.conf` file and the `pg_hba.conf` file can be configured so that the `adminuser` can log in to the database as the Kerberos principal `adminuser/mdw.proddb` without specifying the `-U` option:
 
     ``` bash
     $ psql -h mdw.proddb
     ```
 
-    The following username map is defined in the HAWQ file `$MASTER_DATA_DIRECTORY/pg_ident.conf`:
+    The `pg_ident.conf` file defines the username map. This file is located in the HAWQ master data directory (identified by the `hawq_master_directory` property value in `hawq-site.xml`):
 
     ```
     # MAPNAME   SYSTEM-USERNAME        GP-USERNAME
@@ -283,7 +285,7 @@ Enable Kerberos-authenticated JDBC access to HAWQ.
 You can configure HAWQ to use Kerberos to run user-defined Java functions.
 
 1.  Ensure that Kerberos is installed and configured on the HAWQ master. See [Install and Configure the Kerberos Client](#topic6).
-2.  Create the file .java.login.config in the folder /home/gpadmin and add the following text to the file:
+2.  Create the file `.java.login.config` in the folder `/home/gpadmin` and add the following text to the file:
 
     ```
     pgjdbc {

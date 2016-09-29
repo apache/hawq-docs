@@ -2,7 +2,9 @@
 title: Troubleshooting PXF
 ---
 
-The following table describes some common errors while using PXF:
+## <a id="pxerrortbl"></a>PXF Errors
+
+The following table lists some common errors encountered while using PXF:
 
 <table>
 <caption><span class="tablecap">Table 1. PXF Errors and Explanation</span></caption>
@@ -132,3 +134,70 @@ The following table describes some common errors while using PXF:
 </table>
 
 
+## <a id="pxflogging"></a>PXF Logging
+Enabling more verbose logging may aid PXF troubleshooting efforts.
+
+PXF provides two categories of message logging - service-level and database-level.
+
+### <a id="pxfsvclogmsg"></a>Service-Level Logging
+
+PXF utilizes `log4j` for service-level logging. PXF-service-related log messages are captured in a log file specified by PXF's `log4j` properties file, `/etc/pxf/conf/pxf-log4j.properties`. The default PXF logging configuration will write `INFO` and more severe level logs to `/var/log/pxf/pxf-service.log`.
+
+PXF provides more detailed logging when the `DEBUG` level is enabled.  To configure PXF `DEBUG` logging, uncomment the following line in `pxf-log4j.properties`:
+
+``` shell
+#log4j.logger.org.apache.hawq.pxf=DEBUG
+```
+
+and restart the PXF service:
+
+``` shell
+$ sudo service pxf-service restart
+```
+
+With `DEBUG` level logging now enabled, perform your PXF operations; for example, creating and querying an external table. (Make note of the time; this will direct you to the relevant log messages in `/var/log/pxf/pxf-service.log`.)
+
+``` shell
+$ psql
+```
+
+``` sql
+gpadmin=# CREATE EXTERNAL TABLE hivetest(id int, newid int)
+    LOCATION ('pxf://namenode:51200/pxf_hive1?PROFILE=Hive')
+    FORMAT 'custom' (formatter='pxfwritable_import');
+gpadmin=# select * from hivetest;
+<select output>
+```
+
+Examine/collect the log messages from `pxf-service.log`.
+
+**Note**: `DEBUG` logging is verbose and has a performance impact.  Remember to turn off PXF service `DEBUG` logging after you have collected the desired information.
+ 
+
+### <a id="pxfdblogmsg"></a>Database-Level Logging
+
+Enable HAWQ and PXF debug message logging during operations on PXF external tables by setting the `client_min_messages` server configuration parameter to `DEBUG2` in your `psql` session.
+
+``` shell
+$ psql
+```
+
+``` sql
+gpadmin=# set client_min_messages=DEBUG2
+gpadmin=# select * from hivetest;
+...
+DEBUG2:  churl http header: cell #19: X-GP-URL-HOST: localhost
+DEBUG2:  churl http header: cell #20: X-GP-URL-PORT: 51200
+DEBUG2:  churl http header: cell #21: X-GP-DATA-DIR: pxf_hive1
+DEBUG2:  churl http header: cell #22: X-GP-profile: Hive
+DEBUG2:  churl http header: cell #23: X-GP-URI: pxf://namenode:51200/pxf_hive1?profile=Hive
+...
+```
+
+Examine/collect the log messages from `stdout`.
+
+**Note**: `DEBUG2` database session logging has a performance impact.  Remember to turn off `DEBUG2` logging after you have collected the desired information.
+
+``` sql
+gpadmin=# set client_min_messages=NOTICE
+```

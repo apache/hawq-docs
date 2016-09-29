@@ -35,7 +35,7 @@ All PXF plug-ins require that both the Tomcat and PXF service packages be instal
 Install Tomcat:
 
 ```shell
-$ sudo rpm -i apache-tomcat-x.x.x.noarch.rpm
+$ sudo rpm -i apache-tomcat-x.x.x-el6.noarch.rpm
 ```
     
 where *x.x.x* corresponds to the version of Tomcat required by PXF.  The appropriate version of Tomcat is included in the PXF RPM bundle.
@@ -43,7 +43,7 @@ where *x.x.x* corresponds to the version of Tomcat required by PXF.  The appropr
 Install the PXF service:
 
 ```shell
-$ sudo rpm -i pxf-service-n.n.n-x.noarch.rpm
+$ sudo rpm -i pxf-service-n.n.n-x.el6.noarch.rpm
 ```
 
 where *n.n.n-x* corresponds to the PXF version and build number you wish to install.
@@ -66,7 +66,7 @@ To install PXF support for HDFS, perform the following steps on *each* node in y
 2. Install the PXF HDFS plug-in:
 
     ```shell
-    $ sudo rpm -i pxf-hdfs-n.n.n-x.noarch.rpm
+    $ sudo rpm -i pxf-hdfs-n.n.n-x.el6.noarch.rpm
     ```
 
     The install copies the HDFS JAR file `pxf-hdfs-n.n.n.jar` to `/usr/lib/pxf-n.n.n/` and creates a softlink to `pxf-hdfs.jar` in that directory.
@@ -80,7 +80,7 @@ To install PXF support for Hive, perform the following steps on *each* node in y
 2.  Install the PXF Hive plug-in:
 
     ```shell
-    $ sudo rpm -i pxf-hive-n.n.n-x.noarch.rpm
+    $ sudo rpm -i pxf-hive-n.n.n-x.el6.noarch.rpm
     ```
 
     The install copies the Hive JAR file `pxf-hive-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-hive.jar` in that directory.
@@ -94,7 +94,7 @@ To install PXF support for HBase, perform the following steps on *each* node in 
 2.  Install the PXF HBase plug-in:
 
     ```shell
-    $ sudo rpm -i pxf-hbase-n.n.n-x.noarch.rpm
+    $ sudo rpm -i pxf-hbase-n.n.n-x.el6.noarch.rpm
     ```
 
     The install copies the HBase JAR file `pxf-hbase-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-hbase.jar` in that directory.
@@ -128,7 +128,7 @@ To install PXF support for JSON, perform the following steps on *each* node in y
 2.  Install the PXF JSON plug-in:
 
     ```shell
-    $ sudo rpm -i pxf-json-n.n.n-x.noarch.rpm
+    $ sudo rpm -i pxf-json-n.n.n-x.el6.noarch.rpm
     ```
 
     The install copies the JSON JAR file `pxf-json-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-json.jar` in that directory.

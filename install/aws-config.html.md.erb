@@ -30,9 +30,6 @@ Instance store-backed storage is generally better performing than EBS and recomm
      
 Virtual devices for instance store volumes for HAWQ EC2 instance store instances are named `ephemeralN` (where *N* varies based on instance type). CentOS instance store block device are named `/dev/xvdletter` (where *letter* is a lower case letter of the alphabet).
 
-?? DO WE RECOMMEND EBS-backed VOLUMES FOR ANYTHING?  I.E. BACKUPS, ...??)
-       
-
 ### <a id="topic_cfgplacegrp"></a>Configure Placement Group 
 
 A placement group is a logical grouping of instances within a single availability zone that together participate in a low-latency, 10 Gbps network.  Your HAWQ master and segment cluster instances should support enhanced networking and reside in a single placement group (and subnet) for optimal network performance.  
@@ -77,21 +74,11 @@ A security group is a set of rules that control network traffic to and from your
 
 To configure HAWQ communication between nodes in the HAWQ cluster, include and open the following ports in the appropriate security group for the HAWQ master and segment nodes:
 
-?? PROVIDE SPECIFIC type/protocol/portrange/source settings from EC2 console ??
-
 | Port  | Application |
 |-------|-------------------------------------|
 | 22    | ssh - secure connect to other hosts |
-| XX  | XX |  
-
-UDP access within the VPC should be enabled by default.
-
-
-?? DIFFENT SECURITY GROUP FOR AMBARI NODE ??
 
 To allow access to/from a source external to the Ambari management node, include and open the following ports in an appropriate security group for your Ambari node:
-
-?? PROVIDE SPECIFIC type/protocol/portrange/source settings from EC2 console ??
 
 | Port  | Application |
 |-------|-------------------------------------|
@@ -114,10 +101,11 @@ $ ssh -i my-test.pem user1@192.0.2.0
 
 After launching your HAWQ instance, you will connect to and configure the instance. The  *Instances* page of the EC2 Console lists the running instances and their associated network access information.
 
-Before installing HAWQ, set up the EC2 instances as you would local host server machines. Configure the host operating system, configure host network information (for example, update the `/etc/hosts` file), set operating system parameters, and install operating system packages. For information about how to prepare your operating system environment for HAWQ, see [Select HAWQ Host Machines](../install/select-hosts.html).
+Before installing HAWQ, set up the EC2 instances as you would local host server machines. Configure the host operating system, configure host network information (for example, update the `/etc/hosts` file), set operating system parameters, and install operating system packages. For information about how to prepare your operating system environment for HAWQ, see [Apache HAWQ System Requirements](../requirements/system-requirements.html) and [Select HAWQ Host Machines](../install/select-hosts.html).
 
-?? PACKAGES, KERNEL VERSION, KERNEL SETTINGS, BEST PRACTICES HERE OR WILL THEY BE THE SAME AS FOR PHYSICAL DEVICE?? 
+###Passwordless SSH Configuration<a id="topic_pwdlessssh_cc"></a>
 
+HAWQ hosts will be configured during the installation process to use passwordless SSH for intra-cluster communications. Temporary password-based authentication must be enabled on each HAWQ host in preparation for this configuration. Password authentication is typically disabled by default in cloud images. Update the cloud configuration in `/etc/cloud/cloud.cfg` to enable password authentication in your AMI(s). Set `ssh_pwauth: True` in this file. If desired, disable password authentication after HAWQ installation by setting the property back to `False`.
   
 ##References<a id="topic_hgz_zwy_bv"></a>
 

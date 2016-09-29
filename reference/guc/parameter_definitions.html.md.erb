@@ -110,7 +110,7 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[gp\_autostats\_mode](../../reference/guc/parameter_definitions.html#gp_autostats_mode)**
 
--   **[gp\_autostats\_on\_change\_threshhold](../../reference/guc/parameter_definitions.html#topic_imj_zhf_gw)**
+-   **[gp\_autostats\_on\_change\_threshold](../../reference/guc/parameter_definitions.html#topic_imj_zhf_gw)**
 
 -   **[gp\_backup\_directIO](../../reference/guc/parameter_definitions.html#gp_backup_directIO)**
 
@@ -217,6 +217,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[gp\_statistics\_pullup\_from\_child\_partition](../../reference/guc/parameter_definitions.html#gp_statistics_pullup_from_child_partition)**
 
 -   **[gp\_statistics\_use\_fkeys](../../reference/guc/parameter_definitions.html#gp_statistics_use_fkeys)**
+
+-   **[gp\_vmem\_idle\_resource\_timeout](../../reference/guc/parameter_definitions.html#gp_vmem_idle_resource_timeout)**
 
 -   **[gp\_vmem\_protect\_segworker\_cache\_limit](../../reference/guc/parameter_definitions.html#gp_vmem_protect_segworker_cache_limit)**
 
@@ -1074,10 +1076,6 @@ The `on_change` option triggers statistics collection only when the number of ro
 
 `CREATE TABLE AS SELECT`
 
-`UPDATE`
-
-`DELETE`
-
 `INSERT`
 
 `COPY`
@@ -1111,7 +1109,7 @@ Automatic statistics collection is triggered if data is inserted directly in a l
 </tbody>
 </table>
 
-## <a name="topic_imj_zhf_gw"></a>gp\_autostats\_on\_change\_threshhold
+## <a name="topic_imj_zhf_gw"></a>gp\_autostats\_on\_change\_threshold
 
 Specifies the threshold for automatic statistics collection when `gp_autostats_mode` is set to `on_change`. When a triggering table operation affects a number of rows exceeding this threshold, `ANALYZE         `is added and statistics are collected for the table.
 
@@ -1658,6 +1656,15 @@ When enabled, allows the legacy query optimizer (planner) to use foreign key inf
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | Boolean     | on      | master, session, reload |
+
+## <a name="gp_vmem_idle_resource_timeout"></a>gp\_vmem\_idle\_resource\_timeout
+
+Sets the time in milliseconds a session can be idle before gangs on the segment databases are released to free up resources.
+
+| Value Range    | Default | Set Classifications     |
+|----------------|---------|-------------------------|
+| number of milliseconds | 18000  | master, system, restart |
+
 
 ## <a name="gp_vmem_protect_segworker_cache_limit"></a>gp\_vmem\_protect\_segworker\_cache\_limit
 
@@ -2380,7 +2387,7 @@ The maximum value is INT\_MAX/1024. If an invalid value is specified, the defaul
 
 ## <a name="log_statement"></a>log\_statement
 
-Controls which SQL statements are logged. DDL logs all data definition commands like CREATE, ALTER, and DROP commands. MOD logs all DDL statements, plus INSERT, UPDATE, DELETE, TRUNCATE, and COPY FROM. PREPARE and EXPLAIN ANALYZE statements are also logged if their contained command is of an appropriate type.
+Controls which SQL statements are logged. DDL logs all data definition commands like CREATE, ALTER, and DROP commands. MOD logs all DDL statements, plus INSERT, TRUNCATE, and COPY FROM. PREPARE and EXPLAIN ANALYZE statements are also logged if their contained command is of an appropriate type.
 
 <table>
 <colgroup>
@@ -2451,7 +2458,7 @@ Sets the maximum number of append-only relations that can be written to or loade
 
 ## <a name="max_connections"></a>max\_connections
 
-The maximum number of concurrent connections allowed on master. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount as the master. When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](/20/clientaccess/client_auth.html).
+The maximum number of concurrent connections allowed on master. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount as the master. When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](../../clientaccess/client_auth.html).
 
 Increasing this parameter may cause HAWQ to request more shared memory. See [shared\_buffers](#shared_buffers) for information about HAWQ server instance shared memory buffers.
 
@@ -2821,7 +2828,7 @@ Specifies the order in which schemas are searched when an object is referenced b
 
 ## <a name="seg_max_connections"></a>seg\_max\_connections
 
-The maximum number of concurrent connections on a segment. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount of connections allowed on the master (see [max\_connections](#max_connections).) When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](/20/clientaccess/client_auth.html).
+The maximum number of concurrent connections on a segment. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount of connections allowed on the master (see [max\_connections](#max_connections).) When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](../../clientaccess/client_auth.html).
 
 Increasing this parameter may cause HAWQ to request more shared memory. See [shared\_buffers](#shared_buffers) for information about HAWQ server instance shared memory buffers.
 

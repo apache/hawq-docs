@@ -188,15 +188,15 @@ GROUP BY 1;
   </tr>
   <tr>
     <td>
-    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="/20/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
+    <p>Vacuum all system catalogs (tables in the <code>pg_catalog</code> schema) that are approaching <a href="../reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a>.</p>
     <p>Recommended frequency: daily</p>
     <p>Severity: CRITICAL</p>
     </td>
     <td>
-      <p><p>Vacuum an individual table:</p>
+      <p><p>Vacuum an individual system catalog table:</p>
       <pre><code>VACUUM &lt;<i>table</i>&gt;;</code></pre>
     </td>
-    <td>After the <a href="/20/reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
+    <td>After the <a href="../reference/guc/parameter_definitions.html">vacuum_freeze_min_age</a> value is reached, VACUUM will no longer replace transaction IDs with <code>FrozenXID</code> while scanning a table. Perform vacuum on these tables before the limit is reached.</td>
   </tr>
     <td>
       <p>Update table statistics.</p>
@@ -224,9 +224,7 @@ GROUP BY 1;
       <p>Recommended frequency: weekly, or more often if database objects are created and dropped frequently</p>
     </td>
     <td>
-      <ol>
-        <li><code>VACUUM</code> the system tables in each database.</li>
-      </ol>
+      <p><code>VACUUM</code> the system tables in each database.</p>
     </td>
     <td>The optimizer retrieves information from the system tables to create query plans. If system tables and indexes are allowed to become bloated over time, scanning the system tables increases query execution time.</td>
   </tr>

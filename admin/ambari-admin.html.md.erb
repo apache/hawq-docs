@@ -8,7 +8,7 @@ Ambari provides an easy interface to perform some of the most common HAWQ and PX
 
 HAWQ supports integration with YARN for global resource management. In a YARN managed environment, HAWQ can request resources (containers) dynamically from YARN, and return resources when HAWQ’s workload is not heavy.
 
-See also [Integrating YARN with HAWQ](/20/resourcemgmt/YARNIntegration.html) for command-line instructions and additional details about using HAWQ with YARN.
+See also [Integrating YARN with HAWQ](../resourcemgmt/YARNIntegration.html) for command-line instructions and additional details about using HAWQ with YARN.
 
 ### When to Perform
 
@@ -156,10 +156,12 @@ There are several recommendations to keep in mind when modifying the size of you
 -  When you add a new node, install both a DataNode and a HAWQ segment on the new node.
 -  After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -  Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
--  Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command.
+-  Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](../reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.html) command.
 -  If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
 ### Procedure
+First ensure that the new node(s) has been configured per the instructions found in [Apache HAWQ System Requirements](../requirements/system-requirements.html) and [Select HAWQ Host Machines](../install/select-hosts.html).
+
 1.  If you have any user-defined function (UDF) libraries installed in your existing HAWQ cluster, install them on the new node(s) that you want to add to the HAWQ cluster.
 2.  Access the Ambari web console at http://ambari.server.hostname:8080, and login as the "admin" user. \(The default password is also "admin".\)
 3.  Click **HAWQ** in the list of installed services.
@@ -197,10 +199,12 @@ There are several recommendations to keep in mind when modifying the size of you
 19.  Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
     <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 20.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
-21.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](/20/reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](/20/reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
+21.  If you are using hash distributed tables and wish to take advantage of the performance benefits of using a larger cluster, redistribute the data in all hash-distributed tables by using either the [ALTER TABLE](../reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.html) command. You should redistribute the table data if you modified the `default_hash_table_bucket_number` configuration parameter.
 
     **Note:** The redistribution of table data can take a significant amount of time.
 22.  (Optional.) If you changed the **Exchange SSH Keys** property value before adding the host(s), change the value back to `false` after Ambari exchanges keys with the new hosts. This prevents Ambari from exchanging keys with all hosts every time the HAWQ master is started or restarted.
+
+23.  (Optional.) If you enabled temporary password-based authentication while preparing/configuring your HAWQ host systems, turn off password-based authentication as described in [Apache HAWQ System Requirements](../requirements/system-requirements.html#topic_pwdlessssh).
 
 #### <a id="manual-config-steps"></a>Manually Updating the HAWQ Configuration
 If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
@@ -408,7 +412,7 @@ This alert is triggered when any of the HAWQ Segments fail to register with the 
 
 * Percent HAWQ Segment Status Available:
 This Alert monitors the percentage of HAWQ segments available versus total segments. 
-   Alerts for **WARN**, and **CRITICAL** are displayed when the number of unresponsive HAWQ segments in the cluster is greater than the specified threshhold. Otherwise, the status will show as **OK**.
+   Alerts for **WARN**, and **CRITICAL** are displayed when the number of unresponsive HAWQ segments in the cluster is greater than the specified threshold. Otherwise, the status will show as **OK**.
 
 * PXF Process Alerts:
 PXF Process alerts are triggered when a PXF process on a node is down or not responding on the network. If PXF Alerts are enabled, the Alert status is shown on the PXF Status page.
@@ -423,10 +427,10 @@ To customize the interval, perform the following steps:
 3.  Enter a number for how often to check status for the selected Alert, then click **Save**. The interval must be specified in whole minutes.
 
 
-#### Setting the Available HAWQ Segment Threshhold
+#### Setting the Available HAWQ Segment Threshold
 HAWQ monitors the percentage of available HAWQ segments and can send an alert when a specified percent of unresponsive segments is reached. 
 
-To set the threshhold for the unresponsive segments that will trigger an alert:
+To set the threshold for the unresponsive segments that will trigger an alert:
 
    1.  Click on **Percent HAWQ Segments Available**. 
    2.  Click **Edit**. Enter the percentage of total segments to create a **Warning** alert (default is 10 percent of the total segments) or **Critical** alert (default is 25 percent of total segments).
