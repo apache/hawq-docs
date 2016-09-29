@@ -2,6 +2,8 @@
 title: Using Kerberos Authentication
 ---
 
+**Note:** The following steps for enabling Kerberos *are not required* if you install HAWQ using Ambari.
+
 You can control access to HAWQ with a Kerberos authentication server.
 
 HAWQ supports the Generic Security Service Application Program Interface \(GSSAPI\) with Kerberos authentication. GSSAPI provides automatic authentication \(single sign-on\) for systems that support it. You specify the HAWQ users \(roles\) that require Kerberos authentication in the HAWQ configuration file `pg_hba.conf`. The login fails if Kerberos authentication is not available when a role attempts to log in to HAWQ.
