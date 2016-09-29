@@ -2,9 +2,9 @@
 title: Installing PXF Plug-ins
 ---
 
-This topic describes how to install the built-in PXF service plug-ins that are required to connect PXF to HDFS, Hive, and HBase. 
+This topic describes how to install the built-in PXF service plug-ins that are required to connect PXF to HDFS, Hive, HBase, and JSON. 
 
-**Note:** The PXF plug-ins require that you run Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009. If you have configured Oozie JXM reporting on a host that will run a PXF plug-in, make sure that the reporting service uses a port other than 8005. This helps to prevent port conflict errors from occurring when you start the PXF service.
+**Note:** PXF requires that you run Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009. If you have configured Oozie JXM reporting on a host that will run PXF, make sure that the reporting service uses a port other than 8005. This helps to prevent port conflict errors from occurring when you start the PXF service.
 
 ## <a id="directories_and_logs"></a>PXF Installation and Log File Directories
 
@@ -19,123 +19,50 @@ Installing PXF plug-ins, regardless of method, creates directories and log files
 | `/var/run/pxf/catalina.pid`    | PXF Tomcat container PID location                                                                                                                                                                                                          |
 
 
-## <a id="install_pxf_plug_ambari"></a>Installing PXF Plug-ins Using Ambari
+## <a id="install_pxf_plug_ambari"></a>Installing PXF Using Ambari
 
 If you are using Ambari to install and manage your HAWQ cluster, you do *not* need to follow the manual installation steps in this topic. Installing using the Ambari web interface installs all of the necessary PXF plug-in components.
 
-## <a id="install_pxf_plug_cmdline"></a>Installing PXF Plug-ins from the Command Line
+## <a id="install_pxf_plug_cmdline"></a>Installing PXF from the Command Line
 
 Each PXF service plug-in resides in its own RPM.  You may have built these RPMs in the Apache HAWQ open source project repository (see [PXF Build Instructions](https://github.com/apache/incubator-hawq/blob/master/pxf/README.md)), or these RPMs may have been included in a commercial product download package.
 
-RPMs for PXF plug-ins must be installed on *each* node in your cluster.  The PXF service must be restarted on each node after installation of plug-ins.
+PXF software must be installed on *each* node in your cluster.
 
-### <a id="topic_qsz_wq5_25"></a>Install Prerequisite Packages
-All PXF plug-ins require that both the Tomcat and PXF service packages be installed on each node in your cluster. 
-
-Install Tomcat:
-
-```shell
-$ sudo rpm -i apache-tomcat-x.x.x-el6.noarch.rpm
-```
-    
-where *x.x.x* corresponds to the version of Tomcat required by PXF.  The appropriate version of Tomcat is included in the PXF RPM bundle.
-
-Install the PXF service:
-
-```shell
-$ sudo rpm -i pxf-service-n.n.n-x.el6.noarch.rpm
-```
-
-where *n.n.n-x* corresponds to the PXF version and build number you wish to install.
-
-Installing the PXF service package:
-
-   - creates a `/usr/lib/pxf-n.n.n` directory, adding a softlink from `/usr/lib/pxf` to this directory
-   - copies the PXF service JAR file `pxf-service-n.n.n.jar` to `/usr/lib/pxf-n.n.n/`
-   - creates a softlink to `pxf-service.jar` in `/usr/lib/pxf-n.n.n/`
-   - sets up the PXF service configuration files
-   - starts the PXF service
-
-
-### <a id="topic_qsz_wq5_25"></a>Install the PXF HDFS Plug-in
-
-To install PXF support for HDFS, perform the following steps on *each* node in your cluster:
-
-1. Install the Tomcat and PXF service packages as described in the previous section.
-
-2. Install the PXF HDFS plug-in:
+1. Install the PXF software, including Apache, the PXF service, and all PXF plug-ins: HDFS, HBase, Hive, JSON:
 
     ```shell
-    $ sudo rpm -i pxf-hdfs-n.n.n-x.el6.noarch.rpm
+    $ sudo yum install -y pxf
     ```
 
-    The install copies the HDFS JAR file `pxf-hdfs-n.n.n.jar` to `/usr/lib/pxf-n.n.n/` and creates a softlink to `pxf-hdfs.jar` in that directory.
+    Installing PXF in this manner:
+    * installs the required version of `apache-tomcat`
+    * creates a `/etc/pxf/pxf-n.n.n` directory, adding a softlink from `/etc/pxf` to this directory
+    * sets up the PXF service configuration files in `/etc/pxf`
+    * creates a `/usr/lib/pxf-n.n.n` directory, adding a softlink from `/usr/lib/pxf` to this directory
+    * copies the PXF service JAR file `pxf-service-n.n.n.jar` to `/usr/lib/pxf-n.n.n/`
+    * copies JAR files for each of the PXF plugs-ins to `/usr/lib/pxf-n.n.n/`
+    * creates softlinks from `pxf-xxx.jar` in `/usr/lib/pxf-n.n.n/`
+    * starts the PXF service
 
-### <a id="topic_s1y_1v5_25"></a>Install the PXF Hive Plug-in
+2. If you choose to use the HBase plug-in, perform the following configuration:
 
-To install PXF support for Hive, perform the following steps on *each* node in your cluster:
+    1. Add the PXF HBase plug-in JAR file to the HBase `CLASSPATH` by updating the `HBASE_CLASSPATH` environment variable setting in the HBase environment file `/etc/hbase/conf/hbase-env.sh`:
 
-1.  Install the Tomcat, PXF service, and PXF HDFS RPMs as previously described.
+        ``` shell
+        export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
+        ```
 
-2.  Install the PXF Hive plug-in:
+    3. Restart the HBase service after making this update to HBase configuration.
 
-    ```shell
-    $ sudo rpm -i pxf-hive-n.n.n-x.el6.noarch.rpm
-    ```
+        On the HBase Master node:
 
-    The install copies the Hive JAR file `pxf-hive-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-hive.jar` in that directory.
+        ``` shell
+        $ su -l hbase -c "/usr/hdp/current/hbase-master/bin/hbase-daemon. sh restart master; sleep 25"
+       ```
 
-### <a id="topic_std_cv5_25"></a>Install the PXF HBase Plug-in
+        On an HBase Region Server node:
 
-To install PXF support for HBase, perform the following steps on *each* node in your cluster. 
-
-1.  Install the Tomcat, PXF Service, and PXF HDFS RPMs as previously described.
-
-2.  Install the PXF HBase plug-in:
-
-    ```shell
-    $ sudo rpm -i pxf-hbase-n.n.n-x.el6.noarch.rpm
-    ```
-
-    The install copies the HBase JAR file `pxf-hbase-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-hbase.jar` in that directory.
-
-3.  Add the PXF HBase plug-in JAR file to the HBase `CLASSPATH` by updating the `HBASE_CLASSPATH` environment variable setting in the HBase environment file `/etc/hbase/conf/hbase-env.sh`:
-
-    ```shell
-    export HBASE_CLASSPATH=${HBASE_CLASSPATH}:/usr/lib/pxf/pxf-hbase.jar
-    ```
-
-4.  Restart the HBase service after making this update to HBase configuration.
-
-    If you are on the HBase Master node:
-
-    ```shell
-    $ su -l hbase -c "/usr/hdp/current/hbase-master/bin/hbase-daemon.sh restart master; sleep 25"
-    ```
-
-    If you are on an HBase Region Server node:
-
-    ```shell
-    $ su -l hbase -c "/usr/hdp/current/hbase-regionserver/bin/hbase-daemon.sh restart regionserver"
-    ```
-
-### <a id="topic_s1y_1v5_25"></a>Install the PXF JSON Plug-in
-
-To install PXF support for JSON, perform the following steps on *each* node in your cluster:
-
-1.  Install the Tomcat, PXF service, and PXF HDFS RPMs as previously described.
-
-2.  Install the PXF JSON plug-in:
-
-    ```shell
-    $ sudo rpm -i pxf-json-n.n.n-x.el6.noarch.rpm
-    ```
-
-    The install copies the JSON JAR file `pxf-json-n.n.n.jar` to `/usr/lib/pxf-n.n.n` and creates a softlink to `pxf-json.jar` in that directory.
-
-### <a id="topic_qsz_restartpxf"></a>Restart the PXF Service
-Restart PXF on *each* node after installing the PXF service and any PXF plug-ins.
-
-``` shell
-$ sudo service pxf-service restart
-```
+        ```shell
+        $ su -l hbase -c "/usr/hdp/current/hbase-regionserver/bin/hbase-daemon.sh restart regionserver"
+        ```
