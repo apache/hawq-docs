@@ -1,5 +1,5 @@
 ---
-title: Registering Files into HAWQ Internal Tables<a id="topic1__section1"></a>
+title: Registering Files into HAWQ Internal Tables
 ---
 
 The `hawq register` utility loads and registers HDFS data files or folders into HAWQ internal tables. Files can be read directly, rather than having to be copied or loaded, resulting in higher performance and more efficient transaction processing.
@@ -18,7 +18,7 @@ Requirements for running `hawq register` on the  server are:
 -   The files to be registered and the HAWQ table must be located in the same HDFS cluster.
 -   The target table DDL is configured with the correct data type mapping.
 
-##Registering Externally Generated HDFS File Data to an Existing Table<a id="topic1__section2"></a>
+##<a id="topic1__section2"></a>Registering Externally Generated HDFS File Data to an Existing Table
 
 Files or folders in HDFS can be registered into an existing table, allowing them to be managed as a HAWQ internal table. When registering files, you can optionally specify the maximum amount of data to be loaded, in bytes, using the `--eof` option. If registering a folder, the actual file sizes are used. 
 
@@ -64,7 +64,7 @@ then running
 select relname from pg_class where oid = segrelid
 ```
 
-##Registering Data Using Information from a YAML Configuration File<a id="topic1__section3"></a>
+## <a id="topic1__section3"></a>Registering Data Using Information from a YAML Configuration File
  
 The `hawq register` command can register HDFS files  by using metadata loaded from a YAML configuration file by using the `--config <yaml_config\>` option. Both AO and Parquet tables can be registered. Tables need not exist in HAWQ before being registered. This function can be useful in disaster recovery, allowing information created by the `hawq extract` command to re-create HAWQ tables.
 
@@ -112,7 +112,7 @@ Select the new table and check to verify that  the content has been registered.
 ```
 
 
-##Data Type Mapping<a id="topic1__section4"></a>
+## <a id="topic1__section4"></a>Data Type Mapping<a id="topic1__section4"></a>
 
 HIVE and Parquet tables use different data types than HAWQ tables. Mapping must be used for metadata compatibility. You are responsible for making sure your implementation is mapped to the appropriate data type before running `hawq register`. The tables below show equivalent data types, if available.
 
