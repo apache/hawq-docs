@@ -26,7 +26,7 @@ where:
 
 ## Description
 
-`hawq extract` is a utility that extracts a table's metadata into a YAML formatted file. HAWQ's InputFormat uses this YAML-formatted file to read a HAWQ file stored on HDFS directly into the MapReduce program.
+`hawq extract` is a utility that extracts a table's metadata into a YAML formatted file. HAWQ's InputFormat uses this YAML-formatted file to read a HAWQ file stored on HDFS directly into the MapReduce program. The YAML configuration file can also be used provide the metadata for registering files into HAWQ with the `hawq register` command.
 
 **Note:**
 `hawq extract` is bound by the following rules:
@@ -288,6 +288,6 @@ Parquet_FileLocations:
 
 ## See Also
 
-[hawq load](hawqload.html#topic1)
+[hawq load](hawqload.html#topic1), [hawq register](hawqregister.html#topic1)
 
 
