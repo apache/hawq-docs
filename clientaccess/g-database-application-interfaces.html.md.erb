@@ -10,22 +10,21 @@ HAWQ provides the following connectivity tools for connecting to the HAWQ databa
   - PostgreSQL JDBC Interface - PostgreSQL JDBC driver
   - `libpq` - PostgreSQL C API
 
-## <a id="dbdriver"></a>PostgreSQL Drivers
+## <a id="dbdriver"></a>HAWQ Drivers
 
 ODBC and JDBC drivers for HAWQ are available as a separate download from Pivotal Network [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb).
 
-### <a id="psqlodbc_driver"></a>psqlODBC Driver
+### <a id="odbc_driver"></a>ODBC Driver
 
-The ODBC API specifies a standard set of C interfaces for accessing database management systems.
+The ODBC API specifies a standard set of C interfaces for accessing database management systems.  For additional information on using the ODBC API, refer to the [ODBC Programmer's Reference](https://msdn.microsoft.com/en-us/library/ms714177(v=vs.85).aspx) documentation.
 
-`psqlODBC` is the official PostgreSQL ODBC Driver. The driver is currently maintained by a number of contributors to the [PostgreSQL ODBC driver project](https://odbc.postgresql.org/). `psqlODBC` is released under the Library General Public Licence, or LGPL.
+HAWQ supports the DataDirect ODBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
 
-### <a id="postgresjdbc_driver"></a>PostgreSQL JDBC Driver
-The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases.
+### <a id="jdbc_driver"></a>JDBC Driver
+The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases. For additional information on using the JDBC JDBC API with PostgreSQL drivers, refer to [The PostgreSQL JDBC Interface](https://jdbc.postgresql.org/documentation/82/index.html) documentation.
 
-PostgreSQL provides a type 4 JDBC driver. Type 4 indicates that the driver is written in Pure Java, and communicates in the database system's own network protocol. The driver is currently maintained by a number of contributors to the [PostgreSQL JDBC driver project](http://jdbc.postgresql.org). The PostgreSQL JDBC Interface has not been modified from the original PostgreSQL distribution.
+HAWQ supports the DataDirect JDBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
 
-For additional information on using the PostgreSQL JDBC driver, refer to [The PostgreSQL JDBC Interface](https://jdbc.postgresql.org/documentation/82/index.html) documentation.
 
 ## <a id="libpq_api"></a>libpq API
 `libpq` is the C API to PostgreSQL/HAWQ. This API provides a set of library functions enabling client programs to pass queries to the PostgreSQL backend server and to receive the results of those queries.
