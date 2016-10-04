@@ -1,8 +1,33 @@
 ---
-title: ODBC/JDBC Application Interfaces
+title: HAWQ Database Drivers and APIs
 ---
-
 
 You may want to deploy your existing Business Intelligence (BI) or Analytics applications with HAWQ. The most commonly used database application programming interfaces with HAWQ are the ODBC and JDBC APIs. 
 
-ODBC/JDBC drivers are available as a separate download via Pivotal Network [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb).
+HAWQ provides the following connectivity tools for connecting to the HAWQ database:
+
+  - `psqlODBC` - PostgreSQL ODBC driver
+  - PostgreSQL JDBC Interface - PostgreSQL JDBC driver
+  - `libpq` - PostgreSQL C API
+
+## <a id="dbdriver"></a>PostgreSQL Drivers
+
+ODBC and JDBC drivers for HAWQ are available as a separate download from Pivotal Network [Pivotal Network](https://network.pivotal.io/products/pivotal-hdb).
+
+### <a id="psqlodbc_driver"></a>psqlODBC Driver
+`psqlODBC` is the official PostgreSQL ODBC Driver. The driver is currently maintained by a number of contributors to the [PostgreSQL ODBC driver project](https://odbc.postgresql.org/). `psqlODBC` is released under the Library General Public Licence, or LGPL.
+
+### <a id="postgresjdbc_driver"></a>PostgreSQL JDBC Driver
+The JDBC API specifies a standard set of interfaces to SQL-compliant databases.
+
+PostgreSQL provides a type 4 JDBC driver. Type 4 indicates that the driver is written in Pure Java, and communicates in the database system's own network protocol. The driver is currently maintained by a number of contributors to the [PostgreSQL JDBC driver project](http://jdbc.postgresql.org). The PostgreSQL JDBC Interface has not been modified from the original PostgreSQL distribution.
+
+For additional information on using the PostgreSQL JDBC driver, refer to [The PostgreSQL JDBC Interface](https://jdbc.postgresql.org/documentation/82/index.html) documentation.
+
+## <a id="libpq_api"></a>libpq API
+`libpq` is the C API to PostgreSQL/HAWQ. This API provides a set of library functions enabling client programs to pass queries to the PostgreSQL backend server and to receive the results of those queries.
+
+`libpq` is included in your HAWQ distribution.
+
+For additional information on using the `libpq` API, refer to [libpq - C Library](https://www.postgresql.org/docs/8.2/static/libpq.html) in the PostgreSQL documentation.
+
