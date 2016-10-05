@@ -86,11 +86,11 @@ double_it(PG_FUNCTION_ARGS)
 If the above function is compiled into a shared object named `libdoubleit.so` located in `/share/libs`, you would register and invoke the function with HAWQ as follows:
 
 ``` sql
-gpadmin=# CREATE FUNCTION double_it(integer) RETURNS integer
+gpadmin=# CREATE FUNCTION double_it_c(integer) RETURNS integer
             AS '/share/libs/libdoubleit', 'double_it'
             LANGUAGE C STRICT;
 CREATE FUNCTION
-gpadmin=# SELECT double_it(27);
+gpadmin=# SELECT double_it_c(27);
  double_it 
 -----------
         54
