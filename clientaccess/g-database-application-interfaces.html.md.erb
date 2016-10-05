@@ -4,7 +4,7 @@ title: HAWQ Database Drivers and APIs
 
 You may want to deploy your existing Business Intelligence (BI) or Analytics applications with HAWQ. The database application programming interfaces most commonly used with HAWQ are the ODBC and JDBC APIs.
 
-HAWQ provides the following connectivity tools for connecting to the HAWQ database:
+HAWQ provides the following connectivity tools for connecting to the database:
 
   - ODBC driver
   - JDBC driver
@@ -21,7 +21,7 @@ The ODBC API specifies a standard set of C interfaces for accessing database man
 HAWQ supports the DataDirect ODBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
 
 ### <a id="jdbc_driver"></a>JDBC Driver
-The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases. For additional information on using the JDBC JDBC API with PostgreSQL drivers, refer to [The PostgreSQL JDBC Interface](https://jdbc.postgresql.org/documentation/82/index.html) documentation.
+The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases. For additional information on using the JDBC API with PostgreSQL drivers, refer to [The PostgreSQL JDBC Interface](https://jdbc.postgresql.org/documentation/82/index.html) documentation.
 
 HAWQ supports the DataDirect JDBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
 
@@ -29,7 +29,7 @@ HAWQ supports the DataDirect JDBC Driver. Installation instructions for this dri
 ## <a id="libpq_api"></a>libpq API
 `libpq` is the C API to PostgreSQL/HAWQ. This API provides a set of library functions enabling client programs to pass queries to the PostgreSQL backend server and to receive the results of those queries.
 
-`libpq` is included in your HAWQ distribution.
+`libpq` is included in the `lib/` directory of your HAWQ distribution. `libpq-fe.h`, the header file required for developing frontend PostgreSQL applications can be found in the `/include` directory.
 
 For additional information on using the `libpq` API, refer to [libpq - C Library](https://www.postgresql.org/docs/8.2/static/libpq.html) in the PostgreSQL documentation.
 
