@@ -25,6 +25,18 @@ The JDBC API specifies a standard set of Java interfaces to SQL-compliant databa
 
 HAWQ supports the DataDirect JDBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
 
+The connection URL for accessing the HAWQ DataDirect JDBC driver is of the following format:
+
+``` shell
+jdbc:pivotal:greenplum://host:port;DatabaseName=<name>;
+```
+
+For example:
+
+``` shell
+jdbc:pivotal:greenplum://hdm1:5432;DatabaseName=gpadmin;
+```
+
 
 ## <a id="libpq_api"></a>libpq API
 `libpq` is the C API to PostgreSQL/HAWQ. This API provides a set of library functions enabling client programs to pass queries to the PostgreSQL backend server and to receive the results of those queries.
