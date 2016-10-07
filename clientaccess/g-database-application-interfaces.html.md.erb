@@ -2,7 +2,7 @@
 title: HAWQ Database Drivers and APIs
 ---
 
-You may want to deploy your existing Business Intelligence (BI) or Analytics applications with HAWQ. The database application programming interfaces most commonly used with HAWQ are the ODBC and JDBC APIs.
+You may want to connect your existing Business Intelligence (BI) or Analytics applications with HAWQ. The database application programming interfaces most commonly used with HAWQ are the ODBC and JDBC APIs.
 
 HAWQ provides the following connectivity tools for connecting to the database:
 
@@ -18,30 +18,49 @@ ODBC and JDBC drivers for HAWQ are available as a separate download from Pivotal
 
 The ODBC API specifies a standard set of C interfaces for accessing database management systems.  For additional information on using the ODBC API, refer to the [ODBC Programmer's Reference](https://msdn.microsoft.com/en-us/library/ms714177(v=vs.85).aspx) documentation.
 
-HAWQ supports the DataDirect ODBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
+HAWQ supports the DataDirect ODBC Driver. Installation instructions for this driver are provided on the Pivotal Network driver download page. Refer to [HAWQ ODBC Driver](http://media.datadirect.com/download/docs/odbc/allodbc/#page/odbc%2Fthe-greenplum-wire-protocol-driver.html%23) for HAWQ-specific ODBC driver information.
+
+#### <a id="odbc_driver_connurl"></a>Connection Data Source
+The information required by the HAWQ ODBC driver to connect to a database is stored in a data source. ODBC data sources can be defined at the system level or the user level. 
+
+Certain environment variables must be set when using the HAWQ ODBC driver. On Linux this includes `$ODBCINI`, which points to the fully-qualified path to the ODBC system information file, typically named `odbc.ini`.
+
+Depending on your platform, you may use GUI or command line editor tools to create your data source definition. 
+
 
 ### <a id="jdbc_driver"></a>JDBC Driver
-The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases. For additional information on using the JDBC API with PostgreSQL drivers, refer to [The PostgreSQL JDBC Interface](https://jdbc.postgresql.org/documentation/82/index.html) documentation.
+The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases. For additional information on using the JDBC API, refer to the [Java JDBC API](https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc/) documentation.
 
-HAWQ supports the DataDirect JDBC Driver. Installation instructions for this driver are provided on the Pivotal Network download page.
+HAWQ supports the DataDirect JDBC Driver. Installation instructions for this driver are provided on the Pivotal Network driver download page. Refer to [HAWQ JDBC Driver](http://media.datadirect.com/download/docs/jdbc/alljdbc/help.html#page/jdbcconnect%2Fgreenplum-driver.html%23) for HAWQ-specific JDBC driver information.
 
-The connection URL for accessing the HAWQ DataDirect JDBC driver is of the following format:
+#### <a id="jdbc_driver_connurl"></a>Connection URL
+Connection URLs for accessing the HAWQ DataDirect JDBC driver must be in the following format:
 
 ``` shell
-jdbc:pivotal:greenplum://host:port;DatabaseName=<name>;
+jdbc:pivotal:greenplum://host:port[;<property>=<value>[;...]]
 ```
 
-For example:
+Commonly-specified HAWQ JDBC connection properties include:
+
+| Property Name                                                    | Value Description                                                                                                                                                                                         |
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| DatabaseName | name of the database to which you want to connect |
+| User                         | username used to connect to the specified database                                                                                           |
+| Password              | password used to connect to the specified database                                                                                       |
+
+Refer to [Connection Properties](http://media.datadirect.com/download/docs/jdbc/alljdbc/help.html#page/jdbcconnect%2FConnection_Properties_10.html%23) for a list of JDBC connection properties supported by the HAWQ DataDirect JDBC driver.
+
+Example HAWQ JDBC connection string:
 
 ``` shell
-jdbc:pivotal:greenplum://hdm1:5432;DatabaseName=gpadmin;
+jdbc:pivotal:greenplum://hdm1:5432;DatabaseName=gpadmin;User=hdbuser;Password=hdbpass
 ```
 
 
 ## <a id="libpq_api"></a>libpq API
 `libpq` is the C API to PostgreSQL/HAWQ. This API provides a set of library functions enabling client programs to pass queries to the PostgreSQL backend server and to receive the results of those queries.
 
-`libpq` is included in the `lib/` directory of your HAWQ distribution. `libpq-fe.h`, the header file required for developing frontend PostgreSQL applications can be found in the `/include` directory.
+`libpq` is installed in the `lib/` directory of your HAWQ distribution. `libpq-fe.h`, the header file required for developing front-end PostgreSQL applications, can be found in the `include/` directory.
 
 For additional information on using the `libpq` API, refer to [libpq - C Library](https://www.postgresql.org/docs/8.2/static/libpq.html) in the PostgreSQL documentation.
 
