@@ -13,7 +13,7 @@ Support for SQL, internal, and C language user-defined functions is enabled by d
 
 ## <a id="builtinsql"></a>SQL
 
-SQL functions execute an arbitrary list of SQL statements. The SQL statements in the body of an SQL function must be separated by semicolons. The final statement in a non-void-returning SQL function must be a `SELECT` that returns data of the type specified by the function's return type. The function will return a single or set of rows corresponding to this last SQL query.
+SQL functions execute an arbitrary list of SQL statements. The SQL statements in the body of an SQL function must be separated by semicolons. The final statement in a non-void-returning SQL function must be a [SELECT](../reference/sql/SELECT.html) that returns data of the type specified by the function's return type. The function will return a single or set of rows corresponding to this last SQL query.
 
 The following example creates and calls an SQL function to count the number of rows of the database named `orders`:
 
@@ -33,19 +33,19 @@ For additional information on creating SQL functions, refer to [Query Language (
 
 ## <a id="builtininternal"></a>Internal
 
-Many HAWQ internal functions are written in C. These functions are declared during initialization of the database cluster and statically linked to the HAWQ server.
+Many HAWQ internal functions are written in C. These functions are declared during initialization of the database cluster and statically linked to the HAWQ server. See [Built-in Functions and Operators](../query/functions-operators.html#topic29) for detailed information on HAWQ internal functions.
 
 While users cannot define new internal functions, they can create aliases for existing internal functions.
 
-The following example creates a new function named `to_upper` that will be an alias for the `upper` internal HAWQ function:
+The following example creates a new function named `all_caps` that will be defined as an alias for the `upper` HAWQ internal function:
 
 
 ``` sql
-gpadmin=# CREATE FUNCTION to_upper (text) RETURNS text AS 'upper'
+gpadmin=# CREATE FUNCTION all_caps (text) RETURNS text AS 'upper'
             LANGUAGE internal STRICT;
 CREATE FUNCTION
-gpadmin=# SELECT to_upper('change me');
- to_upper  
+gpadmin=# SELECT all_caps('change me');
+ all_caps  
 -----------
  CHANGE ME
 (1 row)
@@ -58,9 +58,15 @@ For more information on aliasing internal functions, refer to [Internal Function
 
 User-defined functions written in C must be compiled into shared libraries to be loaded by the HAWQ server on demand. This dynamic loading distinguishes C language functions from internal functions that are written in C.
 
-The `CREATE FUNCTION` call for a user-defined C function must include both the name of the shared library and the name of the function.
+The [CREATE FUNCTION](../reference/sql/CREATE-FUNCTION.html) call for a user-defined C function must include both the name of the shared library and the name of the function.
 
-If an absolute path to the shared library is not provided, an attempt is made to locate the library relative to: the HAWQ PostgreSQL library directory (obtained via the `pg_config --pkglibdir` command), the `dynamic_library_path` configuration value, and the current working directory, in that order. 
+If an absolute path to the shared library is not provided, an attempt is made to locate the library relative to the: 
+
+1. HAWQ PostgreSQL library directory (obtained via the `pg_config --pkglibdir` command)
+2. `dynamic_library_path` configuration value
+3. current working directory
+
+in that order. 
 
 Example:
 
