@@ -2,7 +2,7 @@
 title: HAWQ Database Drivers and APIs
 ---
 
-You may want to connect your existing Business Intelligence (BI) or Analytics applications with HAWQ. The database application programming interfaces most commonly used with HAWQ are the ODBC and JDBC APIs.
+You may want to connect your existing Business Intelligence (BI) or Analytics applications with HAWQ. The database application programming interfaces most commonly used with HAWQ are the Postgres and ODBC and JDBC APIs.
 
 HAWQ provides the following connectivity tools for connecting to the database:
 
@@ -21,12 +21,43 @@ The ODBC API specifies a standard set of C interfaces for accessing database man
 HAWQ supports the DataDirect ODBC Driver. Installation instructions for this driver are provided on the Pivotal Network driver download page. Refer to [HAWQ ODBC Driver](http://media.datadirect.com/download/docs/odbc/allodbc/#page/odbc%2Fthe-greenplum-wire-protocol-driver.html%23) for HAWQ-specific ODBC driver information.
 
 #### <a id="odbc_driver_connurl"></a>Connection Data Source
-The information required by the HAWQ ODBC driver to connect to a database is stored in a data source. ODBC data sources can be defined at the system level or the user level. 
+The information required by the HAWQ ODBC driver to connect to a database is typically stored in a named data source. Depending on your platform, you may use [GUI](http://media.datadirect.com/download/docs/odbc/allodbc/index.html#page/odbc%2FData_Source_Configuration_through_a_GUI_14.html%23) or [command line](http://media.datadirect.com/download/docs/odbc/allodbc/index.html#page/odbc%2FData_Source_Configuration_in_the_UNIX_2fLinux_odbc_13.html%23) tools to create your data source definition. On Linux, ODBC data sources are typically defined in a file named `odbc.ini`. 
 
-Certain environment variables must be set when using the HAWQ ODBC driver. On Linux this includes `$ODBCINI`, which points to the fully-qualified path to the ODBC system information file, typically named `odbc.ini`.
+Commonly-specified HAWQ ODBC data source connection properties include:
 
-Depending on your platform, you may use GUI or command line editor tools to create your data source definition. 
+| Property Name                                                    | Value Description                                                                                                                                                                                         |
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Database | name of the database to which you want to connect |
+| Driver   | full path to the ODBC driver library file                                                                                           |
+| HostName              | HAWQ master host name                                                                                     |
+| MaxLongVarcharSize      | maximum size of columns of type long varchar                                                                                      |
+| Password              | password used to connect to the specified database                                                                                       |
+| PortNumber              | HAWQ master database port number                                                                                       |
 
+Refer to [Connection Option Descriptions](http://media.datadirect.com/download/docs/odbc/allodbc/#page/odbc%2Fgreenplum-connection-option-descriptions.html%23) for a list of ODBC connection properties supported by the HAWQ DataDirect ODBC driver.
+
+Example HAWQ DataDirect ODBC driver data source definition:
+
+``` shell
+[HAWQ-201]
+Driver=/usr/local/hawq_drivers/odbc/lib/ddgplm27.so
+Description=DataDirect 7.1 Greenplum Wire Protocol - for HAWQ
+Database=getstartdb
+HostName=hdm1
+PortNumber=5432
+Password=changeme
+MaxLongVarcharSize=8192
+```
+
+The first line, `[HAWQ-201]`, identifies the name of the data source.
+
+ODBC connection properties may also be specified in a connection string identifying either a data source name, the name of a file data source, or the name of a driver.  A HAWQ ODBC connection string has the following format:
+
+``` shell
+([DSN=<data_source_name>]|[FILEDSN=<filename.dsn>]|[DRIVER=<driver_name>])[;<attribute=<value>[;...]]
+```
+
+For additional information on specifying a HAWQ ODBC connection string, refer to [Using a Connection String](http://media.datadirect.com/download/docs/odbc/allodbc/index.html#page/odbc%2FUsing_a_Connection_String_16.html%23).
 
 ### <a id="jdbc_driver"></a>JDBC Driver
 The JDBC API specifies a standard set of Java interfaces to SQL-compliant databases. For additional information on using the JDBC API, refer to the [Java JDBC API](https://docs.oracle.com/javase/8/docs/technotes/guides/jdbc/) documentation.
@@ -53,9 +84,8 @@ Refer to [Connection Properties](http://media.datadirect.com/download/docs/jdbc/
 Example HAWQ JDBC connection string:
 
 ``` shell
-jdbc:pivotal:greenplum://hdm1:5432;DatabaseName=gpadmin;User=hdbuser;Password=hdbpass
+jdbc:pivotal:greenplum://hdm1:5432;DatabaseName=getstartdb;User=hdbuser;Password=hdbpass
 ```
-
 
 ## <a id="libpq_api"></a>libpq API
 `libpq` is the C API to PostgreSQL/HAWQ. This API provides a set of library functions enabling client programs to pass queries to the PostgreSQL backend server and to receive the results of those queries.
