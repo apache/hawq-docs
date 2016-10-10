@@ -24,13 +24,12 @@ Files or folders in HDFS can be registered into an existing table, allowing them
 
 Only HAWQ or Hive-generated Parquet tables are supported. Only single-level partitioned tables are supported; registering partitioned tables with more than one level will result in an error. 
 
-Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so data must be mapped. You must verify that the structure of the parquet files and the HAWQ table are compatible before running `hawq register`. 
+Metadata for the Parquet file(s) and the destination table must be consistent. Different data types are used by HAWQ tables and Parquet files, so data must be mapped. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. Not all HIVE data types can be mapped to HAWQ equivalents. The currently-supported HIVE data types are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.
 
 As a best practice, create a copy of the Parquet file to be registered before running ```hawq register```
 You can then then run ```hawq register``` on the copy,  leaving the original file available for additional Hive queries or if a data mapping error is encountered.
 
-###Limitations for Registering Hive Tables to HAWQ
-The currently-supported data types for generating Hive tables into HAWQ tables are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.  
+###Limitations for Registering Hive Tables to HAWQ 
 
 The following HIVE data types cannot be converted to HAWQ equivalents: timestamp, decimal, array, struct, map, and union.   
 
@@ -40,26 +39,30 @@ This example shows how to register a HIVE-generated parquet file in HDFS into th
 
 In this example, the location of the database is `hdfs://localhost:8020/hawq_default`, the tablespace id is 16385, the database id is 16387, the table filenode id is 77160, and the last file under the filenode is numbered 7.
 
-Enter:
+Run the `hawq register` command for the file location  `hdfs://localhost:8020/temp/hive.paq`:
 
 ``` pre
 $ hawq register -d postgres -f hdfs://localhost:8020/temp/hive.paq parquet_table
 ```
 
-After running the `hawq register` command for the file location  `hdfs://localhost:8020/temp/hive.paq`, the corresponding new location of the file in HDFS is:  `hdfs://localhost:8020/hawq_default/16385/16387/77160/8`. 
+After running the `hawq register` command, the corresponding new location of the file in HDFS is:  `hdfs://localhost:8020/hawq_default/16385/16387/77160/8`. 
 
-The command then updates the metadata of the table `parquet_table` in HAWQ, which is contained in the table `pg_aoseg.pg_paqseg_77160`. The pg\_aoseg table is a fixed schema for row-oriented and Parquet AO tables. For row-oriented tables, the table name prefix is pg\_aoseg. The table name prefix for parquet tables is pg\_paqseg. 77160 is the relation id of the table.
+The command updates the metadata of the table `parquet_table` in HAWQ, which is contained in the table `pg_aoseg.pg_paqseg_77160`. The pg\_aoseg table is a fixed schema for row-oriented and Parquet AO tables. For row-oriented tables, the table name prefix is pg\_aoseg. For Parquet tables, the table name prefix is pg\_paqseg. 77160 is the relation id of the table.
 
-To locate the table, either find the relation ID by looking up the catalog table pg\_class in SQL by running 
+You can locate the table by one of two methods, either  by relation ID or by table name. 
+
+To find the relation ID, run the following command on the catalog table pg\_class: 
 
 ```
 select oid from pg_class where relname=$relname
 ```
-or find the table name by using the SQL command 
+To find the table name, run the command: 
+
 ```
 select segrelid from pg_appendonly where relid = $relid
 ```
-then running 
+then run: 
+
 ```
 select relname from pg_class where oid = segrelid
 ```
