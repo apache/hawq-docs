@@ -148,9 +148,9 @@ The PXF Hive plug-in supports several Hive-related profiles. These include `Hive
 Use the following syntax to create a HAWQ external table representing Hive data:
 
 ``` sql
-CREATE EXTERNAL TABLE table_name
-    ( column_name data_type [, ...] | LIKE other_table )
-LOCATION ('pxf://host[:port]/hive-db-name.hive-table-name
+CREATE EXTERNAL TABLE <table_name>
+    ( <column_name> <data_type> [, ...] | LIKE <other_table> )
+LOCATION ('pxf://<host>[:<port>]/<hive-db-name>.<hive-table-name>
     ?PROFILE=Hive|HiveText|HiveRC[&DELIMITER=delim'])
 FORMAT 'CUSTOM|TEXT' (formatter='pxfwritable_import' | delimiter='delim')
 ```
@@ -159,9 +159,9 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 
 | Keyword  | Value |
 |-------|-------------------------------------|
-| host    | The HDFS NameNode. |
-| hive-db-name    | Name of the Hive database. If omitted, defaults to the Hive database named `default`. |
-| hive-table-name    | Name of the Hive table. |
+| \<host\>    | The HDFS NameNode. |
+| \<hive-db-name\>    | Name of the Hive database. If omitted, defaults to the Hive database named `default`. |
+| \<hive-table-name\>    | Name of the Hive table. |
 | PROFILE    | The `PROFILE` keyword must specify one of the values `Hive`, `HiveText`, or `HiveRC`. |
 | DELIMITER    | The `DELIMITER` clause is required for both the `HiveText` and `HiveRC` profiles and identifies the field delimiter used in the Hive data set.  `delim` must be a single ascii character or specified in hexadecimal representation. |
 | FORMAT (`Hive` profile)   | The `FORMAT` clause must specify `CUSTOM`. The `CUSTOM` format supports only the built-in `pxfwritable_import` `formatter`.   |
