@@ -87,6 +87,8 @@ Encoding: UTF8
 AO_Schema: 
     - name: string
       type: string
+      Bucketnum: 6
+      Distribution_policy: DISTRIBUTED RANDOMLY 
  
 AO_FileLocations:
       Blocksize: int
@@ -109,7 +111,10 @@ AO_FileLocations:
         - path: string
           size: long
 
- 
+Parquet_Schema: 
+    - name: string
+      type: string
+       
 Parquet_FileLocations:
   RowGroupSize: long
   PageSize: long
@@ -202,7 +207,9 @@ AO_FileLocations:
       type: bpchar
     - name: count
       type: int4
+      Bucketnum: 6 
     DFS_URL: hdfs://127.0.0.1:9000
+    Distribution_policy: DISTRIBUTED RANDOMLY
     Encoding: UTF8
     FileFormat: AO
     TableName: public.rank
@@ -284,6 +291,27 @@ Parquet_FileLocations:
     PageSize: 1048576
     RowGroupSize: 8388608
   RowGroupSize: 8388608
+  Parquet_Schema:
+  - name: o_orderkey
+    type: int8
+  - name: o_custkey
+    type: int4
+  - name: o_orderstatus
+    type: bpchar
+  - name: o_totalprice
+    type: numeric
+  - name: o_orderdate
+    type: date
+  - name: o_orderpriority
+    type: bpchar
+  - name: o_clerk
+    type: bpchar
+  - name: o_shippriority
+    type: int4
+  - name: o_comment
+    type: varchar
+  Bucketnum: 6
+  Distribution_policy: DISTRIBUTED RANDOMLY
 ```
 
 ## See Also
