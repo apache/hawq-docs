@@ -20,6 +20,9 @@ If a query performs poorly, examine its query plan and ask the following questio
 
     `Work_mem used: 23430K bytes avg, 23430K bytes max (seg0). Work_mem               wanted: 33649K bytes avg, 33649K bytes max (seg0) to lessen workfile I/O affecting 2               workers.`
 
+**Note**
+The *work\_mem* property is not configurable. Use resource queues to manage memory use.
+
     The "bytes wanted" message from `EXPLAIN               ANALYZE` is based on the amount of data written to work files and is not exact. The minimum `work_mem` needed can differ from the suggested value.
 
 
