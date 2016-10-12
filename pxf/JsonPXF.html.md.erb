@@ -141,25 +141,25 @@ Once loaded to HDFS, JSON data may be queried and analyzed via HAWQ.
 Use the following syntax to create an external table representing JSON data: 
 
 ``` sql
-CREATE EXTERNAL TABLE table_name 
-    ( column_name data_type [, ...] | LIKE other_table )
-LOCATION ( 'pxf://host[:port]/path-to-data?PROFILE=Json[&IDENTIFIER=value]' )
+CREATE EXTERNAL TABLE <table_name> 
+    ( <column_name> <data_type> [, ...] | LIKE <other_table> )
+LOCATION ( 'pxf://<host>[:<port>]/<path-to-data>?PROFILE=Json[&IDENTIFIER=<value>]' )
       FORMAT 'CUSTOM' ( FORMATTER='pxfwritable_import' );
 ```
 JSON-plug-in-specific keywords and values used in the `CREATE EXTERNAL TABLE` call are described below.
 
 | Keyword  | Value |
 |-------|-------------------------------------|
-| host    | Specify the HDFS NameNode in the `host` field. |
+| \<host\>    | Specify the HDFS NameNode in the \<host\> field. |
 | PROFILE    | The `PROFILE` keyword must specify the value `Json`. |
-| IDENTIFIER  | Include the `IDENTIFIER` keyword and value in the `LOCATION` string only when accessing a JSON file with multi-line records. `value` should identify the member name used to determine the encapsulating JSON object to return.  (If the JSON file is the multi-line record Example 2 above, `&IDENTIFIER=created_at` would be specified.) |  
+| IDENTIFIER  | Include the `IDENTIFIER` keyword and \<value\> in the `LOCATION` string only when accessing a JSON file with multi-line records. \<value\> should identify the member name used to determine the encapsulating JSON object to return.  (If the JSON file is the multi-line record Example 2 above, `&IDENTIFIER=created_at` would be specified.) |  
 | FORMAT    | The `FORMAT` clause must specify `CUSTOM`. |
 | FORMATTER    | The JSON `CUSTOM` format supports only the built-in `pxfwritable_import` `FORMATTER`. |
 
 
 ### Example 1 <a id="jsonexample1"></a>
 
-The following `CREATE EXTERNAL TABLE` SQL call creates a queryable external table based on the data in the single-line-per-record JSON example.
+The following [CREATE EXTERNAL TABLE](../reference/sql/CREATE-EXTERNAL-TABLE.html) SQL call creates a queryable external table based on the data in the single-line-per-record JSON example.
 
 ``` sql 
 CREATE EXTERNAL TABLE sample_json_singleline_tbl(
