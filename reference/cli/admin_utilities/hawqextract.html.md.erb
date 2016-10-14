@@ -98,7 +98,7 @@ AO_FileLocations:
       PartitionBy: string ('PARTITION BY ...')
       Files:
       - path: string (/gpseg0/16385/35469/35470.1)
-      size: long
+        size: long
  
       Partitions:
       - Blocksize: int
@@ -207,7 +207,6 @@ AO_FileLocations:
       type: bpchar
     - name: count
       type: int4
-      Bucketnum: 6 
     DFS_URL: hdfs://127.0.0.1:9000
     Distribution_policy: DISTRIBUTED RANDOMLY
     Encoding: UTF8
@@ -310,8 +309,7 @@ Parquet_FileLocations:
     type: int4
   - name: o_comment
     type: varchar
-  Bucketnum: 6
-  Distribution_policy: DISTRIBUTED RANDOMLY
+    Distribution_policy: DISTRIBUTED RANDOMLY
 ```
 
 ## See Also
