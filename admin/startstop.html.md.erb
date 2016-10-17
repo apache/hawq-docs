@@ -19,21 +19,13 @@ For information about [hawq start](../reference/cli/admin_utilities/hawqstart.ht
 
 ## <a id="task_hkd_gzv_fp"></a>Starting HAWQ 
 
-Start an initialized HAWQ system by running the `hawq start` command on the master instance.
+When a HAWQ system is first initialized, it is also started. For more information about initializing HAWQ, see [hawq init](../reference/cli/admin_utilities/hawqinit.html). 
 
-Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts HAWQ by starting all the segments on the HAWQ cluster. `hawq start cluster` orchestrates this process and performs the process in parallel.
+To start a stopped HAWQ system that was previously initialized, run the `hawq start` command on the master instance.
 
 You can also use the `hawq start master` command to start only the HAWQ master, without segment nodes, then add these later, using `hawq start segment`. If you want HAWQ to ignore hosts that fail ssh validation, use the hawq start `--ignore-bad-hosts` option. 
 
--   Run `hawq start cluster` on the master host to start a HAWQ system:
-
-    ```shell
-    $ hawq start cluster
-    ```
-
-    **Note:**
-
-    When the HAWQ system is first initialized with the `hawq init` command, it is automatically started.
+Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts a HAWQ system on the master host and starts all its segments. The command orchestrates this process and performs the process in parallel.
 
 
 ## <a id="task_gpdb_restart"></a>Restarting HAWQ 
