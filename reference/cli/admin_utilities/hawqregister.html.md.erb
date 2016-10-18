@@ -56,7 +56,7 @@ Two usage models are available.
 Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so the data is mapped. Refer to the section [Data Type Mapping](hawqregister.html#topic1__section7) below. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. 
 
 ####Limitations
-Only HAWQ or Hive-generated Parquet tables are supported. Partitioned tables are supported, but only single-level partitioned tables can be registered. 
+Only HAWQ or Hive-generated Parquet tables are supported. Partitioned tables are supported, but only single-level partitioned tables can be registered into HAWQ. 
 Hash tables are not supported in this use model.
 
 ###Usage Model 2: Use information from a YAML configuration file to register data
