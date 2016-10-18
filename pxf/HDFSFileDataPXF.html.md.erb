@@ -25,11 +25,8 @@ The PXF HDFS plug-in includes the following profiles to support the file formats
 
 - `HdfsTextSimple` - text files
 - `HdfsTextMulti` - text files with embedded line feeds
-- `SequenceWritable` - SequenceFile
 - `Avro` - Avro files
-
-## <a id="hdfsplugin_datatypemap"></a>Data Type Mapping
-jjj
+- `SequenceWritable` - SequenceFile  (write only?)
 
 
 ## <a id="hdfsplugin_cmdline"></a>HDFS Shell Commands
@@ -112,7 +109,7 @@ $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_tm.txt /data/pxf_examples/
 You will use these HDFS files in later sections.
 
 ## <a id="hdfsplugin_queryextdata"></a>Querying External HDFS Data
-The PXF HDFS plug-in supports several profiles. These include `HdfsTextSimple`, `HdfsTextMulti`, `SequenceWritable`, and `Avro`.
+The PXF HDFS plug-in supports several profiles. These include `HdfsTextSimple`, `HdfsTextMulti`, `Avro`, and `SequenceWritable`.
 
 Use the following syntax to create a HAWQ external table representing HDFS data: 
 
@@ -134,7 +131,8 @@ HDFS-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 | \<custom-option\>  | \<custom-option\> is profile-specific. Profile-specific options are discussed in the relevant profile topic later in this section.|
 | FORMAT 'TEXT' | Use '`TEXT`' `FORMAT` with the `HdfsTextSimple` profile when \<path-to-hdfs-file\> references a plain text delimited file.  |
 | FORMAT 'CSV' | Use '`CSV`' `FORMAT` with `HdfsTextSimple` and `HdfsTextMulti` profiles when \<path-to-hdfs-file\> references a comma-separated value file.  |
-| FORMAT 'CUSTOM' | Use the`CUSTOM` `FORMAT` with `Avro` and `SequenceWritable` profiles. The '`CUSTOM`' `FORMAT` supports only the built-in `(formatter='pxfwritable_export')` \<formatting-property\> |
+| FORMAT 'CUSTOM' | Use the`CUSTOM` `FORMAT` with  the `Avro` profiles. The `Avro` '`CUSTOM`' `FORMAT` supports only the built-in `(formatter='pxfwritable_import')` \<formatting-property\> |
+| FORMAT 'CUSTOM' | Use the`CUSTOM` `FORMAT` with the `SequenceWritable` profile. The `SequenceWritable` '`CUSTOM`' `FORMAT` supports only the built-in `(formatter='pxfwritable_export')` \<formatting-property\> |
  \<formatting-properties\>    | \<formatting-properties\> are profile-specific. Profile-specific formatting options are discussed in the relevant profile topic later in this section. |
 
 *Note*: When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
@@ -215,30 +213,17 @@ gpadmin=# SELECT * FROM pxf_hdfs_textmulti;
 (5 rows)
 ```
 
-## <a id="profile_hdfsseqwritable"></a>SequenceWritable Profile 
-
-Use the `SequenceWritable` profile when reading SequenceFile format files. Files of this type consist of binary key/value pairs. Sequence files are a common data transfer format between MapReduce jobs. 
-
-The `SequenceWritable` profile supports the following \<custom-options\>:
-
-| Keyword  | Value Description |
-|-------|-------------------------------------|
-| COMPRESSION_CODEC    | The compression codec Java class name.|
-| COMPRESSION_TYPE    | The compression type of the sequence file; supported values are `RECORD` (the default) or `BLOCK`. |
-| DATA-SCHEMA    | The name of the writer serialization class. The jar file in which this class resides must be in the PXF class path. This option has no default value. |
-| THREAD-SAFE | Boolean value determining if a table query can run in multi-thread mode. Default value is `TRUE` - requests can run in multi-thread mode. When set to `FALSE`, requests will be handled in a single thread. |
-
-???? MORE HERE
-
-??? ADDRESS SERIALIZATION
-
 ## <a id="profile_hdfsavro"></a>Avro Profile
 
-Avro files store metadata with the data. Avro files also allow specification of an independent schema used when reading the file. 
+Apache Avro is a data serialization framework where the data is serialized in a compact binary format. 
+
+Avro specifies data types be defined in JSON. Avro format files have an independent schema, also defined in JSON. In Avro files, the schema is stored with the data. 
 
 ### <a id="profile_hdfsavrodatamap"></a>Data Type Mapping
 
-To represent Avro data in HAWQ, map data values that use a primitive data type to HAWQ columns of the same type. 
+Avro supports both primitive and complex data types. 
+
+To represent Avro primitive data types in HAWQ, map data values to HAWQ columns of the same type. 
 
 Avro supports complex data types including arrays, maps, records, enumerations, and fixed types. Map top-level fields of these complex data types to the HAWQ `TEXT` type. While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract or further process subcomponents of these complex data types.
 
@@ -246,7 +231,7 @@ The following table summarizes external mapping rules for Avro data.
 
 <a id="topic_oy3_qwm_ss__table_j4s_h1n_ss"></a>
 
-| Avro Data Type                                                    | PXF Type                                                                                                                                                                                            |
+| Avro Data Type                                                    | PXF/HAWQ Data Type                                                                                                                                                                                            |
 |-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Primitive type (int, double, float, long, string, bytes, boolean) | Use the corresponding HAWQ built-in data type; see [Data Types](../reference/HAWQDataTypes.html). |
 | Complex type: Array, Map, Record, or Enum                         | TEXT, with delimiters inserted between collection items, mapped key-value pairs, and record data.                                                                                           |
@@ -255,13 +240,13 @@ The following table summarizes external mapping rules for Avro data.
 
 ### <a id="profile_hdfsavroptipns"></a>Avro-Specific Custom Options
 
-For complex types, the PXF Avro profile inserts default delimiters between collection items and values. You can use non-default delimiter characters by identifying values for specific Avro custom options in the `CREATE EXTERNAL TABLE` call. 
+For complex types, the PXF `Avro` profile inserts default delimiters between collection items and values. You can use non-default delimiter characters by identifying values for specific `Avro` custom options in the `CREATE EXTERNAL TABLE` call. 
 
 The Avro profile supports the following \<custom-options\>:
 
 | Option Name   | Description       
 |---------------|--------------------|                                                                                        
-| COLLECTION_DELIM | The delimiter character(s) to place between entries in a top-level array, map, or record field when PXF maps a Avro complex data type to a text column. The default is a comma `,` character. |
+| COLLECTION_DELIM | The delimiter character(s) to place between entries in a top-level array, map, or record field when PXF maps an Avro complex data type to a text column. The default is a comma `,` character. |
 | MAPKEY_DELIM | The delimiter character(s) to place between the key and value of a map entry when PXF maps an Avro complex data type to a text column. The default is a colon `:` character. |
 | RECORDKEY_DELIM | The delimiter character(s) to place between the field name and value of a record entry when PXF maps an Avro complex data type to a text column. The default is a colon `:` character. |
 | SCHEMA-DATA | The data schema file used to create and read the HDFS file. This option has no default value. |
@@ -363,6 +348,7 @@ The generated Avro binary data file is written to `/tmp/pxf_hdfs_avro.avro`. Cop
 ``` shell
 $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_avro.avro /data/pxf_examples/
 ```
+### <a id="topic_avro_querydata"></a>Querying Avro Data
 
 Create a queryable external table from this Avro file:
 
@@ -407,6 +393,23 @@ gpadmin=# SELECT username, address FROM followers_view WHERE followers @> '{john
  jim      | {number:9,street:deer creek,city:palo alto}
 ```
 
+## <a id="profile_hdfsseqwritable"></a>SequenceWritable Profile 
+
+Use the `SequenceWritable` profile when writing SequenceFile format files. Files of this type consist of binary key/value pairs. Sequence files are a common data transfer format between MapReduce jobs. 
+
+The `SequenceWritable` profile supports the following \<custom-options\>:
+
+| Keyword  | Value Description |
+|-------|-------------------------------------|
+| COMPRESSION_CODEC    | The compression codec Java class name. If this option is not provided, no data compression is performed. |
+| COMPRESSION_TYPE    | The compression type of the sequence file; supported values are `RECORD` (the default) or `BLOCK`. |
+| DATA-SCHEMA    | The name of the writer serialization class. The jar file in which this class resides must be in the PXF class path. This option has no default value. |
+| THREAD-SAFE | Boolean value determining if a table query can run in multi-thread mode. Default value is `TRUE` - requests can run in multi-thread mode. When set to `FALSE`, requests will be handled in a single thread. |
+
+???? MORE HERE
+
+??? ADDRESS SERIALIZATION
+
 
 ## <a id="recordkeyinkey-valuefileformats"></a>Reading the Record Key 
 
@@ -414,7 +417,7 @@ Sequence file and other file formats that store rows in a key-value format can a
 
 The field type of `recordkey` must correspond to the key type, much as the other fields must match the HDFS data. 
 
-`recordkey` can be of the following Hadoop types:
+`recordkey` can be any of the following Hadoop types:
 
 -   BooleanWritable
 -   ByteWritable
@@ -449,4 +452,4 @@ The opposite is true when a highly available HDFS cluster is reverted to a singl
 
 
 ## <a id="hdfs_advanced"></a>Advanced
-If you find that the pre-defined PXF HDFS profiles do not meet your needs, you may choose to create a custom HDFS profile from the existing HDFS Accessors and Resolvers. Refer to [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on creating a custom profile.
+If you find that the pre-defined PXF HDFS profiles do not meet your needs, you may choose to create a custom HDFS profile from the existing HDFS serialization and deserialization classes. Refer to [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on creating a custom profile.
