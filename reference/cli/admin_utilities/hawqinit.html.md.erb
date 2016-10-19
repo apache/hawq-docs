@@ -4,7 +4,7 @@ title: hawq init
 
 The `hawq init cluster` command initializes a HAWQ system and starts it.
 
-The master or segment nodes can be individually initialized by using the `hawq init master` and `hawq init segment` commands, respectively. Specify any  format options at this time. The `hawq init standby` command initializes a standby master host for a HAWQ system.
+Use the `hawq init master` and `hawq init segment` commands to individually initialize the master or segment nodes, respectively. Specify any format options at this time. The `hawq init standby` command initializes a standby master host for a HAWQ system.
 
 Use the `hawq init <object> --standby-host` option to define the host for a standby at initialization.
 
@@ -40,9 +40,9 @@ where:
 
 The `hawq init <object>` utility creates a HAWQ instance using configuration parameters defined in `$GPHOME/etc/hawq-site.xml`. Before running this utility, verify that you have installed the HAWQ software on all the hosts in the array.
 
-In a HAWQ DBMS, each database instance (the master and all segments) must be initialized across all of the hosts in the system in a way that allows them all to work together as a unified DBMS. The `hawq init cluster` utility initializes the HAWQ master and each segment instance, and configures the system as a whole. When `hawq init cluster` is run, the cluster comes online automatically without needing to explicitly start it. You can start a single node cluster without any user-defined changes to the default `hawq-site.xml` file. For larger clusers, use the template-hawq-site.xml file to specify the configuration.
+In a HAWQ DBMS, each database instance (the master and all segments) must be initialized across all of the hosts in the system in a way that allows them to work together as a unified DBMS. The `hawq init cluster` utility initializes the HAWQ master and each segment instance, and configures the system as a whole. When `hawq init cluster` is run, the cluster comes online automatically without needing to explicitly start it. You can start a single node cluster without any user-defined changes to the default `hawq-site.xml` file. For larger clusters, use the template-hawq-site.xml file to specify the configuration.
 
-To use the template for initializing a new cluster configuration, replace the items contained within the % markers. For example: `value%master.host%value`, `%master.host%` would be replaced with the master host name. After modification, rename the file to the name of the default configuration file: `hawq-site.xml`.
+To use the template for initializing a new cluster configuration, replace the items contained within the % markers. For example, replace `value%master.host%value` and `%master.host%` with the master host name. After modification, rename the file to the name of the default configuration file: `hawq-site.xml`.
 
 
 -   Before initializing HAWQ, set the `$GPHOME` environment variable to point to the location of your HAWQ installation on the master host and exchange SSH keys between all host addresses in the array, using `hawq ssh-exkeys`.
@@ -72,9 +72,9 @@ The `hawq init standby` utility can be run on either  the currently active *prim
 -   Sets up the standby master instance on the alternate master host
 -   Starts the synchronization process
 
-A backup, standby master host serves as a 'warm standby' in the event of the primary master host becoming non-operational. The standby master is kept up to date by transaction log replication processes (the `walsender` and `walreceiver`), which run on the primary master and standby master hosts and keep the data between the primary and standby master hosts synchronized. To add a standby master to the system, use the command `hawq init standby`, for example `hawq init standby           host09`. You can configure the standby hostname at initialization without needing to run hawq config by defining it using the --standby-host option. To create the standby above, you would specify `hawq init standby --standby-host=host09` or `hawq init cluster --standby-host=host09`.
+A backup, standby master host serves as a 'warm standby' in the event of the primary master host becoming non-operational. The standby master is kept up to date by transaction log replication processes (the `walsender` and `walreceiver`), which run on the primary master and standby master hosts and keep the data between the primary and standby master hosts synchronized. To add a standby master to the system, use the command `hawq init standby`, for example: `init standby host09`. To configure the standby hostname at initialization without needing to run hawq config by defining it, use the --standby-host option. To create the standby above, you would specify `hawq init standby --standby-host=host09` or `hawq init cluster --standby-host=host09`.
 
-If the primary master fails, the log replication process is shut down, and you can activate the standby master in its place by using the `hawq activate standby` utility. Upon activation of the standby master, the replicated logs are used to reconstruct the state of the master host at the time of the last successfully committed transaction.
+If the primary master fails, the log replication process is shut down. Run the `hawq activate standby` utility to activate the standby master in its place;  upon activation of the standby master, the replicated logs are used to reconstruct the state of the master host at the time of the last successfully committed transaction.
 
 ## Objects
 
