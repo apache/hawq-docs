@@ -23,7 +23,6 @@ Misc. Options:
      [-f <filepath>] 
 	 [-e <eof>]
  	 [--force]
- 	 [--repair] 
      [-c <yml_config>]  
 hawq register help | -? 
 hawq register --version
@@ -70,7 +69,7 @@ The register process behaves differently, according to different conditions.
 -  Existing tables have files appended to the existing HAWQ table.
 -  If a table does not exist, it is created and registered into HAWQ. 
 -  If the -\\\-force option is used, the data in existing catalog tables is erased and re-registered.
--  If the -\\\-repair option is used, data is rolled back to  the checkpoint configuration in the YAML file. Files generated after the timestamp of the checkpoint will be deleted. Hash table redistribution, table truncate, and table drop are not supported.
+
 
 ###Limitations for Registering Hive Tables to HAWQ
 The currently-supported data types for generating Hive tables into HAWQ tables are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.  
@@ -209,9 +208,6 @@ The following options are used with specific use models.
 
 <dt>-F , -\\\-force</dt>
 <dd>Used for disaster recovery of a cluster. Clears all HDFS-related catalog contents in `pg_aoseg.pg_paqseg_$relid `and re-registers files to a specified table. The HDFS files are not removed or modified. To use this option for recovery, data is assumed to be periodically imported to the cluster to be recovered. Used with Usage Model 2.</dd>
-
-<dt>-R , -\\\-repair \<yml_config\> </dt>
-<dd>Rolls data back to a specified checkpoint. If the table already exists, both the file folder and `pg_aoseg.pg_paqseg_$relid` catalog entry are rolled back to the checkpoint configuration in the YAML file. Deletes any files generated after the timestamp of the checkpoint. Used with Usage Model 2.</dd>
 
 <dt>-c , -\\\-config \<yml_config\> </dt> 
 <dd>Registers files specified by YAML-format configuration files into HAWQ. Used with Usage Model 2.</dd>

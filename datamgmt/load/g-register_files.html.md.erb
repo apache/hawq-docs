@@ -80,7 +80,6 @@ Data is registered according to the following conditions:
 -  Existing tables have files appended to the existing HAWQ table.
 -  If a table does not exist, it is created and registered into HAWQ. The catalog table will be updated with the file size specified by the YAML file.
 -  If the -\\\-force option is used, the data in existing catalog tables is erased and re-registered. All HDFS-related catalog contents in `pg_aoseg.pg_paqseg_$relid ` are cleared. The original files on HDFS are retained.
--  If the -\\\-repair option is used, data is rolled back to a specified checkpoint. If the table already exists, both the file folder and `pg_aoseg.pg_paqseg_$relid` catalog entry are rolled back to the checkpoint configuration in the YAML file. Files generated after the timestamp of the checkpoint will be deleted. you cannot redistribute, truncate, or drop hash tables. Using the -\\\- repair option with redistributed table data will result in an error.
 
 Tables using random distribution are preferred for registering into HAWQ.
 
