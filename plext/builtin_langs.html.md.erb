@@ -9,13 +9,13 @@ HAWQ supports user-defined functions created with the SQL and C built-in languag
 
 ## <a id="enablebuiltin"></a>Enabling Built-in Language Support
 
-Support for SQL, internal, and C language user-defined functions is enabled by default for all HAWQ databases.
+Support for SQL and C language user-defined functions and aliasing of internal functions is enabled by default for all HAWQ databases.
 
-## <a id="builtinsql"></a>SQL
+## <a id="builtinsql"></a>Defining SQL Functions
 
-SQL functions execute an arbitrary list of SQL statements. The SQL statements in the body of an SQL function must be separated by semicolons. The final statement in a non-void-returning SQL function must be a [SELECT](../reference/sql/SELECT.html) that returns data of the type specified by the function's return type. The function will return a single or set of rows corresponding to this last SQL query.
+SQL functions execute an arbitrary list of SQL statements. The SQL statements in the body of a SQL function must be separated by semicolons. The final statement in a non-void-returning SQL function must be a [SELECT](../reference/sql/SELECT.html) that returns data of the type specified by the function's return type. The function will return a single or set of rows corresponding to this last SQL query.
 
-The following example creates and calls an SQL function to count the number of rows of the database named `orders`:
+The following example creates and calls a SQL function to count the number of rows of the database named `orders`:
 
 ``` sql
 gpadmin=# CREATE FUNCTION count_orders() RETURNS bigint AS $$
@@ -29,15 +29,15 @@ gpadmin=# select count_orders();
 (1 row)
 ```
 
-For additional information on creating SQL functions, refer to [Query Language (SQL) Functions](https://www.postgresql.org/docs/8.2/static/xfunc-sql.html) in the PostgreSQL documentation.
+For additional information about creating SQL functions, refer to [Query Language (SQL) Functions](https://www.postgresql.org/docs/8.2/static/xfunc-sql.html) in the PostgreSQL documentation.
 
-## <a id="builtininternal"></a>Internal
+## <a id="builtininternal"></a>Aliasing Internal Functions
 
-Many HAWQ internal functions are written in C. These functions are declared during initialization of the database cluster and statically linked to the HAWQ server. See [Built-in Functions and Operators](../query/functions-operators.html#topic29) for detailed information on HAWQ internal functions.
+Many HAWQ internal functions are written in C. These functions are declared during initialization of the database cluster and statically linked to the HAWQ server. See [Built-in Functions and Operators](../query/functions-operators.html#topic29) for detailed information about HAWQ internal functions.
 
-While users cannot define new internal functions, they can create aliases for existing internal functions.
+You cannot define new internal functions, but you can create aliases for existing internal functions.
 
-The following example creates a new function named `all_caps` that will be defined as an alias for the `upper` HAWQ internal function:
+The following example creates a new function named `all_caps` that is an alias for the `upper` HAWQ internal function:
 
 
 ``` sql
@@ -52,11 +52,11 @@ gpadmin=# SELECT all_caps('change me');
 
 ```
 
-For more information on aliasing internal functions, refer to [Internal Functions](https://www.postgresql.org/docs/8.2/static/xfunc-internal.html) in the PostgreSQL documentation.
+For more information about aliasing internal functions, refer to [Internal Functions](https://www.postgresql.org/docs/8.2/static/xfunc-internal.html) in the PostgreSQL documentation.
 
-## <a id="builtininternal"></a>C
+## <a id="builtinc_lang"></a>Defining C Functions
 
-User-defined functions written in C must be compiled into shared libraries to be loaded by the HAWQ server on demand. This dynamic loading distinguishes C language functions from internal functions that are written in C.
+You must compile user-defined functions written in C into shared libraries so that the HAWQ server can load them on demand. This dynamic loading distinguishes C language functions from internal functions that are written in C.
 
 The [CREATE FUNCTION](../reference/sql/CREATE-FUNCTION.html) call for a user-defined C function must include both the name of the shared library and the name of the function.
 
@@ -106,5 +106,5 @@ gpadmin=# SELECT double_it_c(27);
 
 The shared library `.so` extension may be omitted.
 
-For additional information on using the C language to create functions, refer to [C-Language Functions](https://www.postgresql.org/docs/8.2/static/xfunc-c.html) in the PostgreSQL documentation.
+For additional information about using the C language to create functions, refer to [C-Language Functions](https://www.postgresql.org/docs/8.2/static/xfunc-c.html) in the PostgreSQL documentation.
 
