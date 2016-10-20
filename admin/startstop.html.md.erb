@@ -6,7 +6,9 @@ In a HAWQ DBMS, the database server instances \(the master and all segments\) ar
 
 Because a HAWQ system is distributed across many machines, the process for starting and stopping a HAWQ system is different than the process for starting and stopping a regular PostgreSQL DBMS.
 
-Use the `hawq start `*`object`* and `hawq stop `*`object`* commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. Initializing a HAWQ system also starts it.
+Use the `hawq start `*`object`* and `hawq stop `*`object`* commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. 
+
+Initializing a HAWQ system also starts it.
 
 **Important:**
 
@@ -14,41 +16,16 @@ Do not issue a `KILL` command to end any Postgres process. Instead, use the data
 
 For information about [hawq start](../reference/cli/admin_utilities/hawqstart.html) and [hawq stop](../reference/cli/admin_utilities/hawqstop.html), see the appropriate pages in the HAWQ Management Utility Reference or enter `hawq start -h` or `hawq stop -h` on the command line.
 
-## <a id="task_g1y_xtm_s5"></a>Initialize HAWQ 
-
-Initialize and start the HAWQ system using configuration parameters defined in `$GPHOME/etc/hawq-site.xml`.
-
-The `hawq init` command with the appropriate cluster or node command initializes and starts a HAWQ cluster. The master or segment nodes can be individually initialized by using `hawq init master` and `hawq init segment` commands, respectively. Format options can also be specified at this time.
-
-The `hawq init <object>` utility will create a HAWQ instance using configuration parameters defined in `$GPHOME/etc/hawq-site.xml` A single node cluster can be started without any user-defined changes to the default `hawq-site.xml` file. Use the template-hawq-site.xml file to specify the configuration for larger clusters.
-
-When using the template for initializing a new cluster configuration, replace the items contained within the % markers, for example in: *`value`*`%master.host%`*`value`*, `%master.host%` would be replaced with the master host name. After modification, rename the file to the name of the default configuration file: `hawq-site.xml`.
-
--   Before initializing HAWQ, set the `$GPHOME` environment variable to point to the location of your HAWQ installation on the master host and exchange SSH keys between all host addresses in the array, using `hawq ssh-exkeys`.
--   To initialize and start a HAWQ cluster, enter the following command on the master host:
-
-    ```shell
-    $ hawq init cluster
-    ```
-
 
 ## <a id="task_hkd_gzv_fp"></a>Starting HAWQ 
 
-Start an initialized HAWQ system by running the `hawq start` command on the master instance.
+When a HAWQ system is first initialized, it is also started. For more information about initializing HAWQ, see [hawq init](../reference/cli/admin_utilities/hawqinit.html). 
 
-Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts HAWQ by starting all the segments on the HAWQ cluster. `hawq start cluster` orchestrates this process and performs the process in parallel.
+To start a stopped HAWQ system that was previously initialized, run the `hawq start` command on the master instance.
 
 You can also use the `hawq start master` command to start only the HAWQ master, without segment nodes, then add these later, using `hawq start segment`. If you want HAWQ to ignore hosts that fail ssh validation, use the hawq start `--ignore-bad-hosts` option. 
 
--   Run `hawq start cluster` on the master host to start a HAWQ system:
-
-    ```shell
-    $ hawq start cluster
-    ```
-
-    **Note:**
-
-    When the HAWQ system is first initialized with the `hawq init` command, it is automatically started.
+Use the `hawq start cluster` command to start a HAWQ system that has already been initialized by the `hawq init cluster` command, but has been stopped by the `hawq stop cluster` command. The `hawq start cluster` command starts a HAWQ system on the master host and starts all its segments. The command orchestrates this process and performs the process in parallel.
 
 
 ## <a id="task_gpdb_restart"></a>Restarting HAWQ 

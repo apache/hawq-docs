@@ -8,7 +8,7 @@ The `gpfdist://` protocol is used in a URI to reference a running `gpfdist` inst
 
 Run `gpfdist` on the host where the external data files reside. `gpfdist` uncompresses `gzip` (`.gz`) and `bzip2` (.`bz2`) files automatically. You can use the wildcard character (\*) or other C-style pattern matching to denote multiple files to read. The files specified are assumed to be relative to the directory that you specified when you started the `gpfdist` instance.
 
-All virtual segments access the external file(s) in parallel, subject to the number of segments set in the `gp_external_max_segments` parameter, the length of the `gpfdist` location list, and the limits specified by the `hawq_rm_nvseg_perquery_limit` and `hawq_rm_nvseg_perquery_perseg_limit` parameters. Use multiple `gpfdist` data sources in a `CREATE EXTERNAL TABLE` statement to scale the external table's scan performance. For more information about configuring `gpfdist`, see [Using the Greenplum Parallel File Server (gpfdist)](g-using-the-greenplum-parallel-file-server--gpfdist-.html#topic13).
+All virtual segments access the external file(s) in parallel, subject to the number of segments set in the `gp_external_max_segments` parameter, the length of the `gpfdist` location list, and the limits specified by the `hawq_rm_nvseg_perquery_limit` and `hawq_rm_nvseg_perquery_perseg_limit` parameters. Use multiple `gpfdist` data sources in a `CREATE EXTERNAL TABLE` statement to scale the external table's scan performance. For more information about configuring `gpfdist`, see [Using the HAWQ File Server (gpfdist)](g-using-the-hawq-file-server--gpfdist-.html#topic13).
 
 See the `gpfdist` reference documentation for more information about using `gpfdist` with external tables.
 

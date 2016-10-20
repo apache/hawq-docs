@@ -153,7 +153,7 @@ This topic provides some guidelines around expanding your HAWQ cluster.
 
 There are several recommendations to keep in mind when modifying the size of your running HAWQ cluster:
 
--  When you add a new node, install both a DataNode and a HAWQ segment on the new node.
+-  When you add a new node, install both a DataNode and a HAWQ segment on the new node.  If you are using YARN to manage HAWQ resources, you must also configure a YARN NodeManager on the new node.
 -  After adding a new node, you should always rebalance HDFS data to maintain cluster performance.
 -  Adding or removing a node also necessitates an update to the HDFS metadata cache. This update will happen eventually, but can take some time. To speed the update of the metadata cache, select the **Service Actions > Clear HAWQ's HDFS Metadata Cache** option in Ambari.
 -  Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](../reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.html) command.

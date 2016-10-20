@@ -119,7 +119,7 @@ Regular readable external tables can access static flat files or, by using HAWQ 
 
 Web external tables access dynamic data sources – either on a web server or by executing OS commands or scripts.
 
-The LOCATION clause specifies the location of the external data. The location string begins with a protocol string that specifies the storage type and protocol used to access the data. The `gpfdist://` protocol specifies data files served by one or more instances of the Greenplum parallel file distribution server `gpfdist`. The `http://` protocol specifies one or more HTTP URLs and is used with web tables. The `pxf://` protocol specifies data accessed through the PXF service, which provides access to data in a Hadoop system. Using the PXF API, you can create PXF plug-ins to provide HAWQ access to any other data source.
+The LOCATION clause specifies the location of the external data. The location string begins with a protocol string that specifies the storage type and protocol used to access the data. The `gpfdist://` protocol specifies data files served by one or more instances of the HAWQ file server `gpfdist`. The `http://` protocol specifies one or more HTTP URLs and is used with web tables. The `pxf://` protocol specifies data accessed through the PXF service, which provides access to data in a Hadoop system. Using the PXF API, you can create PXF plug-ins to provide HAWQ access to any other data source.
 
 **Note:** The `file://` protocol is deprecated. Instead, use the `gpfdist://`, `gpfdists://`, or `pxf://` protocol, or the `COPY` command instead.
 
