@@ -34,7 +34,7 @@ Virtual devices for instance store volumes for HAWQ EC2 instance store instances
 
 A placement group is a logical grouping of instances within a single availability zone that together participate in a low-latency, 10 Gbps network.  Your HAWQ master and segment cluster instances should support enhanced networking and reside in a single placement group (and subnet) for optimal network performance.  
 
-If your Ambari node is not a data node, locating the Ambari node instance in a subnet separate from the HAWQ master/segment placement group enables you to manage multiple HAWQ clusters from the single Ambari instance.
+If your Ambari node is not a DataNode, locating the Ambari node instance in a subnet separate from the HAWQ master/segment placement group enables you to manage multiple HAWQ clusters from the single Ambari instance.
 
 Amazon recommends that you use the same instance type for all instances in the placement group and that you launch all instances within the placement group at the same time.
 

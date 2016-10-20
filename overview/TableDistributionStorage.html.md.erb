@@ -12,7 +12,7 @@ For all HAWQ table storage formats, AO \(Append-Only\) and Parquet, the data fil
 
 The default table distribution policy in HAWQ is random.
 
-Randomly distributed tables have some benefits over hash distributed tables. For example, after cluster expansion, HAWQ can use more resources automatically without redistributing the data. For huge tables, redistribution is very expensive, and data locality for randomly distributed tables is better after the underlying HDFS redistributes its data during rebalance or data node failures. This is quite common when the cluster is large.
+Randomly distributed tables have some benefits over hash distributed tables. For example, after cluster expansion, HAWQ can use more resources automatically without redistributing the data. For huge tables, redistribution is very expensive, and data locality for randomly distributed tables is better after the underlying HDFS redistributes its data during rebalance or DataNode failures. This is quite common when the cluster is large.
 
 On the other hand, for some queries, hash distributed tables are faster than randomly distributed tables. For example, hash distributed tables have some performance benefits for some TPC-H queries. You should choose the distribution policy that is best suited for your application's scenario.
 
