@@ -2,7 +2,7 @@
 title: Accessing HDFS File Data
 ---
 
-HDFS is the primary distributed storage mechanism used by Apache Hadoop applications. The PXF HDFS plug-in reads file data stored in HDFS.  The plug-in supports plain delimited and comma-separated-value text files.  The HDFS plug-in also supports Avro and SequenceFile binary formats.
+HDFS is the primary distributed storage mechanism used by Apache Hadoop applications. The PXF HDFS plug-in reads file data stored in HDFS.  The plug-in supports plain delimited and comma-separated-value text files.  The HDFS plug-in also supports the Avro binary format.
 
 This section describes how to use PXF to access HDFS data, including how to create and query an external table from files in the HDFS data store.
 
@@ -15,10 +15,9 @@ Before working with HDFS file data using HAWQ and PXF, ensure that:
 
 ## <a id="hdfsplugin_fileformats"></a>HDFS File Formats
 
-The PXF HDFS plug-in supports the following file formats:
+The PXF HDFS plug-in supports reading the following file formats:
 
 - TextFile - comma-separated value (.csv) or delimited format plain text file
-- SequenceFile - flat file consisting of binary key/value pairs
 - Avro - JSON-defined, schema-based data serialization format
 
 The PXF HDFS plug-in includes the following profiles to support the file formats listed above:
@@ -26,7 +25,6 @@ The PXF HDFS plug-in includes the following profiles to support the file formats
 - `HdfsTextSimple` - text files
 - `HdfsTextMulti` - text files with embedded line feeds
 - `Avro` - Avro files
-- `SequenceWritable` - SequenceFile  (write only?)
 
 
 ## <a id="hdfsplugin_cmdline"></a>HDFS Shell Commands
@@ -109,7 +107,7 @@ $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_tm.txt /data/pxf_examples/
 You will use these HDFS files in later sections.
 
 ## <a id="hdfsplugin_queryextdata"></a>Querying External HDFS Data
-The PXF HDFS plug-in supports several profiles. These include `HdfsTextSimple`, `HdfsTextMulti`, `Avro`, and `SequenceWritable`.
+The PXF HDFS plug-in supports several profiles. These include `HdfsTextSimple`, `HdfsTextMulti`, and `Avro`.
 
 Use the following syntax to create a HAWQ external table representing HDFS data: 
 
@@ -117,7 +115,7 @@ Use the following syntax to create a HAWQ external table representing HDFS data:
 CREATE EXTERNAL TABLE <table_name> 
     ( <column_name> <data_type> [, ...] | LIKE <other_table> )
 LOCATION ('pxf://<host>[:<port>]/<path-to-hdfs-file>
-    ?PROFILE=HdfsTextSimple|HdfsTextMulti|Avro|SequenceWritable[&<custom-option>=<value>[...]]')
+    ?PROFILE=HdfsTextSimple|HdfsTextMulti|Avro[&<custom-option>=<value>[...]]')
 FORMAT '[TEXT|CSV|CUSTOM]' (<formatting-properties>);
 ```
 
@@ -127,12 +125,11 @@ HDFS-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 |-------|-------------------------------------|
 | \<host\>[:\<port\>]    | The HDFS NameNode and port. |
 | \<path-to-hdfs-file\>    | The path to the file in the HDFS data store. |
-| PROFILE    | The `PROFILE` keyword must specify one of the values `HdfsTextSimple`, `HdfsTextMulti`, `SequenceWritable`, or `Avro`. |
+| PROFILE    | The `PROFILE` keyword must specify one of the values `HdfsTextSimple`, `HdfsTextMulti`, or `Avro`. |
 | \<custom-option\>  | \<custom-option\> is profile-specific. Profile-specific options are discussed in the relevant profile topic later in this section.|
 | FORMAT 'TEXT' | Use '`TEXT`' `FORMAT` with the `HdfsTextSimple` profile when \<path-to-hdfs-file\> references a plain text delimited file.  |
 | FORMAT 'CSV' | Use '`CSV`' `FORMAT` with `HdfsTextSimple` and `HdfsTextMulti` profiles when \<path-to-hdfs-file\> references a comma-separated value file.  |
 | FORMAT 'CUSTOM' | Use the`CUSTOM` `FORMAT` with  the `Avro` profiles. The `Avro` '`CUSTOM`' `FORMAT` supports only the built-in `(formatter='pxfwritable_import')` \<formatting-property\> |
-| FORMAT 'CUSTOM' | Use the`CUSTOM` `FORMAT` with the `SequenceWritable` profile. The `SequenceWritable` '`CUSTOM`' `FORMAT` supports only the built-in `(formatter='pxfwritable_export')` \<formatting-property\> |
  \<formatting-properties\>    | \<formatting-properties\> are profile-specific. Profile-specific formatting options are discussed in the relevant profile topic later in this section. |
 
 *Note*: When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
@@ -192,7 +189,7 @@ The following SQL call uses the PXF `HdfsTextMulti` profile to create a queryabl
 
 ``` sql
 gpadmin=# CREATE EXTERNAL TABLE pxf_hdfs_textmulti(address text, month text, year int)
-            LOCATION ('pxf://sandbox.hortonworks.com:51200/data/pxf_examples/pxf_hdfs_tm.txt?PROFILE=HdfsTextMulti') 
+            LOCATION ('pxf://namenode:51200/data/pxf_examples/pxf_hdfs_tm.txt?PROFILE=HdfsTextMulti') 
           FORMAT 'CSV' (delimiter=E':');
 gpadmin=# SELECT * FROM pxf_hdfs_textmulti;
 ```
@@ -358,7 +355,7 @@ Create a queryable external table from this Avro file:
 
 ``` sql
 gpadmin=# CREATE EXTERNAL TABLE pxf_hdfs_avro(id bigint, username text, followers text, fmap text, relationship text, address text)
-            LOCATION ('pxf://sandbox.hortonworks.com:51200/data/pxf_examples/pxf_hdfs_avro.avro?PROFILE=Avro&COLLECTION_DELIM=,&MAPKEY_DELIM=:&RECORDKEY_DELIM=:')
+            LOCATION ('pxf://namenode:51200/data/pxf_examples/pxf_hdfs_avro.avro?PROFILE=Avro&COLLECTION_DELIM=,&MAPKEY_DELIM=:&RECORDKEY_DELIM=:')
           FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
 ```
 
@@ -391,51 +388,6 @@ gpadmin=# SELECT username, address FROM followers_view WHERE followers @> '{john
  username |                   address                   
 ----------+---------------------------------------------
  jim      | {number:9,street:deer creek,city:palo alto}
-```
-
-## <a id="profile_hdfsseqwritable"></a>SequenceWritable Profile 
-
-Use the `SequenceWritable` profile when writing SequenceFile format files. Files of this type consist of binary key/value pairs. Sequence files are a common data transfer format between MapReduce jobs. 
-
-The `SequenceWritable` profile supports the following \<custom-options\>:
-
-| Keyword  | Value Description |
-|-------|-------------------------------------|
-| COMPRESSION_CODEC    | The compression codec Java class name. If this option is not provided, no data compression is performed. |
-| COMPRESSION_TYPE    | The compression type of the sequence file; supported values are `RECORD` (the default) or `BLOCK`. |
-| DATA-SCHEMA    | The name of the writer serialization class. The jar file in which this class resides must be in the PXF class path. This option has no default value. |
-| THREAD-SAFE | Boolean value determining if a table query can run in multi-thread mode. Default value is `TRUE` - requests can run in multi-thread mode. When set to `FALSE`, requests will be handled in a single thread. |
-
-???? MORE HERE
-
-??? ADDRESS SERIALIZATION
-
-
-## <a id="recordkeyinkey-valuefileformats"></a>Reading the Record Key 
-
-Sequence file and other file formats that store rows in a key-value format can access the key value through HAWQ by using the `recordkey` keyword as a field name.
-
-The field type of `recordkey` must correspond to the key type, much as the other fields must match the HDFS data. 
-
-`recordkey` can be any of the following Hadoop types:
-
--   BooleanWritable
--   ByteWritable
--   DoubleWritable
--   FloatWritable
--   IntWritable
--   LongWritable
--   Text
-
-### <a id="example1"></a>Example
-
-A data schema `Babies.class` contains three fields: name (text), birthday (text), weight (float). An external table definition for this schema must include these three fields, and can either include or ignore the `recordkey`.
-
-``` sql
-gpadmin=# CREATE EXTERNAL TABLE babies_1940 (recordkey int, name text, birthday text, weight float)
-            LOCATION ('pxf://namenode:51200/babies_1940s?PROFILE=SequenceWritable&DATA-SCHEMA=Babies')
-          FORMAT 'CUSTOM' (formatter='pxfwritable_import');
-gpadmin=# SELECT * FROM babies_1940;
 ```
 
 ## <a id="accessdataonahavhdfscluster"></a>Accessing HDFS Data in a High Availability HDFS Cluster
