@@ -16,6 +16,12 @@ The RHEL Load Tools are provided in a HAWQ distribution.
  
 2. Refer to the HAWQ command line install instructions to set up your package repositories and install the HAWQ binary.
 
+3. Install the `libevent` and `libyaml` packages. These libraries are required by the HAWQ file server. You must have superuser privileges on the system.
+
+    ``` shell
+    $ sudo yum install -y libevent libyaml
+    ```
+
 ### <a id="installrhelloadabout"></a>About the RHEL Loader Installation
 
 The files/directories of interest in a HAWQ RHEL Load Tools installation include:
@@ -31,6 +37,7 @@ A `greenplum_path.sh` file is located in the HAWQ base install directory followi
 $ . /usr/local/hawq/greenplum_path.sh
 ```
 
+Continue to [Using the HAWQ File Server (gpfdist)](g-using-the-hawq-file-server--gpfdist-.html) for specific information about using the HAWQ load tools.
 
 ## <a id="installloadrunwin"></a>Windows Load Tools
 
