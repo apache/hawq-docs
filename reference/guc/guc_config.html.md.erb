@@ -27,7 +27,7 @@ Many of the configuration parameters have limitations on who can change them and
 
 By design, all HAWQ instances (including master and segments) host identical `hawq-site.xml` files. Using a common `hawq-site.xml` file across all HAWQ instances simplifies configuration of the cluster. Within each `hawq-site.xml` configuration file, some parameters are considered *segment* parameters, meaning that each segment instance looks to its own `hawq-site.xml` file to get the value of that parameter. By convention, these parameter names begin with the string `hawq_segment`. Others parameters are considered *master* parameters. By convention, these parameter names begin with the string `hawq_master`. Master parameters are only applied at the master instance and ignored by segments.
 
-**Note:** If you use the `hawq config` utility to set configuration parameter values in `hawq-site.xml`, the utility synchronizes all configuration files. Any manual modifications that you made to individual `hawq-site.xml` files may be lost.
+**Note:** If you use the `hawq config` utility to set configuration parameter values in `hawq-site.xml`, the utility synchronizes all configuration files. Any manual modifications that you made to individual `hawq-site.xml` files may be lost. Additionally, if you install and manage HAWQ using Ambari, do not use `hawq config` to configure HAWQ properties. If the cluster is restarted, Ambari will overwrite any changes made by `hawq config` For Ambari-managed HAWQ clusters, only  use the Ambari administration interface to set or change HAWQ configuration properties.
 
 This table describes the values in the Set Classifications column of the table in the description of a server configuration parameter.
 
