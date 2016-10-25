@@ -40,69 +40,73 @@ The HDFS file system command is `hdfs dfs <options> [<file>]`. Invoked with no o
 | `-mkdir`    | Create directory in HDFS. |
 | `-put`    | Copy file from local file system to HDFS. |
 
-Create an HDFS directory for PXF example data files:
+### <a id="hdfsplugin_cmdline_create"></a>Create Data Files
 
-``` shell
-$ sudo -u hdfs hdfs dfs -mkdir -p /data/pxf_examples
-```
+Perform the following steps to create data files used in subsequent exercises:
 
-Create a delimited plain text file:
+1. Create an HDFS directory for PXF example data files:
 
-``` shell
-$ vi /tmp/pxf_hdfs_simple.txt
-```
+    ``` shell
+     $ sudo -u hdfs hdfs dfs -mkdir -p /data/pxf_examples
+    ```
 
-Copy and paste the following data into `pxf_hdfs_simple.txt`:
+2. Create a delimited plain text file:
 
-``` pre
-Prague,Jan,101,4875.33
-Rome,Mar,87,1557.39
-Bangalore,May,317,8936.99
-Beijing,Jul,411,11600.67
-```
+    ``` shell
+    $ vi /tmp/pxf_hdfs_simple.txt
+    ```
 
-Notice the use of the comma `,` to separate the four data fields.
+3. Copy and paste the following data into `pxf_hdfs_simple.txt`:
 
-Add the data file to HDFS:
+    ``` pre
+    Prague,Jan,101,4875.33
+    Rome,Mar,87,1557.39
+    Bangalore,May,317,8936.99
+    Beijing,Jul,411,11600.67
+    ```
 
-``` shell
-$ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_simple.txt /data/pxf_examples/
-```
+    Notice the use of the comma `,` to separate the four data fields.
 
-Display the contents of the `pxf_hdfs_simple.txt` file stored in HDFS:
+4. Add the data file to HDFS:
 
-``` shell
-$ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxf_hdfs_simple.txt
-```
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_simple.txt /data/pxf_examples/
+    ```
 
-Create a second delimited plain text file:
+5. Display the contents of the `pxf_hdfs_simple.txt` file stored in HDFS:
 
-``` shell
-$ vi /tmp/pxf_hdfs_multi.txt
-```
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxf_hdfs_simple.txt
+    ```
 
-Copy/paste the following data into `pxf_hdfs_multi.txt`:
+6. Create a second delimited plain text file:
 
-``` pre
-"4627 Star Rd.
-San Francisco, CA  94107":Sept:2017
-"113 Moon St.
-San Diego, CA  92093":Jan:2018
-"51 Belt Ct.
-Denver, CO  90123":Dec:2016
-"93114 Radial Rd.
-Chicago, IL  60605":Jul:2017
-"7301 Brookview Ave.
-Columbus, OH  43213":Dec:2018
-```
+    ``` shell
+    $ vi /tmp/pxf_hdfs_multi.txt
+    ```
 
-Notice the use of the colon `:` to separate the three fields. Also notice the quotes around the first (address) field. This field includes an embedded line feed.
+7. Copy/paste the following data into `pxf_hdfs_multi.txt`:
 
-Add the data file to HDFS:
+    ``` pre
+    "4627 Star Rd.
+    San Francisco, CA  94107":Sept:2017
+    "113 Moon St.
+    San Diego, CA  92093":Jan:2018
+    "51 Belt Ct.
+    Denver, CO  90123":Dec:2016
+    "93114 Radial Rd.
+    Chicago, IL  60605":Jul:2017
+    "7301 Brookview Ave.
+    Columbus, OH  43213":Dec:2018
+    ```
 
-``` shell
-$ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_multi.txt /data/pxf_examples/
-```
+    Notice the use of the colon `:` to separate the three fields. Also notice the quotes around the first (address) field. This field includes an embedded line feed.
+
+8. Add the data file to HDFS:
+
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_multi.txt /data/pxf_examples/
+    ```
 
 You will use these HDFS files in later sections.
 
