@@ -10,7 +10,7 @@ This section describes how to use PXF to access HDFS data, including how to crea
 
 Before working with HDFS file data using HAWQ and PXF, ensure that:
 
--   The HDFS plug-in is installed on all cluster nodes.
+-   The HDFS plug-in is installed on all cluster nodes. See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
 -   All HDFS users have read permissions to HDFS services and that write permissions have been restricted to specific users.
 
 ## <a id="hdfsplugin_fileformats"></a>HDFS File Formats
@@ -26,13 +26,14 @@ The PXF HDFS plug-in includes the following profiles to support the file formats
 - `HdfsTextMulti` - text files with embedded line feeds
 - `Avro` - Avro files
 
+If you find that the pre-defined PXF HDFS profiles do not meet your needs, you may choose to create a custom HDFS profile from the existing HDFS serialization and deserialization classes. Refer to [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on creating a custom profile.
 
 ## <a id="hdfsplugin_cmdline"></a>HDFS Shell Commands
-Hadoop includes command-line tools that interact directly with HDFS.  These tools support typical file system operations including copying and listing files, changing file permissions, etc. 
+Hadoop includes command-line tools that interact directly with HDFS.  These tools support typical file system operations including copying and listing files, changing file permissions, and so forth. 
 
-The HDFS file system command is `hdfs dfs <options> [<file>]`. Invoked with no options, `hdfs dfs` lists the file system options supported by the tool.
+The HDFS file system command syntax is `hdfs dfs <options> [<file>]`. Invoked with no options, `hdfs dfs` lists the file system options supported by the tool.
 
-`hdfs dfs` options used in this section are identified in the table below:
+`hdfs dfs` options used in this topic are:
 
 | Option  | Description |
 |-------|-------------------------------------|
@@ -40,75 +41,26 @@ The HDFS file system command is `hdfs dfs <options> [<file>]`. Invoked with no o
 | `-mkdir`    | Create directory in HDFS. |
 | `-put`    | Copy file from local file system to HDFS. |
 
-### <a id="hdfsplugin_cmdline_create"></a>Create Data Files
+Examples:
 
-Perform the following steps to create data files used in subsequent exercises:
+Create a directory in HDFS:
 
-1. Create an HDFS directory for PXF example data files:
+``` shell
+$ sudo -u hdfs hdfs dfs -mkdir -p /data/exampledir
+```
 
-    ``` shell
-    $ sudo -u hdfs hdfs dfs -mkdir -p /data/pxf_examples
-    ```
+Copy a text file to HDFS:
 
-2. Create a delimited plain text file:
+``` shell
+$ sudo -u hdfs hdfs dfs -put /tmp/example.txt /data/exampledir/
+```
 
-    ``` shell
-    $ vi /tmp/pxf_hdfs_simple.txt
-    ```
+Display the contents of a text file in HDFS:
 
-3. Copy and paste the following data into `pxf_hdfs_simple.txt`:
+``` shell
+$ sudo -u hdfs hdfs dfs -cat /data/exampledir/example.txt
+```
 
-    ``` pre
-    Prague,Jan,101,4875.33
-    Rome,Mar,87,1557.39
-    Bangalore,May,317,8936.99
-    Beijing,Jul,411,11600.67
-    ```
-
-    Notice the use of the comma `,` to separate the four data fields.
-
-4. Add the data file to HDFS:
-
-    ``` shell
-    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_simple.txt /data/pxf_examples/
-    ```
-
-5. Display the contents of the `pxf_hdfs_simple.txt` file stored in HDFS:
-
-    ``` shell
-    $ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxf_hdfs_simple.txt
-    ```
-
-6. Create a second delimited plain text file:
-
-    ``` shell
-    $ vi /tmp/pxf_hdfs_multi.txt
-    ```
-
-7. Copy/paste the following data into `pxf_hdfs_multi.txt`:
-
-    ``` pre
-    "4627 Star Rd.
-    San Francisco, CA  94107":Sept:2017
-    "113 Moon St.
-    San Diego, CA  92093":Jan:2018
-    "51 Belt Ct.
-    Denver, CO  90123":Dec:2016
-    "93114 Radial Rd.
-    Chicago, IL  60605":Jul:2017
-    "7301 Brookview Ave.
-    Columbus, OH  43213":Dec:2018
-    ```
-
-    Notice the use of the colon `:` to separate the three fields. Also notice the quotes around the first (address) field. This field includes an embedded line feed.
-
-8. Add the data file to HDFS:
-
-    ``` shell
-    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_multi.txt /data/pxf_examples/
-    ```
-
-You will use these HDFS files in later sections.
 
 ## <a id="hdfsplugin_queryextdata"></a>Querying External HDFS Data
 The PXF HDFS plug-in supports the `HdfsTextSimple`, `HdfsTextMulti`, and `Avro` profiles.
@@ -148,11 +100,40 @@ Use the `HdfsTextSimple` profile when reading plain text delimited or .csv files
 |-------|-------------------------------------|
 | delimiter    | The delimiter character in the file. Default value is a comma `,`.|
 
-### <a id="profile_hdfstextsimple_query"></a>Query With HdfsTextSimple Profile
+### <a id="profile_hdfstextsimple_query"></a>Example: Using the HdfsTextSimple Profile
 
-Perform the following steps to create and query external tables accessing the `pxf_hdfs_simple.txt` file you created and added to HDFS in an earlier section.
+Perform the following steps to create a sample data file, copy the file to HDFS, and use the `HdfsTextSimple` profile to create PXF external tables to query the data:
 
-1. Use the `HdfsTextSimple` profile to create a queryable HAWQ external table from the `pxf_hdfs_simple.txt` file you created and added to HDFS in an earlier section:
+1. Create an HDFS directory for PXF example data files:
+
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -mkdir -p /data/pxf_examples
+    ```
+
+2. Create a delimited plain text data file named `pxf_hdfs_simple.txt`:
+
+    ``` shell
+    $ echo 'Prague,Jan,101,4875.33
+Rome,Mar,87,1557.39
+Bangalore,May,317,8936.99
+Beijing,Jul,411,11600.67' >> pxf_hdfs_simple.txt
+    ```
+
+    Notice the use of the comma `,` to separate the four data fields.
+
+4. Add the data file to HDFS:
+
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_simple.txt /data/pxf_examples/
+    ```
+
+5. Display the contents of the `pxf_hdfs_simple.txt` file stored in HDFS:
+
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxf_hdfs_simple.txt
+    ```
+
+1. Use the `HdfsTextSimple` profile to create a queryable HAWQ external table from the `pxf_hdfs_simple.txt` file you previously created and added to HDFS:
 
     ``` sql
     gpadmin=# CREATE EXTERNAL TABLE pxf_hdfs_textsimple(location text, month text, num_orders int, total_sales float8)
@@ -192,11 +173,40 @@ Use the `HdfsTextMulti` profile when reading plain text files with delimited sin
 |-------|-------------------------------------|
 | delimiter    | The delimiter character in the file. |
 
-### <a id="profile_hdfstextmulti_query"></a>Query With HdfsTextMulti Profile
+### <a id="profile_hdfstextmulti_query"></a>Example: Using the HdfsTextMulti Profile
 
-Perform the following operations to create and query an external HAWQ table accessing the `pxf_hdfs_multi.txt` file you created and added to HDFS in an earlier section.
+Perform the following steps to create a sample data file, copy the file to HDFS, and use the `HdfsTextMulti` profile to create a PXF external table to query the data:
 
-1. Use the `HdfsTextMulti` profile to create a queryable external table from the `pxf_hdfs_multi.txt` file:
+1. Create a second delimited plain text file:
+
+    ``` shell
+    $ vi /tmp/pxf_hdfs_multi.txt
+    ```
+
+2. Copy/paste the following data into `pxf_hdfs_multi.txt`:
+
+    ``` pre
+    "4627 Star Rd.
+    San Francisco, CA  94107":Sept:2017
+    "113 Moon St.
+    San Diego, CA  92093":Jan:2018
+    "51 Belt Ct.
+    Denver, CO  90123":Dec:2016
+    "93114 Radial Rd.
+    Chicago, IL  60605":Jul:2017
+    "7301 Brookview Ave.
+    Columbus, OH  43213":Dec:2018
+    ```
+
+    Notice the use of the colon `:` to separate the three fields. Also notice the quotes around the first (address) field. This field includes an embedded line feed separating the street address from the city and state.
+
+3. Add the data file to HDFS:
+
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_multi.txt /data/pxf_examples/
+    ```
+
+4. Use the `HdfsTextMulti` profile to create a queryable external table from the `pxf_hdfs_multi.txt` HDFS file, making sure to identify the `:` as the field separator:
 
     ``` sql
     gpadmin=# CREATE EXTERNAL TABLE pxf_hdfs_textmulti(address text, month text, year int)
@@ -230,7 +240,7 @@ Perform the following operations to create and query an external HAWQ table acce
 
 Apache Avro is a data serialization framework where the data is serialized in a compact binary format. 
 
-Avro specifies data types be defined in JSON. Avro format files have an independent schema, also defined in JSON. In Avro files, the schema is stored with the data. An Avro schema, together with its data, is fully self-describing.
+Avro specifies that data types be defined in JSON. Avro format files have an independent schema, also defined in JSON. An Avro schema, together with its data, is fully self-describing.
 
 ### <a id="profile_hdfsavrodatamap"></a>Data Type Mapping
 
@@ -259,9 +269,9 @@ The `Avro` profile supports the following \<custom-options\>:
 
 | Option Name   | Description       
 |---------------|--------------------|                                                                                        
-| COLLECTION_DELIM | The delimiter character(s) to place between entries in a top-level array, map, or record field when PXF maps an Avro complex data type to a text column. The default is a comma `,` character. |
-| MAPKEY_DELIM | The delimiter character(s) to place between the key and value of a map entry when PXF maps an Avro complex data type to a text column. The default is a colon `:` character. |
-| RECORDKEY_DELIM | The delimiter character(s) to place between the field name and value of a record entry when PXF maps an Avro complex data type to a text column. The default is a colon `:` character. |
+| COLLECTION_DELIM | The delimiter character(s) to place between entries in a top-level array, map, or record field when PXF maps an Avro complex data type to a text column. The default is the comma `,` character. |
+| MAPKEY_DELIM | The delimiter character(s) to place between the key and value of a map entry when PXF maps an Avro complex data type to a text column. The default is the colon `:` character. |
+| RECORDKEY_DELIM | The delimiter character(s) to place between the field name and value of a record entry when PXF maps an Avro complex data type to a text column. The default is the colon `:` character. |
 
 
 ### <a id="topic_tr3_dpg_ts__section_m2p_ztg_ts"></a>Avro Schemas and Data
@@ -270,7 +280,10 @@ Avro schemas are defined using JSON, and composed of the same primitive and comp
 
 Fields in an Avro schema file are defined via an array of objects, each of which is specified by a name and a type.
 
-The examples in this section will be operating on Avro data fields with the following record schema:
+
+### <a id="topic_tr3_dpg_ts_example"></a>Example: Using the Avro Profile
+
+The examples in this section will operate on Avro data with the following record schema:
 
 - id - long
 - username - string
@@ -279,7 +292,8 @@ The examples in this section will be operating on Avro data fields with the foll
 - address - record comprised of street number (int), street name (string), and city (string)
 - relationship - enumerated type
 
-#### <a id="topic_tr3_dpg_ts__section_m2p_ztg_ts_99"></a>Create Sample Schema
+
+#### <a id="topic_tr3_dpg_ts__section_m2p_ztg_ts_99"></a>Create Schema
 
 Perform the following operations to create an Avro schema to represent the example schema described above.
 
@@ -333,7 +347,7 @@ Perform the following operations to create an Avro schema to represent the examp
     }
     ```
 
-#### <a id="topic_tr3_dpg_ts__section_spk_15g_ts"></a>Create Sample Avro Data File (JSON)
+#### <a id="topic_tr3_dpgspk_15g_tsdata"></a>Create Avro Data File (JSON)
 
 Perform the following steps to create a sample Avro data file conforming to the above schema.
 
@@ -353,7 +367,7 @@ Perform the following steps to create a sample Avro data file conforming to the 
 
     The sample data uses a comma `,` to separate top level records and a colon `:` to separate map/key values and record field name/values.
 
-3. Convert the text file to Avro format. There are various ways to perform the conversion programmatically and via the command line. In this example, we use the [Java Avro tools](http://avro.apache.org/releases.html), and the jar file resides in the current directory:
+3. Convert the text file to Avro format. There are various ways to perform the conversion, both programmatically and via the command line. In this example, we use the [Java Avro tools](http://avro.apache.org/releases.html); the jar file resides in the current directory:
 
     ``` shell
     $ java -jar ./avro-tools-1.8.1.jar fromjson --schema-file /tmp/avro_schema.avsc /tmp/pxf_hdfs_avro.txt > /tmp/pxf_hdfs_avro.avro
@@ -361,13 +375,13 @@ Perform the following steps to create a sample Avro data file conforming to the 
 
     The generated Avro binary data file is written to `/tmp/pxf_hdfs_avro.avro`. 
     
-4. Copy the generated file to HDFS:
+4. Copy the generated Avro file to HDFS:
 
     ``` shell
     $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_avro.avro /data/pxf_examples/
     ```
     
-### <a id="topic_avro_querydata"></a>Query With Avro Profile
+#### <a id="topic_avro_querydata"></a>Query With Avro Profile
 
 Perform the following steps to create and query an external table accessing the `pxf_hdfs_avro.avro` file you added to HDFS in the previous section. When creating the table:
 
@@ -398,7 +412,7 @@ Perform the following steps to create and query an external table accessing the 
     (2 rows)
     ```
 
-    The simple query of the external table shows the components of the complex type data separated with delimiters.
+    The simple query of the external table shows the components of the complex type data separated with the delimiters identified in the `CREATE EXTERNAL TABLE` call.
 
 
 3. Process the delimited components in the text columns as necessary for your application. For example, the following command uses the HAWQ internal `string_to_array` function to convert entries in the `followers` field to a text array column in a new view.
@@ -434,6 +448,3 @@ gpadmin=# CREATE EXTERNAL TABLE <table_name> ( <column_name> <data_type> [, ...]
 
 The opposite is true when a highly available HDFS cluster is reverted to a single NameNode configuration. In that case, any table definition that has specified \<HA-nameservice\> should use the \<host\>[:\<port\>] syntax. 
 
-
-## <a id="hdfs_advanced"></a>Advanced
-If you find that the pre-defined PXF HDFS profiles do not meet your needs, you may choose to create a custom HDFS profile from the existing HDFS serialization and deserialization classes. Refer to [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on creating a custom profile.
