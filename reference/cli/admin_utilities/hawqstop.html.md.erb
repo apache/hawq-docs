@@ -23,7 +23,7 @@ The `hawq stop` utility is used to stop the database servers that comprise a HAW
 By default, you are not allowed to shut down HAWQ if there are any client connections to the database. Use the `-M fast` option to roll back all in progress transactions and terminate any connections before shutting down. If there are any transactions in progress, the default behavior is to wait for them to commit before shutting down.
 
 With the `-u` option, the utility uploads changes made to the master `pg_hba.conf` file or to *runtime* configuration parameters in the master `hawq-site.xml` file without interruption of service. Note that any active sessions will not pick up the changes until they reconnect to the database.
-When active connections to the database are present, use the command `hawq stop cluster -u -M fast` to ensure that changes to the parameters are reloaded.  
+If the hawq cluster has active connections, use the command `hawq stop cluster -u -M fast` to ensure that changes to the parameters are reloaded.  
 
 ## Objects
 
