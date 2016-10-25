@@ -1,0 +1,334 @@
+---
+title: Writing HDFS Data
+---
+
+DESCRIBE HERE
+
+The PXF HDFS plug-in supports writable external tables using the HdfsTextSimple and SequenceWritable profiles.
+
+WHEN WOULD SOMEONE WANT TO CREATE A WRITABLE TABLE?
+
+This section describes how to use PXF to create writable external tables.
+
+**Note**: You cannot directly query data in a writable table.  You must first create a readable external table for the HDFS file, then query that table. 
+
+## <a id="pxfwrite_prereq"></a>Prerequisites
+
+Before working with HDFS file data using HAWQ and PXF, ensure that:
+
+-   The HDFS plug-in is installed on all cluster nodes.
+-   All HDFS users have read permissions to HDFS services and that write permissions have been restricted to specific users.
+
+## <a id="hdfsplugin_writeextdata"></a>Writing to PXF External Tables
+The PXF HDFS plug-in supports writable two profiles: `HdfsTextSimple` and `SequenceWritable`.
+
+Use the following syntax to create a HAWQ external writable table representing HDFS data: 
+
+``` sql
+CREATE EXTERNAL WRITABLE TABLE <table_name> 
+    ( <column_name> <data_type> [, ...] | LIKE <other_table> )
+LOCATION ('pxf://<host>[:<port>]/<path-to-hdfs-file>
+    ?PROFILE=HdfsTextSimple|SequenceWritable[&<custom-option>=<value>[...]]')
+FORMAT '[TEXT|CSV|CUSTOM]' (<formatting-properties>);
+```
+
+HDFS-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](../reference/sql/CREATE-EXTERNAL-TABLE.html) call are described in the table below.
+
+| Keyword  | Value |
+|-------|-------------------------------------|
+| \<host\>[:\<port\>]    | The HDFS NameNode and port. |
+| \<path-to-hdfs-file\>    | The path to the file in the HDFS data store. |
+| PROFILE    | The `PROFILE` keyword must specify one of the values `HdfsTextSimple` or `SequenceWritable`. |
+| \<custom-option\>  | \<custom-option\> is profile-specific. Profile-specific options are discussed in the relevant profile topic later in this section.|
+| FORMAT 'TEXT' | Use '`TEXT`' `FORMAT` with the `HdfsTextSimple` profile when \<path-to-hdfs-file\> will reference a plain text delimited file. The `HdfsTextSimple` '`TEXT`' `FORMAT` supports only the built-in `(delimiter=<delim>)` \<formatting-property\>. |
+| FORMAT 'CSV' | Use '`CSV`' `FORMAT` with `HdfsTextSimple` when \<path-to-hdfs-file\> will reference a comma-separated value file.  |
+| FORMAT 'CUSTOM' | Use the `'CUSTOM'` `FORMAT` with the `SequenceWritable` profile. The `SequenceWritable` '`CUSTOM`' `FORMAT` supports only the built-in `formatter='pxfwritable_export` (write) and `formatter='pxfwritable_import` (read) \<formatting-properties\>.
+
+*Note*: When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
+
+## <a id="profile_hdfstextsimple"></a>Custom Options
+
+The `HdfsTextSimple` and `SequenceWritable` profiles support the following write-related \<custom-options\>:
+
+| Keyword  | Value Description |
+|-------|-------------------------------------|
+| COMPRESSION_CODEC    | The compression codec Java class name. If this option is not provided, no data compression is performed. Supported compression codecs include: `org.apache.hadoop.io.compress.DefaultCodec`, `org.apache.hadoop.io.compress.BZip2Codec`, and `org.apache.hadoop.io.compress.GzipCodec` (`HdfsTextSimple` profile only) |
+| COMPRESSION_TYPE    | The compression type of the sequence file; supported values are `RECORD` (the default) or `BLOCK`. |
+| DATA-SCHEMA    | (`SequenceWritable` profile only) The name of the writer serialization class. The jar file in which this class resides must be in the PXF class path. This option has no default value. |
+| THREAD-SAFE | Boolean value determining if a table query can run in multi-thread mode. Default value is `TRUE`, requests run in multi-threaded mode. When set to `FALSE`, requests will be handled in a single thread.  `THREAD-SAFE` should be set appropriately when operations that are not thread safe are used (i.e. compression). |
+
+## <a id="profile_hdfstextsimple"></a>HdfsTextSimple Profile
+
+Use the `HdfsTextSimple` profile when writing delimited data to a plain text file where each row is a single record.
+
+\<formatting-properties\> supported by the `HdfsTextSimple` profile include:
+
+| Keyword  | Value |
+|-------|-------------------------------------|
+| delimiter    | The delimiter character to use when writing the file. Default value is a comma `,`.|
+
+
+Use the PXF `HdfsTextSimple` profile to create a writable HAWQ external table with the same data schema as the `pxf_hdfs_ts.txt` file you created and added to HDFS in [ADD LINK]. Create the table specifying a comma `,` as the delimiter:
+
+
+``` sql
+gpadmin=# CREATE WRITABLE EXTERNAL TABLE pxf_hdfs_textsimple_writabletbl_1(location text, month text, num_orders int, total_sales float8)
+            LOCATION ('pxf://namenode:51200/data/pxf_examples/pxfwritable_hdfs_textsimple1?PROFILE=HdfsTextSimple') 
+          FORMAT 'TEXT' (delimiter=E',');
+```
+
+Write a few records to the `pxfwritable_hdfs_textsimple1` HDFS file by invoking the SQL `INSERT` command on `pxf_hdfs_textsimple_writabletbl_1`:
+
+``` sql
+gpadmin=# INSERT INTO pxf_hdfs_textsimple_writabletbl_1 VALUES ( 'Frankfurt', 'Mar', 777, 3956.98 );
+gpadmin=# INSERT INTO pxf_hdfs_textsimple_writabletbl_1 VALUES ( 'Cleveland', 'Oct', 3812, 96645.37 );
+```
+
+View the file contents in HDFS:
+
+``` shell
+$ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxfwritable_hdfs_textsimple1/*
+Frankfurt,Mar,777,3956.98
+Cleveland,Oct,3812,96645.37
+```
+
+Because you specified comma `,` as the delimiter, this character is the field separator in each record of the HDFS file.
+
+You may recall that querying an external writable table is not supported in HAWQ. To read the newly-created writable table, create a readable external table referencing the writable table's HDFS file:
+
+``` sql
+gpadmin=# CREATE EXTERNAL TABLE pxf_hdfs_textsimple_r1(location text, month text, num_orders int, total_sales float8)
+            LOCATION ('pxf://namenode:51200/data/pxf_examples/pxfwritable_hdfs_textsimple1?PROFILE=HdfsTextSimple')
+			FORMAT 'CSV';
+```
+
+Notice the `FORMAT 'CSV'` clause. The `'CSV'` `FORMAT` is specified because comma `,` was the table delimiter character used when creating the writable table.
+
+Query the readable external table `pxf_hdfs_textsimple_r1`:
+
+``` sql
+gpadmin=# SELECT * FROM pxf_hdfs_textsimple_r1;          
+```
+``` pre
+ location  | month | num_orders | total_sales 
+-----------+-------+------------+-------------
+ Cleveland | Oct   |       3812 |    96645.37
+ Frankfurt | Mar   |        777 |     3956.98
+(2 rows)
+```
+
+Create a second external writable table, this time using a colon `:` as the delimiter:
+
+``` sql
+gpadmin=# CREATE WRITABLE EXTERNAL TABLE pxf_hdfs_textsimple_writabletbl_2 (location text, month text, num_orders int, total_sales float8)
+            LOCATION ('pxf://namenode:51200/data/pxf_examples/pxfwritable_hdfs_textsimple2?PROFILE=HdfsTextSimple')
+          FORMAT 'TEXT' (delimiter=E':');          
+```
+
+Write a few records to the `pxfwritable_hdfs_textsimple2` HDFS file:
+
+``` sql
+gpadmin=# INSERT INTO pxf_hdfs_textsimple_writabletbl_2 VALUES ( 'Frankfurt', 'Mar', 777, 3956.98 );
+gpadmin=# INSERT INTO pxf_hdfs_textsimple_writabletbl_2 VALUES ( 'Cleveland', 'Oct', 3812, 96645.37 );
+```
+
+View the file contents in HDFS:
+
+``` shell
+$ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxfwritable_hdfs_textsimple2/*
+Frankfurt:Mar:777:3956.98
+Cleveland:Oct:3812:96645.3
+```
+
+Notice that the colon `:` is the field separator in the HDFS file.
+
+Similar to above, you can create a readable external table to read the contents of the second writable external table named `pxfwritable_hdfs_textsimple2`.
+
+
+## <a id="profile_hdfsseqwritable"></a>SequenceWritable Profile 
+
+Use the HDFS plug-in `SequenceWritable` profile when writing SequenceFile format files. Files of this type consist of binary key/value pairs. Sequence files are a common data transfer format between MapReduce jobs. 
+
+???? MORE HERE
+
+??? ADDRESS SERIALIZATION
+
+When using the `SequenceWritable` profile to write a SequenceFile format file, you must provide the name of the Java class used to serialize/deserialize the data. This class DOES WHAT. 
+
+To create a writable external table with the `SequenceWritable` profile, you will create a Java class named `PxfExample_CustomWritable` that will serialize/deserialize the simple sample schema used in previous examples:
+
+ - location (text)
+ - month (text)
+ - number_of_orders (int)
+ - total_sales (float8)
+
+Prepare to create the sample Java class:
+
+``` shell
+$ mkdir -p pxfex/com/hawq/example/pxf/hdfs/writable/dataschema
+$ cd pxfex/com/hawq/example/pxf/hdfs/writable/dataschema
+$ vi PxfExample_CustomWritable.java
+```
+
+Copy and paste the following text into the `PxfExample_CustomWritable.java` file:
+
+``` java
+package com.hawq.example.pxf.hdfs.writable.dataschema;
+
+import org.apache.hadoop.io.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.lang.reflect.Field;
+
+/**
+ * PxfExample_CustomWritable class - used to serialize and deserialize data with
+ * text, int, and float data types
+ *
+ */
+public class PxfExample_CustomWritable implements Writable {
+
+    public String st1;
+    public String st2;
+    public int int1;
+    public float ft;
+
+    public PxfExample_CustomWritable() {
+        st1 = new String("");
+        st2 = new String("");
+        int1 = 0;
+        ft = 0.f;
+    }
+
+    public PxfExample_CustomWritable(int i1, int i2, int i3) {
+
+        st1 = new String("short_string___" + i1);
+        st2 = new String("short_string___" + i1);
+        int1 = i2;
+        ft = i1 * 10.f * 2.3f;
+
+    }
+
+    String GetSt1() {
+        return st1;
+    }
+
+    String GetSt2() {
+        return st2;
+    }
+
+    int GetInt1() {
+        return int1;
+    }
+    
+    float GetFt() {
+        return ft;
+    }
+
+    @Override
+    public void write(DataOutput out) throws IOException {
+
+        Text txt = new Text();
+        txt.set(st1);
+        txt.write(out);
+        txt.set(st2);
+        txt.write(out);
+
+        IntWritable intw = new IntWritable();
+        intw.set(int1);
+        intw.write(out);
+
+        FloatWritable fw = new FloatWritable();
+        fw.set(ft);
+        fw.write(out);
+    }
+
+    @Override
+    public void readFields(DataInput in) throws IOException {
+
+        Text txt = new Text();
+        txt.readFields(in);
+        st1 = txt.toString();
+        txt.readFields(in);
+        st2 = txt.toString();
+
+        IntWritable intw = new IntWritable();
+        intw.readFields(in);
+        int1 = intw.get();
+
+        FloatWritable fw = new FloatWritable();
+        fw.readFields(in);
+        ft = fw.get();
+    }
+
+    public void printFieldTypes() {
+        Class myClass = this.getClass();
+        Field[] fields = myClass.getDeclaredFields();
+
+        for (int i = 0; i < fields.length; i++) {
+            System.out.println(fields[i].getType().getName());
+        }
+    }
+}
+```
+
+Compile and create a class jar file for `PxfExample_CustomWritable`:
+
+``` shell
+$ javac -classpath /usr/hdp/2.5.0.0-1245/hadoop/hadoop-common.jar  PxfExample_CustomWritable.java
+$ cd ../../../../../../
+$ jar cf pxfex-customwritable.jar com
+$ cp pxfex-customwritable.jar /tmp/
+```
+
+Include the new jar file in the PXF agent classpath by adding the following line to `pxf-public.classpath`. If you use Ambari to manage your cluster, add the following line via the Ambari UI and restart the PXF Agent.
+
+``` pre
+/tmp/pxfex-customwritable.jar
+```
+
+If you have a command-line-managed HAWQ cluster, perform the following steps on each node in your HAWQ cluster:
+
+   - Directly edit `/etc/conf/pxf/pxf-public.classpath` and add that line.
+   - Restart the PXF Agent:
+
+   ``` shell
+   $ sudo service pxf-service restart
+   ```
+
+Use the PXF `SequenceWritable` profile to create a writable HAWQ external table. This table uses the `DATA-SCHEMA` serialization XXXX.
+
+``` sql
+gpadmin=# CREATE WRITABLE EXTERNAL TABLE pxf_tbl_seqwrit (location text, month text, number_of_orders integer, total_sales real) 
+            LOCATION ('pxf://namenode:51200/data/pxf_examples/pxf_seqwrit_file?PROFILE=SequenceWritable&DATA-SCHEMA=com.hawq.example.pxf.hdfs.writable.dataschema.PxfExample_CustomWritable&COMPRESSION_TYPE=BLOCK&COMPRESSION_CODEC=org.apache.hadoop.io.compress.BZip2Codec')
+          FORMAT 'CUSTOM' (formatter='pxfwritable_export');
+```
+
+
+
+## <a id="recordkeyinkey-valuefileformats"></a>Reading the Record Key 
+
+Sequence file and other file formats that store rows in a key-value format can access the key value through HAWQ by using the `recordkey` keyword as a field name.
+
+The field type of `recordkey` must correspond to the key type, much as the other fields must match the HDFS data. 
+
+`recordkey` can be any of the following Hadoop types:
+
+-   BooleanWritable
+-   ByteWritable
+-   DoubleWritable
+-   FloatWritable
+-   IntWritable
+-   LongWritable
+-   Text
+
+### <a id="example1"></a>Example
+
+A data schema `Babies.class` contains three fields: name (text), birthday (text), weight (float). An external table definition for this schema must include these three fields, and can either include or ignore the `recordkey`.
+
+``` sql
+gpadmin=# CREATE EXTERNAL TABLE babies_1940 (recordkey int, name text, birthday text, weight float)
+            LOCATION ('pxf://namenode:51200/babies_1940s?PROFILE=SequenceWritable&DATA-SCHEMA=Babies')
+          FORMAT 'CUSTOM' (formatter='pxfwritable_import');
+gpadmin=# SELECT * FROM babies_1940;
+```
