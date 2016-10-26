@@ -130,7 +130,7 @@ Create a Hive table to expose our sample data set.
             STORED AS textfile;
     ```
 
-    Notice:
+    Notice that:
 
     - The `STORED AS textfile` subclause instructs Hive to create the table in Textfile (the default) format.  Hive Textfile format supports comma-, tab-, and space-separated values, as well as data specified in JSON notation.
     - The `DELIMITED FIELDS TERMINATED BY` subclause identifies the field delimiter within a data record (line). The `sales_info` table field delimiter is a comma (`,`).
@@ -229,7 +229,7 @@ Use the PXF `HiveText` profile to create a queryable HAWQ external table from th
 
     (You can safely ignore the "nonstandard use of escape in a string literal" warning and related messages.)
 
-    Notice:
+    Notice that:
 
     - The `LOCATION` subclause `DELIMITER` value is specified in hexadecimal format. `\x` is a prefix that instructs PXF to interpret the following characters as hexadecimal. `2c` is the hex value for the comma character.
     - The `FORMAT` subclause `delimiter` value is specified as the single ascii comma character ','. `E` escapes the character.
@@ -380,7 +380,7 @@ When specifying an array field in a Hive table, you must identify the terminator
              STORED AS TEXTFILE;
     ```
 
-    Notice:
+    Notice that:
 
     - `FIELDS TERMINATED BY` identifies a comma as the field terminator.
     - The `COLLECTION ITEMS TERMINATED BY` subclause specifies the percent sign as the collection items (array item, map key/value pair) terminator.
@@ -514,7 +514,7 @@ To obtain a description of a Hive table with HCatalog integration, you can use t
 -   Use `\d hcatalog.hive-db-name.*` to describe the whole database schema, i.e. all tables in `hive-db-name`.
 -   Use `\d hcatalog.*.*` to describe the whole schema, i.e. all databases and tables.
 
-**Note:** When using `\d` or `\d+` commands in the `psql` HAWQ client, `hcatalog` will not be listed as a database. If you use other `psql` compatible clients, `hcatalog` will be listed as a database with a size value of `-1` since `hcatalog` is not a real database in HAWQ.
+When using `\d` or `\d+` commands in the `psql` HAWQ client, `hcatalog` will not be listed as a database. If you use other `psql` compatible clients, `hcatalog` will be listed as a database with a size value of `-1` since `hcatalog` is not a real database in HAWQ.
 
 Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF) to obtain Hive table descriptions from other client interfaces or third-party applications. The UDF takes a PXF profile and a table pattern string as its input parameters.  **Note:** The only supported input profile at this time is `'Hive'`.
 
@@ -559,7 +559,7 @@ The PXF Hive plug-in supports the Hive partitioning feature and directory struct
 
 To take advantage of PXF partition filtering push-down, the Hive and PXF partition field names should be the same. Otherwise, PXF ignores partition filtering and the filtering is performed on the HAWQ side, impacting performance.
 
-**Note:** The Hive plug-in only filters on partition columns, not on other table attributes.
+**Note:** The Hive plug-in filters only on partition columns, not on other table attributes.
 
 ### <a id="example2"></a>Create Partitioned Hive Table
 
