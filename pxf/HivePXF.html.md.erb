@@ -2,7 +2,7 @@
 title: Accessing Hive Data
 ---
 
-Apache Hive is a distributed data warehousing infrastructure.  Hive facilitates managing large data sets, supporting multiple data formats, including comma-separated value (.csv), RC, ORC, and parquet. The PXF Hive plug-in reads data stored in Hive, as well as HDFS or HBase.
+Apache Hive is a distributed data warehousing infrastructure.  Hive facilitates managing large data sets supporting multiple data formats, including comma-separated value (.csv), RC, ORC, and parquet. The PXF Hive plug-in reads data stored in Hive, as well as HDFS or HBase.
 
 This section describes how to use PXF to access Hive data. Options for querying data stored in Hive include:
 
@@ -13,7 +13,7 @@ This section describes how to use PXF to access Hive data. Options for querying 
 
 Before accessing Hive data with HAWQ and PXF, ensure that:
 
--   The PXF HDFS plug-in is installed on all cluster nodes.
+-   The PXF HDFS plug-in is installed on all cluster nodes. See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
 -   The PXF Hive plug-in is installed on all cluster nodes.
 -   The Hive JAR files and conf directory are installed on all cluster nodes.
 -   You have tested PXF on HDFS.
@@ -69,7 +69,7 @@ The following table summarizes external mapping rules for Hive primitive types.
 
 Hive supports complex data types including array, struct, map, and union. PXF maps each of these complex types to `text`.  While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract subcomponents of these complex data types.
 
-A complex data type example is provided later in this topic.
+An example using complex data types is provided later in this topic.
 
 
 ## <a id="hive_sampledataset"></a>Sample Data Set
@@ -81,27 +81,30 @@ Examples used in this topic will operate on a common data set. This simple data 
 - number\_of\_orders - integer
 - total\_sales - double
 
-Prepare the sample data set for use. First, create a text file:
+Prepare the sample data set for use:
 
-```
-$ vi /tmp/pxf_hive_datafile.txt
-```
+1. First, create a text file:
 
-Add the following data to `pxf_hive_datafile.txt`, employing a comma `,` to separate the field values:
+    ```
+    $ vi /tmp/pxf_hive_datafile.txt
+    ```
 
-```
-Prague,Jan,101,4875.33
-Rome,Mar,87,1557.39
-Bangalore,May,317,8936.99
-Beijing,Jul,411,11600.67
-San Francisco,Sept,156,6846.34
-Paris,Nov,159,7134.56
-San Francisco,Jan,113,5397.89
-Prague,Dec,333,9894.77
-Bangalore,Jul,271,8320.55
-Beijing,Dec,100,4248.41
-```
-Make note of the path to this file; you will use it in later exercises.
+2. Add the following data to `pxf_hive_datafile.txt`; notice the use of the comma `,` to separate the four field values:
+
+    ```
+    Prague,Jan,101,4875.33
+    Rome,Mar,87,1557.39
+    Bangalore,May,317,8936.99
+    Beijing,Jul,411,11600.67
+    San Francisco,Sept,156,6846.34
+    Paris,Nov,159,7134.56
+    San Francisco,Jan,113,5397.89
+    Prague,Dec,333,9894.77
+    Bangalore,Jul,271,8320.55
+    Beijing,Dec,100,4248.41
+    ```
+
+Make note of the path to `pxf_hive_datafile.txt`; you will use it in later exercises.
 
 
 ## <a id="hivecommandline"></a>Hive Command Line
@@ -112,32 +115,38 @@ The Hive command line is a subsystem similar to that of `psql`. To start the Hiv
 $ HADOOP_USER_NAME=hdfs hive
 ```
 
-The default Hive database is named `default`. Create a Hive table named `sales_info` to expose our sample data set. Create this table in the `default` database:
+The default Hive database is named `default`. 
 
-``` sql
-hive> CREATE TABLE sales_info (location string, month string,
-        number_of_orders int, total_sales double)
-        ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-        STORED AS textfile;
-```
+### <a id="hivecommandline_createdb"></a>Example: Create a Hive Database
 
-Notice:
+Create a Hive table to expose our sample data set.
 
-- The `STORED AS textfile` subclause instructs Hive to create the table in Textfile (the default) format.  Hive Textfile format supports comma-, tab-, and space-separated values, as well as data specified in JSON notation.
-- The `DELIMITED FIELDS TERMINATED BY` subclause identifies the field delimiter within a data record (line). The `sales_info` table field delimiter is a comma (`,`).
+1. Create a Hive table named `sales_info` in the `default` database:
 
-Load the `pxf_hive_datafile.txt` sample data file into the `sales_info` table you just created:
+    ``` sql
+    hive> CREATE TABLE sales_info (location string, month string,
+            number_of_orders int, total_sales double)
+            ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+            STORED AS textfile;
+    ```
 
-``` sql
-hive> LOAD DATA local INPATH '/tmp/pxf_hive_datafile.txt'
-        INTO TABLE sales_info;
-```
+    Notice:
 
-Perform a query on `sales_info` to verify the data was loaded successfully:
+    - The `STORED AS textfile` subclause instructs Hive to create the table in Textfile (the default) format.  Hive Textfile format supports comma-, tab-, and space-separated values, as well as data specified in JSON notation.
+    - The `DELIMITED FIELDS TERMINATED BY` subclause identifies the field delimiter within a data record (line). The `sales_info` table field delimiter is a comma (`,`).
 
-``` sql
-hive> SELECT * FROM sales_info;
-```
+2. Load the `pxf_hive_datafile.txt` sample data file into the `sales_info` table you just created:
+
+    ``` sql
+    hive> LOAD DATA local INPATH '/tmp/pxf_hive_datafile.txt'
+            INTO TABLE sales_info;
+    ```
+
+3. Perform a query on `sales_info` to verify the data was loaded successfully:
+
+    ``` sql
+    hive> SELECT * FROM sales_info;
+    ```
 
 In examples later in this section, you will access the `sales_info` Hive table directly via PXF. You will also insert `sales_info` data into tables of other Hive file format types, and use PXF to access those directly as well.
 
@@ -151,149 +160,156 @@ Use the following syntax to create a HAWQ external table representing Hive data:
 CREATE EXTERNAL TABLE <table_name>
     ( <column_name> <data_type> [, ...] | LIKE <other_table> )
 LOCATION ('pxf://<host>[:<port>]/<hive-db-name>.<hive-table-name>
-    ?PROFILE=Hive|HiveText|HiveRC[&DELIMITER=delim'])
-FORMAT 'CUSTOM|TEXT' (formatter='pxfwritable_import' | delimiter='delim')
+    ?PROFILE=Hive|HiveText|HiveRC[&DELIMITER=<delim>'])
+FORMAT 'CUSTOM|TEXT' (formatter='pxfwritable_import' | delimiter='<delim>')
 ```
 
 Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](../reference/sql/CREATE-EXTERNAL-TABLE.html) call are described below.
 
 | Keyword  | Value |
 |-------|-------------------------------------|
-| \<host\>    | The HDFS NameNode. |
+| \<host\>[:<port\>]    | The HDFS NameNode and port. |
 | \<hive-db-name\>    | Name of the Hive database. If omitted, defaults to the Hive database named `default`. |
 | \<hive-table-name\>    | Name of the Hive table. |
 | PROFILE    | The `PROFILE` keyword must specify one of the values `Hive`, `HiveText`, or `HiveRC`. |
-| DELIMITER    | The `DELIMITER` clause is required for both the `HiveText` and `HiveRC` profiles and identifies the field delimiter used in the Hive data set.  `delim` must be a single ascii character or specified in hexadecimal representation. |
+| DELIMITER    | The `DELIMITER` clause is required for both the `HiveText` and `HiveRC` profiles and identifies the field delimiter used in the Hive data set.  \<delim\> must be a single ascii character or specified in hexadecimal representation. |
 | FORMAT (`Hive` profile)   | The `FORMAT` clause must specify `CUSTOM`. The `CUSTOM` format supports only the built-in `pxfwritable_import` `formatter`.   |
-| FORMAT (`HiveText` and `HiveRC` profiles) | The `FORMAT` clause must specify `TEXT`. The `delimiter` must be specified a second time in `delim`. |
+| FORMAT (`HiveText` and `HiveRC` profiles) | The `FORMAT` clause must specify `TEXT`. The `delimiter` must be specified a second time in '\<delim\>'. |
 
 
-### <a id="profile_hive"></a>Hive Profile
+## <a id="profile_hive"></a>Hive Profile
 
-The `Hive` profile works with any Hive file format table.
+The `Hive` profile works with any Hive file format.
 
-The following SQL call uses the PXF `Hive` profile to create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier:
+### <a id="profile_hive_using"></a>Example: Using the Hive Profile
 
-``` shell
-$ psql -d postgres
-```
+Use the `Hive` profile to create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier.
 
-``` sql
-postgres=# CREATE EXTERNAL TABLE salesinfo_hiveprofile(location text, month text, num_orders int, total_sales float8)
-             LOCATION ('pxf://namenode:51200/default.sales_info?PROFILE=Hive')
-             FORMAT 'custom' (formatter='pxfwritable_import');
-```
+1. Create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier:
 
-``` sql
-postgres=# SELECT * FROM salesinfo_hiveprofile;
-```
+    ``` sql
+    postgres=# CREATE EXTERNAL TABLE salesinfo_hiveprofile(location text, month text, num_orders int, total_sales float8)
+                LOCATION ('pxf://namenode:51200/default.sales_info?PROFILE=Hive')
+              FORMAT 'custom' (formatter='pxfwritable_import');
+    ```
 
-``` shell
-   location    | month | num_orders | total_sales
----------------+-------+------------+-------------
- Prague        | Jan   |        101 |     4875.33
- Rome          | Mar   |         87 |     1557.39
- Bangalore     | May   |        317 |     8936.99
- ...
+2. Query the table:
 
-```
+    ``` sql
+    postgres=# SELECT * FROM salesinfo_hiveprofile;
+    ```
 
-### <a id="profile_hivetext"></a>HiveText Profile
+    ``` shell
+       location    | month | num_orders | total_sales
+    ---------------+-------+------------+-------------
+     Prague        | Jan   |        101 |     4875.33
+     Rome          | Mar   |         87 |     1557.39
+     Bangalore     | May   |        317 |     8936.99
+     ...
+
+    ```
+
+## <a id="profile_hivetext"></a>HiveText Profile
 
 Use the `HiveText` profile to query text formats. The `HiveText` profile is more performant than the `Hive` profile.
 
 **Note**: When using the `HiveText` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
 
-Use the PXF `HiveText` profile to create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier:
+### <a id="profile_hivetext_using"></a>Example: Using the HiveText Profile
 
-``` sql
-postgres=# CREATE EXTERNAL TABLE salesinfo_hivetextprofile(location text, month text, num_orders int, total_sales float8)
-             LOCATION ('pxf://namenode:51200/default.sales_info?PROFILE=HiveText&DELIMITER=\x2c')
-             FORMAT 'TEXT' (delimiter=E',');
-```
+Use the PXF `HiveText` profile to create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier.
 
-(You can safely ignore the "nonstandard use of escape in a string literal" warning and related messages.)
+1. Create the external table:
 
-Notice:
+    ``` sql
+    postgres=# CREATE EXTERNAL TABLE salesinfo_hivetextprofile(location text, month text, num_orders int, total_sales float8)
+                 LOCATION ('pxf://namenode:51200/default.sales_info?PROFILE=HiveText&DELIMITER=\x2c')
+               FORMAT 'TEXT' (delimiter=E',');
+    ```
 
-- The `LOCATION` subclause `DELIMITER` value is specified in hexadecimal format. `\x` is a prefix that instructs PXF to interpret the following characters as hexadecimal. `2c` is the hex value for the comma character.
-- The `FORMAT` subclause `delimiter` value is specified as the single ascii comma character ','. `E` ???
+    (You can safely ignore the "nonstandard use of escape in a string literal" warning and related messages.)
 
-Query the external table:
+    Notice:
 
-``` sql
-postgres=# SELECT * FROM salesinfo_hivetextprofile where location="Beijing";
-```
+    - The `LOCATION` subclause `DELIMITER` value is specified in hexadecimal format. `\x` is a prefix that instructs PXF to interpret the following characters as hexadecimal. `2c` is the hex value for the comma character.
+    - The `FORMAT` subclause `delimiter` value is specified as the single ascii comma character ','. `E` escapes the character.
 
-``` shell
- location | month | num_orders | total_sales
-----------+-------+------------+-------------
- Beijing  | Jul   |        411 |    11600.67
- Beijing  | Dec   |        100 |     4248.41
-(2 rows)
-```
+2. Query the external table:
 
-### <a id="profile_hiverc"></a>HiveRC Profile
+    ``` sql
+    postgres=# SELECT * FROM salesinfo_hivetextprofile where location="Beijing";
+    ```
 
-#### <a id="profile_hiverc_rcfiletbl"></a>RCFile Format Hive Table
+    ``` shell
+     location | month | num_orders | total_sales
+    ----------+-------+------------+-------------
+     Beijing  | Jul   |        411 |    11600.67
+     Beijing  | Dec   |        100 |     4248.41
+    (2 rows)
+    ```
 
-The RCFile Hive format is used for row columnar formatted data. Create a Hive table with RCFile format:
+## <a id="profile_hiverc"></a>HiveRC Profile
 
-``` shell
-$ HADOOP_USER_NAME=hdfs hive
-```
+The RCFile Hive format is used for row columnar formatted data. The `HiveRC` profile provides access to RCFile data.
 
-``` sql
-hive> CREATE TABLE sales_info_rcfile (location string, month string,
-        number_of_orders int, total_sales double)
-        ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
-        STORED AS rcfile;
-```
+### <a id="profile_hiverc_rcfiletbl_using"></a>Example: Using the HiveRC Profile
 
-Insert the data from the `sales_info` table into `sales_info_rcfile`:
+Use the `HiveRC` profile to query RCFile-formatted data in Hive tables. The `HiveRC` profile is more performant than the `Hive` profile for this file format type.
 
-``` sql
-hive> INSERT INTO TABLE sales_info_rcfile SELECT * FROM sales_info;
-```
+1. Create a Hive table with RCFile format:
 
-A copy of the sample data set is now stored in RCFile format in `sales_info_rcfile`. Perform a Hive query on `sales_info_rcfile` to verify the data was loaded successfully:
+    ``` shell
+    $ HADOOP_USER_NAME=hdfs hive
+    ```
 
-``` sql
-hive> SELECT * FROM sales_info_rcfile;
-```
-#### <a id="profile_hiverc_pxfquery"></a>PXF Query
+    ``` sql
+    hive> CREATE TABLE sales_info_rcfile (location string, month string,
+            number_of_orders int, total_sales double)
+          ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+          STORED AS rcfile;
+    ```
 
-Use the `HiveRC` profile to query RCFile-formatted data in Hive tables. The `HiveRC` profile is more performant than the `Hive` profile.
+2. Insert the data from the `sales_info` table into `sales_info_rcfile`:
 
-**Note**: When using the `HiveRC` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
+    ``` sql
+    hive> INSERT INTO TABLE sales_info_rcfile SELECT * FROM sales_info;
+    ```
 
-Use the PXF `HiveRC` profile to create a queryable HAWQ external table from the Hive `sales_info_rcfile` table created in the previous section:
+    A copy of the sample data set is now stored in RCFile format in `sales_info_rcfile`. 
+    
+3. Perform a Hive query on `sales_info_rcfile` to verify the data was loaded successfully:
 
-``` sql
-postgres=# CREATE EXTERNAL TABLE salesinfo_hivercprofile(location text, month text, num_orders int, total_sales float8)
-             LOCATION ('pxf://namenode:51200/default.sales_info_rcfile?PROFILE=HiveRC&DELIMITER=\x2c')
-             FORMAT 'TEXT' (delimiter=E',');
-```
+    ``` sql
+    hive> SELECT * FROM sales_info_rcfile;
+    ```
 
-(Again, you can safely ignore the "nonstandard use of escape in a string literal" warning and related messages.)
+4. Use the PXF `HiveRC` profile to create a queryable HAWQ external table from the Hive `sales_info_rcfile` table created in the previous step. When using the `HiveRC` profile, you **must** specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.:
 
-Query the external table:
+    ``` sql
+    postgres=# CREATE EXTERNAL TABLE salesinfo_hivercprofile(location text, month text, num_orders int, total_sales float8)
+                 LOCATION ('pxf://namenode:51200/default.sales_info_rcfile?PROFILE=HiveRC&DELIMITER=\x2c')
+               FORMAT 'TEXT' (delimiter=E',');
+    ```
 
-``` sql
-postgres=# SELECT location, total_sales FROM salesinfo_hivercprofile;
-```
+    (Again, you can safely ignore the "nonstandard use of escape in a string literal" warning and related messages.)
 
-``` shell
-   location    | total_sales
----------------+-------------
- Prague        |     4875.33
- Rome          |     1557.39
- Bangalore     |     8936.99
- Beijing       |    11600.67
- ...
-```
+5. Query the external table:
 
-### <a id="topic_dbb_nz3_ts"></a>Accessing Parquet-Format Hive Tables
+    ``` sql
+    postgres=# SELECT location, total_sales FROM salesinfo_hivercprofile;
+    ```
+
+    ``` shell
+       location    | total_sales
+    ---------------+-------------
+     Prague        |     4875.33
+     Rome          |     1557.39
+     Bangalore     |     8936.99
+     Beijing       |    11600.67
+     ...
+    ```
+
+## <a id="topic_dbb_nz3_ts"></a>Accessing Parquet-Format Hive Tables
 
 The PXF `Hive` profile supports both non-partitioned and partitioned Hive tables that use the Parquet storage format in HDFS. Simply map the table columns using equivalent HAWQ data types. For example, if a Hive table is created using:
 
@@ -310,17 +326,17 @@ postgres=# CREATE EXTERNAL TABLE pxf_parquet_table (fname text, lname text, cust
     FORMAT 'CUSTOM' (formatter='pxfwritable_import');
 ```
 
-### <a id="profileperf"></a>Profile Performance Considerations
+## <a id="profileperf"></a>Profile Performance Considerations
 
 The `HiveRC` and `HiveText` profiles are faster than the generic `Hive` profile.
 
 ?? MORE HERE. ??
 
-### <a id="complex_dt_example"></a>Complex Data Types Example
+## <a id="complex_dt_example"></a>Complex Data Type Example
 
-Prepare a sample data set for use. This data set will employ the array and map complex types, specifically an array of integers and a string key/value pair map.
+This example will employ the array and map complex types, specifically an array of integers and a string key/value pair map.
 
-The data set includes fields with the following names and data types:
+The example data set includes fields with the following names and data types:
 
 - index - int
 - name - string
@@ -329,99 +345,99 @@ The data set includes fields with the following names and data types:
 
 When specifying an array field in a Hive table, you must identify the terminator for each item in the collection. Similarly, the map key termination character must also be specified.
 
-Create a text file from which you will load the data set:
+1. Create a text file from which you will load the data set:
 
-```
-$ vi /tmp/pxf_hive_complex.txt
-```
+    ```
+    $ vi /tmp/pxf_hive_complex.txt
+    ```
 
-Add the following data to `pxf_hive_complex.txt`.  The data uses a comma `,` to separate field values, the percent symbol `%` to separate collection items, and a `:` to terminate map key values:
+2. Add the following data to `pxf_hive_complex.txt`.  The data uses a comma `,` to separate field values, the percent symbol `%` to separate collection items, and a `:` to terminate map key values:
 
-```
-3,Prague,1%2%3,zone:euro%status:up
-89,Rome,4%5%6,zone:euro
-400,Bangalore,7%8%9,zone:apac%status:pending
-183,Beijing,0%1%2,zone:apac
-94,Sacramento,3%4%5,zone:noam%status:down
-101,Paris,6%7%8,zone:euro%status:up
-56,Frankfurt,9%0%1,zone:euro
-202,Jakarta,2%3%4,zone:apac%status:up
-313,Sydney,5%6%7,zone:apac%status:pending
-76,Atlanta,8%9%0,zone:noam%status:down
-```
+    ```
+    3,Prague,1%2%3,zone:euro%status:up
+    89,Rome,4%5%6,zone:euro
+    400,Bangalore,7%8%9,zone:apac%status:pending
+    183,Beijing,0%1%2,zone:apac
+    94,Sacramento,3%4%5,zone:noam%status:down
+    101,Paris,6%7%8,zone:euro%status:up
+    56,Frankfurt,9%0%1,zone:euro
+    202,Jakarta,2%3%4,zone:apac%status:up
+    313,Sydney,5%6%7,zone:apac%status:pending
+    76,Atlanta,8%9%0,zone:noam%status:down
+    ```
 
-Create a Hive table to represent this data:
+3. Create a Hive table to represent this data:
 
-``` shell
-$ HADOOP_USER_NAME=hdfs hive
-```
+    ``` shell
+    $ HADOOP_USER_NAME=hdfs hive
+    ```
 
-``` sql
-postgres=# CREATE TABLE table_complextypes( index int, name string, intarray ARRAY<int>, propmap MAP<string, string>)
+    ``` sql
+    hive> CREATE TABLE table_complextypes( index int, name string, intarray ARRAY<int>, propmap MAP<string, string>)
              ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
              COLLECTION ITEMS TERMINATED BY '%'
              MAP KEYS TERMINATED BY ':'
              STORED AS TEXTFILE;
-```
+    ```
 
-Notice:
+    Notice:
 
-- `FIELDS TERMINATED BY` identifies a comma as the field terminator.
-- The `COLLECTION ITEMS TERMINATED BY` subclause specifies the percent sign as the collection items (array item, map key/value pair) terminator.
-- `MAP KEYS TERMINATED BY` identifies a colon as the terminator for map keys.
+    - `FIELDS TERMINATED BY` identifies a comma as the field terminator.
+    - The `COLLECTION ITEMS TERMINATED BY` subclause specifies the percent sign as the collection items (array item, map key/value pair) terminator.
+    - `MAP KEYS TERMINATED BY` identifies a colon as the terminator for map keys.
 
-Load the `pxf_hive_complex.txt` sample data file into the `table_complextypes` table you just created:
+4. Load the `pxf_hive_complex.txt` sample data file into the `table_complextypes` table you just created:
 
-``` sql
-hive> LOAD DATA local INPATH '/tmp/pxf_hive_complex.txt' INTO TABLE table_complextypes;
-```
+    ``` sql
+    hive> LOAD DATA local INPATH '/tmp/pxf_hive_complex.txt' INTO TABLE table_complextypes;
+    ```
 
-Perform a query on `table_complextypes` to verify the data was loaded successfully:
+5. Perform a query on Hive table `table_complextypes` to verify the data was loaded successfully:
 
-``` sql
-hive> SELECT * FROM table_complextypes;
-```
+    ``` sql
+    hive> SELECT * FROM table_complextypes;
+    ```
 
-``` shell
-3	Prague	[1,2,3]	{"zone":"euro","status":"up"}
-89	Rome	[4,5,6]	{"zone":"euro"}
-400	Bangalore	[7,8,9]	{"zone":"apac","status":"pending"}
-...
-```
+    ``` shell
+    3	Prague	[1,2,3]	{"zone":"euro","status":"up"}
+    89	Rome	[4,5,6]	{"zone":"euro"}
+    400	Bangalore	[7,8,9]	{"zone":"apac","status":"pending"}
+    ...
+    ```
 
-Use the PXF `Hive` profile to create a queryable HAWQ external table representing the Hive `table_complextypes`:
+6. Use the PXF `Hive` profile to create a queryable HAWQ external table representing the Hive `table_complextypes`:
 
-``` sql
-postgres=# CREATE EXTERNAL TABLE complextypes_hiveprofile(index int, name text, intarray text, propmap text)
-             LOCATION ('pxf://namenode:51200/table_complextypes?PROFILE=Hive')
-             FORMAT 'CUSTOM' (formatter='pxfwritable_import');
-```
+    ``` sql
+    postgres=# CREATE EXTERNAL TABLE complextypes_hiveprofile(index int, name text, intarray text, propmap text)
+                 LOCATION ('pxf://namenode:51200/table_complextypes?PROFILE=Hive')
+               FORMAT 'CUSTOM' (formatter='pxfwritable_import');
+    ```
 
-Notice that the integer array and map complex types are mapped to type text.
+    Notice that the integer array and map complex types are mapped to type text.
 
-Query the external table:
+7. Query the external table:
 
-``` sql
-postgres=# SELECT * FROM complextypes_hiveprofile;
-```
+    ``` sql
+    postgres=# SELECT * FROM complextypes_hiveprofile;
+    ```
 
-``` shell     
- index |    name    | intarray |              propmap
--------+------------+----------+------------------------------------
-     3 | Prague     | [1,2,3]  | {"zone":"euro","status":"up"}
-    89 | Rome       | [4,5,6]  | {"zone":"euro"}
-   400 | Bangalore  | [7,8,9]  | {"zone":"apac","status":"pending"}
-   183 | Beijing    | [0,1,2]  | {"zone":"apac"}
-    94 | Sacramento | [3,4,5]  | {"zone":"noam","status":"down"}
-   101 | Paris      | [6,7,8]  | {"zone":"euro","status":"up"}
-    56 | Frankfurt  | [9,0,1]  | {"zone":"euro"}
-   202 | Jakarta    | [2,3,4]  | {"zone":"apac","status":"up"}
-   313 | Sydney     | [5,6,7]  | {"zone":"apac","status":"pending"}
-    76 | Atlanta    | [8,9,0]  | {"zone":"noam","status":"down"}
-(10 rows)
-```
+    ``` shell     
+     index |    name    | intarray |              propmap
+    -------+------------+----------+------------------------------------
+         3 | Prague     | [1,2,3]  | {"zone":"euro","status":"up"}
+        89 | Rome       | [4,5,6]  | {"zone":"euro"}
+       400 | Bangalore  | [7,8,9]  | {"zone":"apac","status":"pending"}
+       183 | Beijing    | [0,1,2]  | {"zone":"apac"}
+        94 | Sacramento | [3,4,5]  | {"zone":"noam","status":"down"}
+       101 | Paris      | [6,7,8]  | {"zone":"euro","status":"up"}
+        56 | Frankfurt  | [9,0,1]  | {"zone":"euro"}
+       202 | Jakarta    | [2,3,4]  | {"zone":"apac","status":"up"}
+       313 | Sydney     | [5,6,7]  | {"zone":"apac","status":"pending"}
+        76 | Atlanta    | [8,9,0]  | {"zone":"noam","status":"down"}
+    (10 rows)
+    ```
 
-`intarray` and `propmap` are each text strings.
+    `intarray` and `propmap` are each text strings.
 
 ## <a id="hcatalog"></a>Using PXF and HCatalog to Query Hive
 
