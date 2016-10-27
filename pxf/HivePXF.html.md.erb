@@ -176,9 +176,9 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 
 ## <a id="profile_hive"></a>Hive Profile
 
-The `Hive` profile works with any Hive file format.
+The `Hive` profile works with any Hive file format. It can access heterogenous format data in a single table where each partition may be stored as a different file format.
 
-While you can use the `Hive` profile to access any file format, the more specific profiles perform better for those specific file types.
+While you can use the `Hive` profile to access any file format, the more specific profiles perform better for those single file format types.
 
 
 ### <a id="profile_hive_using"></a>Example: Using the Hive Profile
@@ -211,7 +211,7 @@ Use the `Hive` profile to create a queryable HAWQ external table from the Hive `
 
 ## <a id="profile_hivetext"></a>HiveText Profile
 
-Use the `HiveText` profile to query text formats. The `HiveText` profile is more performant than the `Hive` profile.
+Use the `HiveText` profile to query text format files. The `HiveText` profile is more performant than the `Hive` profile.
 
 **Note**: When using the `HiveText` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
 
@@ -324,6 +324,13 @@ postgres=# CREATE EXTERNAL TABLE pxf_parquet_table (fname text, lname text, cust
     LOCATION ('pxf://namenode:51200/hive-db-name.hive_parquet_table?profile=Hive')
     FORMAT 'CUSTOM' (formatter='pxfwritable_import');
 ```
+
+And query the HAWQ external table using:
+
+``` sql
+postgres=# SELECT fname,lname FROM pxf_parquet_table;
+```
+
 
 ## <a id="profileperf"></a>Profile Performance Considerations
 
@@ -561,6 +568,19 @@ To take advantage of PXF partition filtering push-down, the Hive and PXF partiti
 
 **Note:** The Hive plug-in filters only on partition columns, not on other table attributes.
 
+### <a id="partitionfiltering_pushdowncfg"></a>Configure Partition Filtering Push-Down
+
+PXF partition filtering push-down is enabled by default. To disable PXF partition filtering push-down, set the `pxf_enable_filter_pushdown` HAWQ server configuration parameter to `off`:
+
+``` sql
+postgres=# show pxf_enable_filter_pushdown;
+ pxf_enable_filter_pushdown
+-----------------------------
+ on
+(1 row)
+postgres=# set pxf_enable_filter_pushdown=off;
+```
+
 ### <a id="example2"></a>Create Partitioned Hive Table
 
 Create a Hive table `sales_part` with two partition columns, `delivery_state` and `delivery_city:`
@@ -628,6 +648,7 @@ postgres=# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND i
 The following HAWQ query reads all the data under `delivery_state` partition `CALIFORNIA`, regardless of the city.
 
 ``` sql
+postgres=# set pxf_enable_filter_pushdown=on;
 postgres=# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
 ```
 
