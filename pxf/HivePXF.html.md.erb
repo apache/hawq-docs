@@ -22,22 +22,18 @@ Before accessing Hive data with HAWQ and PXF, ensure that:
 
 ## <a id="topic_p2s_lvl_25"></a>Hive File Formats
 
-Hive supports several file formats:
+The PXF Hive plug-in supports several file formats and profiles for accessing these formats:
 
--   TextFile - flat file with data in comma-, tab-, or space-separated value format or JSON notation
--   SequenceFile - flat file consisting of binary key/value pairs
--   RCFile - record columnar data consisting of binary key/value pairs; high row compression rate
--   ORCFile - optimized row columnar data with stripe, footer, and postscript sections; reduces data size
--   Parquet - compressed columnar data representation
--   Avro - JSON-defined, schema-based data serialization format
+| File Format  | Description | Profile |
+|-------|---------------------------|-------|
+| TextFile | Flat file with data in comma-, tab-, or space-separated value format or JSON notation. | Hive, HiveText |
+| SequenceFile | Flat file consisting of binary key/value pairs. | Hive |
+| RCFile | Record columnar data consisting of binary key/value pairs; high row compression rate. | Hive, HiveRC |
+| ORCFile | Optimized row columnar data with stripe, footer, and postscript sections; reduces data size. | Hive |
+| Parquet | Compressed columnar data representation. | Hive |
+| Avro | JSON-defined, schema-based data serialization format. | Hive |
 
 Refer to [File Formats](https://cwiki.apache.org/confluence/display/Hive/FileFormats) for detailed information about the file formats supported by Hive.
-
-The PXF Hive plug-in supports the following profiles for accessing the Hive file formats listed above. These include:
-
-- `Hive`
-- `HiveText`
-- `HiveRC`
 
 ## <a id="topic_p2s_lvl_29"></a>Data Type Mapping
 
@@ -76,10 +72,12 @@ An example using complex data types is provided later in this topic.
 
 Examples used in this topic will operate on a common data set. This simple data set models a retail sales operation and includes fields with the following names and data types:
 
-- location - text
-- month - text
-- number\_of\_orders - integer
-- total\_sales - double
+| Field Name  | Data Type |
+|-------|---------------------------|
+| location | text |
+| month | text |
+| number\_of\_orders | integer |
+| total\_sales | double |
 
 Prepare the sample data set for use:
 
@@ -131,7 +129,6 @@ Create a Hive table to expose our sample data set.
     ```
 
     Notice that:
-
     - The `STORED AS textfile` subclause instructs Hive to create the table in Textfile (the default) format.  Hive Textfile format supports comma-, tab-, and space-separated values, as well as data specified in JSON notation.
     - The `DELIMITED FIELDS TERMINATED BY` subclause identifies the field delimiter within a data record (line). The `sales_info` table field delimiter is a comma (`,`).
 
@@ -142,7 +139,7 @@ Create a Hive table to expose our sample data set.
             INTO TABLE sales_info;
     ```
 
-3. Perform a query on `sales_info` to verify the data was loaded successfully:
+3. Perform a query on `sales_info` to verify that the data was loaded successfully:
 
     ``` sql
     hive> SELECT * FROM sales_info;
@@ -169,8 +166,8 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 | Keyword  | Value |
 |-------|-------------------------------------|
 | \<host\>[:<port\>]    | The HDFS NameNode and port. |
-| \<hive-db-name\>    | Name of the Hive database. If omitted, defaults to the Hive database named `default`. |
-| \<hive-table-name\>    | Name of the Hive table. |
+| \<hive-db-name\>    | The name of the Hive database. If omitted, defaults to the Hive database named `default`. |
+| \<hive-table-name\>    | The name of the Hive table. |
 | PROFILE    | The `PROFILE` keyword must specify one of the values `Hive`, `HiveText`, or `HiveRC`. |
 | DELIMITER    | The `DELIMITER` clause is required for both the `HiveText` and `HiveRC` profiles and identifies the field delimiter used in the Hive data set.  \<delim\> must be a single ascii character or specified in hexadecimal representation. |
 | FORMAT (`Hive` profile)   | The `FORMAT` clause must specify `CUSTOM`. The `CUSTOM` format supports only the built-in `pxfwritable_import` `formatter`.   |
@@ -180,6 +177,9 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 ## <a id="profile_hive"></a>Hive Profile
 
 The `Hive` profile works with any Hive file format.
+
+While you can use the `Hive` profile to access any file format, the more specific profiles perform better for those specific file types.
+
 
 ### <a id="profile_hive_using"></a>Example: Using the Hive Profile
 
@@ -230,9 +230,8 @@ Use the PXF `HiveText` profile to create a queryable HAWQ external table from th
     (You can safely ignore the "nonstandard use of escape in a string literal" warning and related messages.)
 
     Notice that:
-
     - The `LOCATION` subclause `DELIMITER` value is specified in hexadecimal format. `\x` is a prefix that instructs PXF to interpret the following characters as hexadecimal. `2c` is the hex value for the comma character.
-    - The `FORMAT` subclause `delimiter` value is specified as the single ascii comma character ','. `E` escapes the character.
+    - The `FORMAT` subclause `delimiter` value is specified as the single ascii comma character `','`. `E` escapes the character.
 
 2. Query the external table:
 
@@ -277,7 +276,7 @@ Use the `HiveRC` profile to query RCFile-formatted data in Hive tables. The `Hiv
 
     A copy of the sample data set is now stored in RCFile format in `sales_info_rcfile`. 
     
-3. Perform a Hive query on `sales_info_rcfile` to verify the data was loaded successfully:
+3. Perform a Hive query on `sales_info_rcfile` to verify that the data was loaded successfully:
 
     ``` sql
     hive> SELECT * FROM sales_info_rcfile;
@@ -330,18 +329,19 @@ postgres=# CREATE EXTERNAL TABLE pxf_parquet_table (fname text, lname text, cust
 
 The `HiveRC` and `HiveText` profiles are faster than the generic `Hive` profile.
 
-?? MORE HERE. ??
 
 ## <a id="complex_dt_example"></a>Complex Data Type Example
 
 This example will employ the array and map complex types, specifically an array of integers and a string key/value pair map.
 
-The example data set includes fields with the following names and data types:
+The data schema for this example includes fields with the following names and data types:
 
-- index - int
-- name - string
-- intarray - array of integers
-- propmap - map of string key and value pairs
+| Field Name  | Data Type |
+|-------|---------------------------|
+| index | int |
+| name | string
+| intarray | array of integers |
+| propmap | map of string key and value pairs |
 
 When specifying an array field in a Hive table, you must identify the terminator for each item in the collection. Similarly, the map key termination character must also be specified.
 
@@ -381,7 +381,6 @@ When specifying an array field in a Hive table, you must identify the terminator
     ```
 
     Notice that:
-
     - `FIELDS TERMINATED BY` identifies a comma as the field terminator.
     - The `COLLECTION ITEMS TERMINATED BY` subclause specifies the percent sign as the collection items (array item, map key/value pair) terminator.
     - `MAP KEYS TERMINATED BY` identifies a colon as the terminator for map keys.
@@ -392,7 +391,7 @@ When specifying an array field in a Hive table, you must identify the terminator
     hive> LOAD DATA local INPATH '/tmp/pxf_hive_complex.txt' INTO TABLE table_complextypes;
     ```
 
-5. Perform a query on Hive table `table_complextypes` to verify the data was loaded successfully:
+5. Perform a query on Hive table `table_complextypes` to verify that the data was loaded successfully:
 
     ``` sql
     hive> SELECT * FROM table_complextypes;
@@ -460,7 +459,7 @@ The following diagram depicts how HAWQ integrates with HCatalog to query Hive ta
 3.  PXF queries Hive using table metadata that is stored in the HAWQ in-memory catalog tables. Table metadata is dropped at the end of the transaction.
 
 
-### <a id="topic_j1l_y55_c5"></a>Usage
+### <a id="topic_j1l_enabling"></a>Enabling HCatalog Integration
 
 To enable HCatalog query integration in HAWQ, perform the following steps:
 
@@ -476,7 +475,8 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
     ``` sql
     postgres=# GRANT ALL ON PROTOCOL pxf TO "role";
     ``` 
-    
+
+### <a id="topic_j1l_y55_c5"></a>Usage    
 
 To query a Hive table with HCatalog integration, query HCatalog directly from HAWQ. The query syntax is:
 
@@ -574,10 +574,18 @@ hive> CREATE TABLE sales_part (name string, type string, supplier_key int, price
 Load data into this Hive table and add some partitions:
 
 ``` sql
-hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Fresno') VALUES ('block', 'widget', 33, 15.17);
-hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Sacramento') VALUES ('cube', 'widget', 11, 1.17);
-hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'NEVADA', delivery_city = 'Reno') VALUES ('dowel', 'widget', 51, 31.82);
-hive> INSERT INTO TABLE sales_part PARTITION(delivery_state = 'NEVADA', delivery_city = 'Las Vegas') VALUES ('px49', 'pipe', 52, 99.82);
+hive> INSERT INTO TABLE sales_part 
+        PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Fresno') 
+        VALUES ('block', 'widget', 33, 15.17);
+hive> INSERT INTO TABLE sales_part 
+        PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Sacramento') 
+        VALUES ('cube', 'widget', 11, 1.17);
+hive> INSERT INTO TABLE sales_part 
+        PARTITION(delivery_state = 'NEVADA', delivery_city = 'Reno') 
+        VALUES ('dowel', 'widget', 51, 31.82);
+hive> INSERT INTO TABLE sales_part 
+        PARTITION(delivery_state = 'NEVADA', delivery_city = 'Las Vegas') 
+        VALUES ('px49', 'pipe', 52, 99.82);
 ```
 
 The Hive storage directory structure for the `sales_part` table appears as follows:
