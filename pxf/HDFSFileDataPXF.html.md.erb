@@ -29,9 +29,11 @@ The PXF HDFS plug-in includes the following profiles to support the file formats
 If you find that the pre-defined PXF HDFS profiles do not meet your needs, you may choose to create a custom HDFS profile from the existing HDFS serialization and deserialization classes. Refer to [Adding and Updating Profiles](ReadWritePXF.html#addingandupdatingprofiles) for information on creating a custom profile.
 
 ## <a id="hdfsplugin_cmdline"></a>HDFS Shell Commands
-Hadoop includes command-line tools that interact directly with HDFS.  These tools support typical file system operations including copying and listing files, changing file permissions, and so forth. 
+Hadoop includes command-line tools that interact directly with HDFS.  These tools support typical file system operations including copying and listing files, changing file permissions, and so forth.
 
 The HDFS file system command syntax is `hdfs dfs <options> [<file>]`. Invoked with no options, `hdfs dfs` lists the file system options supported by the tool.
+
+The user invoking the `hdfs dfs` command must have sufficient privileges to the HDFS data store to perform HDFS file system operations. Specifically, the user must have write permission to HDFS to create directories and files.
 
 `hdfs dfs` options used in this topic are:
 
@@ -46,19 +48,19 @@ Examples:
 Create a directory in HDFS:
 
 ``` shell
-$ sudo -u hdfs hdfs dfs -mkdir -p /data/exampledir
+$ hdfs dfs -mkdir -p /data/exampledir
 ```
 
 Copy a text file to HDFS:
 
 ``` shell
-$ sudo -u hdfs hdfs dfs -put /tmp/example.txt /data/exampledir/
+$ hdfs dfs -put /tmp/example.txt /data/exampledir/
 ```
 
 Display the contents of a text file in HDFS:
 
 ``` shell
-$ sudo -u hdfs hdfs dfs -cat /data/exampledir/example.txt
+$ hdfs dfs -cat /data/exampledir/example.txt
 ```
 
 
@@ -107,7 +109,7 @@ Perform the following steps to create a sample data file, copy the file to HDFS,
 1. Create an HDFS directory for PXF example data files:
 
     ``` shell
-    $ sudo -u hdfs hdfs dfs -mkdir -p /data/pxf_examples
+    $ hdfs dfs -mkdir -p /data/pxf_examples
     ```
 
 2. Create a delimited plain text data file named `pxf_hdfs_simple.txt`:
@@ -116,7 +118,7 @@ Perform the following steps to create a sample data file, copy the file to HDFS,
     $ echo 'Prague,Jan,101,4875.33
 Rome,Mar,87,1557.39
 Bangalore,May,317,8936.99
-Beijing,Jul,411,11600.67' >> pxf_hdfs_simple.txt
+Beijing,Jul,411,11600.67' > /tmp/pxf_hdfs_simple.txt
     ```
 
     Note the use of the comma `,` to separate the four data fields.
@@ -124,13 +126,13 @@ Beijing,Jul,411,11600.67' >> pxf_hdfs_simple.txt
 4. Add the data file to HDFS:
 
     ``` shell
-    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_simple.txt /data/pxf_examples/
+    $ hdfs dfs -put /tmp/pxf_hdfs_simple.txt /data/pxf_examples/
     ```
 
 5. Display the contents of the `pxf_hdfs_simple.txt` file stored in HDFS:
 
     ``` shell
-    $ sudo -u hdfs hdfs dfs -cat /data/pxf_examples/pxf_hdfs_simple.txt
+    $ hdfs dfs -cat /data/pxf_examples/pxf_hdfs_simple.txt
     ```
 
 1. Use the `HdfsTextSimple` profile to create a queryable HAWQ external table from the `pxf_hdfs_simple.txt` file you previously created and added to HDFS:
@@ -203,7 +205,7 @@ Perform the following steps to create a sample data file, copy the file to HDFS,
 3. Add the data file to HDFS:
 
     ``` shell
-    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_multi.txt /data/pxf_examples/
+    $ hdfs dfs -put /tmp/pxf_hdfs_multi.txt /data/pxf_examples/
     ```
 
 4. Use the `HdfsTextMulti` profile to create a queryable external table from the `pxf_hdfs_multi.txt` HDFS file, making sure to identify the `:` as the field separator:
@@ -378,7 +380,7 @@ Perform the following steps to create a sample Avro data file conforming to the 
 4. Copy the generated Avro file to HDFS:
 
     ``` shell
-    $ sudo -u hdfs hdfs dfs -put /tmp/pxf_hdfs_avro.avro /data/pxf_examples/
+    $ hdfs dfs -put /tmp/pxf_hdfs_avro.avro /data/pxf_examples/
     ```
     
 #### <a id="topic_avro_querydata"></a>Query With Avro Profile
