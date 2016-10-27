@@ -22,7 +22,7 @@ Connection Options:
 Misc. Options:
      [-f <filepath>] 
 	 [-e <eof>]
- 	 [--force] 
+ 	 [--force]
      [-c <yml_config>]  
 hawq register help | -? 
 hawq register --version
@@ -55,8 +55,8 @@ Two usage models are available.
 Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so the data is mapped. Refer to the section [Data Type Mapping](hawqregister.html#topic1__section7) below. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. 
 
 ####Limitations
-Only HAWQ or Hive-generated Parquet tables are supported.
-Hash tables and artitioned tables are not supported in this use model.
+Only HAWQ or Hive-generated Parquet tables are supported. Partitioned tables are supported, but only single-level partitioned tables can be registered into HAWQ. 
+Hash tables are not supported in this use model.
 
 ###Usage Model 2: Use information from a YAML configuration file to register data
  
@@ -69,6 +69,7 @@ The register process behaves differently, according to different conditions.
 -  Existing tables have files appended to the existing HAWQ table.
 -  If a table does not exist, it is created and registered into HAWQ. 
 -  If the -\\\-force option is used, the data in existing catalog tables is erased and re-registered.
+
 
 ###Limitations for Registering Hive Tables to HAWQ
 The currently-supported data types for generating Hive tables into HAWQ tables are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.  
