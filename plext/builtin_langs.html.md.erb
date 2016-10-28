@@ -15,7 +15,7 @@ Support for SQL and C language user-defined functions and aliasing of internal f
 
 SQL functions execute an arbitrary list of SQL statements. The SQL statements in the body of a SQL function must be separated by semicolons. The final statement in a non-void-returning SQL function must be a [SELECT](../reference/sql/SELECT.html) that returns data of the type specified by the function's return type. The function will return a single or set of rows corresponding to this last SQL query.
 
-The following example creates and calls a SQL function to count the number of rows of the database named `orders`:
+The following example creates and calls a SQL function to count the number of rows of the table named `orders`:
 
 ``` sql
 gpadmin=# CREATE FUNCTION count_orders() RETURNS bigint AS $$
