@@ -7,7 +7,7 @@ Collects statistics about a database.
 ## <a id="synopsis"></a>Synopsis
 
 ``` pre
-ANALYZE [VERBOSE] [ROOTPARTITION] table [ (column [, ...] ) ]]
+ANALYZE [VERBOSE] [ROOTPARTITION] <table> [ (<column> [, ...] ) ]]
 ```
 
 ## <a id="desc"></a>Description
@@ -28,10 +28,10 @@ If you use `ROOTPARTITION` on a non-root or non-partitioned table, `ANALYZE` wil
 
 **Note:** Use `ROOTPARTITION ALL` to analyze all root partition tables in the database.</dd>
 
-<dt> *table*   </dt>
+<dt> \<table\>   </dt>
 <dd>The name (possibly schema-qualified) of a specific table to analyze. Defaults to all tables in the current database.</dd>
 
-<dt> *column*   </dt>
+<dt> \<column\>   </dt>
 <dd>The name of a specific column to analyze. Defaults to all columns.</dd>
 
 ## <a id="notes"></a>Notes

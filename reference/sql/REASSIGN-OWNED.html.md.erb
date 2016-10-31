@@ -7,20 +7,20 @@ Changes the ownership of database objects owned by a database role.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-REASSIGN OWNED BY old_role [, ...] TO new_role
+REASSIGN OWNED BY <old_role> [, ...] TO <new_role>
          
 ```
 
 ## <a id="topic1__section3"></a>Description
 
-`REASSIGN OWNED` reassigns all the objects in the current database that are owned by *old\_row* to *new\_role*. Note that it does not change the ownership of the database itself.
+`REASSIGN OWNED` reassigns all the objects in the current database that are owned by \<old\_role\> to \<new\_role\>. Note that it does not change the ownership of the database itself.
 
 ## <a id="topic1__section4"></a>Parameters
 
-<dt> *old\_role*   </dt>
-<dd>The name of a role. The ownership of all the objects in the current database owned by this role will be reassigned to *new\_role*.</dd>
+<dt> \<old\_role\>   </dt>
+<dd>The name of a role. The ownership of all the objects in the current database owned by this role will be reassigned to \<new\_role\>.</dd>
 
-<dt> *new\_role*   </dt>
+<dt> \<new\_role\>   </dt>
 <dd>The name of the role that will be made the new owner of the affected objects.</dd>
 
 ## <a id="topic1__section5"></a>Notes

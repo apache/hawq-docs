@@ -2,7 +2,9 @@
 title: hawq config
 ---
 
-Sets server configuration parameters on all nodes (master and segments) within a HAWQ system.
+Sets server configuration parameters on all nodes (master and segments) for HAWQ systems that are managed using command-line utilities.
+
+**Note:** If you install and manage HAWQ using Ambari, do not use `hawq config` to configure HAWQ properties. Ambari will overwrite any changes that were made by `hawq config` when it restarts the cluster. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to set or change HAWQ configuration properties.
 
 ## <a id="topic1__section2"></a>Synopsis
 

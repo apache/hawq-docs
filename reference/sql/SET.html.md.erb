@@ -7,8 +7,8 @@ Changes the value of a HAWQ configuration parameter.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-SET [SESSION | LOCAL] configuration_parameter {TO | =} value | 'value' | DEFAULT}
-SET [SESSION | LOCAL] TIME ZONE {timezone | LOCAL | DEFAULT}
+SET [SESSION | LOCAL] <configuration_parameter> {TO | =} {<value> | '<value>' | DEFAULT}
+SET [SESSION | LOCAL] TIME ZONE {<timezone> | LOCAL | DEFAULT}
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -27,14 +27,21 @@ The effects of `SET LOCAL` only last till the end of the current transaction, wh
 <dt>LOCAL  </dt>
 <dd>Specifies that the command takes effect for only the current transaction. After `COMMIT` or `ROLLBACK`, the session-level setting takes effect again. Note that `SET LOCAL` will appear to have no effect if it is executed outside of a transaction.</dd>
 
-<dt> *configuration\_parameter*  </dt>
+<dt> \<configuration\_parameter\>  </dt>
 <dd>The name of a HAWQ configuration parameter. Only parameters classified as *session* can be changed with `SET`. See [About Server Configuration Parameters](../guc/guc_config.html#topic1).</dd>
 
-<dt> *value*  </dt>
+<dt> \<value\>  </dt>
 <dd>New value of parameter. Values can be specified as string constants, identifiers, numbers, or comma-separated lists of these. `DEFAULT` can be used to specify resetting the parameter to its default value. If specifying memory sizing or time units, enclose the value in single quotes.</dd>
 
 <dt>TIME ZONE  </dt>
-<dd>`SET TIME ZONE` value is an alias for `SET timezone TO                         value                   `. The syntax `SET TIME ZONE` allows special syntax for the time zone specification. Here are examples of valid values:
+<dd>`SET TIME ZONE` value is an alias for `SET timezone TO                         value`.
+
+<dt>LOCAL,  
+DEFAULT  </dt>
+<dd>Set the time zone to your local time zone (the one that the server's operating system defaults to).</dd>
+
+<dt> \<timezone\>  </dt>
+<dd>The \<timezone\> specification. Examples of syntactically valid values:
 
 `'PST8PDT'`
 
@@ -43,10 +50,7 @@ The effects of `SET LOCAL` only last till the end of the current transaction, wh
 `-7` (time zone 7 hours west from UTC)
 
 `INTERVAL '-08:00' HOUR TO MINUTE` (time zone 8 hours west from UTC).</dd>
-
-<dt>LOCAL,  
-DEFAULT  </dt>
-<dd>Set the time zone to your local time zone (the one that the server's operating system defaults to).</dd>
+</dd>
 
 ## <a id="topic1__section5"></a>Examples
 
@@ -54,12 +58,6 @@ Set the schema search path:
 
 ``` sql
 SET search_path TO my_schema, public;
-```
-
-Increase work memory to 200 MB:
-
-``` sql
-SET work_mem TO '200MB';
 ```
 
 Set the style of date to traditional POSTGRES with "day before month" input convention:
@@ -82,7 +80,7 @@ SET TIME ZONE 'Europe/Rome';
 
 ## <a id="topic1__section6"></a>Compatibility
 
-`SET TIME ZONE` extends syntax defined in the SQL standard. The standard allows only numeric time zone offsets while HAWQ allows more flexible time-zone specifications. All other `SET` features are HAWQ extensions.
+`SET TIME ZONE` extends the syntax defined in the SQL standard. The standard allows only numeric time zone offsets while HAWQ allows more flexible time-zone specifications. All other `SET` features are HAWQ extensions.
 
 ## <a id="topic1__section7"></a>See Also
 

@@ -7,9 +7,9 @@ Defines a new view.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE [OR REPLACE] [TEMP | TEMPORARY] VIEW name
-       [ ( column_name [, ...] ) ]
-       AS query
+CREATE [OR REPLACE] [TEMP | TEMPORARY] VIEW <name>
+       [ ( <column_name> [, ...] ) ]
+       AS <query>
          
 ```
 
@@ -26,13 +26,13 @@ If a schema name is given then the view is created in the specified schema. Othe
 <dt>TEMPORARY | TEMP  </dt>
 <dd>If specified, the view is created as a temporary view. Temporary views are automatically dropped at the end of the current session. Existing permanent relations with the same name are not visible to the current session while the temporary view exists, unless they are referenced with schema-qualified names. If any of the tables referenced by the view are temporary, the view is created as a temporary view (whether `TEMPORARY` is specified or not).</dd>
 
-<dt> *name*   </dt>
+<dt> \<name\>   </dt>
 <dd>The name (optionally schema-qualified) of a view to be created.</dd>
 
-<dt> *column\_name*   </dt>
+<dt> \<column\_name\>   </dt>
 <dd>An optional list of names to be used for columns of the view. If not given, the column names are deduced from the query.</dd>
 
-<dt> *query*   </dt>
+<dt> \<query\>   </dt>
 <dd>A [SELECT](SELECT.html) command which will provide the columns and rows of the view.</dd>
 
 ## <a id="topic1__section5"></a>Notes
@@ -77,7 +77,7 @@ names, rank WHERE rank < '11' AND names.id=rank.id;
 
 The SQL standard specifies some additional capabilities for the `CREATE           VIEW` statement that are not in HAWQ. The optional clauses for the full SQL command in the standard are:
 
--   **CHECK OPTION** — This option has to do with updatable views. All `INSERT` and `UPDATE` commands on the view will be checked to ensure data satisfy the view-defining condition (that is, the new data would be visible through the view). If they do not, the update will be rejected.
+-   **CHECK OPTION** — This option has to do with updatable views. All `INSERT` commands on the view will be checked to ensure data satisfy the view-defining condition (that is, the new data would be visible through the view). If they do not, the insert will be rejected.
 -   **LOCAL** — Check for integrity on this view.
 -   **CASCADED** — Check for integrity on this view and on any dependent view. `CASCADED` is assumed if neither `CASCADED` nor `LOCAL` is specified.
 

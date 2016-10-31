@@ -7,16 +7,16 @@ Changes the definition of a database role (user).
 ## <a id="alteruser__section2"></a>Synopsis
 
 ``` pre
-ALTER USER name RENAME TO newname
+ALTER USER <name> RENAME TO <newname>
 
-ALTER USER name SET config_parameter {TO | =} {value | DEFAULT}
+ALTER USER <name> SET <config_parameter> {TO | =} {<value> | DEFAULT}
 
-ALTER USER name RESET config_parameter
+ALTER USER <name> RESET <config_parameter>
 
-ALTER USER name [ [WITH] option [ ... ] ]
+ALTER USER <name> [ [WITH] <option> [ ... ] ]
 ```
 
-where *option* can be:
+where \<option\> can be:
 
 ``` pre
       SUPERUSER | NOSUPERUSER
@@ -25,8 +25,8 @@ where *option* can be:
     | CREATEUSER | NOCREATEUSER
     | INHERIT | NOINHERIT
     | LOGIN | NOLOGIN
-    | [ ENCRYPTED | UNENCRYPTED ] PASSWORD 'password'
-    | VALID UNTIL 'timestamp'
+    | [ ENCRYPTED | UNENCRYPTED ] PASSWORD '<password>'
+    | VALID UNTIL '<timestamp>'
 ```
 
 ## <a id="alteruser__section3"></a>Description

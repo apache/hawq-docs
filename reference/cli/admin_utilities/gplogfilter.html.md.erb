@@ -45,7 +45,7 @@ where:
 
 ## <a id="topic1__section3"></a>Description
 
-The `gplogfilter` utility can be used to search through a HAWQ log file for entries matching the specified criteria. If an input file is not supplied, then `gplogfilter` will use the `$MASTER_DATA_DIRECTORY` environment variable to locate the HAWQ master log file in the standard logging location. To read from standard input, use a dash (`-`) as the input file name. Input files may be compressed using `gzip`. In an input file, a log entry is identified by its timestamp in `YYYY-MM-DD [hh:mm[:ss]]` format.
+The `gplogfilter` utility can be used to search through a HAWQ log file for entries matching the specified criteria. To read from standard input, use a dash (`-`) as the input file name. Input files may be compressed using `gzip`. In an input file, a log entry is identified by its timestamp in `YYYY-MM-DD [hh:mm[:ss]]` format.
 
 You can also use `gplogfilter` to search through all segment log files at once by running it through the [hawq ssh](hawqssh.html#topic1) utility. For example, to display the last three lines of each segment log file:
 
@@ -63,7 +63,7 @@ By default, the output of `gplogfilter` is sent to standard output. Use the `-o`
 **\<input_options\>**
 
 <dt>\<input\_file\></dt>
-<dd>The name of the input log file(s) to search through. If an input file is not supplied, `gplogfilter` will use the `$MASTER_DATA_DIRECTORY` environment variable to locate the HAWQ master log file. To read from standard input, use a dash (`-`) as the input file name.</dd>
+<dd>The name of the input log file(s) to search through. To read from standard input, use a dash (`-`) as the input file name.</dd>
 
 <dt>-u, -\\\-unzip  </dt>
 <dd>Uncompress the input file using `gunzip`. If the input file name ends in `.gz`, it will be uncompressed by default.</dd>
@@ -144,10 +144,10 @@ $ gplogfilter -e '2016-02-13 14:23'
 
 ## <a id="topic1__section9"></a>Examples
 
-Display the last three error messages in the master log file:
+Display the last three error messages in the identified log file:
 
 ``` shell
-$ gplogfilter -t -n 3 
+$ gplogfilter -t -n 3 "/data/hawq/master/pg_log/hawq-2016-09-01_134934.csv"
 ```
 
 Display the last five error messages in a date-specified log file:
@@ -156,16 +156,16 @@ Display the last five error messages in a date-specified log file:
 $ gplogfilter -t -n 5 "/data/hawq-file-path/hawq-yyyy-mm-dd*.csv"
 ```
 
-Display all log messages in the master log file timestamped in the last 10 minutes:
+Display all log messages in the date-specified log file timestamped in the last 10 minutes:
 
 ``` shell
-$ gplogfilter -d :10
+$ gplogfilter -d :10 "/data/hawq-file-path/hawq-yyyy-mm-dd*.csv"
 ```
 
-Display log messages in the master log file containing the string `|con6 cmd11|`:
+Display log messages in the identified log file containing the string `|con6 cmd11|`:
 
 ``` shell
-$ gplogfilter -f '|con6 cmd11|'
+$ gplogfilter -f '|con6 cmd11|' "/data/hawq/master/pg_log/hawq-2016-09-01_134934.csv"
 ```
 
 Using [hawq ssh](hawqssh.html#topic1), run `gplogfilter` on the segment hosts and search for log messages in the segment log files containing the string `con6` and save output to a file.

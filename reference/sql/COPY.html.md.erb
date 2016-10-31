@@ -7,29 +7,29 @@ Copies data between a file and a table.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-COPY table [(column [, ...])] FROM {'file' | STDIN}
+COPY <table> [(<column> [, ...])] FROM {'<file>' | STDIN}
      [ [WITH] 
        [OIDS]
        [HEADER]
-       [DELIMITER [ AS ] 'delimiter']
-       [NULL [ AS ] 'null string']
-       [ESCAPE [ AS ] 'escape' | 'OFF']
+       [DELIMITER [ AS ] '<delimiter>']
+       [NULL [ AS ] '<null string>']
+       [ESCAPE [ AS ] '<escape>' | 'OFF']
        [NEWLINE [ AS ] 'LF' | 'CR' | 'CRLF']
-       [CSV [QUOTE [ AS ] 'quote'] 
-            [FORCE NOT NULL column [, ...]]
+       [CSV [QUOTE [ AS ] '<quote>'] 
+            [FORCE NOT NULL <column> [, ...]]
        [FILL MISSING FIELDS]
-       [[LOG ERRORS INTO error_table [KEEP] 
-       SEGMENT REJECT LIMIT count [ROWS | PERCENT] ]
+       [[LOG ERRORS INTO <error_table> [KEEP] 
+       SEGMENT REJECT LIMIT <count> [ROWS | PERCENT] ]
 
-COPY {table [(column [, ...])] | (query)} TO {'file' | STDOUT}
+COPY {<table> [(<column> [, ...])] | (<query>)} TO {'<file>' | STDOUT}
       [ [WITH] 
         [OIDS]
         [HEADER]
-        [DELIMITER [ AS ] 'delimiter']
-        [NULL [ AS ] 'null string']
-        [ESCAPE [ AS ] 'escape' | 'OFF']
-        [CSV [QUOTE [ AS ] 'quote'] 
-             [FORCE QUOTE column [, ...]] ]
+        [DELIMITER [ AS ] '<delimiter>']
+        [NULL [ AS ] '<null string>']
+        [ESCAPE [ AS ] '<escape>' | 'OFF']
+        [CSV [QUOTE [ AS ] '<quote>'] 
+             [FORCE QUOTE <column> [, ...]] ]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -40,35 +40,35 @@ If a list of columns is specified, `COPY` will only copy the data in the specifi
 
 `COPY` with a file name instructs the HAWQ master host to directly read from or write to a file. The file must be accessible to the master host and the name must be specified from the viewpoint of the master host. When `STDIN` or `STDOUT` is specified, data is transmitted via the connection between the client and the master.
 
-If `SEGMENT REJECT LIMIT` is used, then a `COPY FROM` operation will operate in single row error isolation mode. In this release, single row error isolation mode only applies to rows in the input file with format errors — for example, extra or missing attributes, attributes of a wrong data type, or invalid client encoding sequences. Constraint errors such as violation of a `NOT           NULL`, `CHECK`, or `UNIQUE` constraint will still be handled in 'all-or-nothing' input mode. The user can specify the number of error rows acceptable (on a per-segment basis), after which the entire `COPY FROM` operation will be aborted and no rows will be loaded. Note that the count of error rows is per-segment, not per entire load operation. If the per-segment reject limit is not reached, then all rows not containing an error will be loaded. If the limit is not reached, all good rows will be loaded and any error rows discarded. If you would like to keep error rows for further examination, you can optionally declare an error table using the `LOG ERRORS           INTO` clause. Any rows containing a format error would then be logged to the specified error table.
+If `SEGMENT REJECT LIMIT` is used, then a `COPY FROM` operation will operate in single row error isolation mode. In this release, single row error isolation mode only applies to rows in the input file with format errors — for example, extra or missing attributes, attributes of a wrong data type, or invalid client encoding sequences. Constraint errors such as violation of a `NOT  NULL`, `CHECK`, or `UNIQUE` constraint will still be handled in 'all-or-nothing' input mode. The user can specify the number of error rows acceptable (on a per-segment basis), after which the entire `COPY FROM` operation will be aborted and no rows will be loaded. Note that the count of error rows is per-segment, not per entire load operation. If the per-segment reject limit is not reached, then all rows not containing an error will be loaded. If the limit is not reached, all good rows will be loaded and any error rows discarded. If you would like to keep error rows for further examination, you can optionally declare an error table using the `LOG ERRORS INTO` clause. Any rows containing a format error would then be logged to the specified error table.
 
 **Outputs**
 
-On successful completion, a `COPY` command returns a command tag of the form, where *count* is the number of rows copied:
+On successful completion, a `COPY` command returns a command tag of the form, where \<count\> is the number of rows copied:
 
 ``` pre
-COPY count
+COPY <count>
             
 ```
 
-If running a `COPY             FROM` command in single row error isolation mode, the following notice message will be returned if any rows were not loaded due to format errors, where *count* is the number of rows rejected:
+If running a `COPY FROM` command in single row error isolation mode, the following notice message will be returned if any rows were not loaded due to format errors, where \<count\> is the number of rows rejected:
 
 ``` pre
-NOTICE: Rejected count badly formatted rows.
+NOTICE: Rejected <count> badly formatted rows.
 ```
 
 ## <a id="topic1__section5"></a>Parameters
 
-<dt> *table*   </dt>
+<dt> \<table\>   </dt>
 <dd>The name (optionally schema-qualified) of an existing table.</dd>
 
-<dt> *column*   </dt>
+<dt> \<column\>   </dt>
 <dd>An optional list of columns to be copied. If no column list is specified, all columns of the table will be copied.</dd>
 
-<dt> *query*   </dt>
+<dt> \<query\>   </dt>
 <dd>A `SELECT` or `VALUES` command whose results are to be copied. Note that parentheses are required around the query.</dd>
 
-<dt> *file*   </dt>
+<dt> \<file\>   </dt>
 <dd>The absolute path name of the input or output file.</dd>
 
 <dt>STDIN  </dt>
@@ -80,13 +80,13 @@ NOTICE: Rejected count badly formatted rows.
 <dt>OIDS  </dt>
 <dd>Specifies copying the OID for each row. (An error is raised if OIDS is specified for a table that does not have OIDs, or in the case of copying a query.)</dd>
 
-<dt> *delimiter*   </dt>
+<dt> \<delimiter\>   </dt>
 <dd>The single ASCII character that separates columns within each row (line) of the file. The default is a tab character in text mode, a comma in `CSV` mode.</dd>
 
-<dt> *null string*   </dt>
+<dt> \<null string\>   </dt>
 <dd>The string that represents a null value. The default is `\N` (backslash-N) in text mode, and a empty value with no quotes in `CSV` mode. You might prefer an empty string even in text mode for cases where you don't want to distinguish nulls from empty strings. When using `COPY FROM`, any data item that matches this string will be stored as a null value, so you should make sure that you use the same string as you used with `COPY TO`.</dd>
 
-<dt> *escape*   </dt>
+<dt> \<escape\>   </dt>
 <dd>Specifies the single character that is used for C escape sequences (such as `\n`,`\t`,`\100`, and so on) and for quoting data characters that might otherwise be taken as row or column delimiters. Make sure to choose an escape character that is not used anywhere in your actual column data. The default escape character is `\` (backslash) for text files or `"` (double quote) for CSV files, however it is possible to specify any other character to represent an escape. It is also possible to disable escaping on text-formatted files by specifying the value '`OFF'` as the escape value. This is very useful for data such as web log data that has many embedded backslashes that are not intended to be escapes.</dd>
 
 <dt>NEWLINE  </dt>
@@ -98,7 +98,7 @@ NOTICE: Rejected count badly formatted rows.
 <dt>HEADER  </dt>
 <dd>Specifies that a file contains a header line with the names of each column in the file. On output, the first line contains the column names from the table, and on input, the first line is ignored.</dd>
 
-<dt> *quote*   </dt>
+<dt> \<quote\>   </dt>
 <dd>Specifies the quotation character in CSV mode. The default is double-quote.</dd>
 
 <dt>FORCE QUOTE  </dt>
@@ -110,17 +110,19 @@ NOTICE: Rejected count badly formatted rows.
 <dt>FILL MISSING FIELDS  </dt>
 <dd>In `COPY FROM` more for both `TEXT` and `CSV`, specifying `FILL MISSING FIELDS` will set missing trailing field values to `NULL` (instead of reporting an error) when a row of data has missing data fields at the end of a line or row. Blank rows, fields with a `NOT NULL` constraint, and trailing delimiters on a line will still report an error.</dd>
 
-<dt>LOG ERRORS INTO *error\_table* \[KEEP\]  </dt>
-<dd>This is an optional clause that can precede a `SEGMENT REJECT LIMIT` clause to log information about rows with formatting errors. The `INTO                 error_table                   ` clause specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the *error\_table* specified already exists, it will be used. If it does not exist, it will be automatically generated. If the command auto-generates the error table and no errors are produced, the default is to drop the error table after the operation completes unless `KEEP` is specified. If the table is auto-generated and the error limit is exceeded, the entire transaction is rolled back and no error data is saved. If you want the error table to persist in this case, create the error table prior to running the `COPY`. An error table is defined as follows:
+<dt>LOG ERRORS INTO \<error\_table\> \[KEEP\]  </dt>
+
+<dd>This is an optional clause that can precede a `SEGMENT REJECT LIMIT` clause to log information about rows with formatting errors. The `INTO <error_table>` clause specifies an error table where rows with formatting errors will be logged when running in single row error isolation mode. You can then examine this error table to see error rows that were not loaded (if any). If the \<error\_table\> specified already exists, it will be used. If it does not exist, it will be automatically generated. If the command auto-generates the error table and no errors are produced, the default is to drop the error table after the operation completes unless `KEEP` is specified. If the table is auto-generated and the error limit is exceeded, the entire transaction is rolled back and no error data is saved. If you want the error table to persist in this case, create the error table prior to running the `COPY`. An error table is defined as follows:
+
 
 ``` pre
-CREATE TABLE error_table_name ( cmdtime timestamptz, relname text, 
+CREATE TABLE <error_table_name> ( cmdtime timestamptz, relname text, 
     filename text, linenum int, bytenum int, errmsg text, 
     rawdata text, rawbytes bytea ) DISTRIBUTED RANDOMLY;
 ```
 </dd>
 
-<dt>SEGMENT REJECT LIMIT count \[ROWS | PERCENT\]  </dt>
+<dt>SEGMENT REJECT LIMIT \<count\> \[ROWS | PERCENT\]  </dt>
 <dd>Runs a `COPY FROM` operation in single row error isolation mode. If the input rows have format errors they will be discarded provided that the reject limit count is not reached on any HAWQ segment instance during the load operation. The reject limit count can be specified as number of rows (the default) or percentage of total rows (1-100). If `PERCENT` is used, each segment starts calculating the bad row percentage only after the number of rows specified by the parameter `gp_reject_percent_threshold` has been processed. The default for `gp_reject_percent_threshold` is 300 rows. Constraint errors such as violation of a `NOT NULL` or `CHECK` constraint will still be handled in 'all-or-nothing' input mode. If the limit is not reached, all good rows will be loaded and any error rows discarded.</dd>
 
 ## <a id="topic1__section6"></a>Notes
@@ -137,7 +139,7 @@ Files named in a `COPY` command are read or written directly by the database ser
 
 `COPY` input and output is affected by `DateStyle`. To ensure portability to other HAWQ installations that might use non-default `DateStyle` settings, `DateStyle` should be set to ISO before using `COPY TO`.
 
-By default, `COPY` stops operation at the first error. This should not lead to problems in the event of a `COPY TO`, but the target table will already have received earlier rows in a `COPY FROM`. These rows will not be visible or accessible, but they still occupy disk space. This may amount to a considerable amount of wasted disk space if the failure happened well into a large `COPY FROM` operation. You may wish to invoke `VACUUM` to recover the wasted space. Another option would be to use single row error isolation mode to filter out error rows while still loading good rows.
+By default, `COPY` stops operation at the first error. This should not lead to problems in the event of a `COPY TO`, but the target table will already have received earlier rows in a `COPY FROM`. These rows will not be visible or accessible, but they still occupy disk space. This may amount to a considerable amount of wasted disk space if the failure happened well into a large `COPY FROM` operation. You may wish to use single row error isolation mode to filter out error rows while still loading good rows.
 
 COPY supports creating readable foreign tables with error tables. The default for concurrently inserting into the error table is 127. You can use error tables with foreign tables under the following circumstances:
 
@@ -149,7 +151,7 @@ COPY supports creating readable foreign tables with error tables. The default fo
 File formats supported by `COPY`.
 
 **Text Format**
-When `COPY` is used without the `BINARY` or `CSV` options, the data read or written is a text file with one line per table row. Columns in a row are separated by the *delimiter* character (tab by default). The column values themselves are strings generated by the output function, or acceptable to the input function, of each attribute's data type. The specified null string is used in place of columns that are null. `COPY             FROM` will raise an error if any line of the input file contains more or fewer columns than are expected. If `OIDS` is specified, the OID is read or written as the first column, preceding the user data columns.
+When `COPY` is used without the `BINARY` or `CSV` options, the data read or written is a text file with one line per table row. Columns in a row are separated by the \<delimiter\> character (tab by default). The column values themselves are strings generated by the output function, or acceptable to the input function, of each attribute's data type. The specified null string is used in place of columns that are null. `COPY             FROM` will raise an error if any line of the input file contains more or fewer columns than are expected. If `OIDS` is specified, the OID is read or written as the first column, preceding the user data columns.
 
 The data file has two reserved characters that have special meaning to `COPY`:
 
@@ -166,7 +168,7 @@ For example, suppose you have a table with three columns and you want to load th
 -   vertical bar = |
 -   backslash = \\
 
-Your designated *delimiter* character is `|` (pipe character), and your designated *escape* character is `*` (asterisk). The formatted row in your data file would look like this:
+Your designated \<delimiter\> character is `|` (pipe character), and your designated \<escape\> character is `*` (asterisk). The formatted row in your data file would look like this:
 
 ``` pre
 percentage sign = % | vertical bar = *| | backslash = \

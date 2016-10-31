@@ -9,41 +9,41 @@ Defines access privileges.
 ``` pre
 GRANT { {SELECT | INSERT | UPDATE | DELETE | REFERENCES }
 [,...] | ALL [PRIVILEGES] }
-    ON [TABLE] tablename [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON [TABLE] <tablename> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { {USAGE | SELECT | UPDATE} [,...] | ALL [PRIVILEGES] }
-    ON SEQUENCE sequencename [, ...]
-    TO { rolename | PUBLIC } [, ...] [WITH GRANT OPTION]
+    ON SEQUENCE <sequencename> [, ...]
+    TO { <rolename> | PUBLIC } [, ...] [WITH GRANT OPTION]
 
 GRANT { {CREATE | CONNECT | TEMPORARY | TEMP} [,...] | ALL
 [PRIVILEGES] }
-    ON DATABASE dbname [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON DATABASE <dbname> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { EXECUTE | ALL [PRIVILEGES] }
-    ON FUNCTION funcname ( [ [argmode] [argname] argtype [, ...]
+    ON FUNCTION <funcname> ( [ [<argmode>] [<argname>] <argtype> [, ...]
     ] ) [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { USAGE | ALL [PRIVILEGES] }
-    ON LANGUAGE langname [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON LANGUAGE <langname> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { {CREATE | USAGE} [,...] | ALL [PRIVILEGES] }
-    ON SCHEMA schemaname [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON SCHEMA <schemaname> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
 GRANT { CREATE | ALL [PRIVILEGES] }
-    ON TABLESPACE tablespacename [, ...]
-    TO {rolename | PUBLIC} [, ...] [WITH GRANT OPTION]
+    ON TABLESPACE <tablespacename> [, ...]
+    TO {<rolename> | PUBLIC} [, ...] [WITH GRANT OPTION]
 
-GRANT parent_role [, ...]
-    TO member_role [, ...] [WITH ADMIN OPTION]
+GRANT <parent_role> [, ...]
+    TO <member_role> [, ...] [WITH ADMIN OPTION]
 
 GRANT { SELECT | INSERT | ALL [PRIVILEGES] }
-    ON PROTOCOL protocolname
-    TO username
+    ON PROTOCOL <protocolname>
+    TO <username>
 
 ```
 
@@ -167,7 +167,7 @@ GRANT admins TO joe;
 
 The `PRIVILEGES` key word in is required in the SQL standard, but optional in HAWQ. The SQL standard does not support setting the privileges on more than one object per command.
 
-HAWQ allows an object owner to revoke his own ordinary privileges: for example, a table owner can make the table read-only to himself by revoking his own `INSERT`, `UPDATE`, and `DELETE` privileges. This is not possible according to the SQL standard. HAWQ treats the owner's privileges as having been granted by the owner to himself; therefore he can revoke them too. In the SQL standard, the owner's privileges are granted by an assumed *system* entity.
+HAWQ allows an object owner to revoke his own ordinary privileges: for example, a table owner can make the table read-only to himself by revoking his own `INSERT` privileges. This is not possible according to the SQL standard. HAWQ treats the owner's privileges as having been granted by the owner to himself; therefore he can revoke them too. In the SQL standard, the owner's privileges are granted by an assumed *system* entity.
 
 The SQL standard allows setting privileges for individual columns within a table.
 

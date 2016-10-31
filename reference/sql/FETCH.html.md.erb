@@ -7,7 +7,7 @@ Retrieves rows from a query using a cursor.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-FETCH [ forward_direction { FROM | IN } ] cursorname
+FETCH [ <forward_direction> { FROM | IN } ] <cursorname>
 
 ```
 
@@ -17,12 +17,12 @@ where *forward\_direction* can be empty or one of:
     NEXT
     FIRST
     LAST
-    ABSOLUTE count
-    RELATIVE count
-    count
+    ABSOLUTE <count>
+    RELATIVE <count>
+    <count>
     ALL
     FORWARD
-    FORWARD count
+    FORWARD <count>
     FORWARD ALL
 ```
 
@@ -51,7 +51,7 @@ The count is the number of rows fetched (possibly zero). Note that in `psql`, th
 
 ## <a id="topic1__section5"></a>Parameters
 
-<dt> *forward\_direction*  </dt>
+<dt>\<forward\_direction\>  </dt>
 <dd>Defines the fetch direction and number of rows to fetch. Only forward fetches are allowed in HAWQ. It can be one of the following:</dd>
 
 <dt>NEXT  </dt>
@@ -63,13 +63,13 @@ The count is the number of rows fetched (possibly zero). Note that in `psql`, th
 <dt>LAST  </dt>
 <dd>Fetch the last row of the query (same as `ABSOLUTE -1`).</dd>
 
-<dt>ABSOLUTE *count*  </dt>
+<dt>ABSOLUTE \<count\>  </dt>
 <dd>Fetch the specified row of the query. Position after last row if count is out of range. Only allowed if the row specified by *count* moves the cursor position forward.</dd>
 
-<dt>RELATIVE *count*  </dt>
+<dt>RELATIVE \<count\>  </dt>
 <dd>Fetch the specified row of the query *count* rows ahead of the current cursor position. `RELATIVE 0` re-fetches the current row, if any. Only allowed if *count* moves the cursor position forward.</dd>
 
-<dt> *count*  </dt>
+<dt>\<count\> </dt>
 <dd>Fetch the next *count* number of rows (same as `FORWARD                 count                   `).</dd>
 
 <dt>ALL  </dt>
@@ -78,13 +78,13 @@ The count is the number of rows fetched (possibly zero). Note that in `psql`, th
 <dt>FORWARD  </dt>
 <dd>Fetch the next row (same as `NEXT`).</dd>
 
-<dt>FORWARD *count*  </dt>
+<dt>FORWARD \<count\>  </dt>
 <dd>Fetch the next *count* number of rows. `FORWARD 0` re-fetches the current row.</dd>
 
 <dt>FORWARD ALL  </dt>
 <dd>Fetch all remaining rows.</dd>
 
-<dt> *cursorname*  </dt>
+<dt>\<cursorname\> </dt>
 <dd>The name of an open cursor.</dd>
 
 ## <a id="topic1__section6"></a>Notes

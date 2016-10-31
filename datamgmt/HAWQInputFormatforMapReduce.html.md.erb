@@ -92,7 +92,7 @@ implements Tool {
        if (args.length < 3) {
         return printUsage();
        }
-       Job job = new Job(getConf());
+       Job job = Job.getInstance(getConf());
        job.setJobName("hawq-inputformat-demo");
        job.setJarByClass(HAWQInputFormatDemoDriver.class);
        job.setMapperClass(DemoMapper.class);
@@ -152,9 +152,7 @@ implements Tool {
         -   `hawq-mapreduce-tool.jar`
 
     2.  Required 3rd party jars (located in the `$GPHOME/lib/postgresql/hawq-mr-io/lib` directory):
-        -   `parquet-column-1.1.0.jar`
         -   `parquet-common-1.1.0.jar`
-        -   `parquet-encoding-1.1.0.jar`
         -   `parquet-format-1.1.0.jar`
         -   `parquet-hadoop-1.1.0.jar`
         -   `postgresql-n.n-n-jdbc4.jar`
@@ -173,9 +171,11 @@ implements Tool {
     ``` shell
     $ cd ../../..
     $ jar cf my-app.jar com
+    $ cp my-app.jar /tmp
     ```
     
-6.  Check that you have installed HAWQ, HDFS and Yarn.
+6.  Check that you have installed HAWQ and HDFS and your HAWQ cluster is running.
+
 7.  Create sample table:
     1.  Log in to HAWQ:
 
@@ -201,29 +201,47 @@ implements Tool {
 
         ``` sql
         INSERT INTO employees VALUES (1, 'Paul');
+        \q
         ```
+8.  Ensure the system `pg_hba.conf` configuration file is set up to allow `gpadmin` access to the `postgres` database.
 
-    4.  Use the following shell script snippet showing how to run the Mapreduce job:
+8.  Use the following shell script snippet showing how to run the Mapreduce job:
 
-        ``` shell
-        #!/bin/bash
-        HAWQMRLIB=/usr/local/hawq/lib/postgresql/hawq-mr-io
-        export HADOOP_CLASSPATH=$HAWQMRLIB/hawq-mapreduce-common.jar:$HAWQMRLIB/hawq-mapreduce-ao.jar:$HAWQMRLIB/hawq-mapreduce-tool.jar:$HAWQMRLIB/lib/postgresql-9.2-1003-jdbc4.jar:$HAWQMRLIB/lib/snakeyaml-1.12.jar
+    ``` shell
+    #!/bin/bash
+    
+    # set up environment variables
+    HAWQMRLIB=/usr/local/hawq/lib/postgresql/hawq-mr-io
+    export HADOOP_CLASSPATH=$HAWQMRLIB/hawq-mapreduce-ao.jar:$HAWQMRLIB/hawq-mapreduce-common.jar:$HAWQMRLIB/hawq-mapreduce-tool.jar:$HAWQMRLIB/hawq-mapreduce-parquet.jar:$HAWQMRLIB/lib/postgresql-9.2-1003-jdbc4.jar:$HAWQMRLIB/lib/snakeyaml-1.12.jar:$HAWQMRLIB/lib/parquet-hadoop-1.1.0.jar:$HAWQMRLIB/lib/parquet-common-1.1.0.jar:$HAWQMRLIB/lib/parquet-format-1.0.0.jar
+    export LIBJARS=$HAWQMRLIB/hawq-mapreduce-ao.jar,$HAWQMRLIB/hawq-mapreduce-common.jar,$HAWQMRLIB/hawq-mapreduce-tool.jar,$HAWQMRLIB/lib/postgresql-9.2-1003-jdbc4.jar,$HAWQMRLIB/lib/snakeyaml-1.12.jar,$HAWQMRLIB/hawq-mapreduce-parquet.jar,$HAWQMRLIB/lib/parquet-hadoop-1.1.0.jar,$HAWQMRLIB/lib/parquet-common-1.1.0.jar,$HAWQMRLIB/lib/parquet-format-1.0.0.jar
+    
+    # usage:  hadoop jar JARFILE CLASSNAME -libjars JARS <database_url> <table_name> <output_path_on_HDFS>
+    #   - writing output to HDFS, so run as hdfs user
+    #   - if not using the default postgres port, replace 5432 with port number for your HAWQ cluster
+    HADOOP_USER_NAME=hdfs hadoop jar /tmp/my-app.jar com.mycompany.app.HAWQInputFormatDemoDriver -libjars $LIBJARS localhost:5432/postgres employees /tmp/employees
+    ```
+    
+    The MapReduce job output is written to the `/tmp/employees` directory on the HDFS file system.
+
+9.  Use the following command to check the result of the Mapreduce job:
+
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -ls /tmp/employees
+    $ sudo -u hdfs hdfs dfs -cat /tmp/employees/*
+    ```
+
+    The output will appear as follows:
+
+    ``` pre
+    1 Paul
+    ```
         
-        hadoop jar my-app.jar com.mycompany.app.HAWQInputFormatDemoDriver localhost:5432/postgres employees /tmp/employees
-        ```
-
-    5.  Use the following command to check the result of the Mapreduce job:
-
-        ``` shell
-        $ hadoop fs -cat /tmp/employees/*
-        ```
-
-The output will appear as follows:
-
-``` pre
-1 Paul
-```
+10.  If you choose to run the program again, delete the output file and directory:
+    
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -rm /tmp/employees/*
+    $ sudo -u hdfs hdfs dfs -rmdir /tmp/employees
+    ```
 
 ## <a id="accessinghawqdata"></a>Accessing HAWQ Data
 

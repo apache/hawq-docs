@@ -28,7 +28,7 @@ where:
 	[-c | --clean]
 	[-C | --create]
 	[-d | --inserts]
-	[(-D | --column-inserts) | --attribute-inserts]
+	[(-D | --column-inserts) ]
 	[-E <encoding> | --encoding <encoding>]
 	[-f <file> | --file <file>]
 	[-F(p|t|c)] | --format (plain|custom|tar)]
@@ -42,7 +42,7 @@ where:
 	[-t <table> | --table <table>]
 	[-T <table> | --exclude-table <table>]
 	[-v | --verbose]
-	[(-x | --no-privileges) | --no-acl]
+	[(-x | --no-privileges) ]
 	[--disable-dollar-quoting]
 	[--disable-triggers]
 	[--use-set-session-authorization]
@@ -89,7 +89,7 @@ When used with one of the archive file formats and combined with `pg_restore`, `
 <dt>-d, -\\\-inserts  </dt>
 <dd>Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.</dd>
 
-<dt>-D, -\\\-column-inserts | -\\\-attribute-inserts  </dt>
+<dt>-D, -\\\-column-inserts  </dt>
 <dd>Dump data as `INSERT` commands with explicit column names `(INSERT INTO` \<table\>`(`\<column\>`, ...) VALUES ...)`. This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents.</dd>
 
 <dt>-E, -\\\-encoding \<encoding\>  </dt>
@@ -148,7 +148,7 @@ Also, `-t` cannot be used to specify a child table partition. To dump a partitio
 <dt>-v, -\\\-verbose  </dt>
 <dd>Specifies verbose mode. This will cause `pg_dump` to output detailed object comments and start/stop times to the dump file, and progress messages to standard error.</dd>
 
-<dt>-x, -\\\-no-privileges | -\\\-no-acl  </dt>
+<dt>-x, -\\\-no-privileges  </dt>
 <dd>Prevent dumping of access privileges (`GRANT/REVOKE` commands).</dd>
 
 <dt>-\\\-disable-dollar-quoting  </dt>

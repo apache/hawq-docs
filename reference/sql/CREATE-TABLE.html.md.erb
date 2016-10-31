@@ -7,45 +7,45 @@ Defines a new table.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE [[GLOBAL | LOCAL] {TEMPORARY | TEMP}] TABLE table_name (
-[ { column_name data_type [ DEFAULT default_expr ]
-   [column_constraint [ ... ]
-[ ENCODING ( storage_directive [,...] ) ]
+CREATE [[GLOBAL | LOCAL] {TEMPORARY | TEMP}] TABLE <table_name> (
+[ { <column_name> <data_type> [ DEFAULT <default_expr> ]
+   [<column_constraint> [ ... ]
+[ ENCODING ( <storage_directive> [,...] ) ]
 ]
-   | table_constraint
-   | LIKE other_table [{INCLUDING | EXCLUDING}
+   | <table_constraint>
+   | LIKE <other_table> [{INCLUDING | EXCLUDING}
                       {DEFAULTS | CONSTRAINTS}] ...} ]
    [, ... ] ]
-   [column_reference_storage_directive [, …] ]
+   [<column_reference_storage_directive> [, …] ]
    )
-   [ INHERITS ( parent_table [, ... ] ) ]
-   [ WITH ( storage_parameter=value [, ... ] )
+   [ INHERITS ( <parent_table> [, ... ] ) ]
+   [ WITH ( <storage_parameter>=<value> [, ... ] )
    [ ON COMMIT {PRESERVE ROWS | DELETE ROWS | DROP} ]
-   [ TABLESPACE tablespace ]
-   [ DISTRIBUTED BY (column, [ ... ] ) | DISTRIBUTED RANDOMLY ]
-   [ PARTITION BY partition_type (column)
-       [ SUBPARTITION BY partition_type (column) ]
-          [ SUBPARTITION TEMPLATE ( template_spec ) ]
+   [ TABLESPACE <tablespace> ]
+   [ DISTRIBUTED BY (<column>, [ ... ] ) | DISTRIBUTED RANDOMLY ]
+   [ PARTITION BY <partition_type> (<column>)
+       [ SUBPARTITION BY <partition_type> (<column>) ]
+          [ SUBPARTITION TEMPLATE ( <template_spec> ) ]
        [...]
-    ( partition_spec )
-        | [ SUBPARTITION BY partition_type (column) ]
+    ( <partition_spec> )
+        | [ SUBPARTITION BY partition_type (<column>) ]
           [...]
-    ( partition_spec
-      [ ( subpartition_spec
+    ( <partition_spec>
+      [ ( <subpartition_spec>
            [(...)]
          ) ]
     )
 ```
 
-where *column\_constraint* is:
+where \<column\_constraint\> is:
 
 ``` pre
-   [CONSTRAINT constraint_name]
+   [CONSTRAINT <constraint_name>]
    NOT NULL | NULL
-   | CHECK ( expression )
+   | CHECK ( <expression> )
 ```
 
-where *storage\_directive* for a column is:
+where \<storage\_directive\> for a column is:
 
 ``` pre
    COMPRESSTYPE={ZLIB | SNAPPY | GZIP | NONE}
@@ -53,12 +53,12 @@ where *storage\_directive* for a column is:
  | BLOCKSIZE={8192-2097152}
 ```
 
-where *storage\_parameter* for a table is:
+where \<storage\_parameter\> for a table is:
 
 ``` pre
    APPENDONLY={TRUE}
    BLOCKSIZE={8192-2097152}
-   bucketnum={x}
+   bucketnum={<x>}
    ORIENTATION={ROW | PARQUET}
    COMPRESSTYPE={ZLIB | SNAPPY | GZIP | NONE}
    COMPRESSLEVEL={0-9}
@@ -68,67 +68,66 @@ where *storage\_parameter* for a table is:
    ROWGROUPSIZE={1024-1073741823}
 ```
 
-and *table\_constraint* is:
+and \<table\_constraint\> is:
 
 ``` pre
-   [CONSTRAINT constraint_name]
-   | CHECK ( expression )
+   [CONSTRAINT <constraint_name>]
+   | CHECK ( <expression> )
 ```
 
-where *partition\_type* is:
+where \<partition\_type\> is:
 
 ``` pre
-    LIST
-  | RANGE
+    LIST  | RANGE
 ```
 
-where *partition\_specification* is:
+where \<partition\_specification\> is:
 
 ``` pre
-            partition_element [, ...]
+            <partition_element> [, ...]
 ```
 
-and *partition\_element* is:
+and \<partition\_element\> is:
 
 ``` pre
-   DEFAULT PARTITION name
-  | [PARTITION name] VALUES (list_value [,...] )
-  | [PARTITION name]
-     START ([datatype] 'start_value') [INCLUSIVE | EXCLUSIVE]
-     [ END ([datatype] 'end_value') [INCLUSIVE | EXCLUSIVE] ]
-     [ EVERY ([datatype] [number | INTERVAL] 'interval_value') ]
-  | [PARTITION name]
-     END ([datatype] 'end_value') [INCLUSIVE | EXCLUSIVE]
-     [ EVERY ([datatype] [number | INTERVAL] 'interval_value') ]
-[ WITH ( partition_storage_parameter=value [, ... ] ) ]
-[column_reference_storage_directive [, …] ]
-[ TABLESPACE tablespace ]
+   DEFAULT PARTITION <name>
+  | [PARTITION <name>] VALUES (<list_value> [,...] )
+  | [PARTITION <name>]
+     START ([<datatype>] '<start_value>') [INCLUSIVE | EXCLUSIVE]
+     [ END ([<datatype>] '<end_value>') [INCLUSIVE | EXCLUSIVE] ]
+     [ EVERY ([<datatype>] [<number> | INTERVAL] '<interval_value>') ]
+  | [PARTITION <name>]
+     END ([<datatype>] '<end_value>') [INCLUSIVE | EXCLUSIVE]
+     [ EVERY ([<datatype>] [<number> | INTERVAL] '<interval_value>') ]
+[ WITH ( <partition_storage_parameter>=<value> [, ... ] ) ]
+[<column_reference_storage_directive> [, …] ]
+[ TABLESPACE <tablespace> ]
 ```
 
-where *subpartition\_spec* or *template\_spec* is:
+where \<subpartition\_spec\> or \<template\_spec\> is:
 
 ``` pre
-            subpartition_element [, ...]
+            <subpartition_element> [, ...]
 ```
 
-and *subpartition\_element* is:
+and \<subpartition\_element\> is:
 
 ``` pre
-   DEFAULT SUBPARTITION name
-  | [SUBPARTITION name] VALUES (list_value [,...] )
-  | [SUBPARTITION name]
-     START ([datatype] 'start_value') [INCLUSIVE | EXCLUSIVE]
-     [ END ([datatype] 'end_value') [INCLUSIVE | EXCLUSIVE] ]
-     [ EVERY ([datatype] [number | INTERVAL] 'interval_value') ]
-  | [SUBPARTITION name]
-     END ([datatype] 'end_value') [INCLUSIVE | EXCLUSIVE]
-     [ EVERY ([datatype] [number | INTERVAL] 'interval_value') ]
-[ WITH ( partition_storage_parameter=value [, ... ] ) ]
-[column_reference_storage_directive [, …] ]
-[ TABLESPACE tablespace ]
+   DEFAULT SUBPARTITION <name>
+  | [SUBPARTITION <name>] VALUES (<list_value> [,...] )
+  | [SUBPARTITION <name>]
+     START ([<datatype>] '<start_value>') [INCLUSIVE | EXCLUSIVE]
+     [ END ([<datatype>] '<end_value>') [INCLUSIVE | EXCLUSIVE] ]
+     [ EVERY ([<datatype>] [<number> | INTERVAL] '<interval_value>') ]
+  | [SUBPARTITION <name>]
+     END ([<datatype>] '<end_value>') [INCLUSIVE | EXCLUSIVE]
+     [ EVERY ([<datatype>] [<number> | INTERVAL] '<interval_value>') ]
+[ WITH ( <partition_storage_parameter>=<value> [, ... ] ) ]
+[<column_reference_storage_directive> [, …] ]
+[ TABLESPACE <tablespace> ]
 ```
 
-where *storage\_directive* is:
+where \<storage\_directive\> is:
 
 ``` pre
    COMPRESSTYPE={ZLIB | SNAPPY | GZIP | NONE}
@@ -136,15 +135,15 @@ where *storage\_directive* is:
  | BLOCKSIZE={8192-2097152}
 ```
 
-where *column\_reference\_storage\_directive* is:
+where \<column\_reference\_storage\_directive\> is:
 
 ``` pre
-   COLUMN column_name ENCODING (storage_directive [, ... ] ), ...
+   COLUMN column_name ENCODING (<storage_directive> [, ... ] ), ...
  |
-   DEFAULT COLUMN ENCODING (storage_directive [, ... ] )
+   DEFAULT COLUMN ENCODING (<storage_directive> [, ... ] )
 ```
 
-where *storage\_parameter* for a partition is:
+where \<storage\_parameter\> for a partition is:
 
 ``` pre
    APPENDONLY={TRUE}
@@ -162,13 +161,13 @@ where *storage\_parameter* for a partition is:
 
 `CREATE TABLE` creates a new, initially empty table in the current database. The table is owned by the user issuing the command. If a schema name is given then the table is created in the specified schema. Otherwise it is created in the current schema. Temporary tables exist in a special schema, so a schema name may not be given when creating a temporary table. The name of the table must be distinct from the name of any other table, external table, sequence, or view in the same schema.
 
-The optional constraint clauses specify conditions that new or updated rows must satisfy for an insert or update operation to succeed. A constraint is an SQL object that helps define the set of valid values in the table in various ways. Constraints apply to tables, not to partitions. You cannot add a constraint to a partition or subpartition.
+The optional constraint clauses specify conditions that new rows must satisfy for an insert operation to succeed. A constraint is an SQL object that helps define the set of valid values in the table in various ways. Constraints apply to tables, not to partitions. You cannot add a constraint to a partition or subpartition.
 
 There are two ways to define constraints: table constraints and column constraints. A column constraint is defined as part of a column definition. A table constraint definition is not tied to a particular column, and it can encompass more than one column. Every column constraint can also be written as a table constraint; a column constraint is only a notational convenience for use when the constraint only affects one column.
 
 When creating a table, there is an additional clause to declare the HAWQ distribution policy. If a `DISTRIBUTED BY` clause is not supplied, HAWQ assigns a `RANDOM` distribution policy to the table, where the rows are distributed based on a round-robin or random distribution. You can also choose to distribute data with a hash-based policy, where the `bucketnum` attribute sets the number of hash buckets used by a hash-distributed table. Columns of geometric or user-defined data types are not eligible as HAWQ distribution key columns. The number of buckets affects how many virtual segments will be used in processing.
 
-By default, a HASH distributed table is created with the number of hash buckets specified by the parameter *default\_hash\_table\_bucket\_number*. This can be changed in session level or in the create table DDL with `bucketnum` storage parameter.
+By default, a HASH distributed table is created with the number of hash buckets specified by the parameter \<default\_hash\_table\_bucket\_number\>. This can be changed in session level or in the create table DDL with `bucketnum` storage parameter.
 
 **Note:** Column-oriented tables are no longer supported. Use Parquet tables for HAWQ internal tables.
 
@@ -182,16 +181,16 @@ The `PARTITION BY` clause allows you to divide the table into multiple sub-table
 <dt>TEMPORARY | TEMP  </dt>
 <dd>If specified, the table is created as a temporary table. Temporary tables are automatically dropped at the end of a session, or optionally at the end of the current transaction (see `ON COMMIT`). Existing permanent tables with the same name are not visible to the current session while the temporary table exists, unless they are referenced with schema-qualified names. Any indexes created on a temporary table are automatically temporary as well.</dd>
 
-<dt> *table\_name*  </dt>
+<dt> \<table\_name\>  </dt>
 <dd>The name (optionally schema-qualified) of the table to be created.</dd>
 
-<dt> *column\_name*  </dt>
+<dt> \<column\_name\>  </dt>
 <dd>The name of a column to be created in the new table.</dd>
 
-<dt> *data\_type*  </dt>
+<dt> \<data\_type\>  </dt>
 <dd>The data type of the column. This may include array specifiers.</dd>
 
-<dt>DEFAULT *default\_expr*  </dt>
+<dt>DEFAULT \<default\_expr\>  </dt>
 <dd>The `DEFAULT` clause assigns a default data value for the column whose column definition it appears within. The value is any variable-free expression (subqueries and cross-references to other columns in the current table are not allowed). The data type of the default expression must match the data type of the column. The default expression will be used in any insert operation that does not specify a value for the column. If there is no default for a column, then the default is null.</dd>
 
 <dt>INHERITS  </dt>
@@ -201,7 +200,7 @@ In HAWQ, the `INHERITS` clause is not used when creating partitioned tables. Alt
 
 If the same column name exists in more than one parent table, an error is reported unless the data types of the columns match in each of the parent tables. If there is no conflict, then the duplicate columns are merged to form a single column in the new table. If the column name list of the new table contains a column name that is also inherited, the data type must likewise match the inherited column(s), and the column definitions are merged into one. However, inherited and new column declarations of the same name need not specify identical constraints: all constraints provided from any declaration are merged together and all are applied to the new table. If the new table explicitly specifies a default value for the column, this default overrides any defaults from inherited declarations of the column. Otherwise, any parents that specify default values for the column must all specify the same default, or an error will be reported.</dd>
 
-<dt>LIKE *other\_table* \[{INCLUDING | EXCLUDING} {DEFAULTS | CONSTRAINTS}\]  </dt>
+<dt>LIKE \<other\_table\> \[{INCLUDING | EXCLUDING} {DEFAULTS | CONSTRAINTS}\]  </dt>
 <dd>The `LIKE` clause specifies a table from which the new table automatically copies all column names, data types, not-null constraints, and distribution policy. Storage properties like append-only or partition structure are not copied. Unlike `INHERITS`, the new table and original table are completely decoupled after creation is complete.
 
 Default expressions for the copied column definitions will only be copied if `INCLUDING DEFAULTS` is specified. The default behavior is to exclude default expressions, resulting in the copied columns in the new table having null defaults.
@@ -213,10 +212,10 @@ Note also that unlike `INHERITS`, copied columns and constraints are not merged 
 <dt>NULL | NOT NULL  </dt>
 <dd>Specifies if the column is or is not allowed to contain null values. `NULL` is the default.</dd>
 
-<dt>CHECK ( *expression* )  </dt>
-<dd>The `CHECK` clause specifies an expression producing a Boolean result which new or updated rows must satisfy for an insert or update operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert or update operation produce a `FALSE` result an error exception is raised and the insert or update does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
+<dt>CHECK ( \<expression\> )  </dt>
+<dd>The `CHECK` clause specifies an expression producing a Boolean result which new rows must satisfy for an insert operation to succeed. Expressions evaluating to `TRUE` or `UNKNOWN` succeed. Should any row of an insert operation produce a `FALSE` result an error exception is raised and the insert does not alter the database. A check constraint specified as a column constraint should reference that column's value only, while an expression appearing in a table constraint may reference multiple columns. `CHECK` expressions cannot contain subqueries nor refer to variables other than columns of the current row.</dd>
 
-<dt>WITH ( *storage\_option=value* )  </dt>
+<dt>WITH ( \<storage\_option\>=\<value\> )  </dt>
 <dd>The `WITH` clause can be used to set storage options for the table or its indexes. Note that you can also set storage parameters on a particular partition or subpartition by declaring the `WITH` clause in the partition specification.
 
 Note: You cannot create a table with both column encodings and compression parameters in a WITH clause.
@@ -229,7 +228,7 @@ The following storage options are available:
 
 **bucketnum** — Set to the number of hash buckets to be used in creating a hash-distributed table, specified as an integer greater than 0 and no more than the value of `default_hash_table_bucket_number`. The default when the table is created is 6 times the segment count. However, explicitly setting the bucket number when creating a hash table is recommended.
 
-**ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. Heap-storage tables can only be row-oriented.
+**ORIENTATION** — Set to `row` (the default) for row-oriented storage, or parquet. The parquet column-oriented format can be more efficient for large-scale queries. This option is only valid if `APPENDONLY=TRUE`. 
 
 **COMPRESSTYPE** — Set to `ZLIB`, `SNAPPY`, or `GZIP` to specify the type of compression used. `ZLIB` provides more compact compression ratios at lower speeds. Parquet tables support `SNAPPY` and `GZIP` compression. Append-only tables support `SNAPPY` and `ZLIB` compression.  This option is valid only if `APPENDONLY=TRUE`.
 
@@ -246,25 +245,25 @@ The following storage options are available:
 
 **DROP** - The temporary table will be dropped at the end of the current transaction block.</dd>
 
-<dt>TABLESPACE *tablespace*  </dt>
+<dt>TABLESPACE \<tablespace\>  </dt>
 <dd>The name of the tablespace in which the new table is to be created. If not specified, the database's default tablespace dfs\_default is used. Creating table on tablespace `pg_default` is not allowed.</dd>
 
-<dt>DISTRIBUTED BY (*column*, \[ ... \] )  
+<dt>DISTRIBUTED BY (\<column\>, \[ ... \] )  
 DISTRIBUTED RANDOMLY  </dt>
 <dd>Used to declare the HAWQ distribution policy for the table. The default is RANDOM distribution. `DISTIBUTED BY` can use hash distribution with one or more columns declared as the distribution key. If hash distribution is desired, it must be specified using the first eligible column of the table as the distribution key.</dd>
 
 <dt>PARTITION BY  </dt>
 <dd>Declares one or more columns by which to partition the table.</dd>
 
-<dt> *partition\_type*  </dt>
+<dt> \<partition\_type\>  </dt>
 <dd>Declares partition type: `LIST` (list of values) or `RANGE` (a numeric or date range).</dd>
 
-<dt> *partition\_specification*  </dt>
+<dt> \<partition\_specification\>  </dt>
 <dd>Declares the individual partitions to create. Each partition can be defined individually or, for range partitions, you can use the `EVERY` clause (with a `START` and optional `END` clause) to define an increment pattern to use to create the individual partitions.
 
-**`DEFAULT PARTITION name                      `** — Declares a default partition. When data does not match to an existing partition, it is inserted into the default partition. Partition designs that do not have a default partition will reject incoming rows that do not match to an existing partition.
+**`DEFAULT PARTITION \<name\>                      `** — Declares a default partition. When data does not match to an existing partition, it is inserted into the default partition. Partition designs that do not have a default partition will reject incoming rows that do not match to an existing partition.
 
-**`PARTITION name                      `** — Declares a name to use for the partition. Partitions are created using the following naming convention: `                      parentname_level#_prt_givenname                   `.
+**`PARTITION \<name\>  `** — Declares a name to use for the partition. Partitions are created using the following naming convention: `                      parentname_level#_prt_givenname                   `.
 
 **`VALUES`** — For list partitions, defines the value(s) that the partition will contain.
 
@@ -304,6 +303,8 @@ You can set three kinds of parameters for a parquet table.
 
 2.  Set the compression type parameter. Parquet tables can be compressed using either `SNAPPY` or `GZIP`. `GZIP` supports compression level values between 1 and 9. `SNAPPY` does not support compression level; providing a compression level when using `SNAPPY` will cause the create table operation to fail. Specifying a compression level but no compression type when creating a parquet table will default to `GZIP` compression.
 
+    **Note:**  For best performance with parquet storage, use `SNAPPY` compression. 
+
 3.  Set the data storage parameter: By default, the two parameters, `PAGESIZE` and `ROWGROUPSIZE` are set to 1MB/8MB for common and partitioned tables.
 
     **Note:** The page size should be less than the rowgroup size. This is because rowgroup includes the metadata information of a single page even for a single column table. The parameters `PAGESIZE` and `ROWGROUPSIZE` are valid for parquet tables, while `BLOCKSIZE` is valid for append-only tables
@@ -317,6 +318,8 @@ DDL and DML: Most DDL and DML operations are valid for a parquet table. The usag
 
 **Compression type and level**: You can only set the compression type at the table level. HAWQ does not support setting column level compression. The specified compression type is propagated to the columns. All the columns must have the same compress type and level.
 
+Using `SNAPPY` compression with parquet files is recommended for best performance.
+
 **Data type**: HAWQ supports all data types except arrays and user defined types.
 
 **Alter table**: HAWQ does not support adding a new column to an existing parquet table or dropping a column. You can use `ALTER TABLE` for a partition operation.
@@ -324,6 +327,9 @@ DDL and DML: Most DDL and DML operations are valid for a parquet table. The usag
 **FillFactor/OIDS/Checksum**: HAWQ does not support these operations when creating parquet tables. The default value for checksum for a parquet table is false. You cannot set this value or specify fillfactor and oids.
 
 **Memory occupation**: When inserting or loading data to a parquet table, the whole rowgroup is stored in physical memory until the size exceeds the threshold or the end of the `INSERT` operation. Once either occurs, the entire rowgroup is flushed to disk. Also, at the beginning of the `INSERT` operation, each column is pre-allocated a page buffer. The column pre-allocated page buffer size should be `min(pageSizeLimit,                rowgroupSizeLimit/estimatedColumnWidth/estimatedRecordWidth)` for the first rowgroup. For the following rowgroup, it should be `min(pageSizeLimit,                actualColumnChunkSize in last rowgroup * 1.05)`, of which 1.05 is the estimated scaling factor. When reading data from a parquet table, the requested columns of the row group are loaded into memory. Memory is allocated 8 MB by default. Ensure that memory occupation does not exceed physical memory when setting `ROWGROUPSIZE` or `PAGESIZE`, otherwise you may encounter an out of memory error. 
+
+**Bulk vs. trickle loads**
+Only bulk loads are recommended for use with parquet tables. Trickle loads can result in bloated footers and larger data files.
 
 ## <a id="parquetexamples"></a>Parquet Examples
 

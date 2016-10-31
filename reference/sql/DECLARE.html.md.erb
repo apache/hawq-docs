@@ -7,9 +7,9 @@ Defines a cursor.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-DECLARE name [BINARY] [INSENSITIVE] [NO SCROLL] CURSOR
+DECLARE <name> [BINARY] [INSENSITIVE] [NO SCROLL] CURSOR
      [{WITH | WITHOUT} HOLD]
-     FOR query [FOR READ ONLY]
+     FOR <query> [FOR READ ONLY]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -27,7 +27,7 @@ When the client application uses the 'extended query' protocol to issue a `FETCH
 
 ## <a id="topic1__section4"></a>Parameters
 
-<dt> *name*  </dt>
+<dt>\<name\>  </dt>
 <dd>The name of the cursor to be created.</dd>
 
 <dt>BINARY  </dt>
@@ -43,7 +43,7 @@ When the client application uses the 'extended query' protocol to issue a `FETCH
 WITHOUT HOLD  </dt>
 <dd>`WITH HOLD` specifies that the cursor may continue to be used after the transaction that created it successfully commits. `WITHOUT HOLD` specifies that the cursor cannot be used outside of the transaction that created it. `WITHOUT HOLD` is the default.</dd>
 
-<dt> *query*  </dt>
+<dt>\<query\> </dt>
 <dd>A [SELECT](SELECT.html) command which will provide the rows to be returned by the cursor.</dd>
 
 <!-- -->

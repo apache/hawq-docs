@@ -88,6 +88,8 @@ The estimated startup cost for this plan is `00.00` (no cost) and a total cost o
     Work_mem wanted: 90K bytes avg, 90K byes max (seg0) to lessen
     workfile I/O affecting 2 workers.
     ```
+**Note**
+The *work\_mem* property is not configurable. Use resource queues to manage memory use. For more information on resource queues, see [Configuring Resource Management](../resourcemgmt/ConfigureResourceManagement.html) and [Working with Hierarchical Resource Queues](../resourcemgmt/ResourceQueues.html).
 
 -   The time (in milliseconds) in which the segment that produced the most rows retrieved the first row, and the time taken for that segment to retrieve all rows. The result may omit *&lt;time&gt; to first row* if it is the same as the *&lt;time&gt; to end*.
 

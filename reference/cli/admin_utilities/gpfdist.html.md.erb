@@ -31,7 +31,7 @@ For readable external tables, if load files are compressed using `gzip` or `bzip
 
 **Note:** Currently, readable external tables do not support compression on Windows platforms, and writable external tables do not support compression on any platforms.
 
-Most likely, you will want to run `gpfdist` on your ETL machines rather than the hosts where HAWQ is installed. To install `gpfdist` on another host, simply copy the utility over to that host and add `gpfdist` to your `$PATH`.
+To run `gpfdist` on your ETL machines, refer to [Client-Based HAWQ Load Tools](../../../datamgmt/load/client-loadtools.html) for more information.
 
 **Note:** When using IPv6, always enclose the numeric IP address in brackets.
 
@@ -96,19 +96,20 @@ HAWQ Loaders allow `gpfdist` to run as a Windows Service.
 
 Follow the instructions below to download, register and activate `gpfdist` as a service:
 
-1.  Update your HAWQ Loader package to the latest version. This package is available from [Pivotal Network](https://network.gopivotal.com/products).
+1.  Update your HAWQ Loaders for Windows package to the latest version. See [HAWQ Loader Tools for Windows](../../../datamgmt/load/client-loadtools.html#installloadrunwin) for install and configuration information.
+    
 2.  Register `gpfdist` as a Windows service:
     1.  Open a Windows command window
     2.  Run the following command:
 
         ``` pre
-        sc create gpfdist binpath= "path_to_gpfdist.exe -p 8081 -d External\load\files\path -l Log\file\path"
+        sc create gpfdist binpath= "<loader_install_dir>\bin\gpfdist.exe -p 8081 -d \"<external_load_files_path>\" -l \"<log_file_path>\""
         ```
 
         You can create multiple instances of `gpfdist` by running the same command again, with a unique name and port number for each instance:
 
         ``` pre
-        sc create gpfdistN binpath= "path_to_gpfdist.exe -p 8082 -d External\load\files\path -l Log\file\path"
+        sc create gpfdistN binpath= "<loader_install_dir>\bin\gpfdist.exe -p 8082 -d \"<external_load_files_path>\" -l \"<log_file_path>\""
         ```
 
 3.  Activate the `gpfdist` service:

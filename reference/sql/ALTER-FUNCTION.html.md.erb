@@ -7,21 +7,21 @@ Changes the definition of a function.
 ## <a id="alterfunction__section2"></a>Synopsis
 
 ``` sql
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   action [, ... ] [RESTRICT]
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   <action> [, ... ] [RESTRICT]
 
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   RENAME TO new_name
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   RENAME TO <new_name>
 
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   OWNER TO new_owner
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   OWNER TO <new_owner>
 
-ALTER FUNCTION name ( [ [argmode] [argname] argtype [, ...] ] )
-   SET SCHEMA new_schema
+ALTER FUNCTION <name> ( [ [<argmode>] [<argname>] <argtype> [, ...] ] )
+   SET SCHEMA <new_schema>
 
 ```
 
-where *action* is one of:
+where \<action\> is one of:
 
 ```pre
 { CALLED ON NULL INPUT | RETURNS NULL ON NULL INPUT | STRICT }
@@ -37,25 +37,25 @@ You must own the function to use `ALTER FUNCTION`. To change a function’s sche
 
 ## <a id="alterfunction__section4"></a>Parameters
 
-<dt> *name*  </dt>
+<dt> \<name\>  </dt>
 <dd>The name (optionally schema-qualified) of an existing function.</dd>
 
-<dt>*argmode*  </dt>
+<dt>\<argmode\>  </dt>
 <dd>The mode of an argument: either `IN`, `OUT`, or `INOUT`. If omitted, the default is `IN`. Note that `ALTER FUNCTION` does not actually pay any attention to `OUT` arguments, since only the input arguments are needed to determine the function's identity. So it is sufficient to list the `IN` and `INOUT` arguments.</dd>
 
-<dt> *argname*  </dt>
+<dt> \<argname\>  </dt>
 <dd>The name of an argument. Note that `ALTER FUNCTION` does not actually pay any attention to argument names, since only the argument data types are needed to determine the function's identity.</dd>
 
-<dt> *argtype*  </dt>
+<dt> \<argtype\>  </dt>
 <dd>The data type(s) of the function's arguments (optionally schema-qualified), if any.</dd>
 
-<dt> *new\_name*  </dt>
+<dt> \<new\_name\>  </dt>
 <dd>The new name of the function.</dd>
 
-<dt> *new\_owner*  </dt>
+<dt> \<new\_owner\>  </dt>
 <dd>The new owner of the function. Note that if the function is marked `SECURITY DEFINER`, it will subsequently execute as the new owner.</dd>
 
-<dt> *new\_schema*  </dt>
+<dt> \<new\_schema\>  </dt>
 <dd>The new schema for the function.</dd>
 
 <dt>CALLED ON NULL INPUT  
@@ -93,7 +93,7 @@ To change the owner of the function `sqrt` for type `integer` to `joe`:
 ALTER FUNCTION sqrt(integer) OWNER TO joe;
 ```
 
-To change the *schema* of the function `sqrt` for type `integer` to `math`:
+To change the schema of the function `sqrt` for type `integer` to `math`:
 
 ``` pre
 ALTER FUNCTION sqrt(integer) SET SCHEMA math;

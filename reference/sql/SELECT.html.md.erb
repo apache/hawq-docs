@@ -7,61 +7,61 @@ Retrieves rows from a table or view.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-SELECT [ALL | DISTINCT [ON (expression [, ...])]]
-  * | expression [[AS] output_name] [, ...]
-  [FROM from_item [, ...]]
-  [WHERE condition]
-  [GROUP BY grouping_element [, ...]]
-  [HAVING condition [, ...]]
-  [WINDOW window_name AS (window_specification)]
-  [{UNION | INTERSECT | EXCEPT} [ALL] select]
-  [ORDER BY expression [ASC | DESC | USING operator] [, ...]]
-  [LIMIT {count | ALL}]
-  [OFFSET start]
+SELECT [ALL | DISTINCT [ON (<expression> [, ...])]]
+  * | <expression> [[AS] <output_name>] [, ...]
+  [FROM <from_item> [, ...]]
+  [WHERE <condition>]
+  [GROUP BY <grouping_element> [, ...]]
+  [HAVING <condition> [, ...]]
+  [WINDOW <window_name> AS (<window_specification>)]
+  [{UNION | INTERSECT | EXCEPT} [ALL] <select>]
+  [ORDER BY <expression> [ASC | DESC | USING <operator>] [, ...]]
+  [LIMIT {<count> | ALL}]
+  [OFFSET <start>]
 ```
 
-where *grouping\_element* can be one of:
+where \<grouping\_element\> can be one of:
 
 ``` pre
   ()
-  expression
-  ROLLUP (expression [,...])
-  CUBE (expression [,...])
-  GROUPING SETS ((grouping_element [, ...]))
+  <expression>
+  ROLLUP (<expression> [,...])
+  CUBE (<expression> [,...])
+  GROUPING SETS ((<grouping_element> [, ...]))
 ```
 
-where *window\_specification* can be:
+where \<window\_specification\> can be:
 
 ``` pre
-  [window_name]
-  [PARTITION BY expression [, ...]]
-  [ORDER BY expression [ASC | DESC | USING operator] [, ...]
+  [<window_name>]
+  [PARTITION BY <expression> [, ...]]
+  [ORDER BY <expression> [ASC | DESC | USING <operator>] [, ...]
      [{RANGE | ROWS}
           { UNBOUNDED PRECEDING
-          | expression PRECEDING
+          | <expression> PRECEDING
           | CURRENT ROW
-          | BETWEEN window_frame_bound AND window_frame_bound }]]
-                    where window_frame_bound can be one of:
+          | BETWEEN <window_frame_bound> AND <window_frame_bound> }]]
+                    where <window_frame_bound> can be one of:
                         UNBOUNDED PRECEDING
-                        expression PRECEDING
+                        <expression> PRECEDING
                         CURRENT ROW
-                        expression FOLLOWING
+                        <expression> FOLLOWING
                         UNBOUNDED FOLLOWING
 ```
 
-where *from\_item* can be one of:
+where \<from\_item\> can be one of:
 
 ``` pre
-[ONLY] table_name [[AS] alias [( column_alias [, ...] )]]
-(select) [AS] alias [( column_alias [, ...] )]
-function_name ( [argument [, ...]] ) [AS] alias
-             [( column_alias [, ...]
-                | column_definition [, ...] )]
-function_name ( [argument [, ...]] ) AS
-              ( column_definition [, ...] )
-from_item [NATURAL] join_type
-            from_item
-          [ON join_condition | USING ( join_column [, ...] )]
+[ONLY] <table_name> [[AS] <alias> [( <column_alias> [, ...] )]]
+(select) [AS] <alias> [( <column_alias> [, ...] )]
+<function_name> ( [<argument> [, ...]] ) [AS] <alias>
+             [( <column_alias> [, ...]
+                | <column_definition> [, ...] )]
+<function_name> ( [<argument> [, ...]] ) AS
+              ( <column_definition> [, ...] )
+<from_item> [NATURAL] <join_type>
+            <from_item>
+          [ON <join_condition> | USING ( <join_column> [, ...] )]
 ```
 
 ## <a id="topic1__section3"></a>Description
@@ -86,9 +86,9 @@ You must have `SELECT` privilege on a table to read its values.
 
 The `SELECT` list (between the key words `SELECT` and `FROM`) specifies expressions that form the output rows of the `SELECT` statement. The expressions can (and usually do) refer to columns computed in the `FROM` clause.
 
-Using the clause `[AS] ` *output\_name*, another name can be specified for an output column. This name is primarily used to label the column for display. It can also be used to refer to the column's value in `ORDER BY` and `GROUP BY` clauses, but not in the `WHERE` or `HAVING` clauses; there you must write out the expression instead. The `AS` keyword is optional in most cases (such as when declaring an alias for column names, constants, function calls, and simple unary operator expressions). In cases where the declared alias is a reserved SQL keyword, the *output\_name* must be enclosed in double quotes to avoid ambiguity.
+Using the clause `[AS] ` \<output\_name\>, another name can be specified for an output column. This name is primarily used to label the column for display. It can also be used to refer to the column's value in `ORDER BY` and `GROUP BY` clauses, but not in the `WHERE` or `HAVING` clauses; there you must write out the expression instead. The `AS` keyword is optional in most cases (such as when declaring an alias for column names, constants, function calls, and simple unary operator expressions). In cases where the declared alias is a reserved SQL keyword, the \<output\_name\> must be enclosed in double quotes to avoid ambiguity.
 
-An *expression* in the `SELECT` list can be a constant value, a column reference, an operator invocation, a function call, an aggregate expression, a window expression, a scalar subquery, and so on. There are a number of constructs that can be classified as an expression but do not follow any general syntax rules.
+An \<expression\> in the `SELECT` list can be a constant value, a column reference, an operator invocation, a function call, an aggregate expression, a window expression, a scalar subquery, and so on. There are a number of constructs that can be classified as an expression but do not follow any general syntax rules.
 
 Instead of an expression, `*` can be written in the output list as a shorthand for all the columns of the selected rows. Also, you can write `                   table_name.*` as a shorthand for the columns coming from just that table.
 
@@ -96,19 +96,19 @@ Instead of an expression, `*` can be written in the output list as a shorthand f
 
 The `FROM` clause specifies one or more source tables for the `SELECT`. If multiple sources are specified, the result is the Cartesian product (cross join) of all the sources. But usually qualification conditions are added to restrict the returned rows to a small subset of the Cartesian product. The `FROM` clause can contain the following elements:
 
-<dt> *table\_name*  </dt>
+<dt> \<table\_name\>  </dt>
 <dd>The name (optionally schema-qualified) of an existing table or view. If `ONLY` is specified, only that table is scanned. If `ONLY` is not specified, the table and all its descendant tables (if any) are scanned.</dd>
 
-<dt> *alias*  </dt>
+<dt> \<alias\>  </dt>
 <dd>A substitute name for the `FROM` item containing the alias. An alias is used for brevity or to eliminate ambiguity for self-joins (where the same table is scanned multiple times). When an alias is provided, it completely hides the actual name of the table or function; for example given `FROM foo AS f`, the remainder of the `SELECT` must refer to this `FROM` item as `f` not `foo`. If an alias is written, a column alias list can also be written to provide substitute names for one or more columns of the table.</dd>
 
-<dt> *select*  </dt>
+<dt> \<select\>  </dt>
 <dd>A sub-`SELECT` can appear in the `FROM` clause. This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. Note that the sub-`SELECT` must be surrounded by parentheses, and an alias must be provided for it. A `VALUES` command can also be used here. See "Non-standard Clauses" in the [Compatibility](#topic1__section19) section for limitations of using correlated sub-selects in HAWQ.</dd>
 
-<dt> *function\_name*  </dt>
-<dd>Function calls can appear in the `FROM` clause. (This is especially useful for functions that return result sets, but any function can be used.) This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. An alias may also be used. If an alias is written, a column alias list can also be written to provide substitute names for one or more attributes of the function's composite return type. If the function has been defined as returning the record data type, then an alias or the key word `AS` must be present, followed by a column definition list in the form `(                 column_name data_type [, ... ] )`. The column definition list must match the actual number and types of columns returned by the function.</dd>
+<dt> \<function\_name\>  </dt>
+<dd>Function calls can appear in the `FROM` clause. (This is especially useful for functions that return result sets, but any function can be used.) This acts as though its output were created as a temporary table for the duration of this single `SELECT` command. An alias may also be used. If an alias is written, a column alias list can also be written to provide substitute names for one or more attributes of the function's composite return type. If the function has been defined as returning the record data type, then an alias or the key word `AS` must be present, followed by a column definition list in the form `(<column_name> <data_type> [, ... ] )`. The column definition list must match the actual number and types of columns returned by the function.</dd>
 
-<dt> *join\_type*  </dt>
+<dt> \<join\_type\>  </dt>
 <dd>One of:
 
 -   **\[INNER\] JOIN**
@@ -117,7 +117,7 @@ The `FROM` clause specifies one or more source tables for the `SELECT`. If multi
 -   **FULL \[OUTER\] JOIN**
 -   **CROSS JOIN**
 
-For the `INNER` and `OUTER` join types, a join condition must be specified, namely exactly one of `NATURAL`, `ON join_condition                      `, or `USING (                   join_column [, ...])`. See below for the meaning. For `CROSS JOIN`, none of these clauses may appear.
+For the `INNER` and `OUTER` join types, a join condition must be specified, namely exactly one of `NATURAL`, `ON <join_condition>                      `, or `USING (<join_column> [, ...])`. See below for the meaning. For `CROSS JOIN`, none of these clauses may appear.
 
 A `JOIN` clause combines two `FROM` items. Use parentheses if necessary to determine the order of nesting. In the absence of parentheses, `JOIN`s nest left-to-right. In any case `JOIN` binds more tightly than the commas separating `FROM` items.
 
@@ -129,10 +129,10 @@ Conversely, `RIGHT OUTER JOIN` returns all the joined rows, plus one row for eac
 
 `FULL OUTER JOIN` returns all the joined rows, plus one row for each unmatched left-hand row (extended with nulls on the right), plus one row for each unmatched right-hand row (extended with nulls on the left).</dd>
 
-<dt>ON *join\_condition*  </dt>
-<dd>*join\_condition* is an expression resulting in a value of type `boolean` (similar to a `WHERE` clause) that specifies which rows in a join are considered to match.</dd>
+<dt>ON \<join\_condition\>  </dt>
+<dd>\<join\_condition\> is an expression resulting in a value of type `boolean` (similar to a `WHERE` clause) that specifies which rows in a join are considered to match.</dd>
 
-<dt>USING (*join\_column* \[, ...\])  </dt>
+<dt>USING (\<join\_column\> \[, ...\])  </dt>
 <dd>A clause of the form `USING ( a, b, ... )` is shorthand for `ON left_table.a = right_table.a AND left_table.b = right_table.b ...               `. Also, `USING` implies that only one of each pair of equivalent columns will be included in the join output, not both.</dd>
 
 <dt>NATURAL  </dt>
@@ -143,30 +143,30 @@ Conversely, `RIGHT OUTER JOIN` returns all the joined rows, plus one row for eac
 The optional `WHERE` clause has the general form:
 
 ``` pre
-WHERE condition
+WHERE <condition>
 ```
 
-where *condition* is any expression that evaluates to a result of type `boolean`. Any row that does not satisfy this condition will be eliminated from the output. A row satisfies the condition if it returns true when the actual row values are substituted for any variable references.
+where \<condition\> is any expression that evaluates to a result of type `boolean`. Any row that does not satisfy this condition will be eliminated from the output. A row satisfies the condition if it returns true when the actual row values are substituted for any variable references.
 
 **The GROUP BY Clause**
 
 The optional `GROUP BY` clause has the general form:
 
 ``` pre
-GROUP BY grouping_element [, ...]
+GROUP BY <grouping_element> [, ...]
 ```
 
-where *grouping\_element* can be one of:
+where \<grouping\_element\> can be one of:
 
 ``` pre
 ()
-expression
-ROLLUP (expression [,...])
-CUBE (expression [,...])
-GROUPING SETS ((grouping_element [, ...]))
+<expression>
+ROLLUP (<expression> [,...])
+CUBE (<expression> [,...])
+GROUPING SETS ((<grouping_element> [, ...]))
 ```
 
-`GROUP             BY` will condense into a single row all selected rows that share the same values for the grouped expressions. *expression* can be an input column name, or the name or ordinal number of an output column (`SELECT` list item), or an arbitrary expression formed from input-column values. In case of ambiguity, a `GROUP BY` name will be interpreted as an input-column name rather than an output column name.
+`GROUP             BY` will condense into a single row all selected rows that share the same values for the grouped expressions. \<expression\> can be an input column name, or the name or ordinal number of an output column (`SELECT` list item), or an arbitrary expression formed from input-column values. In case of ambiguity, a `GROUP BY` name will be interpreted as an input-column name rather than an output column name.
 
 Aggregate functions, if any are used, are computed across all rows making up each group, producing a separate value for each group (whereas without `GROUP BY`, an aggregate produces a single value computed across all the selected rows). When `GROUP BY` is present, it is not valid for the `SELECT` list expressions to refer to ungrouped columns except within aggregate functions, since there would be more than one possible value to return for an ungrouped column.
 
@@ -212,7 +212,7 @@ GROUP BY GROUPING SETS( (a,c), (a,b) )
 
 If using the grouping extension clauses `ROLLUP`, `CUBE`, or `GROUPING SETS`, two challenges arise. First, how do you determine which result rows are subtotals, and then the exact level of aggregation for a given subtotal. Or, how do you differentiate between result rows that contain both stored `NULL` values and "NULL" values created by the `ROLLUP` or `CUBE`. Secondly, when duplicate grouping sets are specified in the `GROUP BY` clause, how do you determine which result rows are duplicates? There are two additional grouping functions you can use in the `SELECT` list to help with this:
 
--   **grouping(column \[, ...\])** — The `grouping` function can be applied to one or more grouping attributes to distinguish super-aggregated rows from regular grouped rows. This can be helpful in distinguishing a "NULL" representing the set of all values in a super-aggregated row from a `NULL` value in a regular row. Each argument in this function produces a bit — either `1` or `0`, where `1` means the result row is super-aggregated, and `0` means the result row is from a regular grouping. The `grouping` function returns an integer by treating these bits as a binary number and then converting it to a base-10 integer.
+-   **grouping(\<column\> \[, ...\])** — The `grouping` function can be applied to one or more grouping attributes to distinguish super-aggregated rows from regular grouped rows. This can be helpful in distinguishing a "NULL" representing the set of all values in a super-aggregated row from a `NULL` value in a regular row. Each argument in this function produces a bit — either `1` or `0`, where `1` means the result row is super-aggregated, and `0` means the result row is from a regular grouping. The `grouping` function returns an integer by treating these bits as a binary number and then converting it to a base-10 integer.
 -   **group\_id()** — For grouping extension queries that contain duplicate grouping sets, the `group_id` function is used to identify duplicate rows in the output. All *unique* grouping set output rows will have a group\_id value of 0. For each duplicate grouping set detected, the `group_id` function assigns a group\_id number greater than 0. All output rows in a particular duplicate grouping set are identified by the same group\_id number.</dd>
 
 **The WINDOW Clause**
@@ -228,29 +228,29 @@ WINDOW mywindow AS (ORDER BY sum(prc*qty));
 A `WINDOW` clause has this general form:
 
 ``` pre
-WINDOW window_name AS (window_specification)
+WINDOW <window_name> AS (<window_specification>)
 ```
 
-where *window\_specification* can be:
+where \<window\_specification\> can be:
 
 ``` pre
-[window_name]
-[PARTITION BY expression [, ...]]
-[ORDER BY expression [ASC | DESC | USING operator] [, ...]
+[<window_name>]
+[PARTITION BY <expression> [, ...]]
+[ORDER BY <expression> [ASC | DESC | USING <operator>] [, ...]
     [{RANGE | ROWS}
       { UNBOUNDED PRECEDING
-      | expression PRECEDING
+      | <expression> PRECEDING
       | CURRENT ROW
-      | BETWEEN window_frame_bound AND window_frame_bound }]]
+      | BETWEEN <window_frame_bound> AND <window_frame_bound> }]]
              where window_frame_bound can be one of:
                UNBOUNDED PRECEDING
-               expression PRECEDING
+               <expression> PRECEDING
                CURRENT ROW
-               expression FOLLOWING
+               <expression> FOLLOWING
                UNBOUNDED FOLLOWING
 ```
 
-<dt> *window\_name*  </dt>
+<dt> \<window\_name\>  </dt>
 <dd>Gives a name to the window specification.</dd>
 
 <dt>PARTITION BY  </dt>
@@ -277,10 +277,10 @@ If you do not specify a `ROW` or a `RANGE` clause, the window bound starts with 
 The optional `HAVING` clause has the general form:
 
 ``` pre
-HAVING condition
+HAVING <condition>
 ```
 
-where *condition* is the same as specified for the `WHERE` clause. `HAVING` eliminates group rows that do not satisfy the condition. `HAVING` is different from `WHERE`: `WHERE` filters individual rows before the application of `GROUP BY`, while `HAVING` filters group rows created by `GROUP BY`. Each column referenced in *condition* must unambiguously reference a grouping column, unless the reference appears within an aggregate function.
+where \<condition\> is the same as specified for the `WHERE` clause. `HAVING` eliminates group rows that do not satisfy the condition. `HAVING` is different from `WHERE`: `WHERE` filters individual rows before the application of `GROUP BY`, while `HAVING` filters group rows created by `GROUP BY`. Each column referenced in \<condition\> must unambiguously reference a grouping column, unless the reference appears within an aggregate function.
 
 The presence of `HAVING` turns a query into a grouped query even if there is no `GROUP BY` clause. This is the same as what happens when the query contains aggregate functions but no `GROUP BY` clause. All the selected rows are considered to form a single group, and the `SELECT` list and `HAVING` clause can only reference table columns from within aggregate functions. Such a query will emit a single row if the `HAVING` condition is true, zero rows if it is not true.
 
@@ -289,10 +289,10 @@ The presence of `HAVING` turns a query into a grouped query even if there is no 
 The `UNION` clause has this general form:
 
 ``` pre
-select_statement UNION [ALL] select_statement
+<select_statement> UNION [ALL] <select_statement>
 ```
 
-where *select\_statement* is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause. (`ORDER BY` and `LIMIT` can be attached to a subquery expression if it is enclosed in parentheses. Without parentheses, these clauses will be taken to apply to the result of the `UNION`, not to its right-hand input expression.)
+where \<select\_statement\> is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause. (`ORDER BY` and `LIMIT` can be attached to a subquery expression if it is enclosed in parentheses. Without parentheses, these clauses will be taken to apply to the result of the `UNION`, not to its right-hand input expression.)
 
 The `UNION` operator computes the set union of the rows returned by the involved `SELECT` statements. A row is in the set union of two result sets if it appears in at least one of the result sets. The two `SELECT` statements that represent the direct operands of the `UNION` must produce the same number of columns, and corresponding columns must be of compatible data types.
 
@@ -307,10 +307,10 @@ Currently, `FOR UPDATE` and `FOR SHARE` may not be specified either for a `UNION
 The `INTERSECT` clause has this general form:
 
 ``` pre
-select_statement INTERSECT [ALL] select_statement
+<select_statement> INTERSECT [ALL] <select_statement>
 ```
 
-where *select\_statement* is any SELECT statement without an `ORDER             BY`, `LIMIT`, `FOR UPDATE`, or `FOR             SHARE` clause.
+where \<select\_statement\> is any SELECT statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause.
 
 The `INTERSECT` operator computes the set intersection of the rows returned by the involved `SELECT` statements. A row is in the intersection of two result sets if it appears in both result sets.
 
@@ -325,10 +325,10 @@ Currently, `FOR UPDATE` and `FOR SHARE` may not be specified either for an `INTE
 The `EXCEPT` clause has this general form:
 
 ``` pre
-select_statement EXCEPT [ALL] select_statement
+<select_statement> EXCEPT [ALL] <select_statement>
 ```
 
-where *select\_statement* is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause.
+where \<select\_statement\> is any `SELECT` statement without an `ORDER BY`, `LIMIT`, `FOR UPDATE`, or `FOR SHARE` clause.
 
 The `EXCEPT` operator computes the set of rows that are in the result of the left `SELECT` statement but not in the result of the right one.
 
@@ -343,10 +343,10 @@ Currently, `FOR             UPDATE` and `FOR SHARE` may not be specified either 
 The optional `ORDER BY` clause has this general form:
 
 ``` pre
-ORDER BY expression [ASC | DESC | USING operator] [, ...]
+ORDER BY <expression> [ASC | DESC | USING <operator>] [, ...]
 ```
 
-where *expression* can be the name or ordinal number of an output column (`SELECT` list item), or it can be an arbitrary expression formed from input-column values.
+where \<expression\> can be the name or ordinal number of an output column (`SELECT` list item), or it can be an arbitrary expression formed from input-column values.
 
 The `ORDER BY` clause causes the result rows to be sorted according to the specified expressions. If two rows are equal according to the left-most expression, they are compared according to the next expression and so on. If they are equal according to all specified expressions, they are returned in an implementation-dependent order.
 
@@ -372,7 +372,7 @@ Character-string data is sorted according to the locale-specific collation order
 
 If `DISTINCT` is specified, all duplicate rows are removed from the result set (one row is kept from each group of duplicates). `ALL` specifies the opposite: all rows are kept. `ALL` is the default.
 
-`DISTINCT             ON ( expression [, ...] )` keeps only the first row of each set of rows where the given expressions evaluate to equal. The `DISTINCT             ON` expressions are interpreted using the same rules as for `ORDER             BY`. Note that the 'first row' of each set is unpredictable unless `ORDER             BY` is used to ensure that the desired row appears first. For example:
+`DISTINCT ON ( <expression> [, ...] )` keeps only the first row of each set of rows where the given expressions evaluate to equal. The `DISTINCT ON` expressions are interpreted using the same rules as for `ORDER BY`. Note that the 'first row' of each set is unpredictable unless `ORDER BY` is used to ensure that the desired row appears first. For example:
 
 ``` pre
 SELECT DISTINCT ON (location) location, time, report FROM
@@ -381,19 +381,19 @@ weather_reports ORDER BY location, time DESC;
 
 retrieves the most recent weather report for each location. But if we had not used `ORDER             BY` to force descending order of time values for each location, we would have gotten a report from an unpredictable time for each location.
 
-The `DISTINCT             ON` expression(s) must match the left-most `ORDER BY` expression(s). The `ORDER BY` clause will normally contain additional expression(s) that determine the desired precedence of rows within each `DISTINCT             ON` group.
+The `DISTINCT ON` expression(s) must match the left-most `ORDER BY` expression(s). The `ORDER BY` clause will normally contain additional expression(s) that determine the desired precedence of rows within each `DISTINCT             ON` group.
 
 **The LIMIT Clause**
 
 The `LIMIT` clause consists of two independent sub-clauses:
 
 ``` pre
-LIMIT {count | ALL}
-OFFSET start
+LIMIT {<count> | ALL}
+OFFSET <start>
 
 ```
 
-where *count* specifies the maximum number of rows to return, while *start* specifies the number of rows to skip before starting to return rows. When both are specified, start rows are skipped before starting to count the count rows to be returned.
+where \<count\> specifies the maximum number of rows to return, while \<start\> specifies the number of rows to skip before starting to return rows. When both are specified, start rows are skipped before starting to count the count rows to be returned.
 
 When using `LIMIT`, it is a good idea to use an `ORDER BY` clause that constrains the result rows into a unique order. Otherwise you will get an unpredictable subset of the query's rows. You may be asking for the tenth through twentieth rows, but tenth through twentieth in what ordering? You don't know what ordering unless you specify `ORDER BY`.
 
@@ -482,7 +482,7 @@ SELECT 2+2;
 
 Some other SQL databases cannot do this except by introducing a dummy one-row table from which to do the `SELECT`.
 
-Note that if a `FROM` clause is not specified, the query cannot reference any database tables. For compatibility with applications that rely on this behavior the *add\_missing\_from* configuration variable can be enabled.
+Note that if a `FROM` clause is not specified, the query cannot reference any database tables. For compatibility with applications that rely on this behavior the *add\_missing\_from* configuration parameter can be enabled.
 
 **The AS Key Word**
 

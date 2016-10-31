@@ -86,6 +86,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[enable\_nestloop](../../reference/guc/parameter_definitions.html#enable_nestloop)**
 
+-   **[enable\_secure\_filesystem](../../reference/guc/parameter_definitions.html#enable_secure_filesystem)**
+  
 -   **[enable\_seqscan](../../reference/guc/parameter_definitions.html#enable_seqscan)**
 
 -   **[enable\_sort](../../reference/guc/parameter_definitions.html#enable_sort)**
@@ -108,7 +110,7 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[gp\_autostats\_mode](../../reference/guc/parameter_definitions.html#gp_autostats_mode)**
 
--   **[gp\_autostats\_on\_change\_threshhold](../../reference/guc/parameter_definitions.html#topic_imj_zhf_gw)**
+-   **[gp\_autostats\_on\_change\_threshold](../../reference/guc/parameter_definitions.html#topic_imj_zhf_gw)**
 
 -   **[gp\_backup\_directIO](../../reference/guc/parameter_definitions.html#gp_backup_directIO)**
 
@@ -215,6 +217,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[gp\_statistics\_pullup\_from\_child\_partition](../../reference/guc/parameter_definitions.html#gp_statistics_pullup_from_child_partition)**
 
 -   **[gp\_statistics\_use\_fkeys](../../reference/guc/parameter_definitions.html#gp_statistics_use_fkeys)**
+
+-   **[gp\_vmem\_idle\_resource\_timeout](../../reference/guc/parameter_definitions.html#gp_vmem_idle_resource_timeout)**
 
 -   **[gp\_vmem\_protect\_segworker\_cache\_limit](../../reference/guc/parameter_definitions.html#gp_vmem_protect_segworker_cache_limit)**
 
@@ -360,6 +364,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[log\_truncate\_on\_rotation](../../reference/guc/parameter_definitions.html#log_truncate_on_rotation)**
 
+-   **[maintenance\_work\_mem](../../reference/guc/parameter_definitions.html#maintenance_work_mem)**
+
 -   **[max\_appendonly\_tables](../../reference/guc/parameter_definitions.html#max_appendonly_tables)**
 
 -   **[max\_connections](../../reference/guc/parameter_definitions.html#max_connections)**
@@ -393,6 +399,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[optimizer\_prefer\_scalar\_dqa\_multistage\_agg](../../reference/guc/parameter_definitions.html#optimizer_prefer_scalar_dqa_multistage_agg)**
 
 -   **[password\_encryption](../../reference/guc/parameter_definitions.html#password_encryption)**
+
+-   **[password\_hash\_algorithm](../../reference/guc/parameter_definitions.html#password_hash_algorithm)**
 
 -   **[pgstat\_track\_activity\_query\_size](../../reference/guc/parameter_definitions.html#pgstat_track_activity_query_size)**
 
@@ -944,6 +952,15 @@ Enables or disables the use of nested-loop join plans by the legacy query optimi
 |-------------|---------|-------------------------|
 | Boolean     | off     | master, session, reload |
 
+## <a name="enable_secure_filesystem"></a>enable\_secure\_filesystem 
+
+Enables or disables access to a secure HDFS file system.  To enable Kerberos security for HDFS, set this configuration parameter to `on` before starting HAWQ.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| Boolean     | off     | master, system, superuser |
+
+
 ## <a name="enable_seqscan"></a>enable\_seqscan
 
 Enables or disables the use of sequential scan plan types by the legacy query optimizer (planner). It's not possible to suppress sequential scans entirely, but turning this variable off discourages the legacy optimizer from using one if there are other methods available.
@@ -1059,10 +1076,6 @@ The `on_change` option triggers statistics collection only when the number of ro
 
 `CREATE TABLE AS SELECT`
 
-`UPDATE`
-
-`DELETE`
-
 `INSERT`
 
 `COPY`
@@ -1096,7 +1109,7 @@ Automatic statistics collection is triggered if data is inserted directly in a l
 </tbody>
 </table>
 
-## <a name="topic_imj_zhf_gw"></a>gp\_autostats\_on\_change\_threshhold
+## <a name="topic_imj_zhf_gw"></a>gp\_autostats\_on\_change\_threshold
 
 Specifies the threshold for automatic statistics collection when `gp_autostats_mode` is set to `on_change`. When a triggering table operation affects a number of rows exceeding this threshold, `ANALYZE         `is added and statistics are collected for the table.
 
@@ -1643,6 +1656,15 @@ When enabled, allows the legacy query optimizer (planner) to use foreign key inf
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | Boolean     | on      | master, session, reload |
+
+## <a name="gp_vmem_idle_resource_timeout"></a>gp\_vmem\_idle\_resource\_timeout
+
+Sets the time in milliseconds a session can be idle before gangs on the segment databases are released to free up resources.
+
+| Value Range    | Default | Set Classifications     |
+|----------------|---------|-------------------------|
+| number of milliseconds | 18000  | master, system, restart |
+
 
 ## <a name="gp_vmem_protect_segworker_cache_limit"></a>gp\_vmem\_protect\_segworker\_cache\_limit
 
@@ -2365,7 +2387,7 @@ The maximum value is INT\_MAX/1024. If an invalid value is specified, the defaul
 
 ## <a name="log_statement"></a>log\_statement
 
-Controls which SQL statements are logged. DDL logs all data definition commands like CREATE, ALTER, and DROP commands. MOD logs all DDL statements, plus INSERT, UPDATE, DELETE, TRUNCATE, and COPY FROM. PREPARE and EXPLAIN ANALYZE statements are also logged if their contained command is of an appropriate type.
+Controls which SQL statements are logged. DDL logs all data definition commands like CREATE, ALTER, and DROP commands. MOD logs all DDL statements, plus INSERT, TRUNCATE, and COPY FROM. PREPARE and EXPLAIN ANALYZE statements are also logged if their contained command is of an appropriate type.
 
 <table>
 <colgroup>
@@ -2416,6 +2438,16 @@ Truncates (overwrites), rather than appends to, any existing log file of the sam
 |-------------|---------|------------------------|
 | Boolean     | off     | local, system, restart |
 
+
+## <a name="maintenance_work_mem"></a>maintenance\_work\_mem
+
+Sets the maximum amount of memory to be used for maintenance operations including vacuum and create index.
+
+| Value Range                      | Default | Set Classifications |
+|----------------------------------|---------|---------------------|
+| 1024KB - (no upper bound) | 65536KB    | master, session, reload     |
+
+
 ## <a name="max_appendonly_tables"></a>max\_appendonly\_tables
 
 Sets the maximum number of append-only relations that can be written to or loaded concurrently. Append-only table partitions and subpartitions are considered as unique tables against this limit. Increasing the limit will allocate more shared memory at server start.
@@ -2426,7 +2458,7 @@ Sets the maximum number of append-only relations that can be written to or loade
 
 ## <a name="max_connections"></a>max\_connections
 
-The maximum number of concurrent connections allowed on master. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount as the master. When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](/20/clientaccess/client_auth.html).
+The maximum number of concurrent connections allowed on master. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount as the master. When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](../../clientaccess/client_auth.html).
 
 Increasing this parameter may cause HAWQ to request more shared memory. See [shared\_buffers](#shared_buffers) for information about HAWQ server instance shared memory buffers.
 
@@ -2620,6 +2652,34 @@ When a password is specified in `CREATE USER` or `ALTER           USER` without 
 |-------------|---------|-------------------------|
 | Boolean     | on      | master, session, reload |
 
+## <a name="password_hash_algorithm"></a>password\_hash\_algorithm
+
+Specifies the cryptographic hash algorithm that is used when storing an encrypted HAWQ Database user password. The default algorithm is MD5.
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="34%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value Range</th>
+<th>Default</th>
+<th>Set Classifications</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>MD5</p>
+<p>SHA-256</p></td>
+<td>MD5</td>
+<td>master, session, reload, superuser</td>
+</tr>
+</tbody>
+</table>
+
+
 ## <a name="pgstat_track_activity_query_size"></a>pgstat\_track\_activity\_query\_size
 
 Sets the maximum length limit for the query text stored in `current_query` column of the system catalog view pg\_stat\_activity. The minimum length is 1024 characters.
@@ -2768,7 +2828,7 @@ Specifies the order in which schemas are searched when an object is referenced b
 
 ## <a name="seg_max_connections"></a>seg\_max\_connections
 
-The maximum number of concurrent connections on a segment. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount of connections allowed on the master (see [max\_connections](#max_connections).) When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](/20/clientaccess/client_auth.html).
+The maximum number of concurrent connections on a segment. In a HAWQ system, user client connections go through the HAWQ master instance only. Segment instances should allow 5-10 times the amount of connections allowed on the master (see [max\_connections](#max_connections).) When you increase this parameter, you must increase [max\_prepared\_transactions](#max_prepared_transactions) as well. For more information about limiting concurrent connections, see [Configuring Client Authentication](../../clientaccess/client_auth.html).
 
 Increasing this parameter may cause HAWQ to request more shared memory. See [shared\_buffers](#shared_buffers) for information about HAWQ server instance shared memory buffers.
 
@@ -3088,7 +3148,7 @@ The estimated cost for vacuuming a buffer that has to be read from disk. This re
 
 Specifies the cutoff age (in transactions) that `VACUUM` should use to decide whether to replace transaction IDs with *FrozenXID* while scanning a table.
 
-For information about `VACUUM` and transaction ID management, see [Managing Data](../../datamgmt/dml.html#topic1) and the [PostgreSQL documentation](http://www.postgresql.org/docs/8.2/static/routine-vacuuming.html#VACUUM-FOR-WRAPAROUND).
+For information about `VACUUM` and transaction ID management, see [Managing Data with HAWQ](../../datamgmt/dml.html#topic1) and the [PostgreSQL documentation](http://www.postgresql.org/docs/8.2/static/routine-vacuuming.html#VACUUM-FOR-WRAPAROUND).
 
 | Value Range            | Default   | Set Classifications    |
 |------------------------|-----------|------------------------|
