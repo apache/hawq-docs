@@ -124,6 +124,12 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
     $ hawq stop master -M fast
     $ hawq stop master -M immediate
     ```
+-   If you want to reload server parameter settings on a HAWQ database where there are active connections, use the command:
+
+
+	```shell
+    $ hawq stop master -u -M fast 
+    ```   
 
 -   When stopping a segment or all segments, you can use the default mode of smart mode. Using fast or immediate mode on segments will have no effect since segments are stateless.
 
