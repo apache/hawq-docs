@@ -414,8 +414,14 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[port](../../reference/guc/parameter_definitions.html#port)**
 
+-   **[pxf\_enable\_filter\_pushdown](../../reference/guc/parameter_definitions.html#pxf_enable_filter_pushdown)**
+
 -   **[pxf\_enable\_stat\_collection](../../reference/guc/parameter_definitions.html#pxf_enable_stat_collection)**
 
+-   **[pxf\_remote\_service\_login](../../reference/guc/parameter_definitions.html#pxf_remote_service_login)**
+
+-   **[pxf\_remote\_service\_secret](../../reference/guc/parameter_definitions.html#pxf_remote_service_secret)**
+  
 -   **[pxf\_service\_address](../../reference/guc/parameter_definitions.html#pxf_service_address)**
 
 -   **[pxf\_service\_port](../../reference/guc/parameter_definitions.html#pxf_service_port)**
@@ -2732,6 +2738,14 @@ The database listener port for a HAWQ instance. The master and each segment has 
 |-----------------------|---------|------------------------|
 | any valid port number | 5432    | local, system, restart |
 
+## <a name="pxf_enable_filter_pushdown"></a>pxf\_enable\_filter\_pushdown
+
+Determines whether partition filtering is enabled. If on, filtering is performed by PXF at the partition level. When off, filtering is performed on the HAWQ side, possibly negatively impacting performance.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| Boolean     | on    | master, session, reload |
+
 ## <a name="pxf_enable_stat_collection"></a>pxf\_enable\_stat\_collection
 
 Determines whether `ANALYZE` collects statistics for readable PXF tables. If true, an analyze operation on a readable PXF table estimates the number of tuples in the table, generates a sample table and runs statistics queries on the sample table to calculate statistics, as it does for native tables. When false, `ANALYZE` displays a message to warn that it is skipping the table because `pxf_enable_stat_collection` is off.
@@ -2740,9 +2754,26 @@ Determines whether `ANALYZE` collects statistics for readable PXF tables. If tru
 |-------------|---------|-------------------------|
 | Boolean     | true    | master, session, reload |
 
+## <a name="pxf_remote_service_login"></a>pxf\_remote\_service\_login
+
+Temporary configuration parameter identifying the login credential to forward to remote services requiring authentication.
+
+| Value Range                                             | Default         | Set Classifications     |
+|---------------------------------------------------------|-----------------|-------------------------|
+| string | | master, session, reload |
+
+## <a name="pxf_remote_service_secret"></a>pxf\_remote\_service\_secret
+
+Temporary configuration parameter identifying the password credential to forward to remote services requiring authentication.
+
+| Value Range                                             | Default         | Set Classifications     |
+|---------------------------------------------------------|-----------------|-------------------------|
+| string | | master, session, reload |
+
+
 ## <a name="pxf_service_address"></a>pxf\_service\_address
 
-Specifies the location and port of the PXF service used by HCatalog. To learn more about HCatalog querying by PXF, see [Using PXF and HCatalog to Query Hive](../../pxf/HivePXF.html#hcatalog).
+Specifies the location and port of the PXF service used by HCatalog. To learn more about HCatalog integration with PXF, see [Using PXF and HCatalog to Query Hive](../../pxf/HivePXF.html#hcatalog).
 
 | Value Range                                             | Default         | Set Classifications     |
 |---------------------------------------------------------|-----------------|-------------------------|
