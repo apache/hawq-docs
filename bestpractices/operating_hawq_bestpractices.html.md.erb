@@ -4,6 +4,16 @@ title: Best Practices for Operating HAWQ
 
 This topic provides best practices for operating HAWQ, including recommendations for stopping, starting and monitoring HAWQ.
 
+## <a id="best_practice_config"></a>Best Practices for Configuring HAWQ Parameters
+
+The HAWQ configuration guc/parameters are located in `$GPHOME/etc/hawq-site.xml`. This configuration file resides on all HAWQ instances and can be modified either by the Ambari interface or the command line. 
+
+If you install and manage HAWQ using Ambari, do not use the command line utilities such as `hawq config` to set or change HAWQ configuration properties. Use the Ambari interface for all configuration changes. Configuration changes to `hawq-site.xml` made outside the Ambari interface will be overwritten when you restart or reconfigure HAWQ using Ambari.
+
+If you make changes using the command line interface, use a consistent `hawq-site.xml` file to configure your entire cluster. 
+
+**Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster.
+
 ## <a id="task_qgk_bz3_1v"></a>Best Practices to Start/Stop HAWQ Cluster Members
 
 For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
