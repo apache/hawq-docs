@@ -8,6 +8,8 @@ Configuration guc/parameters are located in `$GPHOME/etc/hawq-site.xml`. This co
 
 **Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster.
 
+**Note:** If you install and manage HAWQ using Ambari, be aware that any property changes to `hawq-site.xml` made using the command line could be overwritten by Ambari. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to set or change HAWQ configuration properties.
+
 -   **[About Server Configuration Parameters](../reference/guc/guc_config.html)**
 
 -   **[Configuration Parameter Categories](../reference/guc/guc_category-list.html)**
