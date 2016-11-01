@@ -144,7 +144,7 @@ In terms of performance, importing a Python module is an expensive operation and
 
 ```sql
 psql=#
-   CREATE FUNCTION pytest() returns text as $$ 
+   CREATE FUNCTION pytest() RETRUNS text AS $$ 
       if 'mymodule' not in GD:
         import mymodule
         GD['mymodule'] = mymodule
@@ -434,8 +434,8 @@ This PL/Python UDF imports the NumPy module. The function returns SUCCESS if the
 
 ```sql
 CREATE OR REPLACE FUNCTION plpy_test(x int)
-returns text
-as $$
+RETURNS text
+AS $$
   try:
       from numpy import *
       return 'SUCCESS'

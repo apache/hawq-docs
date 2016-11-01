@@ -136,7 +136,7 @@ Perform the following steps as the `gpadmin` user:
     To affect only the *current* database session, set the `pljava_classpath` configuration parameter at the `psql` prompt:
 	
 	 ``` sql
-	 psql> set pljava_classpath='myclasses.jar';
+	 psql> SET pljava_classpath='myclasses.jar';
 	 ```
 
     To affect *all* sessions, set the `pljava_classpath` server configuration parameter and restart the HAWQ cluster:
@@ -635,7 +635,7 @@ $ hawq restart cluster
 From the `psql` command line, run the following command to show the installed JAR files.
 
 ```shell
-psql# show pljava_classpath
+psql# SHOW pljava_classpath
 ```
 
 The following SQL commands create a table and define a Java function to test the method in the JAR file:

@@ -22,7 +22,7 @@ gpadmin=# CREATE FUNCTION count_orders() RETURNS bigint AS $$
  SELECT count(*) FROM orders;
 $$ LANGUAGE SQL;
 CREATE FUNCTION
-gpadmin=# select count_orders();
+gpadmin=# SELECT count_orders();
  my_count 
 ----------
    830513

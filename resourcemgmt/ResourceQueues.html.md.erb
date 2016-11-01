@@ -54,7 +54,7 @@ The minimum value that can be configured is 3, and the maximum is 1024.
 To check the currently configured limit, you can execute the following command:
 
 ``` sql
-postgres=# show hawq_rm_nresqueue_limit;
+postgres=# SHOW hawq_rm_nresqueue_limit;
 ```
 
 ``` pre
@@ -164,7 +164,7 @@ The query displays all the attributes and their values of the selected resource 
 You can also check the runtime status of existing resource queues by querying the `pg_resqueue_status` view:
 
 ``` sql
-postgres=# select * from pg_resqueue_status;
+postgres=# SELECT * FROM pg_resqueue_status;
 ```
 
 

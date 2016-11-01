@@ -134,8 +134,8 @@ These tablespaces use the system default filespace, `pg_system`, the data direct
 To see filespace information, look in the *pg\_filespace* and *pg\_filespace\_entry* catalog tables. You can join these tables with *pg\_tablespace* to see the full definition of a tablespace. For example:
 
 ``` sql
-=# SELECT spcname as tblspc, fsname as filespc,
-          fsedbid as seg_dbid, fselocation as datadir
+=# SELECT spcname AS tblspc, fsname AS filespc,
+          fsedbid AS seg_dbid, fselocation AS datadir
    FROM   pg_tablespace pgts, pg_filespace pgfs,
           pg_filespace_entry pgfse
    WHERE  pgts.spcfsoid=pgfse.fsefsoid

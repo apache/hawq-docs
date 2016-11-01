@@ -203,21 +203,21 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 2.  Set the `password_hash_algorithm` to `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\):
 
     ``` sql
-    # set password_hash_algorithm = 'SHA-256'
+    # SET password_hash_algorithm = 'SHA-256'
     SET
     ```
 
     or:
 
     ``` sql
-    # set password_hash_algorithm = 'SHA-256-FIPS'
+    # SET password_hash_algorithm = 'SHA-256-FIPS'
     SET
     ```
 
 3.  Verify the setting:
 
     ``` sql
-    # show password_hash_algorithm;
+    # SHOW password_hash_algorithm;
     password_hash_algorithm
     ```
 
@@ -240,7 +240,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 4.  Login in as a super user and verify the password hash algorithm setting:
 
     ``` sql
-    # show password_hash_algorithm
+    # SHOW password_hash_algorithm
     password_hash_algorithm
     -------------------------------
     SHA-256-FIPS
@@ -249,7 +249,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 5.  Create a new role with password that has login privileges.
 
     ``` sql
-    create role testdb with password 'testdb12345#' LOGIN;
+    CREATE ROLE testdb WITH PASSWORD 'testdb12345#' LOGIN;
     ```
 
 6.  Change the client authentication method to allow for storage of SHA-256 encrypted passwords:
@@ -276,7 +276,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
     2.  Execute the following:
 
         ``` sql
-        # select rolpassword from pg_authid where rolname = 'testdb';
+        # SELECT rolpassword FROM pg_authid WHERE rolname = 'testdb';
         Rolpassword
         -----------
         sha256<64 hexidecimal characters>

@@ -57,7 +57,7 @@ The *hawq\_toolkit* administrative schema contains several views for checking th
 ```sql
 => SELECT relname AS name, sotdsize AS size, sotdtoastsize
 AS toast, sotdadditionalsize AS other
-FROM hawq_size_of_table_disk as sotd, pg_class
+FROM hawq_size_of_table_disk AS sotd, pg_class
 WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
 ```
 
@@ -66,7 +66,7 @@ WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
 The *hawq\_toolkit* administrative schema contains a number of views for checking index sizes. To see the total size of all index\(es\) on a table, use the *hawq\_size\_of\_all\_table\_indexes* view. To see the size of a particular index, use the *hawq\_size\_of\_index* view. The index sizing views list tables and indexes by object ID \(not by name\). To check the size of an index by name, you must look up the relation name \(`relname`\) in the *pg\_class* table. For example:
 
 ```sql
-=> SELECT soisize, relname as indexname
+=> SELECT soisize, relname AS indexname
 FROM pg_class, hawq_size_of_index
 WHERE pg_class.oid=hawq_size_of_index.soioid
 AND pg_class.relkind='i';
@@ -81,9 +81,9 @@ HAWQ tracks various metadata information in its system catalogs about the object
 You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last analyzed:
 
 ```sql
-=> SELECT schemaname as schema, objname as table,
-usename as role, actionname as action,
-subtype as type, statime as time
+=> SELECT schemaname AS schema, objname AS table,
+usename AS role, actionname AS action,
+subtype AS type, statime AS time
 FROM pg_stat_operations
 WHERE objname='cust';
 ```

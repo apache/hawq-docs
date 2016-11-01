@@ -89,13 +89,13 @@ However, the changed resource quota for the virtual segment cannot exceed the re
 In the following example, when executing the next query statement, the HAWQ resource manager will attempt to allocate 10 virtual segments and each segment has a 256MB memory quota.
 
 ``` sql
-postgres=# set hawq_rm_stmt_vseg_memory='256mb';
+postgres=# SET hawq_rm_stmt_vseg_memory='256mb';
 SET
-postgres=# set hawq_rm_stmt_nvseg=10;
+postgres=# SET hawq_rm_stmt_nvseg=10;
 SET
-postgres=# create table t(i integer);
+postgres=# CREATE TABLE t(i integer);
 CREATE TABLE
-postgres=# insert into t values(1);
+postgres=# INSERT INTO t VALUES(1);
 INSERT 0 1
 ```
 

@@ -97,7 +97,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
     
     ```sql
-    postgres=# select * from gp_segment_configuration;
+    postgres=# SELECT * FROM gp_segment_configuration;
     ```
     
     ```
@@ -164,7 +164,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
     
     ```sql
-    postgres=# select * from gp_segment_configuration ;
+    postgres=# SELECT * FROM gp_segment_configuration ;
     ```
     
     ```
@@ -203,7 +203,7 @@ For example purposes in this procedure, we are adding a new node named `sdw4`.
     ```
     
     ```sql
-    postgres=# select gp_metadata_cache_clear();
+    postgres=# SELECT gp_metadata_cache_clear();
     ```
 
 16. After expansion, if the new size of your cluster is greater than or equal \(#nodes >=4\) to 4, change the value of the `output.replace-datanode-on-failure` HDFS parameter in `hdfs-client.xml` to `false`.

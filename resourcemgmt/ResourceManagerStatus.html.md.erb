@@ -12,7 +12,7 @@ Any query execution requiring resource allocation from HAWQ resource manager has
 The following is an example query to obtain connection track status:
 
 ``` sql
-postgres=# select * from dump_resource_manager_status(1);
+postgres=# SELECT * FROM dump_resource_manager_status(1);
 ```
 
 ``` pre
@@ -59,7 +59,7 @@ Besides the information provided in pg\_resqueue\_status, you can also get YARN 
 The following is a query to obtain resource queue status:
 
 ``` sql
-postgres=# select * from dump_resource_manager_status(2);
+postgres=# SELECT * FROM dump_resource_manager_status(2);
 ```
 
 ``` pre
@@ -104,7 +104,7 @@ QUEUSE(alloc=(0 MB,0.000000 CORE):request=(0 MB,0.000000 CORE):inuse=(0 MB,0.000
 Use the following query to obtain the status of a HAWQ segment.
 
 ``` sql
-postgres=# select * from dump_resource_manager_status(3);
+postgres=# SELECT * FROM dump_resource_manager_status(3);
 ```
 
 ``` pre

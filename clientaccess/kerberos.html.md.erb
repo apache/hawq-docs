@@ -212,7 +212,7 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
 1.  Create a HAWQ administrator role in the database `template1` for the Kerberos principal that is used as the database administrator. The following example uses `gpamin/kerberos-gpdb`.
 
     ``` bash
-    $ psql template1 -c 'create role "gpadmin/kerberos-gpdb" login superuser;'
+    $ psql template1 -c 'CREATE ROLE "gpadmin/kerberos-gpdb" LOGIN SUPERUSER;'
 
     ```
 

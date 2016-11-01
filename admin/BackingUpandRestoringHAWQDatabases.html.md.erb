@@ -191,10 +191,10 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
     master_host$ psql tpch
     ```
     ```sql
-    tpch=# create writable external table wext_orders (like orders)
-    tpch-# location('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
-    tpch=# create writable external table wext_lineitem (like lineitem)
-    tpch-# location('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
+    tpch=# CREATE WRITABLE EXTERNAL TABLE wext_orders (LIKE orders)
+    tpch-# LOCATION('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') FORMAT 'CSV';
+    tpch=# CREATE WRITABLE EXTERNAL TABLE wext_lineitem (LIKE lineitem)
+    tpch-# LOCATION('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') FORMAT 'CSV';
     ```
 
     The sample shows two tables in the `tpch` database: `orders` and `line item`. The sample shows that two corresponding external tables are created. Specify a location or each `gpfdist` instance in the `LOCATION` clause. This sample uses the CSV text format here, but you can also choose other delimited text formats. For more information, see the `CREATE EXTERNAL TABLE` SQL command.
@@ -202,10 +202,10 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 4.  Unload data to the external tables:
 
     ```sql
-    tpch=# begin;
-    tpch=# insert into wext_orders select * from orders;
-    tpch=# insert into wext_lineitem select * from lineitem;
-    tpch=# commit;
+    tpch=# BEGIN;
+    tpch=# INSERT INTO wext_orders SELECT * FROM orders;
+    tpch=# INSERT INTO wext_lineitem SELECT * FROM lineitem;
+    tpch=# COMMIT;
     ```
 
 5.  **\(Optional\)** Stop `gpfdist` servers to free ports for other processes:
@@ -242,8 +242,8 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
     ```
     
     ```sql
-    tpch2=# create external table rext_orders (like orders) location('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') format 'CSV';
-    tpch2=# create external table rext_lineitem (like lineitem) location('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') format 'CSV';
+    tpch2=# CREATE EXTERNAL TABLE rext_orders (LIKE orders) LOCATION('gpfdist://sdw1:8080/orders1.csv', 'gpfdist://sdw1:8081/orders2.csv') FORMAT 'CSV';
+    tpch2=# CREATE EXTERNAL TABLE rext_lineitem (LIKE lineitem) LOCATION('gpfdist://sdw1:8080/lineitem1.csv', 'gpfdist://sdw1:8081/lineitem2.csv') FORMAT 'CSV';
     ```
 
     **Note:** The location clause is the same as the writable external table above.
@@ -251,8 +251,8 @@ This example of using `gpfdist` backs up and restores a 1TB `tpch` database. To
 4.  Load data back from external tables:
 
     ```sql
-    tpch2=# insert into orders select * from rext_orders;
-    tpch2=# insert into lineitem select * from rext_lineitem;
+    tpch2=# INSERT INTO orders SELECT * FROM rext_orders;
+    tpch2=# INSERT INTO lineitem SELECT * FROM rext_lineitem;
     ```
 
 5.  Run the `ANALYZE` command after data loading:

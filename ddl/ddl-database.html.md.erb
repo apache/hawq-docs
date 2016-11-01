@@ -45,7 +45,7 @@ By default, a new database is created by cloning the standard system database te
 If you are working in the `psql` client program, you can use the `\l` meta-command to show the list of databases and templates in your HAWQ system. If using another client program and you are a superuser, you can query the list of databases from the `pg_database` system catalog table. For example:
 
 ``` sql
-=> SELECT datname from pg_database;
+=> SELECT datname FROM pg_database;
 ```
 
 ## <a id="topic7"></a>Altering a Database 
