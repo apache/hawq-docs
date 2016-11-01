@@ -14,7 +14,7 @@ To obtain the best performance during data loading, observe the following best p
 -   If the number of partitions in a table is large, the recommended way to load data into the partitioned table is to load the data partition by partition. For example, you can use query such as the following to load data into only one partition:
 
     ```sql
-    insert into target_partitioned_table_part1 select * from source_table where filter
+    INSERT INTO target_partitioned_table_part1 SELECT * FROM source_table WHERE filter
     ```
 
     where *filter* selects only the data in the target partition.

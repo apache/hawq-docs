@@ -164,7 +164,7 @@ $ psql
 ``` sql
 gpadmin=# CREATE EXTERNAL TABLE hivetest(id int, newid int)
     LOCATION ('pxf://namenode:51200/pxf_hive1?PROFILE=Hive')
-    FORMAT 'custom' (formatter='pxfwritable_import');
+    FORMAT 'CUSTOM' (formatter='pxfwritable_import');
 gpadmin=# select * from hivetest;
 <select output>
 ```
@@ -183,8 +183,8 @@ $ psql
 ```
 
 ``` sql
-gpadmin=# set client_min_messages=DEBUG2
-gpadmin=# select * from hivetest;
+gpadmin=# SET client_min_messages=DEBUG2
+gpadmin=# SELECT * FROM hivetest;
 ...
 DEBUG2:  churl http header: cell #19: X-GP-URL-HOST: localhost
 DEBUG2:  churl http header: cell #20: X-GP-URL-PORT: 51200
@@ -199,5 +199,5 @@ Examine/collect the log messages from `stdout`.
 **Note**: `DEBUG2` database session logging has a performance impact.  Remember to turn off `DEBUG2` logging after you have collected the desired information.
 
 ``` sql
-gpadmin=# set client_min_messages=NOTICE
+gpadmin=# SET client_min_messages=NOTICE
 ```

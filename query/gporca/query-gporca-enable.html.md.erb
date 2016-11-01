@@ -23,7 +23,7 @@ When the configuration parameter `optimizer_analyze_root_partition` is set to `o
 1.  Log into the HAWQ master host as `gpadmin`, the HAWQ administrator.
 2.  Set the values of the server configuration parameters. These HAWQ `hawq             config` utility commands sets the value of the parameters to `on`:
 
-    ``shell
+    ``` shell
     $ hawq config -c optimizer_analyze_root_partition -v on
     ```
 
@@ -55,7 +55,7 @@ Set the server configuration parameter `optimizer` for the HAWQ system.
 Set the server configuration parameter `optimizer` for individual HAWQ databases with the `ALTER DATABASE` command. For example, this command enables GPORCA for the database *test\_db*.
 
 ``` sql
-> ALTER DATABASE test_db SET OPTIMIZER = ON ;
+> ALTER DATABASE test_db SET optimizer = ON ;
 ```
 
 ## <a id="topic_lx4_vqk_br"></a>Enabling GPORCA for a Session or a Query
@@ -63,7 +63,7 @@ Set the server configuration parameter `optimizer` for individual HAWQ databases
 You can use the `SET` command to set `optimizer` server configuration parameter for a session. For example, after you use the `psql` utility to connect to HAWQ, this `SET` command enables GPORCA:
 
 ``` sql
-> set optimizer = on ;
+> SET optimizer = on ;
 ```
 
 To set the parameter for a specific query, include the `SET` command prior to running the query.

@@ -131,7 +131,7 @@ Create a Hive table to expose our sample data set.
 2. Load the `pxf_hive_datafile.txt` sample data file into the `sales_info` table you just created:
 
     ``` sql
-    hive> LOAD DATA local INPATH '/tmp/pxf_hive_datafile.txt'
+    hive> LOAD DATA LOCAL INPATH '/tmp/pxf_hive_datafile.txt'
             INTO TABLE sales_info;
     ```
 
@@ -232,7 +232,7 @@ Use the PXF `HiveText` profile to create a queryable HAWQ external table from th
 2. Query the external table:
 
     ``` sql
-    postgres=# SELECT * FROM salesinfo_hivetextprofile where location="Beijing";
+    postgres=# SELECT * FROM salesinfo_hivetextprofile WHERE location="Beijing";
     ```
 
     ``` shell
@@ -391,7 +391,7 @@ When specifying an array field in a Hive table, you must identify the terminator
 4. Load the `pxf_hive_complex.txt` sample data file into the `table_complextypes` table you just created:
 
     ``` sql
-    hive> LOAD DATA local INPATH '/tmp/pxf_hive_complex.txt' INTO TABLE table_complextypes;
+    hive> LOAD DATA LOCAL INPATH '/tmp/pxf_hive_complex.txt' INTO TABLE table_complextypes;
     ```
 
 5. Perform a query on Hive table `table_complextypes` to verify that the data was loaded successfully:
@@ -569,12 +569,12 @@ To take advantage of PXF partition filtering push-down, the Hive and PXF partiti
 PXF partition filtering push-down is enabled by default. To disable PXF partition filtering push-down, set the `pxf_enable_filter_pushdown` HAWQ server configuration parameter to `off`:
 
 ``` sql
-postgres=# show pxf_enable_filter_pushdown;
+postgres=# SHOW pxf_enable_filter_pushdown;
  pxf_enable_filter_pushdown
 -----------------------------
  on
 (1 row)
-postgres=# set pxf_enable_filter_pushdown=off;
+postgres=# SET pxf_enable_filter_pushdown=off;
 ```
 
 ### <a id="example2"></a>Create Partitioned Hive Table
@@ -626,7 +626,7 @@ postgres=# CREATE EXTERNAL TABLE pxf_sales_part(
   delivery_city TEXT
 )
 LOCATION ('pxf://namenode:51200/sales_part?Profile=Hive')
-FORMAT 'custom' (FORMATTER='pxfwritable_import');
+FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
 
 postgres=# SELECT * FROM pxf_sales_part;
 ```
@@ -644,7 +644,7 @@ postgres=# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND i
 The following HAWQ query reads all the data under `delivery_state` partition `CALIFORNIA`, regardless of the city.
 
 ``` sql
-postgres=# set pxf_enable_filter_pushdown=on;
+postgres=# SET pxf_enable_filter_pushdown=on;
 postgres=# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
 ```
 

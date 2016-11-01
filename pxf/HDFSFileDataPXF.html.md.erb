@@ -444,7 +444,7 @@ To access external HDFS data in a High Availability HDFS cluster, change the `C
 
 ``` sql
 gpadmin=# CREATE EXTERNAL TABLE <table_name> ( <column_name> <data_type> [, ...] | LIKE <other_table> )
-            LOCATION ('pxf://<HA-nameservice>/<path-to-hdfs-file>?PROFILE=HdfsTextSimple|HdfsTextMulti|Avro|SequenceWritable[&<custom-option>=<value>[...]]')
+            LOCATION ('pxf://<HA-nameservice>/<path-to-hdfs-file>?PROFILE=HdfsTextSimple|HdfsTextMulti|Avro[&<custom-option>=<value>[...]]')
          FORMAT '[TEXT|CSV|CUSTOM]' (<formatting-properties>);
 ```
 

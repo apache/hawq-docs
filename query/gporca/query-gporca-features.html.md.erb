@@ -35,7 +35,7 @@ This example `CREATE TABLE` command creates a range partitioned table.
 ``` sql
 CREATE TABLE sales(order_id int, item_id int, amount numeric(15,2), 
       date date, yr_qtr int)
-   range partitioned by yr_qtr;
+   RANGE PARTITIONED BY yr_qtr;
 ```
 
 GPORCA improves on these types of queries against partitioned tables:
@@ -138,7 +138,7 @@ GPORCA generates more efficient plans for the following types of subqueries:
 GPORCA handles queries that contain the `WITH` clause. The `WITH` clause, also known as a common table expression (CTE), generates temporary tables that exist only for the query. This example query contains a CTE.
 
 ``` sql
-WITH v AS (SELECT a, sum(b) as s FROM T where c < 10 GROUP BY a)
+WITH v AS (SELECT a, sum(b) as s FROM T WHERE c < 10 GROUP BY a)
   SELECT *FROM  v AS v1 ,  v AS v2
   WHERE v1.a <> v2.a AND v1.s < v2.s;
 ```

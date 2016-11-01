@@ -62,7 +62,7 @@ CREATE TABLE sales (trans_id int, date date,
 This query against the table is supported by GPORCA and does not generate errors in the log file:
 
 ``` sql
-select * from sales;
+SELECT * FROM sales;
 ```
 
 The `EXPLAIN` plan output lists only the number of selected partitions.
@@ -90,13 +90,13 @@ Output from the log file indicates that GPORCA attempted to optimize the query:
 The following cube query is not supported by GPORCA.
 
 ``` sql
-select count(*) from foo group by cube(a,b);
+SELECT count(*) FROM foo GROUP BY cube(a,b);
 ```
 
 The following EXPLAIN plan output includes the message "Feature not supported by GPORCA."
 
 ``` sql
-postgres=# explain select count(*) from foo group by cube(a,b);
+postgres=# EXPLAIN SELECT count(*) FROM foo GROUP BY cube(a,b);
 ```
 ```
 LOG:  statement: explain select count(*) from foo group by cube(a,b);

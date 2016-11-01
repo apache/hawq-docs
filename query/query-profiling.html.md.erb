@@ -173,21 +173,21 @@ Perform the following steps to create and run a user-defined PL/pgSQL function. 
 4. Create the table `test_tbl` with a single column named `id` of type `integer`:
 
     ``` sql
-    testdb=# create table test_tbl (id int);
+    testdb=# CREATE TABLE test_tbl (id int);
     ```
    
 5. Add some data to the `test_tbl` table:
 
     ``` sql
-    testdb=# insert into test_tbl select generate_series(1,100);
+    testdb=# INSERT INTO test_tbl SELECT generate_series(1,100);
     ```
    
-    This `insert` command adds 100 rows to `test_tbl`, incrementing the `id` for each row.
+    This `INSERT` command adds 100 rows to `test_tbl`, incrementing the `id` for each row.
    
 6. Create a PL/pgSQL function named `explain_plan_func()` by copying and pasting the following text at the `psql` prompt:
 
     ``` sql
-    create or replace function explain_plan_func() returns varchar as $$
+    CREATE OR REPLACE FUNCTION explain_plan_func() RETURNS varchar as $$
    declare
 
      a varchar;
@@ -201,8 +201,8 @@ Perform the following steps to create and run a user-defined PL/pgSQL function. 
        return a;
      end;
    $$
-   language plpgsql
-   volatile;
+   LANGUAGE plpgsql
+   VOLATILE;
     ```
 
 7. Verify the `explain_plan_func()` user-defined function was created successfully:
@@ -216,7 +216,7 @@ Perform the following steps to create and run a user-defined PL/pgSQL function. 
 8. Perform a query using the user-defined function you just created:
 
     ``` sql
-    testdb=# select explain_plan_func();
+    testdb=# SELECT explain_plan_func();
     ```
 
     The `EXPLAIN` plan results for the query are displayed:
