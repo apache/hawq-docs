@@ -54,17 +54,17 @@ You can locate the table by one of two methods, either  by relation ID or by tab
 To find the relation ID, run the following command on the catalog table pg\_class: 
 
 ```
-select oid from pg_class where relname=$relname
+SELECT oid FROM pg_class WHERE relname=$relname
 ```
 To find the table name, run the command: 
 
 ```
-select segrelid from pg_appendonly where relid = $relid
+SELECT segrelid FROM pg_appendonly WHERE relid = $relid
 ```
 then run: 
 
 ```
-select relname from pg_class where oid = segrelid
+SELECT relname FROM pg_class WHERE oid = segrelid
 ```
 
 ## <a id="topic1__section3"></a>Registering Data Using Information from a YAML Configuration File
@@ -92,8 +92,8 @@ This example shows how to use `hawq register` to register HDFS data using a YAML
 First, create a table in SQL and insert some data into it.  
 
 ```
-=> create table paq1(a int, b varchar(10))with(appendonly=true, orientation=parquet);
-=> insert into paq1 values(generate_series(1,1000), 'abcde');
+=> CREATE TABLE paq1(a int, b varchar(10))with(appendonly=true, orientation=parquet);
+=> INSERT INTO paq1 VALUES(generate_series(1,1000), 'abcde');
 ```
 
 Extract the table metadata by using the `hawq extract` utility.
@@ -110,7 +110,7 @@ hawq register --config paq1.yml paq2
 Select the new table and check to verify that  the content has been registered.
 
 ```
-=> select count(*) from paq2;
+=> SELECT count(*) FROM paq2;
 ```
 
 

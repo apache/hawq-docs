@@ -6,13 +6,13 @@ Use SQL commands such as `INSERT` and `SELECT` to query a readable external tabl
 
 ``` sql
 =# INSERT INTO expenses_travel 
-SELECT * from ext_expenses where category='travel';
+SELECT * FROM ext_expenses WHERE category='travel';
 ```
 
 To load all data into a new database table:
 
 ``` sql
-=# CREATE TABLE expenses AS SELECT * from ext_expenses;
+=# CREATE TABLE expenses AS SELECT * FROM ext_expenses;
 ```
 
 
