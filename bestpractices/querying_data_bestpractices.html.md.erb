@@ -17,7 +17,7 @@ The number of virtual segments used for a query directly impacts the query's per
   Otherwise, the number of virtual segments depends on the query's cost: hash-distributed table queries will behave like queries on randomly distributed tables.
 -   **Query Type**: For queries with some user-defined functions, or for external tables where calculating resource costs is difficult, then the number of virtual segments is controlled by `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, as well as by the ON clause and the location list of external tables. If the query has a hash result table (e.g. `INSERT into hash_table`) then the number of virtual segments must be equal to the bucket number of the resulting hash table, If the query is performed in utility mode, such as for `COPY` and `ANALYZE` operations, the virtual segment number is calculated by different policies.
 
-***Note:*** PXF external tables use the `default_hash_table_bucket_number` parameter, not the `hawq_rm_nvseg_perquery_perseg_limit` parameter, to control the number of virtual segments.
+  ***Note:*** PXF external tables use the `default_hash_table_bucket_number` parameter, not the `hawq_rm_nvseg_perquery_perseg_limit` parameter, to control the number of virtual segments.
 
 See [Query Performance](../query/query-performance.html#topic38) for more details.
 
@@ -35,10 +35,9 @@ If a query performs poorly, examine its query plan and ask the following questio
 -   **Does the optimizer selectively scan partitioned tables?** If you use table partitioning, is the optimizer selectively scanning only the child tables required to satisfy the query predicates? Scans of the parent tables should return 0 rows since the parent tables do not contain any data. See [Verifying Your Partition Strategy](../ddl/ddl-partition.html#topic74) for an example of a query plan that shows a selective partition scan.
 -   **Does the optimizer choose hash aggregate and hash join operations where applicable?** Hash operations are typically much faster than other types of joins or aggregations. Row comparison and sorting is done in memory rather than reading/writing from disk. To enable the query optimizer to choose hash operations, there must be sufficient memory available to hold the estimated number of rows. Try increasing work memory to improve performance for a query. If possible, run an `EXPLAIN  ANALYZE` for the query to show which plan operations spilled to disk, how much work memory they used, and how much memory was required to avoid spilling to disk. For example:
 
-    `Work_mem used: 23430K bytes avg, 23430K bytes max (seg0). Work_mem               wanted: 33649K bytes avg, 33649K bytes max (seg0) to lessen workfile I/O affecting 2               workers.`
+    `Work_mem used: 23430K bytes avg, 23430K bytes max (seg0). Work_mem wanted: 33649K bytes avg, 33649K bytes max (seg0) to lessen workfile I/O affecting 2               workers.`
 
-**Note**
-The *work\_mem* property is not configurable. Use resource queues to manage memory use. For more information on resource queues, see [Configuring Resource Management](../resourcemgmt/ConfigureResourceManagement.html) and [Working with Hierarchical Resource Queues](../resourcemgmt/ResourceQueues.html).
+  **Note:** The *work\_mem* property is not configurable. Use resource queues to manage memory use. For more information on resource queues, see [Configuring Resource Management](../resourcemgmt/ConfigureResourceManagement.html) and [Working with Hierarchical Resource Queues](../resourcemgmt/ResourceQueues.html).
 
 
     The "bytes wanted" message from `EXPLAIN               ANALYZE` is based on the amount of data written to work files and is not exact. The minimum `work_mem` needed can differ from the suggested value.
