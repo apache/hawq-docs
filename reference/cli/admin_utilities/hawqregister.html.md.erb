@@ -11,19 +11,19 @@ Usage 1:
 hawq register [<connection_options>] [-f <hdfsfilepath>] [-e <Eof>] <tablename>
 
 Usage 2:
-hawq register [<connection_options>] [-c <configfilepath>][--force] <tablename>
+hawq register [<connection_options>] [-c <configfilepath>][-F] <tablename>
 
 Connection Options:
-     [-h <hostname>] 
-     [-p <port>] 
-     [-U <username>] 
-     [-d <database>]
+     [-h | --host <hostname>] 
+     [-p | --port <port>] 
+     [-U | --user <username>] 
+     [-d | --database <database>]
      
 Misc. Options:
-     [-f <filepath>] 
-	 [-e <eof>]
- 	 [--force]
-     [-c <yml_config>]  
+     [-f | --filepath <filepath>] 
+	 [-e | --eof<eof>]
+ 	 [-F | --force ] 
+     [-c | --config <yml_config>]  
 hawq register help | -? 
 hawq register --version
 ```
@@ -55,8 +55,9 @@ Two usage models are available.
 Metadata for the Parquet file(s) and the destination table must be consistent. Different  data types are used by HAWQ tables and Parquet files, so the data is mapped. Refer to the section [Data Type Mapping](hawqregister.html#topic1__section7) below. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. 
 
 ####Limitations
-Only HAWQ or Hive-generated Parquet tables are supported. Partitioned tables are supported, but only single-level partitioned tables can be registered into HAWQ. 
-Hash tables are not supported in this use model.
+
+Only HAWQ or Hive-generated Parquet tables are supported.
+Hash tables and partitioned tables are not supported in this use model.
 
 ###Usage Model 2: Use information from a YAML configuration file to register data
  
@@ -75,6 +76,8 @@ The register process behaves differently, according to different conditions.
 The currently-supported data types for generating Hive tables into HAWQ tables are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.  
 
 The following HIVE data types cannot be converted to HAWQ equivalents: timestamp, decimal, array, struct, map, and union.   
+
+Only single-level partitioned tables are supported.
 
 ###Data Type Mapping<a id="topic1__section7"></a>
 
