@@ -82,6 +82,8 @@ Tables using random distribution are preferred for registering into HAWQ. If has
 
 In registering hash tables, the size of the registered file should be identical to or a multiple of the hash table bucket number. When registering hash distributed tables using a YAML file, the order of the files in the YAML file should reflect the hash distribution.
 
+Only single-level partitioned tables can be registered into HAWQ.
+
 
 ###Example: Registration using a YAML Configuration File
 
