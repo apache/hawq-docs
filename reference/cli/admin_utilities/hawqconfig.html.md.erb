@@ -35,7 +35,7 @@ The `hawq config` utility allows you to set, unset, or view configuration proper
 
 When `hawq config` sets a configuration property in a `hawq_site.xml` file, the new property setting always displays at the bottom of the file. When you use `hawq config` to remove a configuration property setting, `hawq config` comments out the property in all `hawq-site.xml` files, thereby restoring the system default setting. For example, if you use `hawq config `to remove (comment out) a property and later add it back (set a new value), there will be two instances of the property; one that is commented out, and one that is enabled and inserted at the bottom of the `hawq-site.xml` file.
 
-After setting a property, you must restart your HAWQ system or reload the `hawq-site.xml` file for the change to take effect. Whether you require a restart or a reload depends on the property being set. To reload the configuration files, use `hawq stop -u`. To restart the system, use `hawq restart` .
+After setting a property, you must restart your HAWQ system or reload the `hawq-site.xml` file for the change to take effect. Whether you require a restart or a reload depends on the property being set. To reload the configuration files, use `hawq stop cluster -u`. To restart the system, use `hawq restart` .
 
 To show the currently set values for a property across the system, use the `-s` option.
 
@@ -72,7 +72,7 @@ Removes a HAWQ property setting by commenting out the entry in the `hawq-site.xm
 -s, -\\\-show \<hawq\_property\> 
 </dt>
 <dd>
-Shows the value for a HAWQ property name used on all instances (master and segments) in the HAWQ system. If there is a discrepancy in a parameter value between segment instances, the `hawq config` utility displays an error message. Note that the `hawq config` utility reads property values directly from the database, and not the `hawq-site.xml` file. If you are using `hawq config` to set properties across all segments, then running `hawq               config -s` to verify the changes, you might still see the previous (old) values. You must reload the configuration files (`hawq stop -u`) or restart the system (`hawq restart`) for changes to take effect.
+Shows the value for a HAWQ property name used on all instances (master and segments) in the HAWQ system. If there is a discrepancy in a parameter value between segment instances, the `hawq config` utility displays an error message. Note that the `hawq config` utility reads property values directly from the database, and not the `hawq-site.xml` file. If you are using `hawq config` to set properties across all segments, then running `hawq               config -s` to verify the changes, you might still see the previous (old) values. You must reload the configuration files (`hawq stop cluster -u`) or restart the system (`hawq restart`) for changes to take effect.
 </dd>
 
 <dt>

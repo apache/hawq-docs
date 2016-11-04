@@ -13,13 +13,13 @@ See [The pg\_hba.conf File](http://www.postgresql.org/docs/9.0/interactive/auth-
 The general format of the `pg_hba.conf` file is a set of records, one per line. HAWQ ignores blank lines and any text after the `#` comment character. A record consists of a number of fields that are separated by spaces and/or tabs. Fields can contain white space if the field value is quoted. Records cannot be continued across lines. Each remote client access record has the following format:
 
 ```
-*host*   *database*   *role*   *CIDR-address*   *authentication-method*
+host|hostssl|hostnossl   <database>   <role>   <CIDR-address>|<IP-address>,<IP-mask>   <authentication-method>
 ```
 
 Each UNIX-domain socket access record has the following format:
 
 ```
-*local*   *database*   *role*   *authentication-method*
+local   <database>   <role>   <authentication-method>
 ```
 
 The following table describes meaning of each field.
@@ -30,11 +30,11 @@ The following table describes meaning of each field.
 |host|Matches connection attempts made using TCP/IP. Remote TCP/IP connections will not be possible unless the server is started with an appropriate value for the listen\_addresses server configuration parameter.|
 |hostssl|Matches connection attempts made using TCP/IP, but only when the connection is made with SSL encryption. SSL must be enabled at server start time by setting the ssl configuration parameter|
 |hostnossl|Matches connection attempts made over TCP/IP that do not use SSL.|
-|database|Specifies which database names this record matches. The value `all` specifies that it matches all databases. Multiple database names can be supplied by separating them with commas. A separate file containing database names can be specified by preceding the file name with @.|
-|role|Specifies which database role names this record matches. The value `all` specifies that it matches all roles. If the specified role is a group and you want all members of that group to be included, precede the role name with a +. Multiple role names can be supplied by separating them with commas. A separate file containing role names can be specified by preceding the file name with @.|
-|CIDR-address|Specifies the client machine IP address range that this record matches. It contains an IP address in standard dotted decimal notation and a CIDR mask length. IP addresses can only be specified numerically, not as domain or host names. The mask length indicates the number of high-order bits of the client IP address that must match. Bits to the right of this must be zero in the given IP address. There must not be any white space between the IP address, the /, and the CIDR mask length. Typical examples of a CIDR-address are 192.0.2.0/32 for a single host, or 192.0.2.2/24 for a small network, or 192.0.2.3/16 for a larger one. To specify a single host, use a CIDR mask of 32 for IPv4 or 128 for IPv6. In a network address, do not omit trailing zeroes.|
-|IP-address, IP-mask|These fields can be used as an alternative to the CIDR-address notation. Instead of specifying the mask length, the actual mask is specified in a separate column. For example, 255.255.255.255 represents a CIDR mask length of 32. These fields only apply to host, hostssl, and hostnossl records.|
-|authentication-method|Specifies the authentication method to use when connecting. HAWQ supports the [authentication methods](http://www.postgresql.org/docs/9.0/static/auth-methods.html) supported by PostgreSQL 9.0.|
+|\<database\>|Specifies which database names this record matches. The value `all` specifies that it matches all databases. Multiple database names can be supplied by separating them with commas. A separate file containing database names can be specified by preceding the file name with @.|
+|\<role\>|Specifies which database role names this record matches. The value `all` specifies that it matches all roles. If the specified role is a group and you want all members of that group to be included, precede the role name with a +. Multiple role names can be supplied by separating them with commas. A separate file containing role names can be specified by preceding the file name with @.|
+|\<CIDR-address\>|Specifies the client machine IP address range that this record matches. It contains an IP address in standard dotted decimal notation and a CIDR mask length. IP addresses can only be specified numerically, not as domain or host names. The mask length indicates the number of high-order bits of the client IP address that must match. Bits to the right of this must be zero in the given IP address. There must not be any white space between the IP address, the /, and the CIDR mask length. Typical examples of a CIDR-address are 192.0.2.0/32 for a single host, or 192.0.2.2/24 for a small network, or 192.0.2.3/16 for a larger one. To specify a single host, use a CIDR mask of 32 for IPv4 or 128 for IPv6. In a network address, do not omit trailing zeroes.|
+|\<IP-address\>, \<IP-mask\>|These fields can be used as an alternative to the CIDR-address notation. Instead of specifying the mask length, the actual mask is specified in a separate column. For example, 255.255.255.255 represents a CIDR mask length of 32. These fields only apply to host, hostssl, and hostnossl records.|
+|\<authentication-method\>|Specifies the authentication method to use when connecting. HAWQ supports the [authentication methods](http://www.postgresql.org/docs/9.0/static/auth-methods.html) supported by PostgreSQL 9.0.|
 
 ### <a id="topic3"></a>Editing the pg\_hba.conf File 
 
@@ -44,7 +44,7 @@ This example shows how to edit the `pg_hba.conf` file of the master to allow rem
 
 #### <a id="ip144328"></a>Editing pg\_hba.conf 
 
-1.  Obtain the master data directory from the `hawq_master_directory` property value in `hawq-site.xml` and use a text editor to open the `pg_hba.conf` file in this directory.
+1.  Obtain the master data directory location from the `hawq_master_directory` property value in `hawq-site.xml` and use a text editor to open the `pg_hba.conf` file in this directory.
 2.  Add a line to the file for each type of connection you want to allow. Records are read sequentially, so the order of the records is significant. Typically, earlier records will have tight connection match parameters and weaker authentication methods, while later records will have looser match parameters and stronger authentication methods. For example:
 
     ```
@@ -68,11 +68,12 @@ This example shows how to edit the `pg_hba.conf` file of the master to allow rem
     ```
 
 3.  Save and close the file.
-4.  Reload the `pg_hba.conf `configuration file for your changes to take effect:
+4.  Reload the `pg_hba.conf `configuration file for your changes to take effect. Include the `-M fast` option if you have active/open database connections:
 
     ``` bash
-    $ hawq stop -u
+    $ hawq stop cluster -u [-M fast]
     ```
+    
 
 
 ## <a id="topic4"></a>Limiting Concurrent Connections 
@@ -111,7 +112,7 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
     $ hawq config -c max_connections -v 100
     ```
 
-    This configuration command sets the value on the master.
+    This configuration command sets the value for the master.
 
 3.  Set the value of the `seg_max_connections` parameter. This `hawq config` command sets the value to 6400 on all HAWQ instances.
 
@@ -119,9 +120,9 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
     $ hawq config -c seg_max_connections -v 6400
     ```
 
-    This configuration command sets the value on all segment instances.
+    This configuration command sets the value for all segment instances.
 
-4.  Set the value of the `max_prepared_transactions` parameter. This `hawq config` command sets the value to 200 on the master and all segments.
+4.  Set the value of the `max_prepared_transactions` parameter. This `hawq config` command sets the value to 200 for the master and all segments.
 
     ``` bash
     $ hawq config -c max_prepared_transactions -v 200
@@ -143,7 +144,7 @@ The following steps set the parameter values with the HAWQ utility `hawq config`
     ```
 
 
-**Note:** Raising the values of these parameters may cause HAWQ to request more shared memory. To mitigate this effect, consider decreasing other memory-related parameters such as `gp_cached_segworkers_threshold`.
+**Note:** Raising the values of these parameters may cause HAWQ to request more shared memory. To mitigate this effect, consider decreasing other memory-related server configuration parameters such as [gp\_cached\_segworkers\_threshold](../reference/guc/parameter_definitions.html#gp_cached_segworkers_threshold).
 
 ## <a id="topic5"></a>Encrypting Client/Server Connections 
 
@@ -151,7 +152,7 @@ Enable SSL for client connections to HAWQ to encrypt the data passed over the ne
 
 HAWQ has native support for SSL connections between the client and the master server. SSL connections prevent third parties from snooping on the packets, and also prevent man-in-the-middle attacks. SSL should be used whenever the client connection goes through an insecure link, and must be used whenever client certificate authentication is used.
 
-To enable SSL requires that OpenSSL be installed on both the client and the master server systems. HAWQ can be started with SSL enabled by setting the server configuration parameter `ssl` to `on` in the master `hawq-site.xml`. When starting in SSL mode, the server will look for the files server.key \(server private key\) and server.crt \(server certificate\) in the master data directory. These files must be set up correctly before an SSL-enabled HAWQ system can start.
+Enabling SSL requires that OpenSSL be installed on both the client and the master server systems. HAWQ can be started with SSL enabled by setting the server configuration parameter `ssl` to `on` in the master `hawq-site.xml`. When starting in SSL mode, the server will look for the files `server.key` \(server private key\) and `server.crt` \(server certificate\) in the master data directory. These files must be set up correctly before an SSL-enabled HAWQ system can start.
 
 **Important:** Do not protect the private key with a passphrase. The server does not prompt for a passphrase for the private key, and the database startup fails with an error if one is required.
 
