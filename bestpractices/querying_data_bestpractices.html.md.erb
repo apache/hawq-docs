@@ -9,13 +9,13 @@ To obtain the best results when querying data in HAWQ, review the best practices
 The number of virtual segments used for a query directly impacts the query's performance. The following factors can impact the degree of parallelism of a query:
 
 -   **Cost of the query**. Small queries use fewer segments and larger queries use more segments. Some techniques used in defining resource queues can influence the number of both virtual segments and general resources allocated to queries. For more information, see [Best Practices for Using Resource Queues](managing_resources_bestpractices.html#topic_hvd_pls_wv).
--   **Available resources at query time**. If more resources are available in the resource queue, the resources will be used.
+-   **Available resources at query time**. If more resources are available in the resource queue, those resources will be used.
 -   **Hash table and bucket number**. If the query involves only hash-distributed tables, the query's parallelism is fixed (equal to the hash table bucket number) under the following conditions: 
   	- the bucket number (bucketnum) configured for all the hash tables is the same bucket number for all tables 
    - the table size for random tables is no more than 1.5 times larger than the size allotted for the hash tables. 
 
   Otherwise, the number of virtual segments depends on the query's cost: hash-distributed table queries will behave like queries on randomly distributed tables.
--   **Query Type**: For queries with some user-defined functions, or for external tables where calculating resource costs is difficult, then the number of virtual segments is controlled by `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, as well as by the ON clause and the location list of external tables. If the query has a hash result table (e.g. `INSERT into hash_table`) then the number of virtual segments must be equal to the bucket number of the resulting hash table, If the query is performed in utility mode, such as for `COPY` and `ANALYZE` operations, the virtual segment number is calculated by different policies.
+-   **Query Type**: For queries with some user-defined functions, or for external tables where calculating resource costs is difficult, then the number of virtual segments is controlled by the  `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, as well as by the ON clause and the location list of external tables. If the query has a hash result table (e.g. `INSERT into hash_table`), the number of virtual segments must be equal to the bucket number of the resulting hash table. If the query is performed in utility mode, such as for `COPY` and `ANALYZE` operations, the virtual segment number is calculated by different policies.
 
   ***Note:*** PXF external tables use the `default_hash_table_bucket_number` parameter, not the `hawq_rm_nvseg_perquery_perseg_limit` parameter, to control the number of virtual segments.
 
