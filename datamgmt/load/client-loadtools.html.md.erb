@@ -94,10 +94,11 @@ The HAWQ master database must be configured to accept remote client connections.
 
     Make sure the authentication method you choose is supported by the client tool you are using.
     
-2. If you edited the `pg_hba.conf` file, reload the server configuration:
+2. If you edited the `pg_hba.conf` file, reload the server configuration. If you have any active database connections, you must include the `-M fast` option in the `hawq stop` command:
 
     ``` shell
-    $ hawq stop -u
+    $ hawq stop cluster -u [-M fast]
     ```
+   
 
 3. Verify and/or configure the databases and roles you are using to connect, and that the roles have the correct privileges to the database objects.

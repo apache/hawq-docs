@@ -27,10 +27,10 @@ When the configuration parameter `optimizer_analyze_root_partition` is set to `o
     $ hawq config -c optimizer_analyze_root_partition -v on
     ```
 
-3.  Reload the modified configuration in HAWQ. This HAWQ `hawq stop` utility command reloads the `hawq-site.xml` file of the master without shutting down HAWQ.
+3.  Reload the modified configuration in HAWQ. This HAWQ `hawq stop` utility command reloads the `hawq-site.xml` file without shutting down HAWQ:
 
     ``` shell
-    $ hawq stop master -u
+    $ hawq stop cluster -u
     ```
 
 ## <a id="topic_byp_lqk_br"></a>Enabling GPORCA for a System
@@ -44,10 +44,10 @@ Set the server configuration parameter `optimizer` for the HAWQ system.
     $ hawq config -c optimizer -v on
     ```
 
-3.  Reload the modified configuration in HAWQ. This HAWQ `hawq stop` utility command reloads the `hawq-site.xml` file of the master without shutting down HAWQ.
+3.  Reload the modified configuration in HAWQ:
 
     ``` shell
-    $ hawq stop master -u
+    $ hawq stop cluster -u
     ```
 
 ## <a id="topic_pzr_3db_3r"></a>Enabling GPORCA for a Database

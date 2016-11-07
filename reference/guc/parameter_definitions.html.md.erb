@@ -3015,7 +3015,7 @@ To configure HAWQ to use a custom collection of timezones, copy the file that co
 1.  Copy the file `Default` from the directory `$GPHOME/share/postgresql/timezonesets/` the file `custom`. Add the WIB timezone information from the file `Asia.txt` to the `custom`.
 2.  Copy the file `custom` to the directory `$GPHOME/share/postgresql/timezonesets/` on the HAWQ master and segment hosts.
 3.  Set value of the server configuration parameter `timezone_abbreviations` to `custom`.
-4.  Reload the server configuration file (`hawq stop -u`).
+4.  Reload the server configuration file (`hawq stop cluster -u`).
 
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|

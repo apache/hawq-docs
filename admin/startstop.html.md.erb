@@ -6,9 +6,9 @@ In a HAWQ DBMS, the database server instances \(the master and all segments\) ar
 
 Because a HAWQ system is distributed across many machines, the process for starting and stopping a HAWQ system is different than the process for starting and stopping a regular PostgreSQL DBMS.
 
-Use the `hawq start `*`object`* and `hawq stop `*`object`* commands to start and stop HAWQ, respectively. These management tools are located in the $GPHOME/bin directory on your HAWQ master host. 
+Use the `hawq start `*`object`* and `hawq stop `*`object`* commands to start and stop HAWQ, respectively. These management tools are located in the `$GPHOME/bin` directory on your HAWQ master host. 
 
-Initializing a HAWQ system also starts it.
+Initializing a HAWQ system also starts the system.
 
 **Important:**
 
@@ -32,7 +32,7 @@ Use the `hawq start cluster` command to start a HAWQ system that has already bee
 
 Stop the HAWQ system and then restart it.
 
-The `hawq restart` command with the appropriate cluster or node command can stop and then restart HAWQ after the shutdown completes. If the master or segments are already stopped, restart will have no effect.
+The `hawq restart` command with the appropriate `cluster` or node-type option will stop and then restart HAWQ after the shutdown completes. If the master or segments are already stopped, restart will have no effect.
 
 -   To restart a HAWQ cluster, enter the following command on the master host:
 
@@ -45,14 +45,20 @@ The `hawq restart` command with the appropriate cluster or node command can stop
 
 Reload changes to the HAWQ configuration files without interrupting the system.
 
-The `hawq stop` command can reload changes to the pg\_hba.conf configuration file and to *runtime* parameters in the hawq-site.xml file and pg\_hba.conf file without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](../reference/guc/guc_config.html).
+The `hawq stop` command can reload changes to the `pg_hba.conf `configuration file and to *runtime* parameters in the `hawq-site.xml` and `pg_hba.conf` files without service interruption. Active sessions pick up changes when they reconnect to the database. Many server configuration parameters require a full system restart \(`hawq restart cluster`\) to activate. For information about server configuration parameters, see the [Server Configuration Parameter Reference](../reference/guc/guc_config.html).
 
 -   Reload configuration file changes without shutting down the system using the `hawq stop` command:
 
     ```shell
-    $ hawq stop --reload
+    $ hawq stop cluster --reload
     ```
+    
+    Or:
 
+    ```shell
+    $ hawq stop cluster -u
+    ```
+    
 
 ## <a id="task_maint_mode"></a>Starting the Master in Maintenance Mode 
 
@@ -60,7 +66,7 @@ Start only the master to perform maintenance or administrative tasks without aff
 
 Maintenance mode is a superuser-only mode that should only be used when required for a particular maintenance task. For example, you can connect to a database only on the master instance in maintenance mode and edit system catalog settings.
 
-1.  Run `hawq start` using the master -m option:
+1.  Run `hawq start` on the `master` using the `-m` option:
 
     ```shell
     $ hawq start master -m
@@ -79,7 +85,7 @@ Maintenance mode is a superuser-only mode that should only be used when required
 
     **Warning:**
 
-    Incorrect use of maintenance mode connections can result in an inconsistent system state. Only expert users should perform this operation.
+    Incorrect use of maintenance mode connections can result in an inconsistent HAWQ system state. Only expert users should perform this operation.
 
 
 ## <a id="task_gpdb_stop"></a>Stopping HAWQ 
@@ -118,23 +124,23 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
     $ hawq stop cluster -M immediate
     ```
 
--   Use `hawq stop master` to stop the master only. If you cannot stop the master due to running transactions, try using fast shutdown. If fast shutdown does not work, use immediate shutdown. Use immediate shutdown with caution, as it will result in a crash-recovery run when the system is restarted.
+-   Use `hawq stop master` to stop the master only. If you cannot stop the master due to running transactions, try using `fast` shutdown. If `fast` shutdown does not work, use `immediate` shutdown. Use `immediate` shutdown with caution, as it will result in a crash-recovery run when the system is restarted.
 
 	```shell
     $ hawq stop master -M fast
     $ hawq stop master -M immediate
     ```
--   If you want to reload server parameter settings on a HAWQ database where there are active connections, use the command:
+-   If you have changed or want to reload server parameter settings on a HAWQ database where there are active connections, use the command:
 
 
 	```shell
     $ hawq stop master -u -M fast 
     ```   
 
--   When stopping a segment or all segments, you can use the default mode of smart mode. Using fast or immediate mode on segments will have no effect since segments are stateless.
+-   When stopping a segment or all segments, use `smart` mode, which is the default. Using `fast` or `immediate` mode on segments will have no effect since segments are stateless.
 
     ```shell
     $ hawq stop segment
     $ hawq stop allsegments
     ```
--	Typically you should always use `hawq start cluster` or `hawq restart cluster` to start the cluster. If you do end up using `hawq start standby|master|segment` to start nodes individually, make sure you always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
+-	You should typically always use `hawq start cluster` or `hawq restart cluster` to start the cluster. If you do end up starting nodes individually with `hawq start standby|master|segment`, make sure to always start the standby *before* the active master. Otherwise, the standby can become unsynchronized with the active master.
