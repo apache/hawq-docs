@@ -159,65 +159,68 @@ You can set your chosen encryption method system-wide or on a per-session basis.
 
 #### <a id="topic11"></a>System-wide 
 
-To set the `password_hash_algorithm` server parameter on a complete HAWQ system \(master and its segments\):
+You will perform different procedures to set the encryption method (`password_hash_algorithm` server parameter) system-wide depending upon whether you manage your cluster from the command line or use Ambari. If you use Ambari to manage your HAWQ cluster, you must ensure that you update encryption method configuration parameters only via the Ambari Web UI. If you manage your HAWQ cluster from the command line, you will use the `hawq config` command line utility to set encryption method configuration parameters.
 
-1.  Log into your HAWQ instance as a superuser.
-2.  Execute `hawq config` with the `password_hash_algorithm` set to `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\)
+If you use Ambari to manage your HAWQ cluster:
 
-    ``` bash
-    $ hawq config -c password_hash_algorithm -v 'SHA-256'
+1. Set the `password_hash_algorithm` configuration property via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down. Valid values include `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\).
+2. Select **Service Actions > Restart All** to load the updated configuration.
+
+If you manage your HAWQ cluster from the command line:
+
+1.  Log in to the HAWQ master host as a HAWQ administrator and source the file `/usr/local/hawq/greenplum_path.sh`.
+
+    ``` shell
+    $ source /usr/local/hawq/greenplum_path.sh
     ```
 
-    or:
+1. Use the `hawq config` utility to set `password_hash_algorithm` to `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\):
 
-    ``` bash
+    ``` shell
+    $ hawq config -c password_hash_algorithm -v 'SHA-256'
+    ```
+        
+    Or:
+        
+    ``` shell
     $ hawq config -c password_hash_algorithm -v 'SHA-256-FIPS'
     ```
 
+2. Reload the HAWQ configuration:
+
+    ``` shell
+    $ hawq stop cluster -u
+    ```
+
 3.  Verify the setting:
 
     ``` bash
-    $ hawq config -s
+    $ hawq config -s password_hash_algorithm
     ```
-
-    You will see:
-
-    ``` 
-    Master value: SHA-256
-    Segment value: SHA-256
-    ```
-
-    or:
-
-    ```
-    Master  value: SHA-256-FIPS
-    Segment value: SHA-256-FIPS
-    ```
-
 
 #### <a id="topic12"></a>Individual Session 
 
-To set the `password_hash_algorithm` server parameter for an individual session:
+To set the `password_hash_algorithm` server parameter for an individual database session:
 
-1.  Log into your HAWQ instance as a superuser.
+1.  Log in to your HAWQ instance as a superuser.
 2.  Set the `password_hash_algorithm` to `SHA-256` \(or `SHA-256-FIPS` to use the FIPS-compliant libraries for SHA-256\):
 
     ``` sql
-    # SET password_hash_algorithm = 'SHA-256'
+    =# SET password_hash_algorithm = 'SHA-256'
     SET
     ```
 
     or:
 
     ``` sql
-    # SET password_hash_algorithm = 'SHA-256-FIPS'
+    =# SET password_hash_algorithm = 'SHA-256-FIPS'
     SET
     ```
 
 3.  Verify the setting:
 
     ``` sql
-    # SHOW password_hash_algorithm;
+    =# SHOW password_hash_algorithm;
     password_hash_algorithm
     ```
 
@@ -240,7 +243,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 4.  Login in as a super user and verify the password hash algorithm setting:
 
     ``` sql
-    # SHOW password_hash_algorithm
+    =# SHOW password_hash_algorithm
     password_hash_algorithm
     -------------------------------
     SHA-256-FIPS
@@ -249,7 +252,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
 5.  Create a new role with password that has login privileges.
 
     ``` sql
-    CREATE ROLE testdb WITH PASSWORD 'testdb12345#' LOGIN;
+    =# CREATE ROLE testdb WITH PASSWORD 'testdb12345#' LOGIN;
     ```
 
 6.  Change the client authentication method to allow for storage of SHA-256 encrypted passwords:
@@ -276,7 +279,7 @@ To set the `password_hash_algorithm` server parameter for an individual session:
     2.  Execute the following:
 
         ``` sql
-        # SELECT rolpassword FROM pg_authid WHERE rolname = 'testdb';
+        =# SELECT rolpassword FROM pg_authid WHERE rolname = 'testdb';
         Rolpassword
         -----------
         sha256<64 hexidecimal characters>

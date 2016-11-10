@@ -142,11 +142,35 @@ There are several options for configuring HAWQ statistics collection.
 
 The statistics target is the size of the `most_common_vals`, `most_common_freqs`, and `histogram_bounds` arrays for an individual column. By default, the target is 25. The default target can be changed by setting a server configuration parameter and the target can be set for any column using the `ALTER TABLE` command. Larger values increase the time needed to do `ANALYZE`, but may improve the quality of the legacy query optimizer (planner) estimates.
 
-Set the system default statistics target to a different value by setting the `default_statistics_target` server configuration parameter. The default value is usually sufficient, and you should only raise or lower it if your tests demonstrate that query plans improve with the new target. For example, to raise the default statistics target from 25 to 50 you can use the `hawq config` utility:
+Set the system default statistics target to a different value by setting the `default_statistics_target` server configuration parameter. The default value is usually sufficient, and you should only raise or lower it if your tests demonstrate that query plans improve with the new target. 
 
-``` shell
-$ hawq config -c default_statistics_target -v 50
-```
+You will perform different procedures to set server configuration parameters for your whole HAWQ cluster depending upon whether you manage your cluster from the command line or use Ambari. If you use Ambari to manage your HAWQ cluster, you must ensure that you update server configuration parameters via the Ambari Web UI only. If you manage your HAWQ cluster from the command line, you will use the `hawq config` command line utility to set server configuration parameters.
+
+The following examples show how to raise the default statistics target from 25 to 50.
+
+If you use Ambari to manage your HAWQ cluster:
+
+1. Set the `default_statistics_target` configuration property to `50` via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down.
+2. Select **Service Actions > Restart All** to load the updated configuration.
+
+If you manage your HAWQ cluster from the command line:
+
+1.  Log in to the HAWQ master host as a HAWQ administrator and source the file `/usr/local/hawq/greenplum_path.sh`.
+
+    ``` shell
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+
+1. Use the `hawq config` utility to set `default_statistics_target`:
+
+    ``` shell
+    $ hawq config -c default_statistics_target -v 50
+    ```
+2. Reload the HAWQ configuration:
+
+    ``` shell
+    $ hawq stop cluster -u
+    ```
 
 The statististics target for individual columns can be set with the `ALTER             TABLE` command. For example, some queries can be improved by increasing the target for certain columns, especially columns that have irregular distributions. You can set the target to zero for columns that never contribute to query optimization. When the target is 0, `ANALYZE` ignores the column. For example, the following `ALTER TABLE` command sets the statistics target for the `notes` column in the `emp` table to zero:
 
@@ -174,12 +198,12 @@ The automatic statistics collection mode is set separately for commands that occ
 
 With the `on_change` mode, `ANALYZE` is triggered only if the number of rows affected exceeds the threshold defined by the `gp_autostats_on_change_threshold` configuration parameter. The default value for this parameter is a very high value, 2147483647, which effectively disables automatic statistics collection; you must set the threshold to a lower number to enable it. The `on_change` mode could trigger large, unexpected analyze operations that could disrupt the system, so it is not recommended to set it globally. It could be useful in a session, for example to automatically analyze a table following a load.
 
-To disable automatic statistics collection outside of functions, set the `gp_autostats_mode` parameter to `none`:
+To disable automatic statistics collection outside of functions, set the `gp_autostats_mode` parameter to `none`. For a command-line-managed HAWQ cluster:
 
 ``` shell
 $ hawq configure -c gp_autostats_mode -v none
 ```
 
-Set the `log_autostats` system configuration parameter to on if you want to log automatic statistics collection operations.
+For an Ambari-managed cluster, set `gp_autostats_mode` via the Ambari Web UI.
 
-
+Set the `log_autostats` system configuration parameter to `on` if you want to log automatic statistics collection operations.

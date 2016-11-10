@@ -57,9 +57,9 @@ HAWQ uses the `pljava_classpath` server configuration parameter in place of the 
 
 ### <a id="serverconfigparams"></a>Server Configuration Parameters 
 
-The following server configuration parameters are used by PL/Java in HAWQ. These parameters replace the `pljava.*` parameters that are used in the standard PostgreSQL PL/Java implementation.
+PL/Java uses server configuration parameters to configure classpath, Java VM, and other options. Refer to the [Server Configuration Parameter Reference](../reference/HAWQSiteConfig.html) for general information about HAWQ server configuration parameters.
 
-<p class="note"><b>Note:</b> See the <a href="../reference/hawq-reference.html">HAWQ Reference</a> for information about HAWQ server configuration parameters.</p>
+The following server configuration parameters are used by PL/Java in HAWQ. These parameters replace the `pljava.*` parameters that are used in the standard PostgreSQL PL/Java implementation.
 
 #### pljava\_classpath
 
@@ -77,6 +77,48 @@ If TRUE, lingering savepoints will be released on function exit. If FALSE, they 
 
 Defines the start up options for the Java VM.
 
+### <a id="setting_serverconfigparams"></a>Setting PL/Java Configuration Parameters 
+
+You can set PL/Java server configuration parameters at the session level, or globally across your whole cluster. Your HAWQ cluster configuration must be reloaded after setting a server configuration value globally.
+
+#### <a id="setsrvrcfg_global"></a>Cluster Level
+
+You will perform different procedures to set a PL/Java server configuration parameter for your whole HAWQ cluster depending upon whether you manage your cluster from the command line or use Ambari. If you use Ambari to manage your HAWQ cluster, you must ensure that you update server configuration parameters only via the Ambari Web UI. If you manage your HAWQ cluster from the command line, you will use the `hawq config` command line utility to set PL/Java server configuration parameters.
+
+The following examples add a JAR file named `myclasses.jar` to the `pljava_classpath` server configuration parameter for the entire HAWQ cluster.
+
+If you use Ambari to manage your HAWQ cluster:
+
+1. Set the `pljava_classpath` configuration property to include `myclasses.jar` via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down. 
+2. Select **Service Actions > Restart All** to load the updated configuration.
+
+If you manage your HAWQ cluster from the command line:
+
+1.  Log in to the HAWQ master host as a HAWQ administrator and source the file `/usr/local/hawq/greenplum_path.sh`.
+
+    ``` shell
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+
+1. Use the `hawq config` utility to set `pljava_classpath`:
+
+    ``` shell
+    $ hawq config -c pljava_classpath -v \'myclasses.jar\'
+    ```
+2. Reload the HAWQ configuration:
+
+    ``` shell
+    $ hawq stop cluster -u
+    ```
+
+#### <a id="setsrvrcfg_session"></a>Session Level 
+
+To set a PL/Java server configuration parameter for only the *current* database session, set the parameter within the `psql` subsystem. For example, to set `pljava_classpath`:
+	
+``` sql
+=> SET pljava_classpath='myclasses.jar';
+```
+
 
 ## <a id="enablepljava"></a>Enabling and Removing PL/Java Support 
 
@@ -89,7 +131,7 @@ Before you enable PL/Java:
 
 1. Ensure that you have installed a supported Java runtime environment and that the `$JAVA_HOME` variable is set to the same path on the master and all segment nodes.
 
-2. Perform the following step on all machines to set up `ldconfig` for JDK:
+2. Perform the following step on all machines to set up `ldconfig` for the installed JDK:
 
 	``` shell
 	$ echo "$JAVA_HOME/jre/lib/amd64/server" > /etc/ld.so.conf.d/libjdk.conf
@@ -103,14 +145,14 @@ Before you enable PL/Java:
 To use PL/Java:
 
 1. Enable the language for each database.
-1. Install user-created JAR files containing Java methods on all HAWQ hosts.
-1. Add the name of the JAR file to the HAWQ `pljava_classpath` server configuration parameter in `hawq-site.xml`. This parameter value should contain a list of the installed JAR files.
+1. Install user-created JAR files on all HAWQ hosts.
+1. Add the names of the JAR files to the HAWQ `pljava_classpath` server configuration parameter. This parameter value should identify a list of the installed JAR files.
 
 #### <a id="enablepljava"></a>Enable PL/Java and Install JAR Files 
 
 Perform the following steps as the `gpadmin` user:
 
-1. Enable PL/Java by running the `$GPHOME/share/postgresql/pljava/install.sql` SQL script in the databases that use PL/Java. The `install.sql` script registers both the trusted and untrusted PL/Java. For example, the following command enables PL/Java on a database named `testdb`:
+1. Enable PL/Java by running the `$GPHOME/share/postgresql/pljava/install.sql` SQL script in the databases that will use PL/Java. The `install.sql` script registers both the trusted and untrusted PL/Java languages. For example, the following command enables PL/Java on a database named `testdb`:
 
 	``` shell
 	$ psql -d testdb -f $GPHOME/share/postgresql/pljava/install.sql
@@ -124,27 +166,14 @@ Perform the following steps as the `gpadmin` user:
 
     Use this option *only* if you are certain you want to enable PL/Java in all new databases.
 	
-2. Copy your Java archives (JAR files) to `$GPHOME/lib/postgresql/java/` on all the HAWQ hosts. This example uses the `hawq scp` utility to copy the `myclasses.jar` file:
+2. Copy your Java archives (JAR files) to `$GPHOME/lib/postgresql/java/` on all HAWQ hosts. This example uses the `hawq scp` utility to copy the `myclasses.jar` file located in the current directory:
 
 	``` shell
 	$ hawq scp -f hawq_hosts myclasses.jar =:$GPHOME/lib/postgresql/java/
 	```
 	The `hawq_hosts` file contains a list of the HAWQ hosts.
 
-3. The JAR files must be added to the `pljava_classpath` configuration parameter. This parameter can be set at either the database session or global levels.  
-
-    To affect only the *current* database session, set the `pljava_classpath` configuration parameter at the `psql` prompt:
-	
-	 ``` sql
-	 psql> SET pljava_classpath='myclasses.jar';
-	 ```
-
-    To affect *all* sessions, set the `pljava_classpath` server configuration parameter and restart the HAWQ cluster:
-
-	 ``` shell
-	 $ hawq config -c pljava_classpath -v \'examples.jar:myclasses.jar\' 
-	 $ hawq restart cluster
-	 ```
+3. Add the JAR files to the `pljava_classpath` configuration parameter. Refer to [Setting PL/Java Configuration Parameters](#setting_serverconfigparams) for the specific procedure.
 
 5. (Optional) Your HAWQ installation includes an `examples.sql` file.  This script contains sample PL/Java functions that you can use for testing. Run the commands in this file to create and run test functions that use the Java classes in `examples.jar`:
 
@@ -154,7 +183,9 @@ Perform the following steps as the `gpadmin` user:
 
 #### Configuring PL/Java VM Options
 
-PL/Java JVM options can be configured via the `pljava_vmoptions` parameter in `hawq-site.xml`. For example, `pljava_vmoptions=-Xmx512M` sets the maximum heap size of the JVM. The default Xmx value is set to `-Xmx64M`.
+PL/Java JVM options can be configured via the `pljava_vmoptions` server configuration parameter. For example, `pljava_vmoptions=-Xmx512M` sets the maximum heap size of the JVM. The default `-Xmx` value is `64M`.
+
+Refer to [Setting PL/Java Configuration Parameters](#setting_serverconfigparams) for the specific procedure to set PL/Java server configuration parameters.
 
 	
 ### <a id="uninstallpljava"></a>Disable PL/Java 
@@ -166,7 +197,7 @@ To disable PL/Java, you should:
 
 #### <a id="uninstallpljavasupport"></a>Remove PL/Java Support from Databases 
 
-For a database that no long requires the PL/Java language, remove support for PL/Java by running the `uninstall.sql` file as the `gpadmin` user. For example, the following command disables the PL/Java language in the specified database:
+For a database that no longer requires the PL/Java language, remove support for PL/Java by running the `uninstall.sql` script as the `gpadmin` user. For example, the following command disables the PL/Java language in the specified database:
 
 ``` shell
 $ psql -d <dbname> -f $GPHOME/share/postgresql/pljava/uninstall.sql
@@ -177,17 +208,38 @@ Replace \<dbname\> with the name of the target database.
 
 #### <a id="uninstallpljavapackage"></a>Uninstall the Java JAR files 
 
-When no databases have PL/Java as a registered language, remove the Java JAR files:
+When no databases have PL/Java as a registered language, remove the Java JAR files.
 
-1. Remove the `pljava_classpath` server configuration parameter in the `hawq-site.xml` file.
+If you use Ambari to manage your cluster:
 
-1. Remove the JAR files from the `$GPHOME/lib/postgresql/java/` directory of each HAWQ host.
+1. Remove the `pljava_classpath` configuration property via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down.
 
-1. Restart the HAWQ cluster:
+2. Remove the JAR files from the `$GPHOME/lib/postgresql/java/` directory of each HAWQ host.
 
-	``` shell
-	$ hawq restart cluster
-	```
+3. Select **Service Actions > Restart All** to restart your HAWQ cluster.
+
+
+If you manage your cluster from the command line:
+
+1.  Log in to the HAWQ master host as a HAWQ administrator and source the file `/usr/local/hawq/greenplum_path.sh`.
+
+    ``` shell
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+
+1. Use the `hawq config` utility to remove `pljava_classpath`:
+
+    ``` shell
+    $ hawq config -r pljava_classpath
+    ```
+    
+2. Remove the JAR files from the `$GPHOME/lib/postgresql/java/` directory of each HAWQ host.
+
+3. If you manage your cluster from the command line, run:
+
+    ``` shell
+    $ hawq restart cluster
+    ```
 
 
 ## <a id="writingpljavafunc"></a>Writing PL/Java Functions 
@@ -211,16 +263,16 @@ A Java function is declared with the name of a class and a static method on that
 The following function can be declared to access the static method getProperty on `java.lang.System` class:
 
 ```sql
-CREATE FUNCTION getsysprop(VARCHAR)
-  RETURNS VARCHAR
-  AS 'java.lang.System.getProperty'
-  LANGUAGE java;
+=> CREATE FUNCTION getsysprop(VARCHAR)
+     RETURNS VARCHAR
+     AS 'java.lang.System.getProperty'
+   LANGUAGE java;
 ```
 
 Run the following command to return the Java `user.home` property:
 
 ```sql
-SELECT getsysprop('user.home');
+=> SELECT getsysprop('user.home');
 ```
 
 ### <a id="typemapping"></a>Type Mapping 
@@ -254,10 +306,10 @@ All other types are mapped to `java.lang.String` and will utilize the standard t
 The scalar types that map to Java primitives can not be passed as NULL values. To pass NULL values, those types can have an alternative mapping. You enable this mapping by explicitly denoting it in the method reference.
 
 ```sql
-CREATE FUNCTION trueIfEvenOrNull(integer)
-  RETURNS bool
-  AS 'foo.fee.Fum.trueIfEvenOrNull(java.lang.Integer)'
-  LANGUAGE java;
+=> CREATE FUNCTION trueIfEvenOrNull(integer)
+     RETURNS bool
+     AS 'foo.fee.Fum.trueIfEvenOrNull(java.lang.Integer)'
+   LANGUAGE java;
 ```
 
 The Java code would be similar to this:
@@ -278,8 +330,8 @@ public class Fum
 The following two statements both yield true:
 
 ```sql
-SELECT trueIfEvenOrNull(NULL);
-SELECT trueIfEvenOrNull(4);
+=> SELECT trueIfEvenOrNull(NULL);
+=> SELECT trueIfEvenOrNull(4);
 ```
 
 In order to return NULL values from a Java method, you use the object type that corresponds to the primitive (for example, you return `java.lang.Integer` instead of `int`). The PL/Java resolve mechanism finds the method regardless. Since Java cannot have different return types for methods with the same name, this does not introduce any ambiguity.
@@ -291,12 +343,12 @@ A complex type will always be passed as a read-only `java.sql.ResultSet` with ex
 Example:
 
 ```sql
-CREATE TYPE complexTest
-  AS(base integer, incbase integer, ctime timestamptz);
-CREATE FUNCTION useComplexTest(complexTest)
-  RETURNS VARCHAR
-  AS 'foo.fee.Fum.useComplexTest'
-  IMMUTABLE LANGUAGE java;
+=> CREATE TYPE complexTest
+     AS(base integer, incbase integer, ctime timestamptz);
+=> CREATE FUNCTION useComplexTest(complexTest)
+     RETURNS VARCHAR
+     AS 'foo.fee.Fum.useComplexTest'
+   IMMUTABLE LANGUAGE java;
 ```
 
 In the Java class `Fum`, we add the following static method:
@@ -321,10 +373,10 @@ Java does not stipulate any way to create a `ResultSet`. Hence, returning a Resu
 Assume that the complexTest type in previous section has been created.
 
 ```sql
-CREATE FUNCTION createComplexTest(int, int)
-  RETURNS complexTest
-  AS 'foo.fee.Fum.createComplexTest'
-  IMMUTABLE LANGUAGE java;
+=> CREATE FUNCTION createComplexTest(int, int)
+     RETURNS complexTest
+     AS 'foo.fee.Fum.createComplexTest'
+   IMMUTABLE LANGUAGE java;
 ```
 
 The PL/Java method resolve will now find the following method in the `Fum` class:
@@ -353,10 +405,10 @@ When returning result set, you should not build a result set before returning it
 In order to return a set of a scalar type, you need create a Java method that returns something that implements the `java.util.Iterator` interface. Here is an example of a method that returns a SETOF varchar:
 
 ```sql
-CREATE FUNCTION javatest.getSystemProperties()
-  RETURNS SETOF varchar
-  AS 'foo.fee.Bar.getNames'
-  IMMUTABLE LANGUAGE java;
+=> CREATE FUNCTION javatest.getSystemProperties()
+     RETURNS SETOF varchar
+     AS 'foo.fee.Bar.getNames'
+   IMMUTABLE LANGUAGE java;
 ```
 
 This simple Java method returns an iterator:
@@ -390,10 +442,10 @@ This interface has two methods. The boolean `assignRowValues(java.sql.ResultSet 
 You can use this interface the following way:
 
 ```sql
-CREATE FUNCTION javatest.listComplexTests(int, int)
-  RETURNS SETOF complexTest
-  AS 'foo.fee.Fum.listComplexTest'
-  IMMUTABLE LANGUAGE java;
+=> CREATE FUNCTION javatest.listComplexTests(int, int)
+     RETURNS SETOF complexTest
+     AS 'foo.fee.Fum.listComplexTest'
+   IMMUTABLE LANGUAGE java;
 ```
 
 The function maps to a static java method that returns an instance that implements the `ResultSetProvider` interface.
@@ -444,14 +496,14 @@ This interface is similar to the `ResultSetProvider` interface in that it has a 
 Here is an example that executes a query using a statement that it obtained using the default connection. The SQL suitable for the deployment descriptor looks like this:
 
 ```sql
-CREATE FUNCTION javatest.listSupers()
-  RETURNS SETOF pg_user
-  AS 'org.postgresql.pljava.example.Users.listSupers'
-  LANGUAGE java;
-CREATE FUNCTION javatest.listNonSupers()
-  RETURNS SETOF pg_user
-  AS 'org.postgresql.pljava.example.Users.listNonSupers'
-  LANGUAGE java;
+=> CREATE FUNCTION javatest.listSupers()
+     RETURNS SETOF pg_user
+     AS 'org.postgresql.pljava.example.Users.listSupers'
+   LANGUAGE java;
+=> CREATE FUNCTION javatest.listNonSupers()
+     RETURNS SETOF pg_user
+     AS 'org.postgresql.pljava.example.Users.listNonSupers'
+   LANGUAGE java;
 ```
 
 And in the Java package `org.postgresql.pljava.example` a class `Users` is added:
@@ -606,7 +658,7 @@ Compile the Java code:
 $ javac *.java
 ```
 
-Create a JAR archive named `analytics.jar` that contains the class file and the manifest file in the JAR.
+Create a JAR archive named `analytics.jar` that contains the class file and the manifest file in the JAR:
 
 ```shell
 $ jar cfm analytics.jar manifest.txt *.class
@@ -614,46 +666,37 @@ $ jar cfm analytics.jar manifest.txt *.class
 
 Upload the JAR file to the HAWQ master host.
 
-Run the `hawq scp` utility to copy the jar file to the HAWQ Java directory. Use the `-f` option to specify the file that contains a list of the master and segment hosts.
+Run the `hawq scp` utility to copy the jar file to the HAWQ Java directory. Use the `-f` option to specify the file that contains a list of the master and segment hosts:
 
 ```shell
 $ hawq scp -f hawq_hosts analytics.jar =:/usr/local/hawq/lib/postgresql/java/
 ```
 
-Use the `hawq config` utility to set the HAWQ `pljava_classpath` server configuration parameter. The parameter lists the installed JAR files.
+Add the `analytics.jar` JAR file to the `pljava_classpath` configuration parameter. Refer to [Setting PL/Java Configuration Parameters](#setting_serverconfigparams) for the specific procedure.
 
-```shell
-$ hawq config -c pljava_classpath -v \'analytics.jar\'
-```
+From the `psql` subsystem, run the following command to show the installed JAR files:
 
-Run the `hawq restart` utility to reload the configuration files.
-
-```shell
-$ hawq restart cluster
-```
-
-From the `psql` command line, run the following command to show the installed JAR files.
-
-```shell
-psql# SHOW pljava_classpath
+``` sql
+=> SHOW pljava_classpath
 ```
 
 The following SQL commands create a table and define a Java function to test the method in the JAR file:
 
 ```sql
-CREATE TABLE temp (a varchar) DISTRIBUTED randomly; 
-INSERT INTO temp values ('my string'); 
+=> CREATE TABLE temp (a varchar) DISTRIBUTED randomly; 
+=> INSERT INTO temp values ('my string'); 
 --Example function 
-CREATE OR REPLACE FUNCTION java_substring(varchar, int, int) 
-RETURNS varchar AS 'Example.substring' LANGUAGE java; 
+=> CREATE OR REPLACE FUNCTION java_substring(varchar, int, int) 
+     RETURNS varchar AS 'Example.substring' 
+   LANGUAGE java; 
 --Example execution 
-SELECT java_substring(a, 1, 5) FROM temp;
+=> SELECT java_substring(a, 1, 5) FROM temp;
 ```
 
-You can place the contents in a file, `mysample.sql` and run the command from a psql command line:
+If you add these SQL commands to a file named `mysample.sql`, you can run the commands from the `psql` subsystem using the `\i` meta-command:
 
-```shell
-psql# \i mysample.sql 
+``` sql
+=> \i mysample.sql 
 ```
 
 The output is similar to this:
