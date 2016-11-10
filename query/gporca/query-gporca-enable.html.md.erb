@@ -20,14 +20,27 @@ As part of routine database maintenance, you should refresh statistics on the ro
 
 When the configuration parameter `optimizer_analyze_root_partition` is set to `on`, root partition statistics will be collected when `ANALYZE` is run on a partitioned table. Root partition statistics are required by GPORCA.
 
-1.  Log into the HAWQ master host as `gpadmin`, the HAWQ administrator.
-2.  Set the values of the server configuration parameters. These HAWQ `hawq             config` utility commands sets the value of the parameters to `on`:
+You will perform different procedures to set optimizer configuration parameters for your whole HAWQ cluster depending upon whether you manage your cluster from the command line or use Ambari. If you use Ambari to manage your HAWQ cluster, you must ensure that you update server configuration parameters only via the Ambari Web UI. If you manage your HAWQ cluster from the command line, you will use the `hawq config` command line utility to set optimizer server configuration parameters.
+
+If you use Ambari to manage your HAWQ cluster:
+
+1. Set the `optimizer_analyze_root_partition` configuration property to `on` via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down. 
+2. Select **Service Actions > Restart All** to load the updated configuration.
+
+If you manage your HAWQ cluster from the command line:
+
+1.  Log in to the HAWQ master host as a HAWQ administrator and source the file `/usr/local/hawq/greenplum_path.sh`.
+
+    ``` shell
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+
+1. Use the `hawq config` utility to set `optimizer_analyze_root_partition`:
 
     ``` shell
     $ hawq config -c optimizer_analyze_root_partition -v on
     ```
-
-3.  Reload the modified configuration in HAWQ. This HAWQ `hawq stop` utility command reloads the `hawq-site.xml` file without shutting down HAWQ:
+2. Reload the HAWQ configuration:
 
     ``` shell
     $ hawq stop cluster -u
@@ -37,14 +50,25 @@ When the configuration parameter `optimizer_analyze_root_partition` is set to `o
 
 Set the server configuration parameter `optimizer` for the HAWQ system.
 
-1.  Log into the HAWQ master host as `gpadmin`, the HAWQ administrator.
-2.  Set the value of the server configuration `optimizer` parameter. This HAWQ `hawq config` utility command sets the value to `on`:
+If you use Ambari to manage your HAWQ cluster:
+
+1. Set the `optimizer` configuration property to `on` via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down. 
+2. Select **Service Actions > Restart All** to load the updated configuration.
+
+If you manage your HAWQ cluster from the command line:
+
+1.  Log in to the HAWQ master host as a HAWQ administrator and source the file `/usr/local/hawq/greenplum_path.sh`.
+
+    ``` shell
+    $ source /usr/local/hawq/greenplum_path.sh
+    ```
+
+1. Use the `hawq config` utility to set `optimizer`:
 
     ``` shell
     $ hawq config -c optimizer -v on
     ```
-
-3.  Reload the modified configuration in HAWQ:
+2. Reload the HAWQ configuration:
 
     ``` shell
     $ hawq stop cluster -u
@@ -55,7 +79,7 @@ Set the server configuration parameter `optimizer` for the HAWQ system.
 Set the server configuration parameter `optimizer` for individual HAWQ databases with the `ALTER DATABASE` command. For example, this command enables GPORCA for the database *test\_db*.
 
 ``` sql
-> ALTER DATABASE test_db SET optimizer = ON ;
+=> ALTER DATABASE test_db SET optimizer = ON ;
 ```
 
 ## <a id="topic_lx4_vqk_br"></a>Enabling GPORCA for a Session or a Query
@@ -63,7 +87,7 @@ Set the server configuration parameter `optimizer` for individual HAWQ databases
 You can use the `SET` command to set `optimizer` server configuration parameter for a session. For example, after you use the `psql` utility to connect to HAWQ, this `SET` command enables GPORCA:
 
 ``` sql
-> SET optimizer = on ;
+=> SET optimizer = on ;
 ```
 
 To set the parameter for a specific query, include the `SET` command prior to running the query.

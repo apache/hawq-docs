@@ -36,7 +36,7 @@ When `VERBOSE` is specified, `VACUUM` emits progress messages to indicate which 
 **Note:** A VACUUM FULL is not recommended in HAWQ. See [Notes](#topic1__section6).</dd>
 
 <dt>FREEZE  </dt>
-<dd>Specifying `FREEZE` is equivalent to performing `VACUUM` with the `vacuum_freeze_min_age` server configuration parameter set to zero. The `FREEZE` option is deprecated and will be removed in a future release. Set the parameter by using `hawq config` or by modifying your `hawq-site.xml` configuration file instead.</dd>
+<dd>Specifying `FREEZE` is equivalent to performing `VACUUM` with the `vacuum_freeze_min_age` server configuration parameter set to zero. The `FREEZE` option is deprecated and will be removed in a future release.</dd>
 
 <dt>VERBOSE  </dt>
 <dd>Prints a detailed vacuum activity report for each table.</dd>
