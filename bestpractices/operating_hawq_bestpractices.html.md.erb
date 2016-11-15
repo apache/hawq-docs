@@ -10,9 +10,9 @@ The HAWQ configuration guc/parameters are located in `$GPHOME/etc/hawq-site.xml`
 
 If you install and manage HAWQ using Ambari, use the Ambari interface for all configuration changes. Do not use command line utilities such as `hawq config` to set or change HAWQ configuration properties for Ambari-managed clusters. Configuration changes to `hawq-site.xml` made outside the Ambari interface will be overwritten when you restart or reconfigure HAWQ using Ambari.
 
-If manage your cluster using command line tools instead of Ambari, use a consistent `hawq-site.xml` file to configure your entire cluster. 
+If you manage your cluster using command line tools instead of Ambari, use a consistent `hawq-site.xml` file to configure your entire cluster. 
 
-**Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster.
+**Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster. For Ambari clusters, always use Ambari for configuring `hawq-site.xml` parameters.
 
 ## <a id="task_qgk_bz3_1v"></a>Best Practices to Start/Stop HAWQ Cluster Members
 
