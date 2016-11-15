@@ -4,6 +4,16 @@ title: Best Practices for Operating HAWQ
 
 This topic provides best practices for operating HAWQ, including recommendations for stopping, starting and monitoring HAWQ.
 
+## <a id="best_practice_config"></a>Best Practices for Configuring HAWQ Parameters
+
+The HAWQ configuration guc/parameters are located in `$GPHOME/etc/hawq-site.xml`. This configuration file resides on all HAWQ instances and can be modified either by the Ambari interface or the command line. 
+
+If you install and manage HAWQ using Ambari, use the Ambari interface for all configuration changes. Do not use command line utilities such as `hawq config` to set or change HAWQ configuration properties for Ambari-managed clusters. Configuration changes to `hawq-site.xml` made outside the Ambari interface will be overwritten when you restart or reconfigure HAWQ using Ambari.
+
+If you manage your cluster using command line tools instead of Ambari, use a consistent `hawq-site.xml` file to configure your entire cluster. 
+
+**Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster. For Ambari clusters, always use Ambari for configuring `hawq-site.xml` parameters.
+
 ## <a id="task_qgk_bz3_1v"></a>Best Practices to Start/Stop HAWQ Cluster Members
 
 For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
@@ -85,7 +95,6 @@ WHERE status &lt;&gt; &#39;u&#39;;</code></pre></td>
 <ol>
 <li>Verify that the hosts with down segments are responsive.</li>
 <li>If hosts are OK, check the <span class="ph filepath">pg_log</span> files for the down segments to discover the root cause of the segments going down.</li>
-<li>If no unexpected errors are found, run the <code class="ph codeph">gprecoverseg</code> utility to bring the segments back online.</li>
 </ol></td>
 </tr>
 </tbody>
@@ -116,7 +125,7 @@ WHERE status &lt;&gt; &#39;u&#39;;</code></pre></td>
 <p>Recommended frequency: real-time, if possible, or every 15 minutes</p>
 <p>Severity: CRITICAL</p></td>
 <td>Set up system check for hardware and OS errors.</td>
-<td>If required, remove a machine from the HAWQ cluster to resolve hardware and OS issues, then, after add it back to the cluster and run <code class="ph codeph">gprecoverseg</code>.</td>
+<td>If required, remove a machine from the HAWQ cluster to resolve hardware and OS issues, then add it back to the cluster after the issues are resolved.</td>
 </tr>
 <tr class="even">
 <td>Check disk space usage on volumes used for HAWQ data storage and the OS.
