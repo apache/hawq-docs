@@ -124,7 +124,7 @@ To obtain the best results when querying data in HAWQ, review the best practices
 
 The number of virtual segments used for a query directly impacts the query's performance. The following factors can impact the degree of parallelism of a query:
 
--   **Cost of the query**. Small queries use fewer segments and larger queries use more segments. Some techniques used in defining resource queues can influence the number of both virtual segments and general resources allocated to queries. For more information, see [Best Practices for Using Resource Queues](managing_resources_bestpractices.html#topic_hvd_pls_wv).
+-   **Cost of the query**. Small queries use fewer segments and larger queries use more segments. Some techniques used in defining resource queues can influence the number of both virtual segments and general resources allocated to queries.
 -   **Available resources at query time**. If more resources are available in the resource queue, those resources will be used.
 -   **Hash table and bucket number**. If the query involves only hash-distributed tables, the query's parallelism is fixed (equal to the hash table bucket number) under the following conditions:
 
