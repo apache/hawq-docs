@@ -120,7 +120,7 @@ The following table describes the metrics related to data locality. Use these me
 
 To obtain the best results when querying data in HAWQ, review the best practices described in this topic.
 
-## <a id="virtual_seg_performance"></a>Factors Impacting Query Performance
+### <a id="virtual_seg_performance"></a>Factors Impacting Query Performance
 
 The number of virtual segments used for a query directly impacts the query's performance. The following factors can impact the degree of parallelism of a query:
 
@@ -135,6 +135,7 @@ The number of virtual segments used for a query directly impacts the query's per
 
 -   **Query Type**: It can be difficult to calculate  resource costs for queries with some user-defined functions or for queries to external tables. With these queries,  the number of virtual segments is controlled by the  `hawq_rm_nvseg_perquery_limit `and `hawq_rm_nvseg_perquery_perseg_limit` parameters, as well as by the ON clause and the location list of external tables. If the query has a hash result table (e.g. `INSERT into hash_table`), the number of virtual segments must be equal to the bucket number of the resulting hash table. If the query is performed in utility mode, such as for `COPY` and `ANALYZE` operations, the virtual segment number is calculated by different policies.
 
+###General Guidelines
 
 The following guidelines expand on the numbers of virtual segments to use, provided there are sufficient resources available.
 
