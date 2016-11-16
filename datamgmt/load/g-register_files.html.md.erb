@@ -22,7 +22,7 @@ Requirements for running `hawq register` on the  server are:
 
 Files or folders in HDFS can be registered into an existing table, allowing them to be managed as a HAWQ internal table. When registering files, you can optionally specify the maximum amount of data to be loaded, in bytes, using the `--eof` option. If registering a folder, the actual file sizes are used. 
 
-Only HAWQ or Hive-generated Parquet tables are supported. Only single-level partitioned tables are supported; registering partitioned tables with more than one level will result in an error. 
+Only HAWQ or Hive-generated Parquet tables are supported. Partitioned tables are not supported. Attempting to register these tables will result in an error. 
 
 Metadata for the Parquet file(s) and the destination table must be consistent. Different data types are used by HAWQ tables and Parquet files, so data must be mapped. You must verify that the structure of the Parquet files and the HAWQ table are compatible before running `hawq register`. Not all HIVE data types can be mapped to HAWQ equivalents. The currently-supported HIVE data types are: boolean, int, smallint, tinyint, bigint, float, double, string, binary, char, and varchar.
 
