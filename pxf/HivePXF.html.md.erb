@@ -470,18 +470,18 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
 2.  If necessary, set the `pxf_service_address` global configuration property to the hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
 
     ``` sql
-    postgres=# SET pxf_service_address TO "hivenode:51200"
+    postgres=# SET pxf_service_address TO <hivenode>:51200
     ```
 
 3.  HCatalog internally uses the `pxf` protocol to query.  Grant this protocol privilege to all roles requiring access:
 
     ``` sql
-    postgres=# GRANT ALL ON PROTOCOL pxf TO "role";
+    postgres=# GRANT ALL ON PROTOCOL pxf TO <role>;
     ```
 
-4. Creating a HAWQ table `WITH OIDS` is not recommended. If any user tables were created `WITH OIDS`, additional operations are required to enable HCatalog integration. To access a Hive table via HCatalog when user tables were created `WITH OIDS`, HAWQ users must have `SELECT` permission to query every user table within the same schema that was created with the `WITH OIDS` option. 
+4. It is not recommended to create a HAWQ table using the `WITH (OIDS)` clause. If any user tables were created using the `WITH (OIDS)` clause, additional operations are required to enable HCatalog integration. To access a Hive table via HCatalog when user tables were created using `WITH (OIDS)`, HAWQ users must have `SELECT` permission to query every user table within the same schema that was created using the `WITH (OIDS)` clause. 
 
-    1. Determine which user tables were created `WITH OIDS`:
+    1. Determine which user tables were created using the `WITH (OIDS)` clause:
 
         ``` sql
         postgres=# SELECT oid, relname FROM pg_class 
@@ -492,7 +492,7 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
     2. Grant `SELECT` privilege on all returned tables to all roles to which you chose to provide HCatalog query access. For example:
 
         ``` sql
-        postgres=# GRANT SELECT ON "table-created-WITH-OIDS" TO "role"
+        postgres=# GRANT SELECT ON <table-created-WITH-OIDS> TO <role>
         ``` 
 
 ### <a id="topic_j1l_y55_c5"></a>Usage    
