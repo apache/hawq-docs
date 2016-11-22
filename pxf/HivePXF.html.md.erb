@@ -470,14 +470,30 @@ To enable HCatalog query integration in HAWQ, perform the following steps:
 2.  If necessary, set the `pxf_service_address` global configuration property to the hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
 
     ``` sql
-    postgres=# SET pxf_service_address TO "hivenode:51200"
+    postgres=# SET pxf_service_address TO <hivenode>:51200
     ```
 
 3.  HCatalog internally uses the `pxf` protocol to query.  Grant this protocol privilege to all roles requiring access:
 
     ``` sql
-    postgres=# GRANT ALL ON PROTOCOL pxf TO "role";
-    ``` 
+    postgres=# GRANT ALL ON PROTOCOL pxf TO <role>;
+    ```
+
+4. It is not recommended to create a HAWQ table using the `WITH (OIDS)` clause. If any user tables were created using the `WITH (OIDS)` clause, additional operations are required to enable HCatalog integration. To access a Hive table via HCatalog when user tables were created using `WITH (OIDS)`, HAWQ users must have `SELECT` permission to query every user table within the same schema that was created using the `WITH (OIDS)` clause. 
+
+    1. Determine which user tables were created using the `WITH (OIDS)` clause:
+
+        ``` sql
+        postgres=# SELECT oid, relname FROM pg_class 
+                     WHERE relhasoids = true 
+                       AND relnamespace <> (SELECT oid FROM pg_namespace WHERE nspname = 'pg_catalog');
+        ```
+
+    2. Grant `SELECT` privilege on all returned tables to all roles to which you chose to provide HCatalog query access. For example:
+
+        ``` sql
+        postgres=# GRANT SELECT ON <table-created-WITH-OIDS> TO <role>
+        ``` 
 
 ### <a id="topic_j1l_y55_c5"></a>Usage    
 
@@ -495,24 +511,24 @@ postgres=# SELECT * FROM hcatalog.default.sales_info;
 
 To obtain a description of a Hive table with HCatalog integration, you can use the `psql` client interface.
 
--   Within HAWQ, use either the `\d                                         hcatalog.hive-db-name.hive-table-name` or `\d+                                         hcatalog.hive-db-name.hive-table-name` commands to describe a single table. For example, from the `psql` client interface:
+-   Within HAWQ, use either the `\d                                         hcatalog.hive-db-name.hive-table-name` or `\d+                                         hcatalog.hive-db-name.hive-table-name` commands to describe a single table.  `\d` displays only HAWQ's interpretation of the underlying source (Hive in this case) data type, while `\d+` displays both the HAWQ interpreted and Hive source data types. For example, from the `psql` client interface:
 
     ``` shell
     $ psql -d postgres
     ```
 
     ``` sql
-    postgres=# \d hcatalog.default.sales_info_rcfile;
+    postgres=# \d+ hcatalog.default.sales_info_rcfile;
     ```
 
     ``` shell
     PXF Hive Table "default.sales_info_rcfile"
-          Column      |  Type
-    ------------------+--------
-     location         | text
-     month            | text
-     number_of_orders | int4
-     total_sales      | float8
+          Column      |  Type  | Source type 
+    ------------------+--------+-------------
+     location         | text   | string
+     month            | text   | string
+     number_of_orders | int4   | int
+     total_sales      | float8 | double
     ```
 -   Use `\d hcatalog.hive-db-name.*` to describe the whole database schema, i.e. all tables in `hive-db-name`.
 -   Use `\d hcatalog.*.*` to describe the whole schema, i.e. all databases and tables.
@@ -553,7 +569,7 @@ Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF)
 HCatalog integration has the following limitations:
 
 -   HCatalog integration queries and describe commands do not support complex types; only primitive types are supported. Use PXF external tables to query complex types in Hive. (See [Complex Types Example](#complex_dt_example).)
--   Even for primitive types, HCatalog metadata descriptions produced by `\d` and` \d+` are converted to HAWQ types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
+-   Even for primitive types, HCatalog metadata descriptions produced by `\d` are HAWQ's interpretation of the underlying Hive data types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
 -   HAWQ reserves the database name `hcatalog` for system use. You cannot connect to or alter the system `hcatalog` database.
 
 ## <a id="partitionfiltering"></a>Partition Filtering
