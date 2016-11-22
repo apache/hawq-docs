@@ -511,7 +511,7 @@ postgres=# SELECT * FROM hcatalog.default.sales_info;
 
 To obtain a description of a Hive table with HCatalog integration, you can use the `psql` client interface.
 
--   Within HAWQ, use either the `\d                                         hcatalog.hive-db-name.hive-table-name` or `\d+                                         hcatalog.hive-db-name.hive-table-name` commands to describe a single table. `\d+` displays both the HAWQ and Hive data type, while `\d` displays only the HAWQ data type. For example, from the `psql` client interface:
+-   Within HAWQ, use either the `\d                                         hcatalog.hive-db-name.hive-table-name` or `\d+                                         hcatalog.hive-db-name.hive-table-name` commands to describe a single table.  `\d` displays only HAWQ's interpretation of the underlying source (Hive in this case) data type, while `\d+` displays both the HAWQ interpreted and Hive source data types. For example, from the `psql` client interface:
 
     ``` shell
     $ psql -d postgres
@@ -569,7 +569,7 @@ Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF)
 HCatalog integration has the following limitations:
 
 -   HCatalog integration queries and describe commands do not support complex types; only primitive types are supported. Use PXF external tables to query complex types in Hive. (See [Complex Types Example](#complex_dt_example).)
--   Even for primitive types, HCatalog metadata descriptions produced by `\d` are converted to HAWQ types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
+-   Even for primitive types, HCatalog metadata descriptions produced by `\d` are HAWQ's interpretation of the underlying Hive data types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
 -   HAWQ reserves the database name `hcatalog` for system use. You cannot connect to or alter the system `hcatalog` database.
 
 ## <a id="partitionfiltering"></a>Partition Filtering
