@@ -118,7 +118,7 @@ t, tar — Output a tar archive suitable for input into [pg\_restore](pg_restore
 **Note:** Non-schema objects such as blobs are not dumped when `-n` is specified. You can add blobs back to the dump with the `--blobs` switch.</dd>
 
 <dt>-N, -\\\-exclude-schema \<schema\>  </dt>
-<dd>Do not dump any schemas matching the schema pattern. The pattern is interpreted according to the same rules as for `-n`. `-N` can be given more than once to exclude schemas matching any of several patterns. When both `-n` and `-N` are specified, the behavior is to dump just the schemas that match at least one `-n` switch but no `-N` switches. If `-N` appears without `-n`, then schemas matching `-N` are excluded from what is otherwise a normal dump.</dd>
+<dd>Do not dump any schemas matching the schema pattern. The pattern is interpreted according to the same rules as for `-n`. `-N` can be specified multiple times to exclude schemas that match several different patterns. When both `-n` and `-N` are specified, the behavior is to dump only schemas that match at least one `-n` switch but no `-N` switches. If `-N` appears without `-n`, then schemas matching `-N` are excluded from an otherwise normal dump.</dd>
 
 <dt>-o, -\\\-oids  </dt>
 <dd>Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into HAWQ.</dd>

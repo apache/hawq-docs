@@ -52,11 +52,11 @@ where:
 
 `pg_dumpall` creates a single script file that contains SQL commands that can be used as input to [psql](psql.html#topic1) to restore the databases. It does this by calling [pg\_dump](pg_dump.html#topic1) for each database. `pg_dumpall` also dumps global objects that are common to all databases. (`pg_dump` does not save these objects.) This currently includes information about database users and groups, and access permissions that apply to databases as a whole.
 
-Since `pg_dumpall` reads tables from all databases,  connect as a database superuser to assure producing a complete dump. You also need superuser privileges to execute the saved script, to add users and groups, and to create databases.
+Since `pg_dumpall` reads tables from all databases,  connect as a database superuser to assure producing a complete dump, as well as to execute the saved script, add users and groups, and to create databases.
 
 The SQL script will be written to the standard output. Shell operators should be used to redirect it into a file.
 
-`pg_dumpall` needs to connect to the HAWQ master server several times (once per database). If you use password authentication, a `~/.pgpass` file is convenient, as it may ask for a password each time. 
+`pg_dumpall` needs to connect to the HAWQ master server several times (once per database). If you use password authentication, a password could be requested for each connection, so using a `~/.pgpass` file is recommended. 
 
 ## <a id="topic1__section4"></a>Options
 
@@ -103,7 +103,7 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>Dump only the object definitions (schema), not data.</dd>
 
 <dt>-S \<username\> | -\\\-superuser=\<username\>  </dt>
-<dd>Specify the superuser user name to use when disabling triggers. This is only relevant if `--disable-triggers` is used. Starting the resulting script as a superuser is preferred over use of this option.
+<dd>Specify the superuser user name to use when disabling triggers. This option is only relevant if `--disable-triggers` is used. Starting the resulting script as a superuser is preferred.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
@@ -114,7 +114,7 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>This option disables the use of dollar quoting for function bodies, and forces them to be quoted using SQL standard string syntax.</dd>
 
 <dt>-\\\-disable-triggers  </dt>
-<dd>This option is only relevant when creating a data-only dump. It instructs `pg_dumpall` to include commands to temporarily disable triggers on the target tables while the data is reloaded. Use this if you do not want to invoke triggers on the tables during data reload. Superuser permissions are needed to perform commands issued for `--disable-triggers`. Either  specify a superuser name with the `-S` option, or start the resulting script as a superuser.
+<dd>This option is only relevant when creating a data-only dump. It instructs `pg_dumpall` to include commands to temporarily disable triggers on the target tables while the data is reloaded. Use this if you do not want to invoke triggers on the tables during data reload. You need superuser permissions to perform commands issued for `--disable-triggers`. Either  specify a superuser name with the `-S` option, or start the resulting script as a superuser.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
@@ -153,7 +153,7 @@ Since `pg_dumpall` calls [pg\_dump](pg_dump.html#topic1) internally, some diagno
 
 Once restored, it is wise to run `ANALYZE` on each database so the query planner has useful statistics. You can also run `vacuumdb -a                     -z` to analyze all databases.
 
-`pg_dumpall` requires all necessary tablespace (filespace) directories to exist before the restore.  Otherwise, database creation will fail for databases in non-default locations.
+All tablespace (filespace) directories used by `pg_dumpall` must exist before the restore. Otherwise, database creation will fail for databases in non-default locations.
 
 ## <a id="topic1__section8"></a>Examples
 
