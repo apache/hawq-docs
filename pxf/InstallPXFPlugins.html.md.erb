@@ -27,7 +27,7 @@ If you are using Ambari to install and manage your HAWQ cluster, you do *not* ne
 
 Each PXF service plug-in resides in its own RPM.  You may have built these RPMs in the Apache HAWQ open source project repository (see [PXF Build Instructions](https://github.com/apache/incubator-hawq/blob/master/pxf/README.md)), or these RPMs may have been included in a commercial product download package.
 
-PXF software must be installed on *each* node in your cluster.
+Perform the following steps to install PXF software on **_each_** node in your cluster.
 
 1. Install the PXF software, including Apache, the PXF service, and all PXF plug-ins: HDFS, HBase, Hive, JSON:
 
@@ -43,7 +43,20 @@ PXF software must be installed on *each* node in your cluster.
     * copies the PXF service JAR file `pxf-service-n.n.n.jar` to `/usr/lib/pxf-n.n.n/`
     * copies JAR files for each of the PXF plugs-ins to `/usr/lib/pxf-n.n.n/`
     * creates softlinks from `pxf-xxx.jar` in `/usr/lib/pxf-n.n.n/`
-    * starts the PXF service
+
+2. Initialize the PXF service:
+
+    ```shell
+    $ sudo service pxf-service init
+    ```
+
+2. Start the PXF service:
+
+    ```shell
+    $ sudo service pxf-service start
+    ```
+    
+    Additional `pxf-service` command options include `stop`, `restart`, and `status`.
 
 2. If you choose to use the HBase plug-in, perform the following configuration:
 
