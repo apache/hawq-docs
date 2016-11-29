@@ -223,8 +223,8 @@ This example shows how to register files using a YAML configuration file. This f
 Create a table and insert data into the table:
 
 ```
-=> create table paq1(a int, b varchar(10))with(appendonly=true, orientation=parquet);`
-=> insert into paq1 values(generate_series(1,1000), 'abcde');
+=> CREATE TABLE paq1(a int, b varchar(10))with(appendonly=true, orientation=parquet);`
+=> INSERT INTO paq1 values(generate_series(1,1000), 'abcde');
 ```
 
 Extract the table's metadata.
@@ -242,7 +242,7 @@ hawq register --config paq1.yml paq2
 Select the new table to determine if the content has already been registered:
 
 ```
-=> select count(*) from paq2;
+=> SELECT count(*) FROM paq2;
 ```
 The result should return 1000.
 
