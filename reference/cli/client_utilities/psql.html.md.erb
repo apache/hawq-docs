@@ -189,7 +189,7 @@ If the script itself uses `BEGIN`, `COMMIT`, or `ROLLBACK`, this option will not
 <dd>Force a password prompt. `psql` should automatically prompt for a password whenever the server requests password authentication. However, currently password request detection is not totally reliable, hence this option to force a prompt. If no password prompt is issued and the server requires password authentication, the connection attempt will fail.</dd>
 
 <dt>-w -\\\-no-password  </dt>
-<dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means such as a .pgpass file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.
+<dd>Never issue a password prompt. If the server requires password authentication and a password is not available by other means, such as through a `~/.pgpass` file, the connection attempt will fail. This option can be useful in batch jobs and scripts where no user is present to enter a password.
 
 **Note:** This option remains set for the entire session, and so it affects uses of the meta-command `\connect` as well as the initial connection attempt.</dd>
 
@@ -201,7 +201,7 @@ If the script itself uses `BEGIN`, `COMMIT`, or `ROLLBACK`, this option will not
 
 **Connecting to a Database**
 
-`psql` is a client application for HAWQ. In order to connect to a database you need to know the name of your target database, the host name and port number of the HAWQ master server and what database user name you want to connect as. `psql` can be told about those parameters via command line options, namely `-d`, `-h`, `-p`, and `-U` respectively. If an argument is found that does not belong to any option it will be interpreted as the database name (or the user name, if the database name is already given). Not all these options are required; there are useful defaults. If you omit the host name, `psql` will connect via a UNIX-domain socket to a master server on the local host, or via TCP/IP to `localhost` on machines that do not have UNIX-domain sockets. The default master port number is 5432. If you use a different port for the master, you must specify the port. The default database user name is your UNIX user name, as is the default database name. Note that you cannot just connect to any database under any user name. Your database administrator should have informed you about your access rights.
+`psql` is a client application for HAWQ. To connect to a database you must know the name of your target database, the host name and port number of the HAWQ master server and what database user name you want to connect as. Use the `-d`, `-h`, `-p`, and `-U` command line options, respectively, to specify these parameters to `psql`. If an argument is found that does not belong to any option, it will be interpreted as the database name (or the user name, if the database name is already given). Not all these options are required; there are useful defaults. If you omit the host name, `psql` will connect via a UNIX-domain socket to a master server on the local host, or via TCP/IP to `localhost` on machines that do not have UNIX-domain sockets. The default master port number is 5432. If you use a different port for the master, you must specify the port. The default database user name is your UNIX user name, as is the default database name. Note that you cannot just connect to any database under any user name. Your database administrator should have informed you about your access rights.
 
 When the defaults are not right, you can save yourself some typing by setting any or all of the environment variables `PGAPPNAME`, `PGDATABASE`, `PGHOST`, `PGPORT`, and `PGUSER` to appropriate values.
 
@@ -217,7 +217,7 @@ If the connection could not be made for any reason (insufficient privileges, ser
 
 **Entering SQL Commands**
 
-In normal operation, `psql` provides a prompt with the name of the database to which `psql` is currently connected, followed by the string **=&gt;** for a regular user or **=\#** for a superuser. For example:
+In normal operation, `psql` provides a prompt with the name of the database to which `psql` is currently connected, followed by the string `=>` for a regular user or `=#` for a superuser. For example:
 
 ``` pre
 testdb=>
@@ -387,7 +387,7 @@ The response indicates that the large object received object ID 152801 which one
 <dt>\\prompt \[ \<text\> \] \<name\>  </dt>
 <dd>Prompts the user to set a variable \<name\>. Optionally, you can specify a prompt. Enclose prompts longer than one word in single quotes.
 
-By default, \\prompt uses the terminal for input and output. However, use the -f command line switch to specify standard input and standard output.</dd>
+By default, `\prompt` uses the terminal for input and output. However, you can use the `-f` command line switch to specify standard input and standard output.</dd>
 
 <dt>\\pset \<print\_option\> \[\<value\>\]  </dt>
 <dd>This command sets options affecting the output of query result tables. \<print\_option\> describes which option is to be set. Adjustable printing options are:
@@ -399,9 +399,9 @@ By default, \\prompt uses the terminal for input and output. However, use the -f
     **Note:** Since `psql` does not attempt to wrap column header titles, the wrapped format behaves the same as aligned if the total width needed for column headers exceeds the target.
 
 -   **`border`** – The second argument must be a number. In general, the higher the number the more borders and lines the tables will have, but this depends on the particular format. In HTML mode, this will translate directly into the `border=...` attribute, in the others only values `0` (no border), `1` (internal dividing lines), and `2` (table frame) make sense.
--   **`columns`** – Sets the target width for the `wrapped` format, and also the width limit for determining whether output is wide enough to require the pager. The default is *zero*. Zero causes the target width to be controlled by the environment variable `COLUMNS`, or the detected screen width if `COLUMNS` is not set. In addition, if `columns` is zero then the wrapped format affects screen output only. If columns is nonzero then file and pipe output is wrapped to that width as well.
+-   **`columns`** – Sets the target width for the `wrapped` format, and also the width limit for determining whether output is wide enough to require the pager. The default is *zero*. Zero causes the target width to be controlled by the environment variable `COLUMNS`, or the detected screen width if `COLUMNS` is not set. In addition, if `COLUMNS` is zero, then the wrapped format affects screen output only. If `COLUMNS` is nonzero, then file and pipe output is wrapped to that width as well.
 
-    After setting the target width, use the command `\pset format           wrapped` to enable the wrapped format.
+    After setting the target width, use the command `\pset format wrapped` to enable the wrapped format.
 
 -   **`expanded`**, **`x`** – Toggles between regular and expanded format. When expanded format is enabled, query results are displayed in two columns, with the column name on the left and the data on the right. This mode is useful if the data would not fit on the screen in the normal horizontal mode. Expanded mode is supported by all four output formats.
 -   **`linestyle`** \[**`unicode`** | **`ascii`** | **`old-ascii`**\] – Sets the border line drawing style to one of unicode, ascii, or old-ascii. Unique abbreviations, including one letter, are allowed for the three styles. The default setting is `ascii`. This option only affects the `aligned` and `wrapped` output formats.
@@ -421,7 +421,7 @@ By default, \\prompt uses the terminal for input and output. However, use the -f
 -   **`recordsep`** – Specifies the record (line) separator to use in unaligned output mode. The default is a newline character.
 -   **`title`** \[\<text\>\] – Sets the table title for any subsequently printed tables. This can be used to give your output descriptive tags. If no argument is given, the title is unset.
 -   **`tableattr`**, **`T`** \[\<text\>\] – Allows you to specify any attributes to be placed inside the HTML table tag. This could for example be `cellpadding` or `bgcolor`. Note that you probably don't want to specify border here, as that is already taken care of by `\pset          border`.
--   **`tuples_only`**, **`t          `** \[ novalue  |  on  |  off \] – The `\pset tuples_only` command by itselt toggles between tuples only and full display. The values \<on\> and \</off\> set the tuples display, regardless of the current setting. Full display may show extra information such as column headers, titles, and various footers. In tuples only mode, only actual table data is shown The `\t` command is equivalent to `\pset``tuples_only` and is provided for convenience.
+-   **`tuples_only`**, **`t `** \[ novalue  |  on  |  off \] – The `\pset tuples_only` command by itself toggles between tuples only and full display. The values `on` and `off` set the tuples display, regardless of the current setting. Full display may show extra information such as column headers, titles, and various footers. In tuples only mode, only actual table data is shown The `\t` command is equivalent to `\pset``tuples_only` and is provided for convenience.
 -   **`pager`** – Controls the use of a pager for query and `psql` help output. When `on`, if the environment variable `PAGER` is set, the output is piped to the specified program. Otherwise a platform-dependent default (such as `more`) is used. When `off`, the pager is not used. When `on`, the pager is used only when appropriate. Pager can also be set to `always`, which causes the pager to be always used.
 </dd>
 
@@ -503,7 +503,7 @@ bar
 
 If you call `\set` without a second argument, the variable is set, with an empty string as \<value\>. To unset (or delete) a variable, use the command `\unset`.
 
-`psql`'s internal variable names can consist of letters, numbers, and underscores in any order and any number of them. A number of these variables are treated specially by `psql`. They indicate certain option settings that can be changed at run time by altering the value of the variable or represent some state of the application. Although you can use these variables for any other purpose, this is not recommended, as the program behavior might behave unexpectedly. By convention, all specially treated variables consist of all upper-case letters (and possibly numbers and underscores). To ensure maximum compatibility in the future, avoid using such variable names for your own purposes. A list of all specially treated variables are as follows:
+`psql`'s internal variable names can consist of letters, numbers, and underscores in any order and any number of them. A number of these variables are treated specially by `psql`. They indicate certain option settings that can be changed at run time by altering the value of the variable or represent some state of the application. Although you can use these variables for any other purpose, this is not recommended, as the program might behave unexpectedly. By convention, all specially treated variables consist of all upper-case letters (and possibly numbers and underscores). To ensure maximum compatibility in the future, avoid using such variable names for your own purposes. A list of all specially treated variables are as follows:
 
 <dt>AUTOCOMMIT  </dt>
 <dd>When on (the default), each SQL command is automatically committed upon successful completion. To postpone commit in this mode, you must enter a `BEGIN` or `START TRANSACTION` SQL command. When off or unset, SQL commands are not committed until you explicitly issue `COMMIT` or `END`. The autocommit-on mode works by issuing an implicit `BEGIN` for you, just before any command that is not already in a transaction block and is not itself a `BEGIN` or other transaction-control command, nor a command that cannot be executed inside a transaction block (such as `VACUUM`).
@@ -565,7 +565,7 @@ in `~/.psqlrc` will cause `psql` to maintain a separate history for each databas
 <dt>PROMPT1  
 PROMPT2  
 PROMPT3  </dt>
-<dd>These specify what the prompts `psql` issues should look like. See "Prompting".</dd>
+<dd>These specify what the prompt's `psql` issues should look like. See "Prompting," below.</dd>
 
 <dt>QUIET  </dt>
 <dd>This variable is equivalent to the command line option `-q`. It is not very useful in interactive mode.</dd>
@@ -606,7 +606,7 @@ testdb=> \set content '''' `sed -e "s/'/''/g" < my_file.txt`
 ''''
 ```
 
-If you are using non-standard-conforming strings then you'll also need to double backslashes. This is a bit tricky:
+If you are using non-standard-conforming strings, then you'll also need to use double backslashes. This is a bit tricky:
 
 ``` pre
 testdb=> \set content '''' `sed -e "s/'/''/g" -e 
@@ -642,13 +642,13 @@ The value of the selected prompt variable is printed literally, except where a p
 <dd>Like `%/`, but the output is `~` (tilde) if the database is your default database.</dd>
 
 <dt>%\#  </dt>
-<dd>If the session user is a database superuser, then a **\#**, otherwise a **&gt;**. (The expansion of this value might change during a database session as the result of the command `SET SESSION AUTHORIZATION`.)</dd>
+<dd>If the session user is a database superuser, then a `#`, otherwise a `>`. (The expansion of this value might change during a database session as the result of the command `SET SESSION AUTHORIZATION`.)</dd>
 
 <dt>%R  </dt>
-<dd>In prompt 1 normally **=**, but **^** if in single-line mode, and **!** if the session is disconnected from the database (which can happen if `\connect` fails). In prompt 2 the sequence is replaced by **-**, **\***, a single quote, a double quote, or a dollar sign, depending on whether `psql` expects more input because the command wasn't terminated yet, because you are inside a `/* ...         */` comment, or because you are inside a quoted or dollar-escaped string. In prompt 3 the sequence doesn't produce anything.</dd>
+<dd>In prompt 1, normally `=`, but is `^` if in single-line mode, and `!` if the session is disconnected from the database (which can happen if `\connect` fails). In prompt 2, the sequence is replaced by `-`, `*`, a single quote \(`'`\), a double quote \(`"`\), or a dollar sign \(`$`\), depending on whether `psql` expects more input because: the command is not yet terminated, you are inside a `/* ... */` comment, or you are inside a quoted or dollar-escaped string. In prompt 3, no substitution is produced.</dd>
 
 <dt>%x  </dt>
-<dd>Transaction status: an empty string when not in a transaction block, or **\*** when in a transaction block, or **!** when in a failed transaction block, or **?** when the transaction state is indeterminate (for example, because there is no connection).</dd>
+<dd>Transaction status: an empty string when not in a transaction block, or `*` when in a transaction block, or `!` when in a failed transaction block, or `?` when the transaction state is indeterminate (for example, because there is no connection).</dd>
 
 <dt>%digits  </dt>
 <dd>The character with the indicated octal code is substituted.</dd>

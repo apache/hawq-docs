@@ -52,11 +52,11 @@ where:
 
 `pg_dumpall` creates a single script file that contains SQL commands that can be used as input to [psql](psql.html#topic1) to restore the databases. It does this by calling [pg\_dump](pg_dump.html#topic1) for each database. `pg_dumpall` also dumps global objects that are common to all databases. (`pg_dump` does not save these objects.) This currently includes information about database users and groups, and access permissions that apply to databases as a whole.
 
-Since `pg_dumpall` reads tables from all databases you will most likely have to connect as a database superuser in order to produce a complete dump. Also you will need superuser privileges to execute the saved script in order to be allowed to add users and groups, and to create databases.
+Since `pg_dumpall` reads tables from all databases,  connect as a database superuser to assure producing a complete dump, as well as to execute the saved script, add users and groups, and to create databases.
 
 The SQL script will be written to the standard output. Shell operators should be used to redirect it into a file.
 
-`pg_dumpall` needs to connect several times to the HAWQ master server (once per database). If you use password authentication it is likely to ask for a password each time. It is convenient to have a `~/.pgpass` file in such cases.
+`pg_dumpall` needs to connect to the HAWQ master server several times (once per database). If you use password authentication, a password could be requested for each connection, so using a `~/.pgpass` file is recommended. 
 
 ## <a id="topic1__section4"></a>Options
 
@@ -65,7 +65,7 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>Dump filespace definitions.</dd>
 
 <dt>-i | -\\\-ignore-version  </dt>
-<dd>Ignore version mismatch between [pg\_dump](pg_dump.html#topic1) and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but very old versions may not be supported anymore. Use this option if you need to override the version check.</dd>
+<dd>Ignore version mismatch between [pg\_dump](pg_dump.html#topic1) and the database server. `pg_dump` can dump from servers running previous releases of HAWQ (or PostgreSQL), but some older versions may not be supported. Use this option if you need to override the version check.</dd>
 
 <dt>--help</dt>
 <dd>Displays this help, then exits.</dt>
@@ -76,10 +76,10 @@ The SQL script will be written to the standard output. Shell operators should be
 **Output Control Options**
 
 <dt>-a | -\\\-data-only  </dt>
-<dd>Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
+<dd>Dump only the data, not the schema (data definitions). This option is only meaningful for the plain-text format. For the archive formats, you can specify this option when you call [pg\_restore](pg_restore.html#topic1).</dd>
 
 <dt>-c | -\\\-clean  </dt>
-<dd>Output commands to clean (drop) database objects prior to (the commands for) creating them. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
+<dd>Output commands to clean (DROP) database objects prior to (the commands for) creating them. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
 
 <dt>-d | -\\\-inserts  </dt>
 <dd>Dump data as `INSERT` commands (rather than `COPY`). This will make restoration very slow; it is mainly useful for making dumps that can be loaded into non-PostgreSQL-based databases. Also, since this option generates a separate command for each row, an error in reloading a row causes only that row to be lost rather than the entire table contents. Note that the restore may fail altogether if you have rearranged column order. The `-D` option is safe against column order changes, though even slower.</dd>
@@ -91,7 +91,7 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>Dump only global objects (roles and tablespaces), no databases.</dd>
 
 <dt>-o | -\\\-oids  </dt>
-<dd>Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files that are intended to be restored into HAWQ.</dd>
+<dd>Dump object identifiers (OIDs) as part of the data for every table. Use of this option is not recommended for files to be restored into HAWQ.</dd>
 
 <dt>-O | -\\\-no-owner  </dt>
 <dd>Do not output commands to set ownership of objects to match the original database. By default, [pg\_dump](pg_dump.html#topic1) issues `ALTER                                 OWNER` or `SET SESSION AUTHORIZATION` statements to set ownership of created database objects. These statements will fail when the script is run unless it is started by a superuser (or the same user that owns all of the objects in the script). To make a script that can be restored by any user, but will give that user ownership of all the objects, specify `-O`. This option is only meaningful for the plain-text format. For the archive formats, you may specify the option when you call [pg\_restore](pg_restore.html#topic1).</dd>
@@ -103,7 +103,7 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>Dump only the object definitions (schema), not data.</dd>
 
 <dt>-S \<username\> | -\\\-superuser=\<username\>  </dt>
-<dd>Specify the superuser user name to use when disabling triggers. This is only relevant if `--disable-triggers` is used. It is better to leave this out, and instead start the resulting script as a superuser.
+<dd>Specify the superuser user name to use when disabling triggers. This option is only relevant if `--disable-triggers` is used. Starting the resulting script as a superuser is preferred.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
@@ -114,7 +114,7 @@ The SQL script will be written to the standard output. Shell operators should be
 <dd>This option disables the use of dollar quoting for function bodies, and forces them to be quoted using SQL standard string syntax.</dd>
 
 <dt>-\\\-disable-triggers  </dt>
-<dd>This option is only relevant when creating a data-only dump. It instructs `pg_dumpall` to include commands to temporarily disable triggers on the target tables while the data is reloaded. Use this if you have triggers on the tables that you do not want to invoke during data reload. The commands emitted for `--disable-triggers` must be done as superuser. So, you should also specify a superuser name with `-S`, or preferably be careful to start the resulting script as a superuser.
+<dd>This option is only relevant when creating a data-only dump. It instructs `pg_dumpall` to include commands to temporarily disable triggers on the target tables while the data is reloaded. Use this if you do not want to invoke triggers on the tables during data reload. You need superuser permissions to perform commands issued for `--disable-triggers`. Either  specify a superuser name with the `-S` option, or start the resulting script as a superuser.
 
 **Note:** HAWQ does not support user-defined triggers.</dd>
 
@@ -153,7 +153,7 @@ Since `pg_dumpall` calls [pg\_dump](pg_dump.html#topic1) internally, some diagno
 
 Once restored, it is wise to run `ANALYZE` on each database so the query planner has useful statistics. You can also run `vacuumdb -a                     -z` to analyze all databases.
 
-`pg_dumpall` requires all needed tablespace (filespace) directories to exist before the restore or database creation will fail for databases in non-default locations.
+All tablespace (filespace) directories used by `pg_dumpall` must exist before the restore. Otherwise, database creation will fail for databases in non-default locations.
 
 ## <a id="topic1__section8"></a>Examples
 
