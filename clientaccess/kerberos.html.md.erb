@@ -233,7 +233,7 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
     host all all 0.0.0.0/0 gss include_realm=0 krb_realm=KRB.EXAMPLE.COM
     ```
 
-    For information about the `pg_hba.conf` file, see [The pg\_hba.conf file](http://www.postgresql.org/docs/8.4/static/auth-pg-hba-conf.html) in the Postgres documentation.
+    For information about the `pg_hba.conf` file, see [The pg\_hba.conf file](http://www.postgresql.org/docs/9.0/static/auth-pg-hba-conf.html) in the Postgres documentation.
 
 4.  Create a ticket using `kinit` and show the tickets in the Kerberos ticket cache with `klist`.
 5.  As a test, log in to the database as the `gpadmin` role with the Kerberos credentials `gpadmin/kerberos-gpdb`:
@@ -267,7 +267,7 @@ After you have set up Kerberos on the HAWQ master, you can configure HAWQ to use
     host all all 0.0.0.0/0 krb5 include_realm=0 krb_realm=proddb map=mymap
     ```
 
-    For more information about specifying username maps see [Username maps](http://www.postgresql.org/docs/8.4/static/auth-username-maps.html) in the Postgres documentation.
+    For more information about specifying username maps see [Username maps](http://www.postgresql.org/docs/9.0/static/auth-username-maps.html) in the Postgres documentation.
 
 6.  If a Kerberos principal is not a HAWQ user, a message similar to the following is displayed from the `psql` command line when the user attempts to log in to the database:
 
