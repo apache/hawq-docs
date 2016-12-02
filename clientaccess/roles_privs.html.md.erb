@@ -61,11 +61,7 @@ You can set these attributes when you create the role, or later using the `ALTER
 =# ALTER ROLE jsmith DENY DAY 'Sunday';
 ```
 
-A role can also have role-specific defaults for many of the server configuration settings. For example, to set the default schema search path for a role:
-
-``` sql
-=# ALTER ROLE admin SET search_path TO myschema, public;
-```
+A role can also have role-specific defaults for many of the server configuration settings. 
 
 ## <a id="topic5"></a>Role Membership 
 
