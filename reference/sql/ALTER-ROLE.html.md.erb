@@ -44,7 +44,7 @@ where \<option\> can be:
 -   **RESOURCE QUEUE** — Assigns the role to a workload management resource queue. The role would then be subject to the limits assigned to the resource queue when issuing queries. Specify `NONE` to assign the role to the default resource queue. A role can only belong to one resource queue. For a role without `LOGIN` privilege, resource queues have no effect. See [CREATE RESOURCE QUEUE](CREATE-RESOURCE-QUEUE.html#topic1) for more information.
 -   **WITH** \<option\> — Changes many of the role attributes that can be specified in [CREATE ROLE](CREATE-ROLE.html). Attributes not mentioned in the command retain their previous settings. Database superusers can change any of these settings for any role. Roles having `CREATEROLE` privilege can change any of these settings, but only for non-superuser roles. Ordinary roles can only change their own password.
 
-**Note:** SET and RESET commands are currently not supported in connection with ALTER ROLE and will result in an error. 
+**Note:** SET and RESET commands are currently not supported in connection with ALTER ROLE and will result in an error. See [SET](SET.html) and [About Server Configuration Parameters](../guc/guc_config.html#topic1) for information about user-settable configuration parameters.
 
 ## <a id="alterrole__section4"></a>Parameters
 
@@ -53,9 +53,6 @@ where \<option\> can be:
 
 <dt> \<newname\>  </dt>
 <dd>The new name of the role.</dd>
-
-<dt> \<config\_parameter\>=\<value\>  </dt>
-<dd>Set this role's session default for the specified configuration parameter to the given value. If value is `DEFAULT` or if `RESET` is used, the role-specific variable setting is removed, so the role will inherit the system-wide default setting in new sessions. Use `RESET ALL` to clear all role-specific settings. See [SET](SET.html) and [About Server Configuration Parameters](../guc/guc_config.html#topic1) for information about user-settable configuration parameters.</dd>
 
 <dt> \<queue\_name\>  </dt>
 <dd>The name of the resource queue to which the user-level role is to be assigned. Only roles with `LOGIN` privilege can be assigned to a resource queue. To unassign a role from a resource queue and put it in the default resource queue, specify `NONE`. A role can only belong to one resource queue.</dd>
