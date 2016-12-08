@@ -61,12 +61,6 @@ You can set these attributes when you create the role, or later using the `ALTER
 =# ALTER ROLE jsmith DENY DAY 'Sunday';
 ```
 
-A role can also have role-specific defaults for many of the server configuration settings. For example, to set the default schema search path for a role:
-
-``` sql
-=# ALTER ROLE admin SET search_path TO myschema, public;
-```
-
 ## <a id="topic5"></a>Role Membership 
 
 It is frequently convenient to group users together to ease management of object privileges: that way, privileges can be granted to, or revoked from, a group as a whole. In HAWQ this is done by creating a role that represents the group, and then granting membership in the group role to individual user roles.

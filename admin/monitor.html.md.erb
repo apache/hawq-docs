@@ -181,7 +181,8 @@ $ hawq ssh -f seg_host_log_file
 Use HAWQ's administrative schema *hawq\_toolkit* to query the system catalogs, log files, and operating environment for system status information. The `hawq_toolkit` schema contains several views you can access using SQL commands. The *hawq\_toolkit* schema is accessible to all database users. Some objects require superuser permissions. Use a command similar to the following to add the *hawq\_toolkit* schema to your schema search path:
 
 ```sql
-=> ALTER ROLE myrole SET search_path TO myschema,hawq_toolkit;
+=>SET ROLE 'gpadmin' ;
+=>SET search_path TO myschema, hawq_toolkit ;
 ```
 
 ## <a id="topic_jx2_rqg_kp"></a>HAWQ Error Codes 
