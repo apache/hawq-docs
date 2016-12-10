@@ -11,8 +11,8 @@ The `pg_appendonly` table contains information about the storage options and oth
 |-----------------|----------|------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `relid`         | oid      |            | The table object identifier (OID) of the compressed table.                                                                                         |
 | `compresslevel` | smallint |            | The compression level, with increasing compression ratio. If the `gzip` or `zlib` compression type is specified, valid values are 1-9.                           |
-| `majorversion`  | smallint |            | The major version number of the pg\_appendonly table.                                                                                              |
-| `minorversion`  | smallint |            | The minor version number of the pg\_appendonly table.                                                                                              |
+| `majorversion`  | smallint |            | The major version number of the `pg_appendonly` table.                                                                                              |
+| `minorversion`  | smallint |            | The minor version number of the `pg_appendonly` table.                                                                                              |
 | `checksum`      | boolean  |            | A checksum value that is stored to compare the state of a block of data at compression time and at scan time to ensure data integrity.             |
 | `compresstype`  | text     |            | Type of compression used on append-only and parquet tables. `zlib`, `snappy`, and `gzip` compression types are supported. |
 | `columnstore`   | boolean  |            | `0` for row-oriented storage.                                                                                                                      |

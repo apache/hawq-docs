@@ -24,7 +24,7 @@ Because user identities are system-wide, `pg_authid` is shared across all databa
 | `rolpassword`       | text        |            | Password (possibly encrypted); NULL if none                                                                           |
 | `rolvaliduntil`     | timestamptz |            | Password expiry time (only used for password authentication); NULL if no expiration                                   |
 | `rolconfig`         | text\[\]    |            | Session defaults for server configuration parameters                                                                  |
-| `relresqueue`       | oid         |            | Object ID of the associated resource queue ID in *pg\_resqueue*                                                       |
+| `relresqueue`       | oid         |            | Object ID of the associated resource queue ID in `pg_resqueue`                                                       |
 | `rolcreaterextgpfd` | boolean     |            | Privilege to create read external tables with the `gpfdist` or `gpfdists` protocol                                    |
 | `rolcreaterexhttp`  | boolean     |            | Privilege to create read external tables with the `http` protocol                                                     |
 | `rolcreatewextgpfd` | boolean     |            | Privilege to create write external tables with the `gpfdist` or `gpfdists` protocol                                   |
