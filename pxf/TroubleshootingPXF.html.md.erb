@@ -211,27 +211,13 @@ You may run into situations where a query will hang or fail with an Out of Memor
 
 **Note**: The configuration changes described in this topic require modifying config files on *each* PXF node in your HAWQ cluster. After performing the updates, be sure to verify that the configuration on all PXF nodes is the same.
 
+You will need to re-apply these configuration changes after any PXF version upgrades.
+
 ### <a id="pxf-heapcfg"></a>Increasing the Maximum Heap Size
 
 Each PXF node is configured with a default Java heap size of 512MB. If the nodes in your cluster have an ample amount of memory, increasing the amount allocated to the PXF agents is the best approach. Pivotal recommends a heap size value between 1-2GB.
 
-The steps you perform to increase the PXF agent heap size will differ depending upon whether or not the PXF service is currently running. **You must perform the configuration changes on each PXF node in your HAWQ cluster.**
-
-If the PXF service has not yet been started, increase the heap size in the PXF Tomcat `setenv.sh` template:
-
-1. Open the `/opt/pxf/tomcat-templates/bin/setenv.sh` file in a text editor.
-
-    ``` shell
-    root@pxf-node$ vi /opt/pxf/tomcat-templates/bin/setenv.sh
-    ```
-
-2. Update the `-Xmx` option to the desired value in the `JVM_OPTS` setting:
-
-    ``` shell
-    JVM_OPTS="-Xmx1024M -Xss256K"
-    ```
-
-If the PXF service is running, increase the heap size directly in the PXF `setenv.sh` script:
+Perform the following steps to increase the PXF agent heap size in your HAWQ  deployment. **You must perform the configuration changes on each PXF node in your HAWQ cluster.**
 
 1. Open `/var/pxf/pxf-service/bin/setenv.sh` in a text editor.
 
@@ -260,26 +246,7 @@ If increasing the maximum heap size is not suitable for your HAWQ cluster, try d
 
 The Tomcat default maximum number of threads is 300. Pivotal recommends  decreasing the maximum number of threads to under 6. (If you plan to run large workloads on a large number of files using a Hive profile, Pivotal recommends you pick an even lower value.)
 
-The steps to decrease the maximum number of Tomcat threads will differ depending upon whether or not the PXF service is currently running. **You must perform the configuration changes on each PXF node in your HAWQ cluster.**
-
-If the PXF service has not yet been started, decrease the maximum number of threads via the PXF Tomcat `server.xml` template:
-
-1. Open the `/opt/pxf/tomcat-templates/conf/server.xml` file in a text editor.
-
-    ``` shell
-    root@pxf-node$ vi /opt/pxf/tomcat-templates/conf/server.xml
-    ```
-
-2. Update the `Catalina` `Executor` block to identify the desired `maxThreads` value:
-
-    ``` xml
-    <Executor maxThreads="2"
-              minSpareThreads="50"
-              name="tomcatThreadPool"
-              namePrefix="tomcat-http--"/>
-    ```
-
-If the PXF service is running, decrease the maximum number of Tomcat threads directly in the PXF `server.xml` file:
+Perform the following steps to decrease the maximum number of Tomcat threads in your HAWQ PXF deployment. **You must perform the configuration changes on each PXF node in your HAWQ cluster.**
 
 1. Open the `/var/pxf/pxf-service/conf/server.xml` file in a text editor.
 
