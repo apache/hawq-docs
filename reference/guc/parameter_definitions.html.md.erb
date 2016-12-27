@@ -2789,7 +2789,7 @@ Specifies the listen port for the PXF service when HDFS NameNode High Availabili
 
 ## <a name="pxf_stat_max_fragments"></a>pxf\_stat\_max\_fragments
 
-The maximum number of fragments to sample during `ANALYZE` on a PXF table. A lower value provides better performance for the `ANALYZE` command, but the sampling is less uniform. A higher value provides more uniform sampling, with slower `ANALYZE` performance.
+The maximum number of fragments to sample during `ANALYZE` on a PXF table. A lower value provides faster performance for the `ANALYZE` command, but the sampling is less uniform. A higher value provides more uniform sampling, with slower `ANALYZE` performance.
 
 | Value Range         | Default | Set Classifications     |
 |---------------------|---------|-------------------------|
