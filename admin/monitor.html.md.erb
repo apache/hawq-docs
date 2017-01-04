@@ -8,6 +8,16 @@ Observing the HAWQ system day-to-day performance helps administrators understand
 
 Also, be sure to review [Recommended Monitoring and Maintenance Tasks](RecommendedMonitoringTasks.html) for monitoring activities you can script to quickly detect problems in the system.
 
+
+## <a id="topic31"></a>Using hawq\_toolkit 
+
+Use HAWQ's administrative schema [*hawq\_toolkit*](../reference/toolkit/hawq_toolkit.html) to query the system catalogs, log files, and operating environment for system status information. The *hawq\_toolkit* schema contains several views you can access using SQL commands. The *hawq\_toolkit* schema is accessible to all database users. Some objects require superuser permissions. Use a command similar to the following to add the *hawq\_toolkit* schema to your schema search path:
+
+```sql
+=> SET ROLE 'gpadmin' ;
+=# SET search_path TO myschema, hawq_toolkit ;
+```
+
 ## <a id="topic3"></a>Monitoring System State 
 
 As a HAWQ administrator, you must monitor the system for problem events such as a segment going down or running out of disk space on a segment host. The following topics describe how to monitor the health of a HAWQ system and examine certain state information for a HAWQ system.
@@ -23,23 +33,24 @@ A HAWQ system is comprised of multiple PostgreSQL instances \(the master and seg
 
 #### <a id="topic13"></a>Viewing Master and Segment Status and Configuration 
 
-The default `hawq state` action is to check segment instances and show a brief status of the valid and failed segments. For example, to see a quick status of your HAWQ system, type:
+The default `hawq state` action is to check segment instances and show a brief status of the valid and failed segments. For example, to see a quick status of your HAWQ system:
 
 ```shell
 $ hawq state -b
 ```
 
-You can also display information about the HAWQ master data directory by using `hawq state` with the `-d` option:
+You can also display information about the HAWQ master data directory by invoking `hawq state` with the `-d` option:
 
 ```shell
-$ hawq state -d MASTER_DIR
+$ hawq state -d <master_data_dir>
 ```
+
 
 ### <a id="topic15"></a>Checking Disk Space Usage 
 
 #### <a id="topic16"></a>Checking Sizing of Distributed Databases and Tables 
 
-The `hawq_toolkit` administrative schema contains several views that you can use to determine the disk space usage for a distributed HAWQ database, schema, table, or index.
+The *hawq\_toolkit* administrative schema contains several views that you can use to determine the disk space usage for a distributed HAWQ database, schema, table, or index.
 
 ##### <a id="topic17"></a>Viewing Disk Space Usage for a Database 
 
@@ -47,7 +58,7 @@ To see the total size of a database \(in bytes\), use the *hawq\_size\_of\_datab
 
 ```sql
 => SELECT * FROM hawq_toolkit.hawq_size_of_database
-ORDER BY sodddatname;
+     ORDER BY sodddatname;
 ```
 
 ##### <a id="topic18"></a>Viewing Disk Space Usage for a Table 
@@ -56,9 +67,9 @@ The *hawq\_toolkit* administrative schema contains several views for checking th
 
 ```sql
 => SELECT relname AS name, sotdsize AS size, sotdtoastsize
-AS toast, sotdadditionalsize AS other
-FROM hawq_size_of_table_disk AS sotd, pg_class
-WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
+     AS toast, sotdadditionalsize AS other
+     FROM hawq_toolkit.hawq_size_of_table_disk AS sotd, pg_class
+   WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
 ```
 
 ##### <a id="topic19"></a>Viewing Disk Space Usage for Indexes 
@@ -67,25 +78,25 @@ The *hawq\_toolkit* administrative schema contains a number of views for checkin
 
 ```sql
 => SELECT soisize, relname AS indexname
-FROM pg_class, hawq_size_of_index
-WHERE pg_class.oid=hawq_size_of_index.soioid
-AND pg_class.relkind='i';
+     FROM pg_class, hawq_size_of_index
+   WHERE pg_class.oid=hawq_size_of_index.soioid
+     AND pg_class.relkind='i';
 ```
 
 ### <a id="topic24"></a>Viewing Metadata Information about Database Objects 
 
-HAWQ tracks various metadata information in its system catalogs about the objects stored in a database, such as tables, views, indexes and so on, as well as global objects such as roles and tablespaces.
+HAWQ uses its system catalogs to track various metadata information about the objects stored in a database (tables, views, indexes and so on), as well as global objects including roles and tablespaces.
 
 #### <a id="topic25"></a>Viewing the Last Operation Performed 
 
-You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on an object, such as a table. For example, to see the actions performed on a table, such as when it was created and when it was last analyzed:
+You can use the system views *pg\_stat\_operations* and *pg\_stat\_partition\_operations* to look up actions performed on a database object. For example, to view when the `cust` table was created and when it was last analyzed:
 
 ```sql
 => SELECT schemaname AS schema, objname AS table,
-usename AS role, actionname AS action,
-subtype AS type, statime AS time
-FROM pg_stat_operations
-WHERE objname='cust';
+     usename AS role, actionname AS action,
+     subtype AS type, statime AS time
+   FROM pg_stat_operations
+   WHERE objname='cust';
 ```
 
 ```
@@ -100,32 +111,49 @@ WHERE objname='cust';
 
 #### <a id="topic26"></a>Viewing the Definition of an Object 
 
-To see the definition of an object, such as a table or view, you can use the `\d+` meta-command when working in `psql`. For example, to see the definition of a table:
+You can use the `psql` `\d` meta-command to display the definition of an object, such as a table or view. For example, to see the definition of a table named `sales`:
 
-<pre><code>=> \d+ <i>mytable</i></code></pre>
+``` sql
+=> \d sales
+```
+
+```
+Append-Only Table "public.sales"
+ Column |  Type   | Modifiers 
+--------+---------+-----------
+ id     | integer | 
+ year   | integer | 
+ qtr    | integer | 
+ day    | integer | 
+ region | text    | 
+Compression Type: None
+Compression Level: 0
+Block Size: 32768
+Checksum: f
+Distributed by: (id)
+```
 
 
 ### <a id="topic27"></a>Viewing Query Workfile Usage Information 
 
 The HAWQ administrative schema *hawq\_toolkit* contains views that display information about HAWQ workfiles. HAWQ creates workfiles on disk if it does not have sufficient memory to execute the query in memory. This information can be used for troubleshooting and tuning queries. The information in the views can also be used to specify the values for the HAWQ configuration parameters `hawq_workfile_limit_per_query` and `hawq_workfile_limit_per_segment`.
 
-These are the views in the schema *hawq\_toolkit*:
+Views in the *hawq\_toolkit* schema include:
 
--   The hawq\_workfile\_entries view contains one row for each operator using disk space for workfiles on a segment at the current time.
--   The hawq\_workfile\_usage\_per\_query view contains one row for each query using disk space for workfiles on a segment at the current time.
--   The hawq\_workfile\_usage\_per\_segment view contains one row for each segment. Each row displays the total amount of disk space used for workfiles on the segment at the current time.
+-   *hawq\_workfile\_entries* - one row for each operator currently using disk space for workfiles on a segment
+-   *hawq\_workfile\_usage\_per\_query* - one row for each running query currently using disk space for workfiles on a segment
+-   *hawq\_workfile\_usage\_per\_segment* - one row for each segment where each row displays the total amount of disk space currently in use for workfiles on the segment
 
-For information about using *hawq\_toolkit*, see [Using hawq\_toolkit](#topic31).
 
 ## <a id="topic28"></a>Viewing the Database Server Log Files 
 
-Every database instance in HAWQ \(master and segments\) runs a PostgreSQL database server with its own server log file. Daily log files are created in the `pg_log` directory of the master and each segment data directory \(`$GPHOME/masterdd/pg_log` and `$GPHOME/segmentdd/pg_log`\).
+Every database instance in HAWQ \(master and segments\) runs a PostgreSQL database server with its own server log file. Daily log files are created in the `pg_log` directory of the master  and each segment data directory.
 
 ### <a id="topic29"></a>Log File Format 
 
-The server log files are written in comma-separated values \(CSV\) format. Some log entries will not have values for all log fields. For example, only log entries associated with a query worker process will have the `slice_id` populated. You can identify related log entries of a particular query by the query's session identifier \(`gp_session_id`\) and command identifier \(`gp_command_count`\).
+The server log files are written in comma-separated values \(CSV\) format. Log entries may not include values for all log fields. For example, only log entries associated with a query worker process will have the `slice_id` populated. You can identify related log entries of a particular query by the query's session identifier \(`gp_session_id`\) and command identifier \(`gp_command_count`\).
 
-The following fields are written to the log:
+Log entries may include the following fields:
 
 <table>
   <tr><th>#</th><th>Field Name</th><th>Data Type</th><th>Description</th></tr>
@@ -162,27 +190,18 @@ The following fields are written to the log:
 </table>
 ### <a id="topic30"></a>Searching the HAWQ Server Log Files 
 
-HAWQ provides a utility called `gplogfilter` can search through a HAWQ log file for entries matching the specified criteria. By default, this utility searches through the HAWQ master log file in the default logging location. For example, to display the entries to the master log file starting after 2 pm on a certain date:
+You can use the `gplogfilter` HAWQ utility to search through a HAWQ log file for entries matching specific criteria. By default, this utility searches through the HAWQ master log file in the default logging location. For example, to display the entries to the master log file starting after 2 pm on a certain date:
 
-```shell
+``` shell
 $ gplogfilter -b '2016-01-18 14:00'
 ```
 
-To search through all segment log files simultaneously, run `gplogfilter` through the `hawq ssh` utility. For example, specify the seg\_host\_log\_file that contains hosts to participate in the session, then use `gplogfilter` to display the last three lines of each segment log file:
+To search through all segment log files simultaneously, run `gplogfilter` through the `hawq ssh` utility. For example, specify a \<seg\_hosts\> file that includes all segment hosts of interest, then invoke `gplogfilter` to display the last three lines of each segment log file on each segment host. (Note: enter the commands after the `=>` prompt, do not include the `=>`.):
 
-```shell
-$ hawq ssh -f seg_host_log_file
-=> source ~/greenplum_path.sh
-=> gplogfilter -n 3 /data/hawq-install-path/segmentdd/pg_log/hawq*.csv
-```
-
-## <a id="topic31"></a>Using hawq\_toolkit 
-
-Use HAWQ's administrative schema *hawq\_toolkit* to query the system catalogs, log files, and operating environment for system status information. The `hawq_toolkit` schema contains several views you can access using SQL commands. The *hawq\_toolkit* schema is accessible to all database users. Some objects require superuser permissions. Use a command similar to the following to add the *hawq\_toolkit* schema to your schema search path:
-
-```sql
-=>SET ROLE 'gpadmin' ;
-=>SET search_path TO myschema, hawq_toolkit ;
+``` shell
+$ hawq ssh -f <seg_hosts>
+=> source /usr/local/hawq/greenplum_path.sh
+=> gplogfilter -n 3 /data/hawq/segment/pg_log/hawq*.csv
 ```
 
 ## <a id="topic_jx2_rqg_kp"></a>HAWQ Error Codes 
