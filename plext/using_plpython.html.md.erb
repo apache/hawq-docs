@@ -19,27 +19,27 @@ HAWQ uses the system Python installation.
  
 ## <a id="enableplpython"></a>Enabling and Removing PL/Python Support 
 
-To use PL/Python in HAWQ, you must either install a binary version of HAWQ that includes PL/Python or specify PL/Python as a build option when compiling HAWQ from source.
+To use PL/Python in HAWQ, you must either install a binary version of HAWQ that includes PL/Python or specify PL/Python as a build option when you compile HAWQ from source.
 
-PL/Python user-defined functions (UDFs) are registered at the database level. To create and run a PL/Python UDF on a database, you must register the PL/Python language with the database. 
+You must register the PL/Python language with a database before you can create and execute a PL/Python UDF on that database. You must be a database superuser to register and remove new languages in HAWQ databases.
 
 On every database to which you want to install and enable PL/Python:
 
 1. Connect to the database using the `psql` client:
 
     ``` shell
-    $ psql -d <dbname>
+    gpadmin@hawq-node$ psql -d <dbname>
     ```
 
     Replace \<dbname\> with the name of the target database.
 
-2. Run the following SQL command to register the PL/Python procedural language; you must be a database superuser to register new languages:
+2. Run the following SQL command to register the PL/Python procedural language:
 
     ``` sql
     dbname=# CREATE LANGUAGE plpythonu;
     ```
 
-    **Note**: `plpythonu` is installed as an *untrusted* language; it offers no way of restricting what you can program in UDFs created with the language.
+    **Note**: `plpythonu` is installed as an *untrusted* language; it offers no way of restricting what you can program in UDFs created with the language. Creating and executing PL/Python UDFs is permitted only by database superusers and other database users explicitly `GRANT`ed the permissions.
 
 To remove support for `plpythonu` from a database, run the following SQL command; you must be a database superuser to remove a registered procedural language:
 
@@ -58,7 +58,7 @@ PL/Python function results are returned with a `return` statement, or a `yield` 
 The following PL/Python function computes and returns the maximum of two integers:
 
 ``` sql
-=> CREATE FUNCTION mypymax (a integer, b integer)
+=# CREATE FUNCTION mypymax (a integer, b integer)
      RETURNS integer
    AS $$
      if (a is None) or (b is None):
@@ -72,7 +72,7 @@ The following PL/Python function computes and returns the maximum of two integer
 To execute the `mypymax` function:
 
 ``` sql
-=> SELECT mypymax(5, 7);
+=# SELECT mypymax(5, 7);
  mypymax 
 ---------
        7
@@ -84,23 +84,23 @@ Adding the `STRICT` keyword to the `LANGUAGE` subclause instructs HAWQ to return
 The following example uses an unnamed argument, the built-in Python `max()` function, and the `STRICT` keyword to create a UDF named `mypymax2`:
 
 ``` sql
-=> CREATE FUNCTION mypymax2 (a integer, integer)
+=# CREATE FUNCTION mypymax2 (a integer, integer)
      RETURNS integer AS $$ 
    return max(a, args[0]) 
    $$ LANGUAGE plpythonu STRICT;
-=> SELECT mypymax(5, 3);
+=# SELECT mypymax(5, 3);
  mypymax2
 ----------
         5
 (1 row)
-=> SELECT mypymax(5, null);
+=# SELECT mypymax(5, null);
  mypymax2
 ----------
        
 (1 row)
 ```
 
-## <a id="example_createtbl"></a>Preparing For Exercises
+## <a id="example_createtbl"></a>Creating the Sample Data
 
 Perform the following steps to create, and insert data into, a simple table. This table will be used in later exercises.
 
@@ -151,7 +151,7 @@ The HAWQ PL/Python procedural language extension automatically imports the Pytho
    
 ### <a id="executepreparesql"></a>Executing and Preparing SQL Queries 
 
-Use the PL/Python `plpy` module `plpy.execute()` function to execute an SQL query. Use the `plpy.prepare()` function to prepare an execution plan for a query. Preparing the execution plan for a query is useful if you plan to run the query from multiple Python functions.
+Use the PL/Python `plpy` module `plpy.execute()` function to execute a SQL query. Use the `plpy.prepare()` function to prepare an execution plan for a query. Preparing the execution plan for a query is useful if you want to run the query from multiple Python functions.
 
 #### <a id="plpyexecute"></a>plpy.execute() 
 
@@ -186,7 +186,7 @@ Example: Use `plpy.execute()` to run a similar query on the `sales` table you cr
 1. Define a PL/Python UDF that executes a query to return at most 5 rows from the `sales` table:
 
     ``` sql
-    => CREATE OR REPLACE FUNCTION mypytest(a integer) 
+    =# CREATE OR REPLACE FUNCTION mypytest(a integer) 
          RETURNS text 
        AS $$ 
          rv = plpy.execute("SELECT * FROM sales ORDER BY id", 5)
@@ -202,7 +202,7 @@ Example: Use `plpy.execute()` to run a similar query on the `sales` table you cr
 3. Run `mypytest` with an argument identifying `id` `3`:
 
     ```sql
-    => SELECT mypytest(3);
+    =# SELECT mypytest(3);
      mypytest 
     ----------
      asia
@@ -251,7 +251,7 @@ Each function gets its own execution environment in the Python interpreter, so t
 This example saves an execution plan to the SD dictionary and then executes the plan:
 
 ```sql
-=> CREATE FUNCTION usesavedplan() RETURNS text AS $$
+=# CREATE FUNCTION usesavedplan() RETURNS text AS $$
      select1plan = plpy.prepare("SELECT region FROM sales WHERE id=1")
      SD["s1plan"] = select1plan
      # other function processing
@@ -259,7 +259,7 @@ This example saves an execution plan to the SD dictionary and then executes the 
      rv = plpy.execute(SD["s1plan"])
      return rv[0]["region"]
    $$ LANGUAGE plpythonu;
-=> SELECT usesavedplan();
+=# SELECT usesavedplan();
 ```
 
 ##### <a id="plpyprepare_example"></a>Example: plpy.prepare()
@@ -269,7 +269,7 @@ Example: Use `plpy.prepare()` and `plpy.execute()` to prepare and run an executi
 1. Define a PL/Python UDF to prepare and save an execution plan to the GD. Also  return the name of the plan:
 
     ``` sql
-    => CREATE OR REPLACE FUNCTION mypy_prepplan() 
+    =# CREATE OR REPLACE FUNCTION mypy_prepplan() 
          RETURNS text 
        AS $$ 
          plan = plpy.prepare("SELECT * FROM sales WHERE region = $1 ORDER BY id", [ "text" ])
@@ -283,7 +283,7 @@ Example: Use `plpy.prepare()` and `plpy.execute()` to prepare and run an executi
 1. Define a PL/Python UDF to run the execution plan; this function will take the plan name and `region` name as an input:
 
     ``` sql
-    => CREATE OR REPLACE FUNCTION mypy_execplan(planname text, regionname text)
+    =# CREATE OR REPLACE FUNCTION mypy_execplan(planname text, regionname text)
          RETURNS integer 
        AS $$ 
          rv = plpy.execute(GD[planname], [ regionname ], 5)
@@ -297,7 +297,7 @@ Example: Use `plpy.prepare()` and `plpy.execute()` to prepare and run an executi
 3. Execute the `mypy_prepplan()` and `mypy_execplan()` UDFs, passing `region` `usa`:
 
     ``` sql
-    => SELECT mypy_execplan( mypy_prepplan(), 'usa' );
+    =# SELECT mypy_execplan( mypy_prepplan(), 'usa' );
      mypy_execplan
     ---------------
          2014
@@ -327,7 +327,7 @@ In this example, you will create a PL/Python UDF that includes some debug log me
 1. Define a PL/Python UDF that executes a query that will return at most 5 rows from the `sales` table. Invoke the `plpy.debug()` method to display some additional information:
 
     ``` sql
-    => CREATE OR REPLACE FUNCTION mypytest_debug(a integer) 
+    =# CREATE OR REPLACE FUNCTION mypytest_debug(a integer) 
          RETURNS text 
        AS $$ 
          plpy.debug('mypytest_debug executing query:  SELECT * FROM sales ORDER BY id')
@@ -341,7 +341,7 @@ In this example, you will create a PL/Python UDF that includes some debug log me
 2. Execute the `mypytest_debug()` UDF, passing the integer `2` as an argument:
 
     ```sql
-    => SELECT mypytest_debug(2);
+    =# SELECT mypytest_debug(2);
      mypytest_debug 
     ----------------
      asia
@@ -351,13 +351,13 @@ In this example, you will create a PL/Python UDF that includes some debug log me
 3. Enable `DEBUG2` level client logging:
 
     ``` sql
-    => SET client_min_messages=DEBUG2;
+    =# SET client_min_messages=DEBUG2;
     ```
     
 2. Execute the `mypytest_debug()` UDF again:
 
     ```sql
-    => SELECT mypytest_debug(2);
+    =# SELECT mypytest_debug(2);
     ...
     DEBUG2:  mypytest_debug executing query:  SELECT * FROM sales ORDER BY id
     ...
@@ -370,7 +370,7 @@ In this example, you will create a PL/Python UDF that includes some debug log me
 6. Turn off client-level debug logging:
 
     ```sql
-    => SET client_min_messages=NOTICE;
+    =# SET client_min_messages=NOTICE;
     ```
 
 ## <a id="pythonmodules-3rdparty"></a>3rd-Party Python Modules 
@@ -655,7 +655,7 @@ You can create a simple PL/Python user-defined function (UDF) to validate that a
     gpadmin@hawq_node$ psql -d testdb
     ```
     ``` sql
-    => CREATE OR REPLACE FUNCTION test_importnumpy(x int)
+    =# CREATE OR REPLACE FUNCTION test_importnumpy(x int)
        RETURNS text
        AS $$
          try:
@@ -679,7 +679,7 @@ You can create a simple PL/Python user-defined function (UDF) to validate that a
 3. Run the UDF on the segment nodes where data is stored in the primary segment instances.
 
     ``` sql
-    => SELECT gp_segment_id, test_importnumpy(1) AS status
+    =# SELECT gp_segment_id, test_importnumpy(1) AS status
          FROM disttbl
          GROUP BY gp_segment_id, status
          ORDER BY gp_segment_id, status;
@@ -689,14 +689,6 @@ You can create a simple PL/Python user-defined function (UDF) to validate that a
    
 
 #### <a id="testingpythonmodules"></a>Troubleshooting Python Module Import Failures
-
-If a Python module import UDF returns FAILURE, you can find the host on which the associated segment instance resides. The HAWQ system table `gp_segment_configuration` includes information about segment configuration. 
-
-To obtain the host name for a segment ID:
-
-``` sql
-=> WHAT QUERY WILL RETURN THIS INFO??
-```
 
 Possible causes of a Python module import failure include:
 
@@ -730,7 +722,7 @@ Importing a Python module is an expensive operation that can adversely affect pe
 The following PL/Python function uses the GD persistent storage dictionary to avoid importing the module NumPy if it has already been imported in the GD. The UDF includes a call to `plpy.notice()` to display a message when importing the module.
 
 ``` sql
-=> CREATE FUNCTION mypy_import2gd() RETURNS text AS $$ 
+=# CREATE FUNCTION mypy_import2gd() RETURNS text AS $$ 
      if 'numpy' not in GD:
        plpy.notice('mypy_import2gd: importing module numpy')
        import numpy
@@ -739,7 +731,7 @@ The following PL/Python function uses the GD persistent storage dictionary to av
    $$ LANGUAGE plpythonu;
 ```
 ``` sql
-=> SELECT mypy_import2gd();
+=# SELECT mypy_import2gd();
 NOTICE:  mypy_import2gd: importing module numpy
 CONTEXT:  PL/Python function "mypy_import2gd"
  mypy_import2gd 
@@ -748,7 +740,7 @@ CONTEXT:  PL/Python function "mypy_import2gd"
 (1 row)
 ```
 ``` sql
-=> SELECT mypy_import2gd();
+=# SELECT mypy_import2gd();
  mypy_import2gd 
 ----------------
  numpy
