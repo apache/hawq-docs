@@ -6,7 +6,7 @@ sections:
  - repository:
      name: incubator-hawq-docs/markdown
    directory: docs/userguide/2.1.0.0-incubating
-   subnav_template: apache-hawq-nav
+   subnav_template: apache-hawq-nav-210
 
 template_variables:
   use_global_header: true
