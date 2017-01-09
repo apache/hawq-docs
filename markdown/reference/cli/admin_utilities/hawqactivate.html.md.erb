@@ -1,0 +1,87 @@
+---
+title: hawq activate
+---
+
+Activates a standby master host and makes it the active master for the HAWQ system.
+
+**Note:** If HAWQ was installed using Ambari, do not use `hawq activate` to activate a standby master host. The system catalogs could become unsynchronized if you mix Ambari and command line functions. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to activate a standby master. For more information, see [Manging HAWQ Using Ambari](../../../admin/ambari-admin.html#topic1).
+
+## <a id="topic1__section2"></a>Synopsis
+
+``` pre
+hawq activate standby 
+     [-M (smart|fast|immediate) | --mode (smart|fast|immediate)] 
+     [-t <time> | --timeout <time>] 
+     [-l <logfile_directory> | --logdir <logfile_directory>]
+     [(-v | --verbose) | (-q | --quiet)] 
+     [--ignore-bad-hosts]
+
+hawq activate [-h | --help]
+
+```
+
+## <a id="topic1__section3"></a>Description
+
+If the primary master fails, the log replication process is shut down, and the standby master can be activated in its place. The `hawq activate                                         standby` utility activates a backup, standby master host and brings it into operation as the active master instance for a HAWQ system. The activated standby master effectively becomes the HAWQ master, accepting client connections on the master port.
+
+When you initialize a standby master, the default is to use the same port as the active master. For information about the master port for the standby master, see [hawq init](hawqinit.html#topic1).
+
+You must run this utility from the master host you are activating, not the failed master host you are disabling. Running this utility assumes you have a standby master host configured for the system .
+
+The utility will perform the following steps:
+
+-   Stops the synchronization process (`walreceiver`) on the standby master
+-   Updates the system catalog tables of the standby master using the logs
+-   Activates the standby master to be the new active master for the system
+-   Restarts the HAWQ system with the new master host
+
+In order to use `hawq activate standby` to activate a new primary master host, the master host that was previously serving as the primary master cannot be running. The utility checks for a `postmaster.pid` file in the data directory of the disabled master host, and if it finds it there, it will assume the old master host is still active. In some cases, you may need to remove the `postmaster.pid` file from the disabled master host data directory before running `hawq activate                                         standby` (for example, if the disabled master host process was terminated unexpectedly).
+
+After activating a standby master, run `ANALYZE` to update the database query statistics. For example:
+
+``` shell
+$ psql <dbname> -c 'ANALYZE;'
+```
+
+After you activate the standby master as the primary master, the HAWQ system no longer has a standby master configured. You might want to specify another host to be the new standby with the [hawq init](hawqinit.html#topic1) utility.
+
+## <a id="topic1__section4"></a>Options
+
+<dt>-M, -\\\-mode (smart | fast | immediate) </dt>
+<dd>Stop with one of the specified modes.
+
+Smart shutdown is the default. Shutdown fails with a warning message, if active connections are found.
+
+Fast shut down interrupts and rolls back any transactions currently in progress.
+
+Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
+
+<dt>-t, -\\\-timeout \<timeout\_seconds\>  </dt>
+<dd>Seconds to wait before discontinuing the operation. If not specified, the default timeout is 60 seconds.</dd>
+
+<dt>-l, -\\\-logdir \<logfile\_directory\> </dt>
+<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
+
+<dt>-v, -\\\-verbose  </dt>
+<dd>Displays detailed status, progress and error messages output by the utility.</dd>
+
+<dt>-q, -\\\-quiet  </dt>
+<dd>Run in quiet mode. Command output is not displayed on the screen, but is still written to the log file.</dd>
+
+<dt>-\\\-ignore-bad-hosts  </dt>
+<dd>Overrides copying configuration files to a host on which SSH validation fails. If ssh to a skipped host is reestablished, make sure the configuration files are re-synched once it is reachable.</dd>
+
+<dt>-h, -\\\-help (help)  </dt>
+<dd>Displays the online help.</dd>
+
+## <a id="topic1__section5"></a>Example
+
+Activate the standby master host and make it the active master instance for a HAWQ system (run from backup master host you are activating):
+
+``` shell
+$ hawq activate standby
+```
+
+## <a id="topic1__section6"></a>See Also
+
+[hawq init](hawqinit.html#topic1)
