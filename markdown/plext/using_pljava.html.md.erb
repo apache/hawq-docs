@@ -35,9 +35,9 @@ PL/Java is embedded in your HAWQ product distribution or within your HAWQ build 
 
 There are a few key differences between the implementation of PL/Java in standard PostgreSQL and HAWQ.
 
-### <a id="pljavafunctions"></a>Functions Not Supported
+### <a id="pljavafunctions"></a>Unsupported Functions
 
-The following functions are not supported in HAWQ. The PL/Java classpath is handled differently in a distributed HAWQ environment than that of the PostgreSQL environment.
+The following functions are not supported in HAWQ:
 
 - sqlj.install_jar()
 - sqlj.install_jar()
@@ -46,7 +46,7 @@ The following functions are not supported in HAWQ. The PL/Java classpath is hand
 - sqlj.get_classpath()
 - sqlj.set_classpath()
 
-HAWQ uses the `pljava_classpath` server configuration parameter in place of the `sqlj.set_classpath()` function.
+The PL/Java classpath is handled differently in a distributed HAWQ environment than that of the PostgreSQL environment. HAWQ uses the `pljava_classpath` server configuration parameter in place of the `sqlj.set_classpath()` function.
 
 ### <a id="serverconfigparams"></a>Server Configuration Parameters 
 
@@ -62,7 +62,7 @@ A PL/Java user-defined function will appoint a static method in a Java class. In
 
 #### pljava\_release\_lingering\_savepoints
 
-[`pljava_release_lingering_savepoints`](../reference/guc/parameter_definitions.html#pljava_release_lingering_savepoints) identifies the action to perform when lingering savepoints exist on exit of a PL/Java user-defined function. If TRUE, lingering savepoints will be released on function exit. If FALSE, lingering savepoints will be rolled back.
+[`pljava_release_lingering_savepoints`](../reference/guc/parameter_definitions.html#pljava_release_lingering_savepoints) identifies the action to perform when lingering savepoints exist after a PL/Java user-defined function exits. If TRUE, lingering savepoints are released on function exit. If FALSE, lingering savepoints are rolled back.
 
 #### pljava\_statement\_cache\_size
 
@@ -70,7 +70,7 @@ A PL/Java user-defined function will appoint a static method in a Java class. In
 
 #### pljava\_vmoptions
 
-[`pljava_vmoptions`](../reference/guc/parameter_definitions.html#pljava_vmoptions) defines the start-up options for the Java VM.
+[`pljava_vmoptions`](../reference/guc/parameter_definitions.html#pljava_vmoptions) defines the set of space-delimited start-up options for the Java VM.
 
 ### <a id="setting_serverconfigparams"></a>Setting PL/Java Configuration Parameters 
 
@@ -80,7 +80,7 @@ You can set PL/Java server configuration parameters at the session level, or glo
 
 You will perform different procedures to set a PL/Java server configuration parameter for your whole HAWQ cluster depending upon whether you manage your cluster from the command line or use Ambari. If you use Ambari to manage your HAWQ cluster, you must ensure that you update server configuration parameters only via the Ambari Web UI. If you manage your HAWQ cluster from the command line, you will use the `hawq config` command line utility to set PL/Java server configuration parameters.
 
-Your HAWQ cluster configuration must be reloaded after setting a server configuration value globally.
+You must reload your HAWQ cluster configuration after you set a server configuration value globally.
 
 The following examples add a JAR file named `myclasses.jar` to the `pljava_classpath` server configuration parameter for the entire HAWQ cluster.
 
@@ -114,7 +114,7 @@ If you manage your HAWQ cluster from the command line:
 
 #### <a id="setsrvrcfg_session"></a>Session Level 
 
-To set a PL/Java server configuration parameter for only the *current* database session, set the parameter within the `psql` subsystem. For example:
+To set a PL/Java server configuration parameter only for the *current* database session, set the parameter within the `psql` subsystem. For example:
 	
 ``` sql
 => SET pljava_classpath='myclasses.jar';
@@ -126,15 +126,16 @@ This section describes specific security considerations when using PL/Java.
 
 ### <a id="installation"></a>Enable/Disable 
 
-Only a database superuser can enable/disable PL/Java. The PL/Java utility functions are created using `SECURITY DEFINER` privileges; they execute with the access permissions that were granted to the creator of the functions.
+Only a database superuser can enable and disable PL/Java. You install the PL/Java utility functions with `SECURITY DEFINER` privileges; they execute with the access permissions granted to the creator of the functions.
 
 ### <a id="trustedlang"></a>Trusted/Untrusted Language 
 
 PL/Java includes trusted and untrusted language variants.
 
-The PL/Java trusted language is named `java`. The trusted PL/Java language has no access to the file system as stipulated by PostgreSQL definition of a trusted language. Any database user can create and execute functions in the trusted `java` language.
+The PL/Java trusted language is named `java`. The trusted PL/Java language cannot access the file system as stipulated by the PostgreSQL definition of a trusted language. Any database user can create and execute functions in the trusted `java` language.
 
-The PL/Java untrusted language is named `javau`. `javau` offers no way of restricting what you can program in UDFs created with the language. Creating untrusted PL/Java UDFs is permitted only by database superusers. Executing untrusted PL/Java UDFs is permitted only by database superusers and other database users explicitly `GRANT`ed the permissions.
+The PL/Java untrusted language is named `javau`. You cannot restrict operation of functions you create with the `javau` untrusted language. Only database superusers have privileges to create untrusted PL/Java UDFs. Only database superusers and other database users explicitly `GRANT`ed the permissions can execute untrusted PL/Java UDFs.
+
 ## <a id="enablepljava"></a>Enabling and Removing PL/Java Support 
 
 The PL/Java extension must be explicitly enabled on each database in which it will be used. To remove PL/Java support, the extension must be explicitly removed from each database in which it was used.
@@ -183,17 +184,17 @@ Perform the following steps as the `gpadmin` user:
     gpadmin@master$ psql -d template1 -f $GPHOME/share/postgresql/pljava/install.sql
     ```
 
-    Use this option *only* if you are certain you want to enable both the trusted and untrusted versions of PL/Java in all newly-created databases. This operation takes effect on all databases created after the command is invoked.
+    Use this option *only* if you are certain you want to enable both the trusted and untrusted versions of PL/Java in all newly-created databases. After you invoke this command, PL/Java will be enabled in each new database that a user creates.
 	
-2. Copy all custom Java JAR files to `$GPHOME/lib/postgresql/java/` on all HAWQ nodes. This example uses the `hawq scp` utility to copy the `myclasses.jar` file located in the current directory to the list of hosts identified in the `hawq_hosts` file, also located in the current directory:
+2. Copy all custom Java JAR files to `$GPHOME/lib/postgresql/java/` on all HAWQ nodes. This example uses the `hawq scp` utility to copy the `myclasses.jar` file  to the list of hosts identified in the `hawq_hosts` file:
 
 	``` shell
-	gpadmin@master$ hawq scp -f hawq_hosts myclasses.jar =:/usr/local/hawq/lib/postgresql/java/
+	gpadmin@master$ hawq scp -f ./hawq_hosts ./myclasses.jar =:/usr/local/hawq/lib/postgresql/java/
 	```
 
 3. Add all JAR files to the `pljava_classpath` configuration parameter. Refer to [Setting PL/Java Configuration Parameters](#setting_serverconfigparams) for the specific procedure.
 
-5. (Optional) Your HAWQ installation includes an `examples.sql` file. This script includes sample PL/Java functions that you can use to test PL/Java installation. Run the commands in this file to create and execute PL/Java user-defined functions that use the Java classes implemented in `examples.jar`. The database on which you run the script must have PL/Java enabled:
+5. (Optional) Your HAWQ installation includes an `examples.sql` file. This script registers sample PL/Java functions that you can use to test the PL/Java installation. Run the commands in this file to create and execute PL/Java user-defined functions that use the Java classes implemented in `examples.jar`. The database on which you run the script must have PL/Java enabled:
 
 	``` shell
 	gpadmin@master$ psql -d <dbname> -f $GPHOME/share/postgresql/pljava/examples.sql
@@ -214,7 +215,7 @@ To disable PL/Java, you should:
 
 #### <a id="uninstallpljavasupport"></a>Remove PL/Java Support from Databases 
 
-For a database that no longer requires the PL/Java language, remove support for PL/Java by running the `uninstall.sql` script as the `gpadmin` user. For example, the following command disables the PL/Java languages in the specified database:
+Remove support for PL/Java by running the `uninstall.sql` script as the `gpadmin` user. For example, the following command disables the PL/Java languages in the specified database:
 
 ``` shell
 gpadmin@master$ psql -d <dbname> -f $GPHOME/share/postgresql/pljava/uninstall.sql
@@ -279,7 +280,7 @@ PL/Java functions are defined using the standard SQL [CREATE FUNCTION](../refere
 
 The `RETURNS` clause identifies the type of the function's return value. 
 
-Use the `AS` clause to identify the name of a Java class and the static method on that class that will be invoked when the PL/Java UDF is executed. The arguments to the UDF will be passed to the identified Java method.
+Use the `AS` clause to identify the name of a Java class and the static method on that class that HAWQ invokes when it executes the function. Any arguments to the UDF are also passed to the Java method.
 
 The Java class is resolved using the classpath that has been defined for the schema in which the function is declared. If no classpath has been defined for that schema, the `public` schema is used. If no classpath is found in the `public` schema, an attempt is made to resolve the class using the Java system class loader.
 
@@ -588,9 +589,9 @@ Example: Complex Return Types
 
 PL/Java supports user-defined functions that return sets of both scalar and complex types. 
 
-HAWQ backend a function that `RETURNS` a `SETOF` to return one row at a time.
+The HAWQ backend expects a function that `RETURNS` a `SETOF` to return one row at a time.
 
-### <a id="returnsetofscalar"></a>Returning a SETOF \<scalar type\> 
+### <a id="returnsetofscalar"></a>Returning a SETOF &lt;Scalar Type&gt; 
 
 To return a set of a scalar type, the Java method must return an object that implements the `java.util.Iterator` interface. 
 
@@ -671,7 +672,7 @@ Example: Function that returns a SETOF varchar:
     
     The UDF returns a list of four string names.
 
-### <a id="returnsetofcomplex"></a>Returning a SETOF \<complex type\> 
+### <a id="returnsetofcomplex"></a>Returning a SETOF &lt;Complex Type&gt; 
 
 A method returning a set of \<complex type\> must implement either the `org.postgresql.pljava.ResultSetProvider` interface or the `org.postgresql.pljava.ResultSetHandle` interface. The interfaces provide optimal handling for distinct use cases. Use `org.postgresql.pljava.ResultSetProvider` when you want to dynamically create each row the function returns. Use `org.postgresql.pljava.ResultSetHandle` in cases where you want to return the result of an executed query.
 
@@ -734,7 +735,7 @@ int increment)
     }
     ```
 
-    The `listComplex()` method is called once. It will return NULL if no results are available or an instance of the `ResultSetProvider` interface. The Java class `FumSetOfComplex` implements this interface to return an instance of itself. `assignRowValues()` is called repeatedly until it returns false. At that time, `close()` is called.
+    The `listComplex()` method is called once. It will return NULL if no results are available. If results are available, `listComplex()` will return an instance of a `ResultSetProvider` interface. The Java class `FumSetOfComplex` implements this interface to return an instance of itself. `assignRowValues()` is called repeatedly until it returns false. At that time, `close()` is called.
 
 3. Compile the `FumSetOfComplex` class, create the JAR file, and copy the JAR file to the default PL/Java classpath directory:
 
@@ -788,7 +789,7 @@ int increment)
 
 #### Using the ResultSetHandle Interface
 
-Classes implementing the `ResultSetHandle` interface will include a method to return a `ResultSet` named `getResultSet()`. The query evaluator will iterate over this set and deliver the `ResultSet` contents, one tuple at a time, to the caller until a call to `next()` returns false or the evaluator decides that no more rows are needed.
+Classes implementing the `ResultSetHandle` interface must include a method to return a `ResultSet` named `getResultSet()`. The query evaluator will iterate over this set and deliver the `ResultSet` contents, one tuple at a time, to the caller until a call to `next()` returns false or the evaluator decides that no more rows are needed.
 
 Example: Using the `ResultSetHandle` Interface
 
@@ -919,17 +920,17 @@ Limitations of the PL/Java JDBC driver include the following:
 - Savepoints are available, with some restrictions. A savepoint cannot outlive the function in which it was set, and it must be rolled back or released by that same function.
 - A `ResultSet` returned from `executeQuery()` is always `FETCH_FORWARD` and `CONCUR_READ_ONLY`.
 - `CallableStatement` (for stored procedures) is not implemented.
-- The types `Clob` or `Blob` are not completely implemented. Use the types `byte[]` and `String` for `bytea` and `text`, respectively.
+- The types `Clob` and `Blob` are not completely implemented. Use the types `byte[]` and `String` for `bytea` and `text`, respectively.
 
 ## <a id="exceptionhandling"></a>Exception Handling 
 
 You can catch and handle an exception in the HAWQ backend just like any other exception. The backend `ErrorData` structure is exposed as a property in the `org.postgresql.pljava.internal.ServerException` class (derived from `java.sql.SQLException`), and the Java `try/catch` construct is synchronized with the backend mechanism.
 
-**Important:** If the backend has generated an exception and you have set a savepoint, the exception condition is reset when the savepoint is rolled back, allowing you to continue your execution.  If the backend has generated an exception and you have *not* used a savepoint, you will not be able to continue executing backend functions until your function has returned and the error has been propagated.
+**Important:** If the backend generates an exception and you have set a savepoint, the exception condition is reset when the savepoint is rolled back, allowing you to continue your execution. If the backend has generated an exception and you have *not* used a savepoint, then you cannot execute backend functions until your function propagates the error and returns.
 
 ## <a id="savepoints"></a>Savepoints 
 
-HAWQ savepoints are exposed using the `java.sql.Connection` interface. Two restrictions apply:
+HAWQ exposes savepoints using the `java.sql.Connection` interface. Two restrictions apply:
 
 - A savepoint must be rolled back or released in the function in which it was set.
 - A savepoint must not outlive the function from which it was set.
@@ -947,7 +948,7 @@ The logger uses a handler that maps the current setting of the HAWQ `log_min_mes
 
 **Note:** The `log_min_messages` setting is read from the database the first time a PL/Java function in a session is executed and can only be changed by restarting the HAWQ session.
 
-Java to HAWQ log level mapping is identified in the table below.
+The table below identifies the Java to HAWQ log level mapping:
 
 **Table 2: PL/Java Logging Levels Mappings**
 
@@ -964,7 +965,11 @@ Java to HAWQ log level mapping is identified in the table below.
 
 ## <a id="pljavaexample"></a>Example 
 
-The following example creates a Java class with a single method, creates a PL/Java UDF that invokes the method, and executes the PL/Java UDF on a simple table.
+The following example:
+
+1. Creates a Java class with a single method.
+2. Creates a PL/Java UDF that invokes the method.
+3. Executes the PL/Java UDF on a simple table.
 
 **Note**: This example requires a Java SDK be installed on your development system.
 
