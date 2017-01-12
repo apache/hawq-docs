@@ -7,11 +7,11 @@ Defines a new cast.
 ## <a id="topic1__section2"></a>Synopsis
 
 ``` pre
-CREATE CAST (sourcetype AS targettype) 
-       WITH FUNCTION funcname (argtypes) 
+CREATE CAST (<sourcetype> AS <targettype>) 
+       WITH FUNCTION <funcname (argtypes)> 
        [AS ASSIGNMENT | AS IMPLICIT]
 
-CREATE CAST (sourcetype AS targettype) WITHOUT FUNCTION 
+CREATE CAST (<sourcetype> AS <targettype>) WITHOUT FUNCTION 
        [AS ASSIGNMENT | AS IMPLICIT]
 ```
 
@@ -23,7 +23,7 @@ CREATE CAST (sourcetype AS targettype) WITHOUT FUNCTION
 SELECT CAST(42 AS text);
 ```
 
-converts the integer constant 42 to type `text` by invoking a previously specified function, in this `case text(int4)`. If no suitable cast has been defined, the conversion fails.
+converts the integer constant 42 to type `text` by invoking a previously specified function, in this case `text(int4)`. If no suitable cast has been defined, the conversion fails.
 
 Two types may be binary compatible, which means that they can be converted into one another without invoking any function. This requires that corresponding values use the same internal representation. For instance, the types `text` and `varchar` are binary compatible.
 
