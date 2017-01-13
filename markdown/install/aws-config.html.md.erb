@@ -81,23 +81,25 @@ Ensure your Ambari and HAWQ master instances are each assigned a public IP addre
 
 A security group is a set of rules that control network traffic to and from your HAWQ instance.  One or more rules may be associated with a security group, and one or more security groups may be associated with an instance.
 
-To configure HAWQ communication between nodes in a HAWQ cluster, include and open the following ports in the appropriate security group for the HAWQ master and segment nodes. For example, if you create a security group named `hawq-cluster-sg` for your cluster, configure this security group to open the following ports:
+To configure HAWQ communication between nodes in a HAWQ cluster, include and open appropriate ports in the security group for the HAWQ master and segment nodes. For example, if you have a single VPC, you may create a single security group named `hawq-cluster-sg` for your cluster, and configure this security group to open the following ports:
 
 | Port  | Protocol | Application | Source |
 |-------|----------|--------------|-------------|
 | -1    |  ICMP | `ping` | `hawq-cluster-sg` |
 | 5432    | TCP     | HAWQ/Postgres | cidr 0.0.0.0/0 |
 | 50700    |  TCP   | HDFS NameNode |  cidr 0.0.0.0/0 |
-| 0-65535 | TCP | `ssh` and other Linux apps  | `hawq-cluster-sg` |
-| 0-65535 | UDP | Linux apps  | `hawq-cluster-sg` |
+| 0-65535 | TCP | `ssh`, HAWQ segment communication  | `hawq-cluster-sg` |
+| 0-65535 | UDP | HAWQ segment communication  | `hawq-cluster-sg` |
 
-Open any additional ports required for your HAWQ deployment environment.
+This configuration allows communication between the HAWQ segment nodes. It also allows `ping` on and `ssh` between all instances in the `hawq-cluster-sg`  security group. The HAWQ master and HDFS NameNode ports are open with the above settings.
+
+Open and/or restrict these and any additional ports required for your HAWQ deployment environment.
 
 Include and open the following ports in an appropriate security group for your Ambari node to allow access to/from a source external to this node:
 
 | Port  | Protocol | Application |
 |-------|-----------------|--------------------|
-| 22    | TCP | `ssh` - secure connection to/from other hosts |
+| 22    | TCP | `ssh` - secure shell to/from other hosts |
 | 8080  | TCP | Ambari - HAWQ admininstration web console |
 
 
