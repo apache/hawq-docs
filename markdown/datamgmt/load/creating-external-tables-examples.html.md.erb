@@ -19,7 +19,7 @@ Creates a readable external table, `ext_expenses`, using the `gpfdist` protocol.
 ``` sql
 =# CREATE EXTERNAL TABLE ext_expenses
         ( name text, date date, amount float4, category text, desc1 text )
-    LOCATION ('gpfdist://etlhost-1:8081/*', 'gpfdist://etlhost-1:8082/*')
+    LOCATION ('gpfdist://etlhost-1:8081/*')
     FORMAT 'TEXT' (DELIMITER '|');
 ```
 
