@@ -56,14 +56,12 @@ An EC2 instance type is a specific combination of CPU, memory, default storage, 
 
 Several instance store-backed EC2 instance types have shown acceptable performance for HAWQ nodes in development and production environments: 
 
-| Instance Type  | Env | vCPUs | Memory (GB) | Disk Capacity (GB) | Storage Type |  Enhanced Networking |
+| Instance Type  | Env | vCPUs | Memory (GB) | Disk Capacity (GB) | Storage Type | Network Speed |
 |-------|-----|------|--------|----------|--------|-------|
-| cc2.8xlarge  | Dev | 32 | 60.5 | 4 x 840 | HDD | No |
-| d2.2xlarge  | Dev | 8 | 60 | 6 x 2000 | HDD | Yes |
-| d2.4xlarge  | Dev/QA/Prod | 16 | 122 | 12 x 2000 | HDD | Yes |
-| i2.8xlarge  | Prod | 32 | 244 | 8 x 800 | SSD | Yes |
-| hs1.8xlarge  | Prod | 16 | 117 | 24 x 2000 | HDD | No |
-| d2.8xlarge  | Prod | 36 | 244 | 24 x 2000 | HDD | Yes |
+| d2.2xlarge  | Dev | 8 | 60 | 6 x 2000 | HDD | High |
+| d2.4xlarge  | Dev/QA/Prod | 16 | 122 | 12 x 2000 | HDD | High |
+| i2.8xlarge  | Prod | 32 | 244 | 8 x 800 | SSD | 10 Gigabit |
+| d2.8xlarge  | Prod | 36 | 244 | 24 x 2000 | HDD | 10 Gigabit |
  
 For optimal network performance, the chosen HAWQ instance type should support EC2 enhanced networking. Enhanced networking results in higher performance, lower latency, and lower jitter. Refer to [Enhanced Networking on Linux Instances](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html) for detailed information on enabling enhanced networking in supported EC2 instance types.
 
