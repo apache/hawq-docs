@@ -19,36 +19,36 @@ Use the **Amazon EC2 Console** to launch instances and configure, start, stop, a
 
 ### <a id="topic_amitype"></a>Choose AMI Type
 
-An Amazon Machine Image (AMI) is a template that contains a specific software configuration including the operating system, application server, and applications that best suit your purpose. When configuring a HAWQ virtual instance, we recommend that you use a *hardware virtualized* (HVM) AMI supporting enhanced 10Gbps networking. Ensure the AMI is running 64-bit Red Hat Enterprise Linux version 6.4 or 6.5 or 64-bit CentOS 6.4 or 6.5.  Obtain the licenses and instances directly from the OS provider.
+An Amazon Machine Image (AMI) is a template that contains a specific software configuration including the operating system, application server, and applications that best suit your purpose. When configuring a HAWQ virtual instance, use a *hardware virtualized* (HVM) AMI supporting enhanced 10Gbps networking. Ensure the AMI is running 64-bit Red Hat Enterprise Linux version 6.4 or 6.5 or 64-bit CentOS 6.4 or 6.5.  Obtain the licenses and instances directly from the OS provider.
 
 ### <a id="topic_selcfgstorage"></a>Consider Storage
-EC2 instances are launched as either Elastic Block Store (EBS)-backed or instance store-backed. Choose the storage type based on the expected lifetime of your cluster and data.
+You can launch EC2 instances as either Elastic Block Store (EBS)-backed or instance store-backed. Choose the storage type based on the expected lifetime of your cluster and data.
 
 #### <a id="topic_selcfgstorage_instance"></a>Instance Store-Backed
 
 Use instance store-backed storage for short lived or transient clusters that do not require long-term persistence of data. While instance store-backed storage is generally better performing than EBS, it is not recommended for use in a production environment.
 
-**Warning**: EC2 instance store provides *temporary* block-level storage. This storage is located on disks that are physically attached to the host computer. You will lose all instance store data when the AMI instance is powered off.
+**Warning**: EC2 instance store-backed storage provides *temporary* block-level storage. This storage is located on disks that are physically attached to the host computer. You will lose all instance store data when the AMI instance is powered off.
 
 
 #### <a id="topic_selcfgstorage_ebs"></a>EBS-Backed
-EBS volumes are reliable and highly-available. Use EBS-backed storage for longer running clusters where data must be quickly accessible and requires longer term persistence.
+EBS volumes are reliable and highly-available. Use EBS-backed storage for longer running clusters where data must be quickly accessible and must remain available for a long period of time.
 
 
 #### <a id="topic_selcfgstorage_volume"></a>Volume Types
-When selecting between HDD and SSD volume types, the trade-off is speed vs. capacity vs. cost. HDD volumes have greater disk capacity at less performance and cost. SSD (solid state) volumes are more performant, though costlier and typically with less disk capacity.
+When selecting between HDD and SSD volume types, the trade-offs are between speed, capacity, and cost. HDD volumes are less expensive and have greater disk capacity, but may be less performant. SSD (solid state drive) volumes are more performant, but costlier and typically have less disk capacity.
 
 ### <a id="topic_cfgplacegrp"></a>Configure Placement Group 
 
-A placement group is a logical grouping of instances within a single availability zone that together participate in a low-latency, 10 Gbps network.  We recommend your HAWQ master and segment cluster instances support enhanced networking and reside in a single placement group (and subnet) for optimal network performance.
+A placement group is a logical grouping of instances within a single availability zone that participate in a low-latency, 10 Gbps network. Your HAWQ master and segment cluster instances should support enhanced networking and reside in a single placement group (and subnet) for optimal network performance.
 
 If your Ambari node is not a DataNode, locating the Ambari node instance in a subnet separate from the HAWQ master/segment placement group enables you to manage multiple HAWQ clusters from the single Ambari instance.
 
 Amazon recommends that you use the same instance type for all instances in the placement group and that you launch all instances within the placement group at the same time.
 
-Membership in a placement group has some implications on your HAWQ cluster.  Specifically, growing the cluster over capacity may require shutting down all HAWQ instances in the current placement group and restarting the instances in a new placement group. **Warning**: Instance store volumes are lost in this scenario.
+Membership in a placement group has some implications for your HAWQ cluster.  Specifically, growing the cluster beyond the placement group capacity may require shutting down all HAWQ instances in the current placement group and restarting the instances in a new placement group. **Warning**: Instance store volumes are lost in this scenario.
 
-**Note**: If you have no tolerance for potential cluster expansion down time, placement groups may not be a viable option for your HAWQ deployment.
+**Note**: If cluster down time during expansion is not acceptable for your HAWQ deployment, do not use placement groups.
 
 ### <a id="topic_selinsttype"></a>Select EC2 Instance Type
 
@@ -72,7 +72,7 @@ Place your HAWQ cluster instances in a single VPC and on the same subnet. Instan
 
 You may choose to locate your Ambari node on a separate subnet in the VPC. Both a public IP address for the instance and an Internet gateway configured for the EC2 VPC are required to access the Ambari instance from an external source and for the instance to access the Internet. 
 
-Ensure your Ambari and HAWQ master instances are each assigned a public IP address for external and internet access. We recommend you also assign an Elastic IP Address to the HAWQ master instance.
+Ensure your Ambari and HAWQ master instances are each assigned a public IP address for external and internet access. Also assign an Elastic IP Address to the HAWQ master instance.
 
 
 ###Configure Security Groups<a id="topic_cfgsecgrp"></a>
