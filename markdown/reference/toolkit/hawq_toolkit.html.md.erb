@@ -101,9 +101,9 @@ The `hawq_size_*` family of views can be used to determine the disk space usage 
 The table and index sizing views list the relation by object ID (not by name). To check the size of a table or index by name, you must look up the relation name (`relname`) in the `pg_class` table. For example:
 
 ``` pre
-SELECT relname as name, sotdsize as size, sotdtoastsize as 
-toast, sotdadditionalsize as other 
-FROM hawq_size_of_table_disk as sotd, pg_class 
+SELECT relname AS name, sotdsize AS size, sotdtoastsize AS 
+toast, sotdadditionalsize AS other 
+FROM hawq_size_of_table_disk AS sotd, pg_class 
 WHERE sotd.sotdoid=pg_class.oid ORDER BY relname;
 ```
 
