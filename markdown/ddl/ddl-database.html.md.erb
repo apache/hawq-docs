@@ -8,7 +8,7 @@ Your HAWQ deployment may have multiple databases. This is different from some da
 
 Each new database you create is based on a *template*. HAWQ provides a default database, `template1`. HAWQ uses `template1` to create databases unless you specify another template. Do not create any objects in `template1` unless you want those objects to be in every database you create.
 
-HAWQ uses two other database templates internally, `template0` and `postgres`. Do not drop or modify `template0` or `postgres`. You can use `template0` to create a completely clean database containing only the standard objects predefined by HAWQ at initialization, especially if you have modified `template1`.
+HAWQ uses two other database templates internally, `template0` and `postgres`. Do not drop or modify `template0` or `postgres`. You can use `template0` to create a completely clean database containing only the standard objects predefined by HAWQ at initialization. This may be necessary if you have modified `template1`.
 
 ## <a id="topic4"></a>Creating a Database 
 
@@ -32,7 +32,7 @@ Some objects, such as roles, are shared by all of the databases in a HAWQ deploy
 
 ### <a id="topic5"></a>Cloning a Database 
 
-By default, a new database is created by cloning the standard system database template, `template1`. You may identify an alternate template to use for database creation. As mentioned in the section above, you can specify `template0` as the template:
+By default, a new database is created by cloning the standard system database template, `template1`. You can identify an alternate template to use for database creation. As mentioned in the section above, you can specify `template0` as the template:
 
 ``` sql
 =# CREATE DATABASE <new_dbname> WITH TEMPLATE template0;
@@ -48,7 +48,7 @@ You can use the `\l` meta-command of the `psql` client subsystem to display the 
 
 ## <a id="topic7"></a>Altering a Database 
 
-Use the [ALTER DATABASE](../reference/sql/ALTER-DATABASE.html) command to update database attributes including owner or name. You can also use ALTER DATABASE to update a database's default configuration. For example, the following command alters a database by setting its default schema search path using the `search_path` server configuration parameter:
+Use the [ALTER DATABASE](../reference/sql/ALTER-DATABASE.html) command to update database attributes including owner or name. You can also use ALTER DATABASE to update a database's default configuration. For example, the following command alters the `search_path` server configuration parameter to change the default schema search path for database `mydatabase`:
 
 ``` sql
 =# ALTER DATABASE mydatabase SET search_path TO myschema, public, pg_catalog;
@@ -58,7 +58,7 @@ To alter a database, you must be the owner of the database or a superuser.
 
 ## <a id="topic8"></a>Dropping a Database 
 
-The [DROP DATABASE](../reference/sql/DROP-DATABASE.html) command drops \(or deletes\) a database. It removes the system catalog entries for the database and deletes the data on disk. You must be the database owner or a superuser to drop a database, and you cannot drop a database while you or anyone else is connected to it. Connect to `template1` \(or another database\) before dropping a database. For example:
+The [DROP DATABASE](../reference/sql/DROP-DATABASE.html) command drops \(deletes\) a database. It removes the system catalog entries for the database and deletes the data on disk. You must be the database owner or a superuser to drop a database, and you cannot drop a database while you or anyone else is connected to it. Connect to `template1` \(or another database\) before dropping a database. For example:
 
 ``` shell
 =# \c template1
