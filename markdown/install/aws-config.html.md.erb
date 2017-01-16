@@ -59,10 +59,14 @@ Several instance store-backed EC2 instance types have shown acceptable performan
 | Instance Type  | Env | vCPUs | Memory (GB) | Disk Capacity (GB) | Storage Type | Network Speed |
 |-------|-----|------|--------|----------|--------|-------|
 | d2.2xlarge  | Dev | 8 | 60 | 6 x 2000 | HDD | High |
-| d2.4xlarge  | Dev/QA/Prod | 16 | 122 | 12 x 2000 | HDD | High |
+| d2.4xlarge  | Dev/QA | 16 | 122 | 12 x 2000 | HDD | High |
+| c3.8xlarge  | Dev/QA | 32 | 60 | 2 x 320 | SSD | 10 Gigabit |
+| r3.8xlarge  | Dev/QA | 32 | 244 | 2 x 320 | SSD | 10 Gigabit |
 | i2.8xlarge  | Prod | 32 | 244 | 8 x 800 | SSD | 10 Gigabit |
 | d2.8xlarge  | Prod | 36 | 244 | 24 x 2000 | HDD | 10 Gigabit |
  
+**Note**: This list is not exhaustive. You may find other instance types with similar specifications suitable for your HAWQ deployment.
+
 For optimal network performance, the chosen HAWQ instance type should support EC2 enhanced networking. Enhanced networking results in higher performance, lower latency, and lower jitter. Refer to [Enhanced Networking on Linux Instances](http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/enhanced-networking.html) for detailed information on enabling enhanced networking in supported EC2 instance types.
 
 
