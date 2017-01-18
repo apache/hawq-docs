@@ -8,7 +8,7 @@ Use the `HdfsTextSimple` profile when writing text data. Use the `SequenceWritab
 
 This section describes how to use these PXF profiles to create writable external tables.
 
-**Note**: Tables that you create with writable profiles can only be used for INSERT operations.  If you want to query inserted data, you must define a separate external readable table that references the new HDFS file using the equivalent readable profile.  ??You can also create a Hive table to access the HDFS file.??
+**Note**: Tables that you create with writable profiles can only be used for INSERT operations.  If you want to query inserted data, you must define a separate external readable table that references the new HDFS file using the equivalent readable profile.
 
 ## <a id="pxfwrite_prereq"></a>Prerequisites
 
@@ -52,14 +52,14 @@ The `HdfsTextSimple` and `SequenceWritable` profiles support the following custo
 | Option  | Value Description | Profile |
 |-------|-------------------------------------|--------|
 | COMPRESSION_CODEC    | The compression codec Java class name. If this option is not provided, no data compression is performed. Supported compression codecs include: `org.apache.hadoop.io.compress.DefaultCodec` and `org.apache.hadoop.io.compress.BZip2Codec` | HdfsTextSimple, SequenceWritable |
-|    |  `org.apache.hadoop.io.compress.GzipCodec` | HdfsTextSimple |
+|  COMPRESSION_CODEC  |  `org.apache.hadoop.io.compress.GzipCodec` | HdfsTextSimple |
 | COMPRESSION_TYPE    | The compression type to employ; supported values are `RECORD` (the default) or `BLOCK`. | HdfsTextSimple, SequenceWritable |
 | DATA-SCHEMA    | The name of the writer serialization/deserialization class. The jar file in which this class resides must be in the PXF classpath. This option is required for the `SequenceWritable` profile and has no default value. | SequenceWritable|
 | THREAD-SAFE | Boolean value determining if a table query can run in multi-threaded mode. The default value is `TRUE`. Set this option to `FALSE` to handle all requests in a single thread for operations that are not thread-safe (for example, compression). | HdfsTextSimple, SequenceWritable| 
 
 ## <a id="profile_hdfstextsimple"></a>HdfsTextSimple Profile
 
-Use the `HdfsTextSimple` profile when writing delimited data to a plain text file where each row is a single record.
+Use the `HdfsTextSimple` profile when writing delimited data to a plain text file where each line is a single record.
 
 Writable tables created using the `HdfsTextSimple` profile can optionally use record or block compression. The following compression codecs are supported:
 
@@ -136,7 +136,7 @@ Perform the following operations to use the PXF `HdfsTextSimple` profile to crea
 			    FORMAT 'CSV';
     ```
 
-    The table is created with the `'CSV'` `FORMAT` because the delimiter character used when creating the writable table was a comma `,`.
+    The table is created with the `'CSV'` `FORMAT` because the delimiter character with which you created the writable table was a comma `,`.
 
 6. Query the readable external table `pxf_hdfs_textsimple_r1`:
 
@@ -314,11 +314,13 @@ public class PxfExample_CustomWritable implements Writable {
 3. Compile and create a Java class JAR file for `PxfExample_CustomWritable`:
 
     ``` shell
-    $ javac -classpath /usr/hdp/2.5.0.0-1245/hadoop/hadoop-common.jar  PxfExample_CustomWritable.java
+    $ javac -classpath /usr/hdp/2.5.3.0-37/hadoop/hadoop-common.jar  PxfExample_CustomWritable.java
     $ cd ../../../../../../../
     $ jar cf pxfex-customwritable.jar com
     $ cp pxfex-customwritable.jar /tmp/
     ```
+
+    (Your Hadoop library classpath may differ.)
 
 4. Include the new jar file in the PXF Agent classpath by updating the `pxf-public.classpath` file. If you use Ambari to manage your cluster, add the following line via the Ambari UI and restart the PXF Agent:
 
@@ -374,10 +376,6 @@ public class PxfExample_CustomWritable implements Writable {
     (2 rows)
     ```
 
-7. To read the `pxf_seqwrit_file` HDFS file via Hive:
-
-    IS THIS A VALID USE CASE???  COULD NOT GET THIS TO WORK.
-
 ## <a id="recordkeyinkey-valuefileformats"></a>Reading the Record Key 
 
 When a HAWQ external table references a SequenceFile or another file format that store rows in a key-value format, you can access the key values in HAWQ queries by using the `recordkey` keyword as a field name.
@@ -396,7 +394,7 @@ The field type of `recordkey` must correspond to the key type, much as the other
 
 ### <a id="example1"></a>Example: Using Record Keys
 
-Create an external readable table to access the record keys from the writable table `pxf_tbl_seqwrit` that you created in [Example: Writing Data Using the SequenceWritable Profile](#profile_hdfsseqwritable_writing).  The `recordkey` is of type `int8`. (We did not identify a record key when creating the writable table.
+Create an external readable table to access the record keys from the writable table `pxf_tbl_seqwrit` that you created in [Example: Writing Data Using the SequenceWritable Profile](#profile_hdfsseqwritable_writing).  The `recordkey` is of type `int8`. (You did not identify a record key when you created the writable table.
 
 ``` sql
 gpadmin=# CREATE  EXTERNAL TABLE read_pxf_tbl_seqwrit_RECKEY (recordkey int8, location text, month text, number_of_orders integer, total_sales real)
@@ -413,4 +411,4 @@ gpadmin=# SELECT * FROM read_pxf_tbl_seqwrit_RECKEY;
 (2 rows)
 ```
 
-The `recordkey` is displayed as `0`; a record key was not identified when you inserted entries in the writable table.
+The `recordkey` is displayed as `0`; you did not identify a record key when you inserted entries in the writable table.
