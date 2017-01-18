@@ -258,9 +258,13 @@ Query minidump files are generated in a `minidumps/` subdirectory in the HAWQ ma
 Use the [optimizer_minidump](../reference/guc/parameter_definitions.html#optimizer_minidump) HAWQ server configuration parameter to configure minidump generation. The default setting generates minidump files only on error.
 
 
-## <a id="logging_other"></a>PXF Log Files
+## <a id="logging_pxf"></a>PXF Log Files
 
 PXF provides both service- and database-level logging. Refer to [PXF Logging](../pxf/TroubleshootingPXF.html#pxflogging) for specific PXF logging configuration and management information.
+
+## <a id="logging_ambari"></a>Ambari Log Files
+
+Ambari log files may be useful in helping diagnose general cluster problems. The Ambari server log files are located in the `/var/log/ambari-server/` directory. Ambari agent log files are located in `/var/log/ambari-agent/`. Refer to [Reviewing Ambari Log Files](https://docs.hortonworks.com/HDPDocuments/Ambari-2.2.1.1/bk_ambari_troubleshooting/content/_reviewing_ambari_log_files.html) for additional information.
 
 
 ## <a id="logging_other"></a>Hadoop Log Files
