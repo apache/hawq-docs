@@ -155,6 +155,8 @@ Create a Hive table to expose our sample data set.
     hive> LOAD DATA LOCAL INPATH '/tmp/pxf_hive_datafile.txt'
             INTO TABLE sales_info;
     ```
+    
+    In examples later in this section, you will access the `sales_info` Hive table directly via PXF. You will also insert `sales_info` data into tables of other Hive file format types, and use PXF to access those directly as well.
 
 3. Perform a query on `sales_info` to verify that the data was loaded successfully:
 
@@ -162,7 +164,21 @@ Create a Hive table to expose our sample data set.
     hive> SELECT * FROM sales_info;
     ```
 
-In examples later in this section, you will access the `sales_info` Hive table directly via PXF. You will also insert `sales_info` data into tables of other Hive file format types, and use PXF to access those directly as well.
+### <a id="get_hdfs_file_location"></a>Determine the HDFS location of a Hive Table
+
+Should you need to identify the HDFS file location of a Hive managed table, you will reference it using its HDFS file path. You can determine a Hive table's location in HDFS using the `DESCRIBE` command, for example:
+
+``` sql
+hive> DESCRIBE EXTENDED sales_info;
+Detailed Table Information
+...
+location:hdfs://<namenode>:<port>/apps/hive/warehouse/sales_info
+...
+```
+
+The `location` value identifies the HDFS file path of the table.
+
+
 
 
 ## <a id="hcatalog"></a>Using PXF and HCatalog to Query Hive
@@ -240,7 +256,7 @@ To obtain a description of a Hive table with HCatalog integration, you can use t
     ```
 
     ``` sql
-    postgres=# \d+ hcatalog.default.sales_info_rcfile;
+    postgres=# \d+ hcatalog.default.sales_info;
     ```
 
     ``` shell
@@ -327,7 +343,7 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 
 ## <a id="profile_hive"></a>Hive Profile
 
-Use the `Hive` profile with any Hive file storage format. With the `Hive` profile, you can also access heterogenous format data in a single table where each partition may be stored in a different file format. In both cases, the `Hive` profile will use the optimal `Hive*` profile for the underlying file format type.
+Use the `Hive` profile with any Hive file storage format. With the `Hive` profile, you can also access heterogenous format data in a single table where each partition may be stored in a different file format. In both cases, the `Hive` profile will use the optimal `Hive*` profile for the underlying file storage type. Refer to the [Partition Filtering](#partitionfiltering) discussion later in this topic for additional information on partitioning and the `Hive` profile.
 
 ### <a id="profile_hive_using"></a>Example: Using the Hive Profile
 
@@ -361,7 +377,7 @@ Use the `Hive` profile to create a queryable HAWQ external table from the Hive `
 
 Use the `HiveText` profile to query text format files.
 
-**Note**: When using the `HiveText` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
+**Note**: When using the `HiveText` profile, you **must** specify a delimiter option in both the `LOCATION` and `FORMAT` clauses.
 
 ### <a id="profile_hivetext_using"></a>Example: Using the HiveText Profile
 
@@ -399,7 +415,7 @@ Use the PXF `HiveText` profile to create a queryable HAWQ external table from th
 
 The RCFile Hive format is used for row columnar formatted data. The `HiveRC` profile provides access to RCFile data.
 
-**Note**: When using the `HiveRC` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
+**Note**: When using the `HiveRC` profile, you **must** specify a delimiter option in both the `LOCATION` and `FORMAT` clauses.
 
 ### <a id="profile_hiverc_rcfiletbl_using"></a>Example: Using the HiveRC Profile
 
@@ -432,7 +448,7 @@ Use the `HiveRC` profile to query RCFile-formatted data in Hive tables.
     hive> SELECT * FROM sales_info_rcfile;
     ```
 
-4. Use the PXF `HiveRC` profile to create a queryable HAWQ external table from the Hive `sales_info_rcfile` table created in the previous step. When using the `HiveRC` profile, you **must** specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.:
+4. Use the PXF `HiveRC` profile to create a queryable HAWQ external table from the Hive `sales_info_rcfile` table created in the previous step. You *must* specify a delimiter option in both the `LOCATION` and `FORMAT` clauses.:
 
     ``` sql
     postgres=# CREATE EXTERNAL TABLE salesinfo_hivercprofile(location text, month text, num_orders int, total_sales float8)
@@ -611,76 +627,192 @@ postgres=# SHOW pxf_enable_filter_pushdown;
 postgres=# SET pxf_enable_filter_pushdown=off;
 ```
 
-### <a id="example2"></a>Create Partitioned Hive Table
+### <a id="example_hive_part"></a>Example: Using the Hive Profile to Access Partitioned Homogenous Data
 
-Create a Hive table `sales_part` with two partition columns, `delivery_state` and `delivery_city:`
+In this example, you will use the `Hive` profile to query a Hive table named `sales_part` you partition on `delivery_state` and `delivery_city` fields.  You will then create a HAWQ external table to query `sales_part`, including specific examples illustrating filter pushdown.
 
-``` sql
-hive> CREATE TABLE sales_part (name string, type string, supplier_key int, price double)
-        PARTITIONED BY (delivery_state string, delivery_city string)
-        ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
-```
+1. Create a Hive table named `sales_part` with two partition columns, `delivery_state` and `delivery_city:`
 
-Load data into this Hive table and add some partitions:
+    ``` sql
+    hive> CREATE TABLE sales_part (name string, type string, supplier_key int, price double)
+            PARTITIONED BY (delivery_state string, delivery_city string)
+            ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+    ```
 
-``` sql
-hive> INSERT INTO TABLE sales_part 
-        PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Fresno') 
-        VALUES ('block', 'widget', 33, 15.17);
-hive> INSERT INTO TABLE sales_part 
-        PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Sacramento') 
-        VALUES ('cube', 'widget', 11, 1.17);
-hive> INSERT INTO TABLE sales_part 
-        PARTITION(delivery_state = 'NEVADA', delivery_city = 'Reno') 
-        VALUES ('dowel', 'widget', 51, 31.82);
-hive> INSERT INTO TABLE sales_part 
-        PARTITION(delivery_state = 'NEVADA', delivery_city = 'Las Vegas') 
-        VALUES ('px49', 'pipe', 52, 99.82);
-```
+2. Load data into this Hive table and add some partitions:
 
-The Hive storage directory structure for the `sales_part` table appears as follows:
+    ``` sql
+    hive> INSERT INTO TABLE sales_part 
+            PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Fresno') 
+            VALUES ('block', 'widget', 33, 15.17);
+    hive> INSERT INTO TABLE sales_part 
+            PARTITION(delivery_state = 'CALIFORNIA', delivery_city = 'Sacramento') 
+            VALUES ('cube', 'widget', 11, 1.17);
+    hive> INSERT INTO TABLE sales_part 
+            PARTITION(delivery_state = 'NEVADA', delivery_city = 'Reno') 
+            VALUES ('dowel', 'widget', 51, 31.82);
+    hive> INSERT INTO TABLE sales_part 
+            PARTITION(delivery_state = 'NEVADA', delivery_city = 'Las Vegas') 
+            VALUES ('px49', 'pipe', 52, 99.82);
+    ```
+    
+3. Query the `sales_part` table:
 
-``` pre
-$ sudo -u hdfs hdfs dfs -ls -R /apps/hive/warehouse/sales_part
-/apps/hive/warehouse/sales_part/delivery_state=CALIFORNIA/delivery_city=’Fresno’/
-/apps/hive/warehouse/sales_part/delivery_state=CALIFORNIA/delivery_city=Sacramento/
-/apps/hive/warehouse/sales_part/delivery_state=NEVADA/delivery_city=Reno/
-/apps/hive/warehouse/sales_part/delivery_state=NEVADA/delivery_city=’Las Vegas’/
-```
+    ``` sql
+    hive> SELECT * FROM sales_part;
+    ```
+    
+    A `SELECT *` statement on a Hive partitioned table shows the partition fields at the end of the record.
 
-To define a HAWQ PXF table that will read this Hive table and take advantage of partition filter push-down, define the fields corresponding to the Hive partition fields at the end of the `CREATE EXTERNAL TABLE` attribute list. In HiveQL, a `SELECT *` statement on a partitioned table shows the partition fields at the end of the record.
+3. Examine the Hive/HDFS directory structure for the `sales_part` table:
 
-``` sql
-postgres=# CREATE EXTERNAL TABLE pxf_sales_part(
-  item_name TEXT, 
-  item_type TEXT, 
-  supplier_key INTEGER, 
-  item_price DOUBLE PRECISION, 
-  delivery_state TEXT, 
-  delivery_city TEXT
-)
-LOCATION ('pxf://namenode:51200/sales_part?Profile=Hive')
-FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+    ``` shell
+    $ sudo -u hdfs hdfs dfs -ls -R /apps/hive/warehouse/sales_part
+    /apps/hive/warehouse/sales_part/delivery_state=CALIFORNIA/delivery_city=Fresno/
+    /apps/hive/warehouse/sales_part/delivery_state=CALIFORNIA/delivery_city=Sacramento/
+    /apps/hive/warehouse/sales_part/delivery_state=NEVADA/delivery_city=Reno/
+    /apps/hive/warehouse/sales_part/delivery_state=NEVADA/delivery_city=Las Vegas/
+    ```
 
-postgres=# SELECT * FROM pxf_sales_part;
-```
+4. Create a PXF external table to read the partitioned `sales_part` Hive table.  To take advantage of partition filter push-down, define fields corresponding to the Hive partition fields at the end of the `CREATE EXTERNAL TABLE` attribute list.
 
-### <a id="example3"></a>Query Without Pushdown
+    ``` shell
+    $ psql -d postgres
+    ```
 
-In the following example, the HAWQ query filters the `delivery_city` partition `Sacramento`. The filter on  `item_name` is not pushed down, since it is not a partition column. It is performed on the HAWQ side after all the data on `Sacramento` is transferred for processing.
+    ``` sql
+    postgres=# CREATE EXTERNAL TABLE pxf_sales_part(
+                 item_name TEXT, item_type TEXT, 
+                 supplier_key INTEGER, item_price DOUBLE PRECISION, 
+                 delivery_state TEXT, delivery_city TEXT)
+               LOCATION ('pxf://namenode:51200/sales_part?Profile=Hive')
+               FORMAT 'CUSTOM' (FORMATTER='pxfwritable_import');
+    ```
+    
+5. Query the table:
 
-``` sql
-postgres=# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND item_name = 'cube';
-```
+    ``` sql
+    postgres=# SELECT * FROM pxf_sales_part;
+    ```
 
-### <a id="example4"></a>Query With Pushdown
+6.  Perform another query (no pushdown) on `pxf_sales_part` to return records where the `delivery_city` is `Sacramento` and  `item_name` is `cube`
 
-The following HAWQ query reads all the data under `delivery_state` partition `CALIFORNIA`, regardless of the city.
+    ``` sql
+    postgres=# SELECT * FROM pxf_sales_part WHERE delivery_city = 'Sacramento' AND item_name = 'cube';
+    ```
 
-``` sql
-postgres=# SET pxf_enable_filter_pushdown=on;
-postgres=# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
-```
+    The query filters the `delivery_city` partition `Sacramento`. The filter on  `item_name` is not pushed down, since it is not a partition column. It is performed on the HAWQ side after all the data in the `Sacramento` partition is transferred for processing.
+
+7. Query (with pushdown) for all records where `delivery_state` is `CALIFORNIA`:
+
+    ``` sql
+    postgres=# SET pxf_enable_filter_pushdown=on;
+    postgres=# SELECT * FROM pxf_sales_part WHERE delivery_state = 'CALIFORNIA';
+    ```
+
+    This query reads all of the data in the `CALIFORNIA` `delivery_state` partition, regardless of the city.
+
+### <a id="example_hive_part_multi"></a>Example: Using the Hive Profile to Access Partitioned Heterogenous Data
+
+The `Hive` profile supports multiple data format types. This support enables you  to query a partitioned Hive table that may be composed of data of different formats.
+
+In this example, you will use the `Hive` profile to query a partitioned Hive external table composed of the HDFS data files associated with the `sales_info` (text format) and `sales_info_rcfile` (RC format) Hive tables you created in previous exercises. You will partition the data by year, assigning the data from `sales_info` to the year 2013, and the data from `sales_info_rcfile` to the year 2016. (Ignore at the moment the fact that the tables contain the same data.)
+
+1. Create a Hive external table named `hive_multiformpart` that is partitioned by a string field named `year`:
+
+    ``` shell
+    $ HADOOP_USER_NAME=hdfs hive
+    ```
+
+    ``` sql
+    hive> CREATE EXTERNAL TABLE hive_multiformpart( location string, month string, number_of_orders int, total_sales double)
+            PARTITIONED BY( year string )
+            ROW FORMAT DELIMITED FIELDS TERMINATED BY ',';
+    ```
+
+2. Describe the `sales_info` and `sales_info_rcfile` tables, making note of the HDFS file `location`s:
+
+    ``` sql
+    hive> DESCRIBE EXTENDED sales_info;
+    hive> DESCRIBE EXTENDED sales_info_rcfile;
+    ```
+    
+3. Create partitions in the `hive_multiformpart` table for the HDFS locations associated with each of the `sales_info` and `sales_info_rcfile` tables:
+
+    ``` sql
+    hive> ALTER TABLE hive_multiformpart ADD PARTITION (year = '2013') LOCATION 'hdfs://namenode:8020/apps/hive/warehouse/sales_info';
+    hive> ALTER TABLE hive_multiformpart ADD PARTITION (year = '2016') LOCATION 'hdfs://namenode:8020/apps/hive/warehouse/sales_info_rcfile';
+    ```
+
+4. Explicitly identify the file format of the partition associated with the  `sales_info_rcfile` table:
+
+    ``` sql
+    hive> ALTER TABLE hive_multiformpart PARTITION (year='2016') SET FILEFORMAT RCFILE;
+    ```
+    
+    You need not specify the file format of the partition associated with the `sales_info` table, as `TEXTFILE` format is the default.
+
+5. Query the `hive_multiformpart` table:
+
+    ``` sql
+    hive> SELECT * from hive_multiformpart;
+    ...
+    Bangalore	Jul	271	8320.55	2016
+    Beijing	Dec	100	4248.41	2016
+    Prague	Jan	101	4875.33	2013
+    Rome	Mar	87	1557.39	2013
+    ...
+    hive> SELECT * from hive_multiformpart WHERE year='2013';
+    hive> SELECT * from hive_multiformpart WHERE year='2016';
+    ```
+
+6. Show the partitions defined for the `hive_multiformpart` table:
+
+    ``` sql
+    hive> SHOW PARTITIONS hive_multiformpart;
+    year=2013
+    year=2016
+    ```
+
+7. Use the PXF `Hive` profile to create a readable HAWQ external table derived from the Hive `hive_multiformpart` external table created in the previous steps:
+
+    ``` shell
+    $ psql -d postgres
+    ```
+    
+    ``` sql
+    postgres=# CREATE EXTERNAL TABLE pxf_multiformpart(location text, month text, num_orders int, total_sales float8, year text)
+                 LOCATION ('pxf://namenode:51200/default.hive_multiformpart?PROFILE=Hive')
+               FORMAT 'CUSTOM' (formatter='pxfwritable_import');
+    ```
+
+5. Query the PXF external table:
+
+    ``` sql
+    postgres=# SELECT * FROM pxf_multiformpart;
+    ```
+
+    ``` shell
+       location    | month | num_orders | total_sales | year 
+    ---------------+-------+------------+-------------+--------
+     ....
+     Prague        | Dec   |        333 |     9894.77 | 2013
+     Bangalore     | Jul   |        271 |     8320.55 | 2013
+     Beijing       | Dec   |        100 |     4248.41 | 2013
+     Prague        | Jan   |        101 |     4875.33 | 2016
+     Rome          | Mar   |         87 |     1557.39 | 2016
+     Bangalore     | May   |        317 |     8936.99 | 2016
+     ....
+    ```
+
+6. Perform a second query to calculate the total number of orders for the year 2013:
+
+    ``` sql
+    postgres=# SELECT sum(num_orders) FROM pxf_multiformpart WHERE month='Dec' AND year='2013';
+     sum 
+    -----
+     433
+    ```
 
 ## <a id="topic_fdm_zrh_1s"></a>Using PXF with Hive Default Partitions
 
