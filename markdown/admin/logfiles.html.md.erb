@@ -2,23 +2,13 @@
 title: HAWQ Administrative Log Files
 ---
 
-Log files are files that include messages and other information about your HAWQ deployment, including the database and utilities.
+Log files are files that include messages and other information about your HAWQ deployment, including the database and utilities. HAWQ administrative log files reside in pre-defined or configured locations on the local file system of the HAWQ node.  These log files are distinctly located, formatted, configured, and managed.
 
 Every database instance in HAWQ \(master, standby, and segments\) runs a PostgreSQL database server with its own server log file. You generate log files when you invoke HAWQ management utilities directly, or indirectly via Ambari management operations. Additionally, other components in your HAWQ cluster (PXF, HDFS) generate log files of their own.
 
-These log files are distinctly located, formatted, configured, and managed.
-
-**Locating Log Files**
-
-HAWQ administrative log files reside in pre-defined or configured locations on the local file system of the HAWQ node.
-
-**Configuring Logging Parameters**
-
 Configurable logging parameters may affect what, when, and where messages are logged. You configure HAWQ administrative logging options via HAWQ server configuration parameters or command line options.
 
-**Managing Log Files**
-
-Log files are created and/or rotated at pre-defined or configured intervals.   Note that administrative log files are not automatically truncated or deleted. The administrator must implement and periodically run scripts to clean up these log files.
+Log files may be created and/or rotated at pre-defined or configured intervals.   Note that administrative log files are not automatically truncated or deleted. The administrator must implement and periodically run scripts to clean up these log files.
 
 ## <a id="topic28"></a>HAWQ Database Server Log Files
 
@@ -93,6 +83,13 @@ You will examine the HAWQ log files to obtain information about your HAWQ deploy
 Identify log entries of related transactions using the `transaction_id`. You can identify related log entries of a particular query by the query's session identifier \(`gp_session_id`\) and command identifier \(`gp_command_count`\).
 
 Alternatively, you can use the [*hawq_toolkit*](../reference/toolkit/hawq_toolkit.html#topic16) administrative schema to query HAWQ log files when the [`gp_log_format`](../reference/guc/parameter_definitions.html#gp_log_format) server configuration parameter value specifies `csv` format log files.
+
+For example, the following `hawq_toolkit` query displays the time and message for all `ERROR` logs related to the database named `testdb`:
+
+``` sql
+=# SELECT logtime, logmessage FROM hawq_toolkit.hawq_log_master_concise 
+     WHERE logdatabase='testdb' AND logseverity='ERROR';
+```
 
 ### <a id="topic30"></a>Searching HAWQ Log Files 
 
@@ -174,21 +171,21 @@ Daily log files are created in the `pg_log` subdirectory of the master and each 
 
 
 ## <a id="mgmtutil_log"></a>Management Utility Log Files 
-You invoke HAWQ management utilities (MU) both from the command line and when you perform cluster management activities using the Ambari user interface. Regardless of source, these utilities log information about command execution status and results. The messages are logged to both `stdout` and a log file.
+You invoke HAWQ management utilities both from the command line and when you perform cluster management activities using the Ambari user interface. Regardless of source, these utilities log information about command execution status and results. The messages are logged to both `stdout` and a log file.
 
 Each management utility, when invoked, creates/manages a daily log file.  The logs for a particular execution of a utility are added or appended to its daily log file each time that utility is run that day.
 
-**Note**: Some management utilities are aliases for invoking one or more other management utilities. For example, `hawq restart` invokes `hawq stop` and `hawq start`. Logs are written to the daily log files associated with the  two invoked utilities.
+**Note**: Some management utilities are aliases for invoking one or more other management utilities. For example, `hawq restart` invokes `hawq stop` and `hawq start`. Logs are written to the daily log files associated with the two invoked utilities.
 
-### <a id="logfile_locate_mu"></a>Locating MU Log Files
+### <a id="logfile_locate_mu"></a>Locating Management Utility Log Files
 
-The HAWQ management utilities default log file location is `/home/gpadmin/hawqAdminLogs/`. You may choose to specify an alternate log file directory.
+The default location of HAWQ management utility log files is `/home/gpadmin/hawqAdminLogs/`. You may choose to specify an alternate log file directory.
 
-The naming convention for HAWQ management utilities log files is  `<cmdname>_<date>.log`. For example, `hawq_state_20170102.log` or `hawq_start_20161228.log`.
+The naming convention for HAWQ management utility log files is  `<cmdname>_<date>.log`. For example, `hawq_state_20170102.log` or `hawq_start_20161228.log`.
 
-### <a id="logfile_format_mu"></a>MU Log Format
+### <a id="logfile_format_mu"></a>Management Utility Log Format
 
-HAWQ management utilities log files are written in text format.
+HAWQ management utility log files are written in text format.
 
 Management utility commands' log entries are formed as follows:
 
@@ -208,22 +205,22 @@ Log entry fields are described in the table below.
 | message | The log message |
 
 
-Example management utilities log entries:
+Example management utility log entries:
 
 &nbsp;&nbsp;&nbsp;&nbsp;`20170102:06:16:06:451225 hawq_stop:hmast1:gpadmin-[INFO]:-Master host=hmast1`
 
 &nbsp;&nbsp;&nbsp;&nbsp;`20170102:06:16:15:451826 hawq_start:hmast1:gpadmin-[INFO]:-Start hawq with args: ['start', 'segment']`
 
 
-**Note**: The log files for certain management utilities commands, for example `hawq init`, diverge from these conventions.
+**Note**: The log files for certain management utility commands, for example `hawq init`, diverge from these conventions.
 
 
-### <a id="logfile_examine_mu"></a>Examining MU Log Entries
+### <a id="logfile_examine_mu"></a>Examining Management Utility Log Entries
 
-You will examine the HAWQ management utilities log files to get more detailed information about the execution of the command. Additionally, the most recent log file for a particular command provides date/time and status information about the last time you invoked the command.
+You will examine the HAWQ management utility log files to get more detailed information about the execution of the command. Additionally, the most recent log file for a particular command provides date/time and status information about the last time you invoked the command.
 
 
-### <a id="logging_config_mu"></a>Configuring MU Logging
+### <a id="logging_config_mu"></a>Configuring Management Utility Logging
 
 Most management utilities support options for verbose logging and identifying  alternate log file directories.
 
@@ -236,9 +233,9 @@ Management utility logging-related configuration command options include:
 
 Invoke the management utility command with the `--help` option to determine support for changing the log directory and/or enabling verbose output.
 
-### <a id="logfile_manage_mu"></a>Managing MU Log Files
+### <a id="logfile_manage_mu"></a>Managing Management Utility Log Files
 
-Although MU log files are rolled over daily, they are not automatically truncated or deleted. Administrators should implement and run scripts or programs to periodically clean up old MU log files.
+Although Management Utility log files are rolled over daily, they are not automatically truncated or deleted. Administrators should implement and run scripts or programs to periodically clean up old Management Utility log files.
 
 
 ## <a id="query_log"></a>Query Minidump Log Files 
