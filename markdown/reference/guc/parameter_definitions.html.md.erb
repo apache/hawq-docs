@@ -2593,19 +2593,7 @@ For information about the legacy query optimizer and GPORCA, see [About GPORCA](
 
 ## <a name="optimizer_minidump"></a>optimizer\_minidump
 
-GPORCA generates minidump files to describe the optimization context for a given query. Use the minidump files to analyze HAWQ issues. The minidump file is located under the master data directory and uses the following naming format:
-
-`Minidump_date_time.mdp`
-
-The minidump file contains this query related information:
-
--   Catalog objects including data types, tables, operators, and statistics required by GPORCA
--   An internal representation (DXL) of the query
--   An internal representation (DXL) of the plan produced by GPORCA
--   System configuration information passed to GPORCA such as server configuration parameters, cost and statistics configuration, and number of segments
--   A stack trace of errors generated while optimizing the query
-
-Setting this parameter to `ALWAYS` generates a minidump for all queries.
+GPORCA generates minidump files to describe the optimization context for a given query. Set this parameter to `ALWAYS` to generate a minidump for all queries.
 
 **Note:** Set this parameter to `ONERROR` in production environments to minimize total optimization time.
 
