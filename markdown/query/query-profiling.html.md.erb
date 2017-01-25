@@ -88,8 +88,7 @@ The estimated startup cost for this plan is `00.00` (no cost) and a total cost o
     Work_mem wanted: 90K bytes avg, 90K byes max (seg0) to lessen
     workfile I/O affecting 2 workers.
     ```
-**Note**
-The *work\_mem* property is not configurable. Use resource queues to manage memory use. For more information on resource queues, see [Configuring Resource Management](../resourcemgmt/ConfigureResourceManagement.html) and [Working with Hierarchical Resource Queues](../resourcemgmt/ResourceQueues.html).
+**Warning**: The `work_mem` server configuration parameter is deprecated and will be removed in a future HAWQ release. Use resource queues to manage memory use. For more information on resource queues, see [Configuring Resource Management](../resourcemgmt/ConfigureResourceManagement.html) and [Working with Hierarchical Resource Queues](../resourcemgmt/ResourceQueues.html).
 
 -   The time (in milliseconds) in which the segment that produced the most rows retrieved the first row, and the time taken for that segment to retrieve all rows. The result may omit *&lt;time&gt; to first row* if it is the same as the *&lt;time&gt; to end*.
 
@@ -143,7 +142,7 @@ If a query performs poorly, examine its query plan and ask the following questio
 
     `Work_mem used: 23430K bytes avg, 23430K bytes max (seg0). Work_mem               wanted: 33649K bytes avg, 33649K bytes max (seg0) to lessen workfile I/O affecting 2               workers.`
 
-    The "bytes wanted" message from `EXPLAIN               ANALYZE` is based on the amount of data written to work files and is not exact. The minimum `work_mem` needed can differ from the suggested value.
+    The "bytes wanted" message from `EXPLAIN ANALYZE` is based on the amount of data written to work files and is not exact. The minimum `work_mem` needed can differ from the suggested value.
 
 ## <a id="explainplan_plpgsql"></a>Generating EXPLAIN Plan from a PL/pgSQL Function
 
