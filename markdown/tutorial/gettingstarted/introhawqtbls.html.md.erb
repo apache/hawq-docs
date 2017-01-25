@@ -1,0 +1,241 @@
+---
+title: Lesson 5 - Introduction to HAWQ Tables
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+HAWQ writes data to, and reads data from, HDFS natively. HAWQ tables are similar to tables in any relational database, except that table rows (data) are distributed across the different segments in the system.
+
+In this exercise, you will run scripts that use the SQL `CREATE TABLE` command to create HAWQ tables. You will load the Retail sample fact data into the HAWQ tables using the `COPY` command. You will then perform simple and complex queries on the data.
+
+
+## <a id="tut_introhawqtblprereq"></a>Prerequisites
+
+Ensure that you have:
+
+- [Set Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup),
+- [Created the HAWQ Tutorial Database](basicdbadmin.html#tut_ex_createdb),
+- [Downloaded the Retail Data and Script Files](dataandscripts.html#tut_exdownloadfilessteps),
+- [Created the Retail Data Set Schema](dataandscripts.html#tut_dsschema_ex),
+
+and that your HAWQ cluster is up and running.
+
+## <a id="tut_excreatehawqtblsteps"></a>Exercise: Create, Add Data to, and Query HAWQ Retail Demo Tables
+
+Perform the following steps to create and load HAWQ tables from the sample Retail data set. 
+
+1. Navigate to the HAWQ script directory:
+
+    ``` shell
+    gpadmin@master$ cd $HAWQGSBASE/tutorials/getstart/hawq
+    ```
+
+2. Start the `psql` subsystem:
+
+    ``` shell
+    gpadmin@master$ psql
+    ```
+
+    ``` sql
+    hawqgsdb=#
+    ```
+    
+    You are connected to the `hawqgsdb` database.
+
+    
+3. Create tables for the Retail fact data using the script provided tbad then exit the `psql` subsystem:
+    
+    ``` sql
+    hawqgsdb=# \i ./create_hawq_tables.sql
+    hawqgsdb=# \q
+    ```
+	
+    Note: The `create_hawq_tables.sql` script deletes each table before attempting to create it. If this is your first time performing this exercise, you can safely ignore the `psql` "table does not exist, skipping" NOTICE messages.)
+    
+6. Let's take a look at the `create_hawq_tables.sql` script:
+
+    ``` shell
+    gpadmin@master$ vi create_hawq_tables.sql
+    ```
+
+    Notice the use of the `retail_demo.` schema name prefix to the table names:
+    
+    ``` sql
+    DROP TABLE IF EXISTS retail_demo.order_lineitems_hawq;
+    CREATE  TABLE retail_demo.order_lineitems_hawq
+    (
+        order_id TEXT,
+        order_item_id TEXT,
+        product_id TEXT,
+        product_name TEXT,
+        customer_id TEXT,
+        store_id TEXT,
+        item_shipment_status_code TEXT,
+        order_datetime TEXT,
+        ship_datetime TEXT,
+        item_return_datetime TEXT,
+        item_refund_datetime TEXT,
+        product_category_id TEXT,
+        product_category_name TEXT,
+        payment_method_code TEXT,
+        tax_amount TEXT,
+        item_quantity TEXT,
+        item_price TEXT,
+        discount_amount TEXT,
+        coupon_code TEXT,
+        coupon_amount TEXT,
+        ship_address_line1 TEXT,
+        ship_address_line2 TEXT,
+        ship_address_line3 TEXT,
+        ship_address_city TEXT,
+        ship_address_state TEXT,
+        ship_address_postal_code TEXT,
+        ship_address_country TEXT,
+        ship_phone_number TEXT,
+        ship_customer_name TEXT,
+        ship_customer_email_address TEXT,
+        ordering_session_id TEXT,
+        website_url TEXT
+    )
+    WITH (appendonly=true, compresstype=zlib) DISTRIBUTED RANDOMLY;
+    ```
+    
+    The `CREATE TABLE` statement above creates a table named `order_lineitems_hawq` in the `retail_demo` schema. `order_lineitems_hawq` has several columns. `order_id` and `customer_id` provide keys into the orders fact and customers dimension tables. The data in `order_lineitems_hawq` is distributed randomly and is compressed using the `zlib` compression algorithm.
+    
+    `create_hawq_tables.sql` also creates the `orders_hawq` fact table.
+
+6. Use the provided script to load (may take a bit of time) the Retail fact data into the newly-created tables:
+
+    ``` shell
+    gpadmin@master$ ./load_hawq_tables.sh
+    ```
+
+6. Take a look at the `load_hawq_tables.sh` script:
+
+    ``` shell
+    gpadmin@master$ vi load_hawq_tables.sh
+    ```
+
+    Again, notice the use of the `retail_demo.` schema name prefix to the table names. Examine the `psql -c` `COPY` commands:
+    
+    ``` shell
+    zcat $DATADIR/order_lineitems.tsv.gz | psql -c "COPY retail_demo.order_lineitems_hawq FROM STDIN DELIMITER E'\t' NULL E'';"
+    zcat $DATADIR/orders.tsv.gz | psql -c "COPY retail_demo.orders_hawq FROM STDIN DELIMITER E'\t' NULL E'';"
+    ```
+    The `load_hawq_tables.sh` shell script uses the `zcat` command to uncompress the `.tsv.gz` data files. The SQL `COPY` command copies `STDIN` (i.e. the output of the `zcat` command) to the HAWQ table. The `COPY` command also identifies the `DELIMITER` used in the file (tab) and the `NULL` string (''). While probably not the most efficient way to load the data, it gets the job done.
+
+6. Use the provided script to verify the Retail demo data set:
+
+    ``` shell
+    gpadmin@master$ ./verify_load_hawq_tables.sh
+    ```
+
+    The output of the `verify_load_hawq_tables.sh` script should match the following:
+
+    ``` shell						    
+        Table Name                |    Count 
+    ------------------------------+------------------------
+     order_lineitems_hawq         |   1024158
+     orders_hawq                  |   512071
+    ------------------------------+------------------------
+    ```
+    
+7. Run a query on the `order_lineitems_hawq` table that returns the `product_id`, `item_quantity`, `item_price`, and `coupon_amount` for all order line items associated with order id `8467975147`:
+
+    ``` shell
+    gpadmin@master$ psql
+    ```
+
+    ``` sql
+    hawqgsdb=# SELECT product_id, item_quantity, item_price, coupon_amount 
+                 FROM retail_demo.order_lineitems_hawq 
+                 WHERE order_id='8467975147' ORDER BY item_price;
+    ```
+
+    ``` pre
+     product_id | item_quantity | item_price | coupon_amount 
+    ------------+---------------+------------+---------------
+     1611429    | 1             | 11.38      | 0.00000
+     1035114    | 1             | 12.95      | 0.15000
+     1382850    | 1             | 17.56      | 0.50000
+     1562908    | 1             | 18.50      | 0.00000
+     1248913    | 1             | 34.99      | 0.50000
+     741706     | 1             | 45.99      | 0.00000
+    (6 rows)
+    ```
+    
+    The `ORDER BY` clause identifies the sort column, `item_price`. If you do not specify an `ORDER BY` column(s), the rows are returned in the order in which they were added to the table.
+
+7. Determine the top three postal codes by order revenue by running the following query on the `orders_hawq` table:
+
+    ``` sql
+    hawqgsdb=# SELECT billing_address_postal_code,
+                 sum(total_paid_amount::float8) AS total,
+                 sum(total_tax_amount::float8) AS tax
+               FROM retail_demo.orders_hawq
+                 GROUP BY billing_address_postal_code
+                 ORDER BY total DESC LIMIT 3;
+    ```
+    
+    Notice the use of the `sum()` aggregate function to add the order totals (`total_amount_paid`) and tax totals (`total_tax_paid`) for all orders. These totals are grouped/summed for each `billing_address_postal_code`.
+    
+    Compare your output to the following:
+ 
+    ``` pre
+     billing_address_postal_code |   total   |    tax    
+    ----------------------------+-----------+-----------
+     48001                       | 111868.32 | 6712.0992
+     15329                       | 107958.24 | 6477.4944
+     42714                       | 103244.58 | 6194.6748
+    (3 rows)
+    ```
+
+10. Run the following query on the `orders_hawq` and `order_lineitems_hawq` tables to display the `product_id`, `item_quantity`, and `item_price` for all line items of all orders:
+
+    ``` sql
+    hawqgsdb=# SELECT retail_demo.order_lineitems_hawq.order_id, product_id, item_quantity, item_price
+                 FROM retail_demo.order_lineitems_hawq, retail_demo.orders_hawq
+               WHERE retail_demo.order_lineitems_hawq.order_id=retail_demo.orders_hawq.order_id 
+                 ORDER BY retail_demo.order_lineitems_hawq.order_id, product_id;
+    ```
+    
+    ``` pre
+      order_id  | product_id | item_quantity | item_price 
+    ------------+------------+---------------+------------
+     4831097343 | 1335584    | 1             | 7.25
+     4831097343 | 712358     | 1             | 762.99
+     4831097524 | 1565516    | 1             | 16.84
+     4831097725 | 1350178    | 1             | 1.22
+     4831097728 | 1869831    | 1             | 11.87
+     4831097728 | 1538578    | 1             | 21.08
+     ...
+    ```
+   
+11. Exit the `psql` subsystem:
+
+    ``` sql
+    hawqgsdb=# \q
+    ```
+
+## <a id="tut_introhawqtbl_summary"></a>Summary
+You created and loaded Retail order and order line item data into HAWQ fact tables. You also queried these tables, learning to filter the data to your needs. In the next lesson, you use PXF external tables to similarly access dimension data stored in HDFS.
+
+**Previous Lesson**: [Introduction to the Retail Data Schema](dataandscripts.html)  
+**Next Lesson**: [Introduction to the HAWQ Extension Framework (PXF)](intropxfhdfs.html)

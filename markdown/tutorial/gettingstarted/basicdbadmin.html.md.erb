@@ -1,0 +1,203 @@
+---
+title: Lesson 3 - HAWQ Database Administration Basics
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+The HAWQ database administrator, and those users specifically granted the privileges, can execute SQL commands to create HAWQ databases and tables. These commands may be invoked via scripts, programs, and from the `psql` subsystem.
+
+For specific information on SQL command support in HAWQ, refer to the [SQL Command](../../reference/SQLCommandReference.html) reference.
+
+In this tutorial section, you are introduced to basic HAWQ database administration commands and tasks. You will create a database and a simple table, and add data to and query the table.
+
+## <a id="tut_adminprereq"></a> Prerequisites
+
+Ensure that you have performed the steps in [Set Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup) and that your HAWQ cluster is up and running.
+
+
+## <a id="tut_admindbaccesscmds"></a>Database Management Commands
+
+HAWQ databases and roles can be created and deleted from the command line by authorized users.
+
+<caption><span class="tablecap">Table 2. Common HAWQ Database Commands</span></caption>
+
+<a id="topic_table_dbcmd"></a>
+
+| Action                                                    | Command                                                                                                                                                                                            |
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Create a database | `createdb <dbname>` |
+| Create a database role   | `createuser <rolename>`                                                                                         |
+| Remove a database    | `dropdb <dbname>`                                                                                         |
+| Remove a database role     | `dropuser <rolename>`                                                                                         |
+| Start the interactive HAWQ database front-end     | `psql`                                                                                         |
+| Run an SQL command from the command line     | `psql -c <sqlcommand>`                                                                                         |
+
+### <a id="tut_ex_createdb"></a>Exercise: Create the HAWQ Tutorial Database
+
+1. Create a database named `hawqgsdb`:
+
+    ``` shell
+    gpadmin@master$ createdb hawqgsdb
+    ```
+
+2. Set the `PGDATABASE` environment variable to `hawqsgdb`:
+
+    ``` shell
+    gpadmin@master$ export PGDATABASE=hawqgsdb
+    ```
+    
+    `$PGDATABASE` identifies the default database to which to connect  when invoking the HAWQ `psql` command.
+    
+3. Add the `PGDATABASE` setting to your `.bash_profile`.
+
+## <a id="tut_admindbaccesspsql"></a>psql
+
+You can also manage and access HAWQ databases via the `psql` utility, an interactive front-end to the HAWQ database.  Commonly-used `psql` meta commands include:
+
+| Action                                                    | Command                                                                                                                                                                                            |
+|-------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| List databases | `\l` |
+| List tables in current database   | `\dt`                                                                                         |
+| Describe a specific table   | `\d <tablename>`                                                                                         |
+| Execute an SQL script     | `\i <scriptname>`                                                                                         |
+| Quit/Exit    | `\q`                                                                                         |
+
+For detailed information on the `psql` subsystem, refer to the [psql](../../reference/cli/client_utilities/psql.html) reference page.
+
+### <a id="tut_ex_usepsql"></a>Exercise: Use psql to Create, Add Data to, and Query a Simple HAWQ Table
+
+1. Start the `psql` subsystem:
+
+    ``` shell
+    $ gpadmin@master$ psql -d hawqgsdb
+    ```
+
+    You enter the `psql` interpreter, connecting to the `hawqgsdb` database. Note that, because you previously set `PGDATABASE=hawqgsdb`, you could have omitted the `-d hawqgsdb` option:
+    
+    ``` sql
+    psql (8.2.15)
+    Type "help" for help.
+
+    hawqgsdb=# 
+    ```
+    
+    The `psql` prompt is the database name followed by `=#` or `=>`. `=#` identifies the session as that of a database superuser. The default `psql` prompt for a non-superuser is `=>`.
+
+2. List all HAWQ databases:
+
+    ``` sql
+    hawqgsdb=# \l
+    ```
+    
+    ``` pre
+          Name       |  Owner  | Encoding | Access privileges 
+    -----------------+---------+----------+-------------------
+     hawqgsdb        | gpadmin | UTF8     | 
+     postgres        | gpadmin | UTF8     | 
+     template0       | gpadmin | UTF8     | 
+     template1       | gpadmin | UTF8     | 
+    ```
+    
+    HAWQ creates three template databases during installation, as you see above.
+    
+3. Create a table named `first_tbl` that has a single integer field named `i`:
+
+    ``` sql
+    hawqgsdb=# CREATE TABLE first_tbl( i int );
+    CREATE TABLE 
+    ```
+    
+    The `;` at the end of the `CREATE TABLE` statement instructs `psql` to interpret the command. SQL commands that span multiple lines are not interpreted until the `;` is entered.
+    
+4. Display table information for `first_tbl`:
+
+    ``` sql
+    hawqgsdb=# \d first_tbl
+    Append-Only Table "public.first_tbl"
+     Column |  Type   | Modifiers 
+    --------+---------+-----------
+     i      | integer | 
+    Compression Type: None
+    Compression Level: 0
+    Block Size: 32768
+    Checksum: f
+    Distributed randomly
+    ```
+    
+    `first_tbl` is a table in the HAWQ `public` schema. `first_tbl` has a single integer column, was created with no compression, and is distributed randomly.
+
+5. Add some data to `first_tbl`:
+
+    ``` sql
+    hawqgsdb=# INSERT INTO first_tbl SELECT generate_series(1,11);
+    INSERT 0 11 
+    ```
+    
+    This `INSERT` command adds 11 rows to `first_tbl`, starting with `i=1` and writing and incrementing `i` for each row.
+    
+6. Perform a query to return all data in the `first_tbl` table:
+
+    ``` sql
+    hawqgsdb=# SELECT * from first_tbl;
+     i  
+    ----
+      1
+      2
+      3
+      ...
+     10
+     11
+    (11 rows)
+    ```
+    
+    The `SELECT *` command queries `first_tbl`, returning all columns and all rows. After the query results, `SELECT` also displays the number of rows returned.
+
+7. Perform a query to return column `i` for all rows in `first_tbl` where `i` is greater than 9:
+
+    ``` sql
+    hawqgsdb=# SELECT i FROM first_tbl WHERE i>9;
+     i  
+    ----
+     10
+     11
+    (2 rows)
+    ```
+    
+    The `SELECT` command returns the 2 rows (10 and 11) in the table where `i` is larger than 9.
+
+8. Exit the `psql` subsystem:
+
+    ``` sql
+    hawqgsdb=# \q
+    ```
+    
+9. Perform the query you ran in Step 7 from the command line:
+
+    ``` shell
+    gpadmin@master$ psql -d hawqgsdb -c 'SELECT i FROM first_tbl WHERE i>9;'
+    ```
+   
+    Again, you could have omitted the `-d hawqgsdb` option, as you had previously set `PGDATABASE`.
+    
+## <a id="tut_dbadmin_summary"></a>Summary
+You just created the database you will use in later exercises. You also created, inserted data into, and queried a simple HAWQ table. Next, you are introduced to the Retail data set, a more complicated data schema used in upcoming lessons.
+
+**Previous Lesson**: [HAWQ Cluster Administration Basics](basichawqadmin.html)  
+**Next Lesson**: [Introduction to the Retail Data Schema](dataandscripts.html)
