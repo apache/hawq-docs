@@ -167,16 +167,31 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[gp\_hashjoin\_tuples\_per\_bucket](../../reference/guc/parameter_definitions.html#gp_hashjoin_tuples_per_bucket)**
 
 -   **[gp\_idf\_deduplicate](../../reference/guc/parameter_definitions.html#gp_idf_deduplicate)**
+ 
+-   **[gp\_interconnect\_cache\_future\_packets](../../reference/guc/parameter_definitions.html#gp_interconnect_cache_future_packets)**
+
+-   **[gp\_interconnect\_default\_rtt](../../reference/guc/parameter_definitions.html#gp_interconnect_default_rtt)**
 
 -   **[gp\_interconnect\_fc\_method](../../reference/guc/parameter_definitions.html#gp_interconnect_fc_method)**
 
 -   **[gp\_interconnect\_hash\_multiplier](../../reference/guc/parameter_definitions.html#gp_interconnect_hash_multiplier)**
 
+-  **[gp\_interconnect\_min\_retries\_before\_timeout](../../reference/guc/parameter_definitions.html#gp_interconnect_min_retries_before_timeout)**
+
+-  **[gp\_interconnect\_min\_rto](../../reference/guc/parameter_definitions.html#gp_interconnect_min_rto)**
 -   **[gp\_interconnect\_queue\_depth](../../reference/guc/parameter_definitions.html#gp_interconnect_queue_depth)**
 
 -   **[gp\_interconnect\_setup\_timeout](../../reference/guc/parameter_definitions.html#gp_interconnect_setup_timeout)**
 
 -   **[gp\_interconnect\_snd\_queue\_depth](../../reference/guc/parameter_definitions.html#gp_interconnect_snd_queue_depth)**
+
+-  **[gp\_interconnect\_timer\_period
+](../../reference/guc/parameter_definitions.html#gp_interconnect_timer_period
+)**
+
+-  **[gp\_interconnect\_timer\_checking\_period
+](../../reference/guc/parameter_definitions.html#gp_interconnect_timer_checking_period
+)**
 
 -   **[gp\_interconnect\_type](../../reference/guc/parameter_definitions.html#gp_interconnect_type)**
 
@@ -1371,6 +1386,41 @@ Changes the strategy to compute and process MEDIAN, and PERCENTILE\_DISC.
 </tbody>
 </table>
 
+## <a name="gp_interconnect_cache_future_packets"></a>gp\_interconnect\_cache\_future\_packets
+
+Controls whether future packets are cached.
+
+| Value Range | Default   | Set Classifications     |
+|-------------|-----------|-------------------------|
+| Boolean     | true (on) | master, session, reload |
+
+
+## <a name="gp_interconnect_default_rtt"></a>gp\_interconnect\_default\_rtt
+
+Sets the default rtt (in ms) for UDP interconnect.
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value Range</th>
+<th>Default</th>
+<th>Set Classifications</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1-1000ms</td>
+<td>20ms</td>
+<td>master, session, reload</td>
+</tr>
+</tbody>
+</table>
+
 ## <a name="gp_interconnect_fc_method"></a>gp\_interconnect\_fc\_method
 
 Specifies the flow control method used for UDP interconnect when the value of [gp\_interconnect\_type](#gp_interconnect_type) is UDPIFC.
@@ -1410,6 +1460,25 @@ Sets the size of the hash table used by the UDP interconnect to track connection
 |-------------|---------|-------------------------|
 | 2-25        | 2       | master, session, reload |
 
+## <a name="gp_interconnect_min_retries_before\_timeout"></a>gp\_interconnect\_min\_retries\_before\_timeout
+
+Sets the minimum number of retries before reporting a transmit timeout in the interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-4096        | 100       | master, session, reload |
+
+
+## <a name="gp_interconnect_min_rto"></a>gp\_interconnect\_min\_rto
+
+Sets the minimum rto (in ms) for UDP interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+|1-1000ms        | 20ms       | master, session, reload |
+
+
+
 ## <a name="gp_interconnect_queue_depth"></a>gp\_interconnect\_queue\_depth
 
 Sets the amount of data per-peer to be queued by the UDP interconnect on receivers (when data is received but no space is available to receive it the data will be dropped, and the transmitter will need to resend it). Increasing the depth from its default value will cause the system to use more memory; but may increase performance. It is reasonable for this to be set between 1 and 10. Queries with data skew potentially perform better when this is increased. Increasing this may radically increase the amount of memory used by the system.
@@ -1437,6 +1506,36 @@ This parameter is used only when [gp\_interconnect\_type](#gp_interconnect_type)
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | 1 - 4096    | 2       | master, session, reload |
+
+## <a name="gp_interconnect_timer_period"></a>gp\_interconnect\_timer\_period
+
+Sets the timer period (in ms) for UDP interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-100ms        | 5ms       | master, session, reload |
+
+
+
+## <a name="gp_interconnect_timer_checking_period"></a>gp\_interconnect\_timer\_checking\_period
+
+Sets the timer checking period (in ms) for UDP interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-100ms        | 20ms       | master, session, reload |
+
+
+
+## <a name="gp_interconnect_transmit_timeout"></a>gp\_interconnect\_transmit\_timeout
+
+Timeout (in seconds) on interconnect to transmit a packet.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-7200s        | 3600s       | master, session, reload |
+
+
 
 ## <a name="gp_interconnect_type"></a>gp\_interconnect\_type
 
