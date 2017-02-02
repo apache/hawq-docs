@@ -32,8 +32,10 @@ This section describes how to use PXF to access Hive data. Options for querying 
 
 Before accessing Hive data with HAWQ and PXF, ensure that:
 
--   The PXF HDFS plug-in is installed on all cluster nodes. See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
--   The PXF Hive plug-in is installed on all cluster nodes.
+-   The PXF HDFS plug-in is installed on all HAWQ and HDFS cluster nodes (master, segment, NameNode, DataNode). See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
+-   The PXF Hive plug-in is installed on all HAWQ and HDFS cluster nodes.
+-   If you configured Hadoop with high availability, PXF must also be installed on all HDFS nodes running NameNode services.
+-   The Hive client is installed on all PXF nodes.
 -   The Hive JAR files and conf directory are installed on all cluster nodes.
 -   You have tested PXF on HDFS.
 -   You are running the Hive Metastore service on a machine in your cluster. 
@@ -80,7 +82,7 @@ The following table summarizes external mapping rules for Hive primitive types.
 
 Hive supports complex data types including array, struct, map, and union. PXF maps each of these complex types to `text`.  While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract subcomponents of these complex data types.
 
-An example using complex data types is provided later in this topic.
+An example using complex data types with the `Hive` profile is provided later in this topic.
 
 
 ## <a id="hive_sampledataset"></a>Sample Data Set
@@ -191,9 +193,7 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 
 ## <a id="profile_hive"></a>Hive Profile
 
-The `Hive` profile works with any Hive file format. It can access heterogenous format data in a single table where each partition may be stored as a different file format.
-
-While you can use the `Hive` profile to access any file format, the more specific profiles perform better for those single file format types.
+Use the `Hive` profile with any Hive file format. With the `Hive` profile, you can also access heterogenous format data in a single table where each partition may be stored as a different file format. In both cases, the `Hive` profile will use the optimal `Hive*` profile for the underlying file format type.
 
 
 ### <a id="profile_hive_using"></a>Example: Using the Hive Profile
@@ -226,7 +226,7 @@ Use the `Hive` profile to create a queryable HAWQ external table from the Hive `
 
 ## <a id="profile_hivetext"></a>HiveText Profile
 
-Use the `HiveText` profile to query text format files. The `HiveText` profile is more performant than the `Hive` profile.
+Use the `HiveText` profile to query text format files.
 
 **Note**: When using the `HiveText` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
 
@@ -266,9 +266,11 @@ Use the PXF `HiveText` profile to create a queryable HAWQ external table from th
 
 The RCFile Hive format is used for row columnar formatted data. The `HiveRC` profile provides access to RCFile data.
 
+**Note**: When using the `HiveRC` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
+
 ### <a id="profile_hiverc_rcfiletbl_using"></a>Example: Using the HiveRC Profile
 
-Use the `HiveRC` profile to query RCFile-formatted data in Hive tables. The `HiveRC` profile is more performant than the `Hive` profile for this file format type.
+Use the `HiveRC` profile to query RCFile-formatted data in Hive tables.
 
 1. Create a Hive table with RCFile format:
 
@@ -345,11 +347,6 @@ And query the HAWQ external table using:
 ``` sql
 postgres=# SELECT fname,lname FROM pxf_parquet_table;
 ```
-
-
-## <a id="profileperf"></a>Profile Performance Considerations
-
-The `HiveRC` and `HiveText` profiles are faster than the generic `Hive` profile.
 
 
 ## <a id="complex_dt_example"></a>Complex Data Type Example
@@ -458,7 +455,7 @@ When specifying an array field in a Hive table, you must identify the terminator
     (10 rows)
     ```
 
-    `intarray` and `propmap` are each text strings.
+    `intarray` and `propmap` are each serialized as text strings.
 
 ## <a id="hcatalog"></a>Using PXF and HCatalog to Query Hive
 
@@ -587,7 +584,7 @@ Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF)
 
 HCatalog integration has the following limitations:
 
--   HCatalog integration queries and describe commands do not support complex types; only primitive types are supported. Use PXF external tables to query complex types in Hive. (See [Complex Types Example](#complex_dt_example).)
+-   HCatalog queries on Hive tables with complex type fields return those fields serialized as text.
 -   Even for primitive types, HCatalog metadata descriptions produced by `\d` are HAWQ's interpretation of the underlying Hive data types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
 -   HAWQ reserves the database name `hcatalog` for system use. You cannot connect to or alter the system `hcatalog` database.
 
