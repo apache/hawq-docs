@@ -1,0 +1,32 @@
+---
+title: Best Practices for Configuring HAWQ Parameters
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+
+The configuration parameters for HAWQ are maintained in the `$GPHOME/etc/hawq-site.xml` file. This file resides on all HAWQ instances and can be modified either via Ambari or by using the HAWQ command line interface. Use a consistent strategy (Ambari or command line interface) to maintain the contents of `hawq-site.xml`. 
+
+For Ambari-managed clusters, always use Ambari for configuring hawq-site.xml parameters; restarting or reconfiguring HAWQ via Ambari will overwrite any configuration changes to `hawq-site.xml` made outside the Ambari interface.
+
+If you manage your cluster using command line tools instead of Ambari, use a consistent `hawq-site.xml` file to configure your entire cluster. 
+
+**Note:** Do not configure HAWQ parameters through the `postgresql.conf` file. Use only `hawq-site.xml` to configure your HAWQ cluster. Any parameters defined in `hawq-site.xml` will overwrite parameters in `postgresql.conf`. 
+
