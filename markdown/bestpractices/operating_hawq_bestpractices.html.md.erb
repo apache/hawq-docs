@@ -23,13 +23,13 @@ under the License.
 
 This topic provides best practices for operating HAWQ, including recommendations for stopping, starting and monitoring HAWQ.
 
-## <a id="task_qgk_bz3_1v"></a>Best Practices Using the Command Line                                                to Start/Stop HAWQ Cluster Members
+## <a id="task_qgk_bz3_1v"></a>Best Practices Using the Command Line to Start/Stop HAWQ Cluster Members
 
-The following best practices are recommended for best results when using `hawq start` and `hawq stop` to manage your HAWQ cluster.
+The following best practices are recommended when using `hawq start` and `hawq stop` to manage your HAWQ cluster.
 
--   Always use HAWQ management commands to start and stop HAWQ, rather than Postgres equivalents.
+-   Always use HAWQ management commands to start and stop HAWQ, instead of Postgres equivalents.
 -   Use `hawq start cluster` or `hawq restart cluster` to start the entire cluster, rather than starting the master and individual segments.
--   If you do decide to use `hawq start standby|master|segment` to start nodes individually, make sure you always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
+-   If you do decide to use `hawq start standby|master|segment` to start nodes individually, always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
 -   When stopping a cluster, issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file before stopping the cluster. A checkpoint ensures that, in the event of a crash, files can be restored from the checkpoint snapshot.
 -   Stop the entire HAWQ system by stopping the cluster on the master host:
     ```shell
