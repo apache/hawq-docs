@@ -195,7 +195,7 @@ Examine/collect the log messages from `pxf-service.log`.
 
 ### <a id="pxfdblogmsg"></a>Database-Level Logging
 
-Database-level logging may provide insight into internal PXF service operations. Additionally, when accessing Hive tables using `hcatalog` or the `Hive*` profiles, log messages will identify the underlying `Hive*` profile(s) employed to access the data.
+Database-level logging may provide insight into internal PXF service operations. Additionally, when you access Hive tables using `hcatalog` or the `Hive*` profiles, log messages identify the underlying `Hive*` profile(s) employed to access the data.
 
 Enable HAWQ and PXF debug message logging during operations on PXF external tables by setting the `client_min_messages` server configuration parameter to `DEBUG2` in your `psql` session.
 
