@@ -149,7 +149,7 @@ Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
 </tbody>
 </table>
 
-**Notes**: Metadata identifies the Java class that provides field definitions in the relation. OutputFormat identifies the file format for which a specific profile is optimized. While the built-in `Hive*` profiles provide Metadata and OutputFormat classes, most profiles will have no need to implement or specify these classes.
+**Notes**: Metadata identifies the Java class that provides field definitions in the relation. OutputFormat identifies the output serialization format (text or binary) for which a specific profile is optimized. While the built-in `Hive*` profiles provide Metadata and OutputFormat classes, other profiles may have no need to implement or specify these classes.
 
 ## <a id="addingandupdatingprofiles"></a>Adding and Updating Profiles
 
