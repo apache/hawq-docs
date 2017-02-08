@@ -195,6 +195,8 @@ Examine/collect the log messages from `pxf-service.log`.
 
 ### <a id="pxfdblogmsg"></a>Database-Level Logging
 
+Database-level logging may provide insight into internal PXF service operations. Additionally, when you access Hive tables using `hcatalog` or the `Hive*` profiles, log messages identify the underlying `Hive*` profile(s) employed to access the data.
+
 Enable HAWQ and PXF debug message logging during operations on PXF external tables by setting the `client_min_messages` server configuration parameter to `DEBUG2` in your `psql` session.
 
 ``` shell
@@ -210,6 +212,8 @@ DEBUG2:  churl http header: cell #20: X-GP-URL-PORT: 51200
 DEBUG2:  churl http header: cell #21: X-GP-DATA-DIR: pxf_hive1
 DEBUG2:  churl http header: cell #22: X-GP-profile: Hive
 DEBUG2:  churl http header: cell #23: X-GP-URI: pxf://namenode:51200/pxf_hive1?profile=Hive
+...
+DEBUG2:  pxf: set_current_fragment_headers: using profile: Hive
 ...
 ```
 

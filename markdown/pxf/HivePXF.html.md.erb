@@ -25,15 +25,17 @@ Apache Hive is a distributed data warehousing infrastructure.  Hive facilitates 
 
 This section describes how to use PXF to access Hive data. Options for querying data stored in Hive include:
 
--  Creating an external table in PXF and querying that table
 -  Querying Hive tables via PXF's integration with HCatalog
+-  Creating an external table in PXF and querying that table
 
 ## <a id="installingthepxfhiveplugin"></a>Prerequisites
 
 Before accessing Hive data with HAWQ and PXF, ensure that:
 
--   The PXF HDFS plug-in is installed on all cluster nodes. See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
--   The PXF Hive plug-in is installed on all cluster nodes.
+-   The PXF HDFS plug-in is installed on all HAWQ and HDFS cluster nodes (master, segment, NameNode, DataNode). See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
+-   The PXF Hive plug-in is installed on all HAWQ and HDFS cluster nodes.
+-   If you configured Hadoop with high availability, PXF must also be installed on all HDFS nodes running NameNode services.
+-   The Hive client is installed on all PXF nodes.
 -   The Hive JAR files and conf directory are installed on all cluster nodes.
 -   You have tested PXF on HDFS.
 -   You are running the Hive Metastore service on a machine in your cluster. 
@@ -80,7 +82,7 @@ The following table summarizes external mapping rules for Hive primitive types.
 
 Hive supports complex data types including array, struct, map, and union. PXF maps each of these complex types to `text`.  While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract subcomponents of these complex data types.
 
-An example using complex data types is provided later in this topic.
+An example using complex data types with the `Hive` profile is provided later in this topic.
 
 
 ## <a id="hive_sampledataset"></a>Sample Data Set
@@ -162,9 +164,143 @@ Create a Hive table to expose our sample data set.
 
 In examples later in this section, you will access the `sales_info` Hive table directly via PXF. You will also insert `sales_info` data into tables of other Hive file format types, and use PXF to access those directly as well.
 
+
+## <a id="hcatalog"></a>Using PXF and HCatalog to Query Hive
+
+You can query Hive tables directly through HCatalog integration with HAWQ and PXF, regardless of the underlying file storage format. This integration allows HAWQ to directly use table metadata stored in HCatalog.
+
+HCatalog is built on top of the Hive metastore and incorporates Hive's DDL. This provides several advantages:
+
+-   You do not need to know the table schema of your Hive tables
+-   You do not need to manually enter information about Hive table location or format
+-   If Hive table metadata changes, HCatalog provides updated metadata. This is in contrast to the use of static external PXF tables to define Hive table metadata for HAWQ.
+
+The following diagram depicts how HAWQ integrates with HCatalog to query Hive tables:
+
+<img src="../images/hawq_hcatalog.png" id="hcatalog__image_ukw_h2v_c5" class="image" width="672" />
+
+1.  HAWQ retrieves table metadata from HCatalog using PXF.
+2.  HAWQ creates in-memory catalog tables from the retrieved metadata. If a table is referenced multiple times in a transaction, HAWQ uses its in-memory metadata to reduce external calls to HCatalog.
+3.  PXF queries Hive using table metadata that is stored in the HAWQ in-memory catalog tables. Table metadata is dropped at the end of the transaction.
+
+
+### <a id="topic_j1l_enabling"></a>Enabling HCatalog Integration
+
+To enable HCatalog query integration in HAWQ, perform the following steps:
+
+1.  Make sure your deployment meets the requirements listed in [Prerequisites](#installingthepxfhiveplugin).
+2.  If necessary, set the `pxf_service_address` global configuration property to the hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
+
+    ``` sql
+    postgres=# SET pxf_service_address TO <hivenode>:51200
+    ```
+
+3.  HCatalog internally uses the `pxf` protocol to query.  Grant this protocol privilege to all roles requiring access:
+
+    ``` sql
+    postgres=# GRANT ALL ON PROTOCOL pxf TO <role>;
+    ```
+
+4. It is not recommended to create a HAWQ table using the `WITH (OIDS)` clause. If any user tables were created using the `WITH (OIDS)` clause, additional operations are required to enable HCatalog integration. To access a Hive table via HCatalog when user tables were created using `WITH (OIDS)`, HAWQ users must have `SELECT` permission to query every user table within the same schema that was created using the `WITH (OIDS)` clause.
+
+    1. Determine which user tables were created using the `WITH (OIDS)` clause:
+
+        ``` sql
+        postgres=# SELECT oid, relname FROM pg_class
+                     WHERE relhasoids = true
+                       AND relnamespace <> (SELECT oid FROM pg_namespace WHERE nspname = 'pg_catalog');
+        ```
+
+    2. Grant `SELECT` privilege on all returned tables to all roles to which you chose to provide HCatalog query access. For example:
+
+        ``` sql
+        postgres=# GRANT SELECT ON <table-created-WITH-OIDS> TO <role>
+        ```
+
+### <a id="topic_j1l_y55_c5"></a>Usage
+
+To query a Hive table with HCatalog integration, query HCatalog directly from HAWQ. The query syntax is:
+
+``` sql
+postgres=# SELECT * FROM hcatalog.hive-db-name.hive-table-name;
+```
+
+For example:
+
+``` sql
+postgres=# SELECT * FROM hcatalog.default.sales_info;
+```
+
+To obtain a description of a Hive table with HCatalog integration, you can use the `psql` client interface.
+
+-   Within HAWQ, use either the `\d                                         hcatalog.hive-db-name.hive-table-name` or `\d+                                         hcatalog.hive-db-name.hive-table-name` commands to describe a single table.  `\d` displays only HAWQ's interpretation of the underlying source (Hive in this case) data type, while `\d+` displays both the HAWQ interpreted and Hive source data types. For example, from the `psql` client interface:
+
+    ``` shell
+    $ psql -d postgres
+    ```
+
+    ``` sql
+    postgres=# \d+ hcatalog.default.sales_info_rcfile;
+    ```
+
+    ``` shell
+       PXF Hive Table "default.sales_info"
+          Column      |  Type  | Source type 
+    ------------------+--------+-------------
+     location         | text   | string
+     month            | text   | string
+     number_of_orders | int4   | int
+     total_sales      | float8 | double
+    ```
+-   Use `\d hcatalog.hive-db-name.*` to describe the whole database schema, i.e. all tables in `hive-db-name`.
+-   Use `\d hcatalog.*.*` to describe the whole schema, i.e. all databases and tables.
+
+When using `\d` or `\d+` commands in the `psql` HAWQ client, `hcatalog` will not be listed as a database. If you use other `psql` compatible clients, `hcatalog` will be listed as a database with a size value of `-1` since `hcatalog` is not a real database in HAWQ.
+
+Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF) to obtain Hive table descriptions from other client interfaces or third-party applications. The UDF takes a PXF profile and a table pattern string as its input parameters.  **Note:** The only supported input profile at this time is `'Hive'`.
+
+- The following statement returns a description of a specific table. The description includes path, itemname (table), fieldname, fieldtype (HAWQ type), and sourcefieldtype (Hive type).
+
+    ``` sql
+    postgres=# SELECT * FROM pxf_get_item_fields('Hive','default.sales_info');
+    ```
+
+    ``` pre
+      path   |  itemname  |    fieldname     | fieldtype | sourcefieldtype 
+    ---------+------------+------------------+-----------+-----------------
+     default | sales_info | location         | text      | string
+     default | sales_info | month            | text      | string
+     default | sales_info | number_of_orders | int4      | int
+     default | sales_info | total_sales      | float8    | double
+    ```
+
+- The following statement returns table descriptions from the default database.
+
+    ``` sql
+    postgres=# SELECT * FROM pxf_get_item_fields('Hive','default.*');
+    ```
+
+- The following statement returns a description of the entire schema.
+
+    ``` sql
+    postgres=# SELECT * FROM pxf_get_item_fields('Hive', '*.*');
+    ```
+
+### <a id="topic_r5k_pst_25"></a>Limitations
+
+HCatalog integration has the following limitations:
+
+-   HCatalog queries on Hive tables with complex type fields return those fields serialized as text.
+-   Even for primitive types, HCatalog metadata descriptions produced by `\d` are HAWQ's interpretation of the underlying Hive data types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
+-   HAWQ reserves the database name `hcatalog` for system use. You cannot connect to or alter the system `hcatalog` database.
+
+
+
 ## <a id="topic_p2s_lvl_28"></a>Querying External Hive Data
 
-The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`.
+In the previous section, you used HCatalog integration to query a Hive table. You can also create a PXF/HAWQ external table to access Hive table data. This Hive table access mechanism requires that you identify an appropriate Hive profile.
+
+The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`. The `HiveText` and `HiveRC` profiles are specifically optimized for text and RC file formats, respectively. The `Hive` profile is optimized for all file storage types; use the `Hive` profile when the underlying Hive table is composed of multiple partitions with differing file formats.
 
 Use the following syntax to create a HAWQ external table representing Hive data:
 
@@ -191,10 +327,7 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 
 ## <a id="profile_hive"></a>Hive Profile
 
-The `Hive` profile works with any Hive file format. It can access heterogenous format data in a single table where each partition may be stored as a different file format.
-
-While you can use the `Hive` profile to access any file format, the more specific profiles perform better for those single file format types.
-
+Use the `Hive` profile with any Hive file storage format. With the `Hive` profile, you can also access heterogenous format data in a single table where each partition may be stored in a different file format. In both cases, the `Hive` profile will use the optimal `Hive*` profile for the underlying file format type.
 
 ### <a id="profile_hive_using"></a>Example: Using the Hive Profile
 
@@ -226,7 +359,7 @@ Use the `Hive` profile to create a queryable HAWQ external table from the Hive `
 
 ## <a id="profile_hivetext"></a>HiveText Profile
 
-Use the `HiveText` profile to query text format files. The `HiveText` profile is more performant than the `Hive` profile.
+Use the `HiveText` profile to query text format files.
 
 **Note**: When using the `HiveText` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
 
@@ -266,9 +399,11 @@ Use the PXF `HiveText` profile to create a queryable HAWQ external table from th
 
 The RCFile Hive format is used for row columnar formatted data. The `HiveRC` profile provides access to RCFile data.
 
+**Note**: When using the `HiveRC` profile, you *must* specify a delimiter option in *both* the `LOCATION` and `FORMAT` clauses.
+
 ### <a id="profile_hiverc_rcfiletbl_using"></a>Example: Using the HiveRC Profile
 
-Use the `HiveRC` profile to query RCFile-formatted data in Hive tables. The `HiveRC` profile is more performant than the `Hive` profile for this file format type.
+Use the `HiveRC` profile to query RCFile-formatted data in Hive tables.
 
 1. Create a Hive table with RCFile format:
 
@@ -347,14 +482,9 @@ postgres=# SELECT fname,lname FROM pxf_parquet_table;
 ```
 
 
-## <a id="profileperf"></a>Profile Performance Considerations
+## <a id="complex_dt_example"></a>Hive Profile Complex Data Type Example
 
-The `HiveRC` and `HiveText` profiles are faster than the generic `Hive` profile.
-
-
-## <a id="complex_dt_example"></a>Complex Data Type Example
-
-This example will employ the array and map complex types, specifically an array of integers and a string key/value pair map.
+This example employs the `Hive` profile and the array and map complex types, specifically an array of integers and a string key/value pair map.
 
 The data schema for this example includes fields with the following names and data types:
 
@@ -458,138 +588,7 @@ When specifying an array field in a Hive table, you must identify the terminator
     (10 rows)
     ```
 
-    `intarray` and `propmap` are each text strings.
-
-## <a id="hcatalog"></a>Using PXF and HCatalog to Query Hive
-
-Hive tables can be queried directly through HCatalog integration with HAWQ and PXF, regardless of the underlying file storage format.
-
-In previous sections, you created an external table in PXF that described the target table's Hive metadata. Another option for querying Hive tables is to take advantage of HAWQ's integration with HCatalog. This integration allows HAWQ to directly use table metadata stored in HCatalog.
-
-HCatalog is built on top of the Hive metastore and incorporates Hive's DDL. This provides several advantages:
-
--   You do not need to know the table schema of your Hive tables
--   You do not need to manually enter information about Hive table location or format
--   If Hive table metadata changes, HCatalog provides updated metadata. This is in contrast to the use of static external PXF tables to define Hive table metadata for HAWQ.
-
-The following diagram depicts how HAWQ integrates with HCatalog to query Hive tables:
-
-<img src="../images/hawq_hcatalog.png" id="hcatalog__image_ukw_h2v_c5" class="image" width="672" />
-
-1.  HAWQ retrieves table metadata from HCatalog using PXF.
-2.  HAWQ creates in-memory catalog tables from the retrieved metadata. If a table is referenced multiple times in a transaction, HAWQ uses its in-memory metadata to reduce external calls to HCatalog.
-3.  PXF queries Hive using table metadata that is stored in the HAWQ in-memory catalog tables. Table metadata is dropped at the end of the transaction.
-
-
-### <a id="topic_j1l_enabling"></a>Enabling HCatalog Integration
-
-To enable HCatalog query integration in HAWQ, perform the following steps:
-
-1.  Make sure your deployment meets the requirements listed in [Prerequisites](#installingthepxfhiveplugin).
-2.  If necessary, set the `pxf_service_address` global configuration property to the hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
-
-    ``` sql
-    postgres=# SET pxf_service_address TO <hivenode>:51200
-    ```
-
-3.  HCatalog internally uses the `pxf` protocol to query.  Grant this protocol privilege to all roles requiring access:
-
-    ``` sql
-    postgres=# GRANT ALL ON PROTOCOL pxf TO <role>;
-    ```
-
-4. It is not recommended to create a HAWQ table using the `WITH (OIDS)` clause. If any user tables were created using the `WITH (OIDS)` clause, additional operations are required to enable HCatalog integration. To access a Hive table via HCatalog when user tables were created using `WITH (OIDS)`, HAWQ users must have `SELECT` permission to query every user table within the same schema that was created using the `WITH (OIDS)` clause. 
-
-    1. Determine which user tables were created using the `WITH (OIDS)` clause:
-
-        ``` sql
-        postgres=# SELECT oid, relname FROM pg_class 
-                     WHERE relhasoids = true 
-                       AND relnamespace <> (SELECT oid FROM pg_namespace WHERE nspname = 'pg_catalog');
-        ```
-
-    2. Grant `SELECT` privilege on all returned tables to all roles to which you chose to provide HCatalog query access. For example:
-
-        ``` sql
-        postgres=# GRANT SELECT ON <table-created-WITH-OIDS> TO <role>
-        ``` 
-
-### <a id="topic_j1l_y55_c5"></a>Usage    
-
-To query a Hive table with HCatalog integration, query HCatalog directly from HAWQ. The query syntax is:
-
-``` sql
-postgres=# SELECT * FROM hcatalog.hive-db-name.hive-table-name;
-```
-
-For example:
-
-``` sql
-postgres=# SELECT * FROM hcatalog.default.sales_info;
-```
-
-To obtain a description of a Hive table with HCatalog integration, you can use the `psql` client interface.
-
--   Within HAWQ, use either the `\d                                         hcatalog.hive-db-name.hive-table-name` or `\d+                                         hcatalog.hive-db-name.hive-table-name` commands to describe a single table.  `\d` displays only HAWQ's interpretation of the underlying source (Hive in this case) data type, while `\d+` displays both the HAWQ interpreted and Hive source data types. For example, from the `psql` client interface:
-
-    ``` shell
-    $ psql -d postgres
-    ```
-
-    ``` sql
-    postgres=# \d+ hcatalog.default.sales_info_rcfile;
-    ```
-
-    ``` shell
-    PXF Hive Table "default.sales_info_rcfile"
-          Column      |  Type  | Source type 
-    ------------------+--------+-------------
-     location         | text   | string
-     month            | text   | string
-     number_of_orders | int4   | int
-     total_sales      | float8 | double
-    ```
--   Use `\d hcatalog.hive-db-name.*` to describe the whole database schema, i.e. all tables in `hive-db-name`.
--   Use `\d hcatalog.*.*` to describe the whole schema, i.e. all databases and tables.
-
-When using `\d` or `\d+` commands in the `psql` HAWQ client, `hcatalog` will not be listed as a database. If you use other `psql` compatible clients, `hcatalog` will be listed as a database with a size value of `-1` since `hcatalog` is not a real database in HAWQ.
-
-Alternatively, you can use the `pxf_get_item_fields` user-defined function (UDF) to obtain Hive table descriptions from other client interfaces or third-party applications. The UDF takes a PXF profile and a table pattern string as its input parameters.  **Note:** The only supported input profile at this time is `'Hive'`.
-
-- The following statement returns a description of a specific table. The description includes path, itemname (table), fieldname, and fieldtype.
-
-    ``` sql
-    postgres=# SELECT * FROM pxf_get_item_fields('Hive','default.sales_info_rcfile');
-    ```
-
-    ``` pre
-      path   |     itemname      |    fieldname     | fieldtype
-    ---------+-------------------+------------------+-----------
-     default | sales_info_rcfile | location         | text
-     default | sales_info_rcfile | month            | text
-     default | sales_info_rcfile | number_of_orders | int4
-     default | sales_info_rcfile | total_sales      | float8
-    ```
-
-- The following statement returns table descriptions from the default database.
-
-    ``` sql
-    postgres=# SELECT * FROM pxf_get_item_fields('Hive','default.*');
-    ```
-
-- The following statement returns a description of the entire schema.
-
-    ``` sql
-    postgres=# SELECT * FROM pxf_get_item_fields('Hive', '*.*');
-    ```
-
-### <a id="topic_r5k_pst_25"></a>Limitations
-
-HCatalog integration has the following limitations:
-
--   HCatalog integration queries and describe commands do not support complex types; only primitive types are supported. Use PXF external tables to query complex types in Hive. (See [Complex Types Example](#complex_dt_example).)
--   Even for primitive types, HCatalog metadata descriptions produced by `\d` are HAWQ's interpretation of the underlying Hive data types. For example, the Hive type `tinyint` is converted to HAWQ type `int2`. (See [Data Type Mapping](#hive_primdatatypes).)
--   HAWQ reserves the database name `hcatalog` for system use. You cannot connect to or alter the system `hcatalog` database.
+    `intarray` and `propmap` are each serialized as text strings.
 
 ## <a id="partitionfiltering"></a>Partition Filtering
 
@@ -710,7 +709,7 @@ The insertion of row 4 creates a Hive default partition, because the partition c
 In Hive, any query that filters on the partition column omits data in the default partition. For example, the following query returns no rows:
 
 ``` sql
-hive> SELECT * FROM sales WHERE xdate is null;
+hive> SELECT * FROM sales WHERE xdate IS null;
 ```
 
 However, if you map this table as a PXF external table in HAWQ, all default partition values are translated into actual NULL values. In HAWQ, executing the same query against the PXF table returns row 4 as the result, because the filter matches the NULL value.
