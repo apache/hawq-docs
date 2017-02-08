@@ -300,7 +300,7 @@ HCatalog integration has the following limitations:
 
 In the previous section, you used HCatalog integration to query a Hive table. You can also create a PXF/HAWQ external table to access Hive table data. This Hive table access mechanism requires that you identify an appropriate Hive profile.
 
-The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`. `HiveText` and `HiveRC` profiles are specifically optimized for text and RC file formats, respectively. The `Hive` profile is optimized for all file storage types; use the `Hive` profile when the underlying Hive table is composed of multiple partitions with differing file formats.
+The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`. The `HiveText` and `HiveRC` profiles are specifically optimized for text and RC file formats, respectively. The `Hive` profile is optimized for all file storage types; use the `Hive` profile when the underlying Hive table is composed of multiple partitions with differing file formats.
 
 Use the following syntax to create a HAWQ external table representing Hive data:
 
