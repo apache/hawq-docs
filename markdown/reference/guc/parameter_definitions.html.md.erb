@@ -1508,9 +1508,11 @@ Sets the amount of data per-peer to be queued by the UDP interconnect on receive
 
 ## <a name="gp_interconnect_setup_timeout"></a>gp\_interconnect\_setup\_timeout
 
-When the interconnect type is UDP, the time to wait for the Interconnect to complete setup before it times out.
+When the interconnect type is UDP, the time to wait for the Interconnect to complete setup before it times out. 
 
 This parameter is used only when [gp\_interconnect\_type](#gp_interconnect_type) is set to UDP.
+
+**Warning**: The `gp_interconnect_setup_timeout` server configuration parameter is deprecated and will be removed in a future HAWQ release.
 
 | Value Range                                 | Default | Set Classifications     |
 |---------------------------------------------|---------|-------------------------|
