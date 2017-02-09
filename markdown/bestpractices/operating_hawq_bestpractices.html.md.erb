@@ -23,21 +23,14 @@ under the License.
 
 This topic provides best practices for operating HAWQ, including recommendations for stopping, starting and monitoring HAWQ.
 
-## <a id="best_practice_config"></a>Best Practices for Configuring HAWQ Parameters
+## <a id="task_qgk_bz3_1v"></a>Best Practices Using the Command Line to Start/Stop HAWQ Cluster Members
 
-The HAWQ configuration guc/parameters are located in `$GPHOME/etc/hawq-site.xml`. This configuration file resides on all HAWQ instances and can be modified either by the Ambari interface or the command line. 
+The following best practices are recommended when using `hawq start` and `hawq stop` to manage your HAWQ cluster.
 
-If you install and manage HAWQ using Ambari, use the Ambari interface for all configuration changes. Do not use command line utilities such as `hawq config` to set or change HAWQ configuration properties for Ambari-managed clusters. Configuration changes to `hawq-site.xml` made outside the Ambari interface will be overwritten when you restart or reconfigure HAWQ using Ambari.
-
-If you manage your cluster using command line tools instead of Ambari, use a consistent `hawq-site.xml` file to configure your entire cluster. 
-
-**Note:** While `postgresql.conf` still exists in HAWQ, any parameters defined in `hawq-site.xml` will overwrite configurations in `postgresql.conf`. For this reason, we recommend that you only use `hawq-site.xml` to configure your HAWQ cluster. For Ambari clusters, always use Ambari for configuring `hawq-site.xml` parameters.
-
-## <a id="task_qgk_bz3_1v"></a>Best Practices to Start/Stop HAWQ Cluster Members
-
-For best results in using `hawq start` and `hawq stop` to manage your HAWQ system, the following best practices are recommended.
-
--   Issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file before stopping the cluster. A checkpoint ensures that, in the event of a crash, files can be restored from the checkpoint snapshot.
+-   Always use HAWQ management commands to start and stop HAWQ, instead of Postgres equivalents.
+-   Use `hawq start cluster` or `hawq restart cluster` to start the entire cluster, rather than starting the master and individual segments.
+-   If you do decide to use `hawq start standby|master|segment` to start nodes individually, always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
+-   When stopping a cluster, issue the `CHECKPOINT` command to update and flush all data files to disk and update the log file before stopping the cluster. A checkpoint ensures that, in the event of a crash, files can be restored from the checkpoint snapshot.
 -   Stop the entire HAWQ system by stopping the cluster on the master host:
     ```shell
     $ hawq stop cluster
@@ -70,8 +63,6 @@ For best results in using `hawq start` and `hawq stop` to manage your HAWQ syste
     $ hawq stop allsegments
     ```
 
--   Typically you should always use `hawq start cluster` or `hawq               restart cluster` to start the cluster. If you do end up using `hawq start standby|master|segment` to start nodes individually, make sure you always start the standby before the active master. Otherwise, the standby can become unsynchronized with the active master.
-
 ## <a id="id_trr_m1j_1v"></a>Guidelines for Cluster Expansion
 
 This topic provides some guidelines around expanding your HAWQ cluster.
@@ -84,7 +75,12 @@ There are several recommendations to keep in mind when modifying the size of you
 -   Note that for hash distributed tables, expanding the cluster will not immediately improve performance since hash distributed tables use a fixed number of virtual segments. In order to obtain better performance with hash distributed tables, you must redistribute the table to the updated cluster by either the [ALTER TABLE](../reference/sql/ALTER-TABLE.html) or [CREATE TABLE AS](../reference/sql/CREATE-TABLE-AS.html#topic1) command.
 -   If you are using hash tables, consider updating the `default_hash_table_bucket_number` server configuration parameter to a larger value after expanding the cluster but before redistributing the hash tables.
 
-## <a id="id_o5n_p1j_1v"></a>Database State Monitoring Activities
+## <a id="best_pract_monitoring"></a>Best Practices for Monitoring a HAWQ System
+The sections below provide recommendations for common monitoring tasks. 
+
+**Note:** If your HAWQ cluster is managed through the Ambari interface, use Ambari to perform the suggested monitoring tasks. 
+
+### <a id="id_o5n_p1j_1v"></a>Database State Monitoring Activities
 
 <a id="id_o5n_p1j_1v__d112e31"></a>
 
@@ -120,7 +116,7 @@ WHERE status &lt;&gt; &#39;u&#39;;</code></pre></td>
 </table>
 
 
-## <a id="id_d3w_p1j_1v"></a>Hardware and Operating System Monitoring
+### <a id="id_d3w_p1j_1v"></a>Hardware and Operating System Monitoring
 
 <a id="id_d3w_p1j_1v__d112e111"></a>
 
@@ -195,7 +191,7 @@ If transfer rates are lower than expected, consult with your data architect rega
 </table>
 
 
-## <a id="id_khd_q1j_1v"></a>Data Maintenance
+### <a id="id_khd_q1j_1v"></a>Data Maintenance
 
 <a id="id_khd_q1j_1v__d112e279"></a>
 
@@ -224,7 +220,7 @@ If transfer rates are lower than expected, consult with your data architect rega
 </table>
 
 
-## <a id="id_lx4_q1j_1v"></a>Database Maintenance
+### <a id="id_lx4_q1j_1v"></a>Database Maintenance
 
 <a id="id_lx4_q1j_1v__d112e343"></a>
 
@@ -277,7 +273,7 @@ If transfer rates are lower than expected, consult with your data architect rega
 </table>
 
 
-## <a id="id_blv_q1j_1v"></a>Patching and Upgrading
+### <a id="id_blv_q1j_1v"></a>Patching and Upgrading
 
 <a id="id_blv_q1j_1v__d112e472"></a>
 
