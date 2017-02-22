@@ -716,7 +716,7 @@ In this example, you will use the `Hive` profile to query a Hive table named `sa
 
 The `Hive` profile supports multiple data format types. This support enables you  to query a partitioned Hive table that may be composed of data of different formats.
 
-In this example, you will use the `Hive` profile both directly and indirectly via PXF HCatalog integration to query a partitioned Hive external table composed of the HDFS data files associated with the `sales_info` (text format) and `sales_info_rcfile` (RC format) Hive tables you created in previous exercises. You will partition the data by year, assigning the data from `sales_info` to the year 2013, and the data from `sales_info_rcfile` to the year 2016. (Ignore at the moment the fact that the tables contain the same data.)
+In this example, you will use the `Hive` profile both directly and indirectly via PXF HCatalog integration to query a partitioned Hive external table. The table is composed of the HDFS data files associated with the `sales_info` (text format) and `sales_info_rcfile` (RC format) Hive tables you created in previous exercises. You will partition the data by year, assigning the data from `sales_info` to the year 2013, and the data from `sales_info_rcfile` to the year 2016. (Ignore at the moment the fact that the tables contain the same data.)
 
 1. Create a Hive external table named `hive_multiformpart` that is partitioned by a string field named `year`:
 
@@ -800,7 +800,7 @@ In this example, you will use the `Hive` profile both directly and indirectly vi
      ...
     ```
 
-7. Now use the PXF `Hive` profile to create a readable HAWQ external table derived from the Hive `hive_multiformpart` external table you created in the previous steps:
+7. Use the PXF `Hive` profile to create a readable HAWQ external table derived from the Hive `hive_multiformpart` external table you created in the previous steps:
 
     ``` sql
     postgres=# CREATE EXTERNAL TABLE pxf_multiformpart(location text, month text, num_orders int, total_sales float8, year text)
