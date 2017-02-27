@@ -93,7 +93,7 @@ $ PGOPTIONS='-c gp_role=utility' psql
 <dd>Starts HAWQ in restricted mode (only database superusers are allowed to connect).</dd>
 
 <dt>-t , -\\\-timeout \<timeout\_seconds\>  </dt>
-<dd>Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 60 seconds.</dd>
+<dd>Specifies a timeout in seconds to wait for a segment instance to start up. If a segment instance was shutdown abnormally (due to power failure or killing its `postgres` database listener process, for example), it may take longer to start up due to the database recovery and validation process. If not specified, the default timeout is 600 seconds.</dd>
 
 <dt>-U , -\\\-special-mode maintenance   </dt>
 <dd>(Superuser only) Start HAWQ in \[maintenance | upgrade\] mode. In maintenance mode, the `gp_maintenance_conn` parameter is set.</dd>

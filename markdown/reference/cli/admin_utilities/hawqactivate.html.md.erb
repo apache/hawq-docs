@@ -30,7 +30,6 @@ Activates a standby master host and makes it the active master for the HAWQ syst
 ``` pre
 hawq activate standby 
      [-M (smart|fast|immediate) | --mode (smart|fast|immediate)] 
-     [-t <time> | --timeout <time>] 
      [-l <logfile_directory> | --logdir <logfile_directory>]
      [(-v | --verbose) | (-q | --quiet)] 
      [--ignore-bad-hosts]
@@ -74,9 +73,6 @@ Smart shutdown is the default. Shutdown fails with a warning message, if active 
 Fast shut down interrupts and rolls back any transactions currently in progress.
 
 Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
-
-<dt>-t, -\\\-timeout \<timeout\_seconds\>  </dt>
-<dd>Seconds to wait before discontinuing the operation. If not specified, the default timeout is 60 seconds.</dd>
 
 <dt>-l, -\\\-logdir \<logfile\_directory\> </dt>
 <dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
