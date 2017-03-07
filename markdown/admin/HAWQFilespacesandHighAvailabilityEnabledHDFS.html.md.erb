@@ -240,3 +240,7 @@ For command-line administrators:
 	$ hawq init standby -n -M fast
 
 	```
+
+## <a id="pxfnhdfsnamenode"></a>Using PXF with HDFS NameNode HA
+
+When HDFS NameNode High Availability is enabled, identify the HDFS Nameservice ID in the `LOCATION` clause \<host\> field when invoking any PXF `CREATE EXTERNAL TABLE` command. If the \<port\> is omitted from the `LOCATION` URI, PXF connects to the port number designated by the `pxf_service_port` server configuration parameter value (default is 51200).
