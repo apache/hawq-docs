@@ -332,7 +332,7 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 
 | Keyword  | Value |
 |-------|-------------------------------------|
-| \<host\>    | The PXF host. \<host\> may identify any PXF agent node. If HDFS High Availability is enabled, \<host\> must identify the HDFS NameService. |
+| \<host\>    | The PXF host. While \<host\> may identify any PXF agent node, use the HDFS NameNode as it is guaranteed to be available in a running HDFS cluster. If HDFS High Availability is enabled, \<host\> must identify the HDFS NameService. |
 | \<port\>    | The PXF port. If \<port\> is omitted, PXF assumes \<host\> identifies a High Availability HDFS Nameservice and connects to the port number designated by the `pxf_service_port` server configuration parameter value. Default is 51200. |
 | \<hive-db-name\>    | The name of the Hive database. If omitted, defaults to the Hive database named `default`. |
 | \<hive-table-name\>    | The name of the Hive table. |
