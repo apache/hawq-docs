@@ -2067,7 +2067,7 @@ HAWQ resource manager segment server port number.
 
 ## <a name="hawq_rm_stmt_nvseg"></a>hawq\_rm\_stmt\_nvseg
 
-Defines the number of virtual segments to use for the next query's execution. The default value is 0 which means statement level resource quota setting is disabled.
+Defines the number of virtual segments to use for the next query's execution. The default value is 0, which means statement level resource quota setting is disabled.
 
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
@@ -2075,7 +2075,7 @@ Defines the number of virtual segments to use for the next query's execution. Th
 
 ## <a name="hawq_rm_stmt_vseg_memory"></a>hawq\_rm\_stmt\_vseg\_memory
 
-Defines the memory quota of one virtual segment.
+Defines the memory quota of one virtual segment. You must set the number of virtual segments to a number greater than 0 in `hawq_rm_stmt_nvseg` before specifying the memory quota.  
 
 | Value Range                                                                         | Default | Set Classifications     |
 |-------------------------------------------------------------------------------------|---------|-------------------------|

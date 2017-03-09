@@ -115,6 +115,8 @@ SET HAWQ_RM_STMT_VSEG_MEMORY='2gb';
 query1;
 SET HAWQ_RM_STMT_NVSEG=0;
 ```
+***Note:*** To enable the statement level, you must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting `hawq_rm_stmt_vseg_memory`. After running a query, the value of `hawq_rm_stmt_nvseg` should be reset to 0,  as shown in the example above.
+
 
 ### Restricting Resource Consumption for Specific Queries
 
