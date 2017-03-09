@@ -23,6 +23,8 @@ under the License.
 
 Configuration parameters affect categories of server behaviors, such as resource consumption, query tuning, and authentication. The following sections describe HAWQ configuration parameter categories.
 
+**Note:** If you install and manage HAWQ using Ambari, be aware that property changes made using `hawq config` could be overwritten by Ambari. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to set or change HAWQ configuration properties.
+
 ## <a id="topic_hfd_1tl_zp"></a>Append-Only Table Parameters
 
 The following parameters configure the <span class="ph">append-only</span> tables feature of HAWQ.
@@ -388,8 +390,6 @@ When automatic statistics collection is enabled, you can run `ANALYZE` automatic
 
 -   [gp\_autostats\_mode](parameter_definitions.html#gp_autostats_mode)
 -   [log\_autostats](parameter_definitions.html#log_autostats)
-
-**Note:** If you install and manage HAWQ using Ambari, be aware that property changes made using `hawq config` could be overwritten by Ambari. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to set or change HAWQ configuration properties.
 
 ### <a id="topic37"></a>Runtime Statistics Collection Parameters
 
