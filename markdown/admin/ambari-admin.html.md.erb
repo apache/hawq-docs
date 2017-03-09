@@ -352,7 +352,7 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
 ## <a id="manual-cfg-norestart"></a>Updating HAWQ Configuration Without Cluster Restart
 There may be circumstances, such as during dynamic cluster expansion, when you must update HAWQ configuration parameters but cannot tolerate cluster downtime in your Ambari-managed cluster. In these situations, perform the following workaround to update and reload HAWQ configuration changes without a complete cluster restart.
 
-**Note**: Use this procedure only for setting or updating HAWQ server configuration parameters.
+**Note**: Use this procedure for setting or updating only those HAWQ server configuration parameters with a set classification of reload.
 
 1.  Use the Ambari console UI to set and save the desired HAWQ configuration parameter(s) via the **HAWQ** service **Settings**, **Configs >Settings**, and/or **Configs >Advanced** tabs. Make sure to note the configuration parameter names and new values. You may need to hover the mouse over the configuration field to identify the HAWQ parameter name.
     
