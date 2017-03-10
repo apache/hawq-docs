@@ -152,7 +152,10 @@ The standby can become out-of-date if the log synchronization process between th
 
 To resynchronize the standby with the master:
 
-1. If you use Ambari to manage your cluster, follow the instructions in [Removing the HAWQ Standby Master](ambari-admin.html#amb-remove-standby).
+1. If you use Ambari to manage your cluster:
+
+    1. Follow the instructions in [Removing the HAWQ Standby Master](ambari-admin.html#amb-remove-standby) to remove the HAWQ Standby Master node.
+    2. Follow the instructions in [Adding a HAWQ Standby Master](ambari-admin.html#amb-add-standby) to re-add the Standby Master.
 
 2. If you do not use Ambari, execute the following command on the HAWQ master:
 

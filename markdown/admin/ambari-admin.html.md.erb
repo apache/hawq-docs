@@ -182,20 +182,23 @@ First ensure that the new node(s) has been configured per the instructions found
    4. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
    5. In the Components summary, select **Add > PXF**.
    6. Click **Confirm Add** to acknowledge the component to add. Click **OK** when the task completes.
-17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting (`default_hash_table_bucket_number`) on the HAWQ service's **Configs > Settings** tab. Update this property's value by multiplying the new number of nodes in the cluster by the appropriate number indicated below.
+17. (Optional) If you are using hash tables, adjust the **Default buckets for Hash Distributed tables** setting (`default_hash_table_bucket_number`).
 
-    |Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
-    |---------------|------------------------------------------|
-    |<= 85|6 \* \#nodes|
-    |\> 85 and <= 102|5 \* \#nodes|
-    |\> 102 and <= 128|4 \* \#nodes|
-    |\> 128 and <= 170|3 \* \#nodes|
-    |\> 170 and <= 256|2 \* \#nodes|
-    |\> 256 and <= 512|1 \* \#nodes|
-    |\> 512|512|
-18.  Ambari requires the HAWQ service to be restarted in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then you can use the HAWQ CLI commands described in [Manually Updating the HAWQ Configuration](#manual-config-steps) *instead* of following this step.
-    <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, and applies the new configuration.
-    >**Note:** Do not use the **Restart All** service action to complete this step.
+    1. Open the HAWQ service's **Configs > Settings** tab. Update the `default_hash_table_bucket_number` property's value by multiplying the new number of nodes in the cluster by the appropriate number indicated below.
+
+        |Number of Nodes After Expansion|Suggested default\_hash\_table\_bucket\_number value|
+        |---------------|------------------------------------------|
+        |<= 85|6 \* \#nodes|
+        |\> 85 and <= 102|5 \* \#nodes|
+        |\> 102 and <= 128|4 \* \#nodes|
+        |\> 128 and <= 170|3 \* \#nodes|
+        |\> 170 and <= 256|2 \* \#nodes|
+        |\> 256 and <= 512|1 \* \#nodes|
+        |\> 512|512|
+    18.  Ambari requires you to restart the HAWQ service in order to apply the configuration changes. If you need to apply the configuration *without* restarting HAWQ (for dynamic cluster expansion), then use the procedure described in [Workaround for Dynamic Cluster Expansion](#manual-config-steps) *instead* of following this step.
+        <br/><br/>Stop and then start the HAWQ service to apply your configuration changes via Ambari. Select **Service Actions > Stop**, followed by **Service Actions > Start** to ensure that the HAWQ Master starts before the newly-added segment. During the HAWQ startup, Ambari exchanges ssh keys for the `gpadmin` user, and applies the new configuration.
+        **Note:** Do *not* use the **Restart All** service action to complete this step.
+<a id="step-10"></a>
 19.  Consider the impact of rebalancing HDFS to other components, such as HBase, before you complete this step.
     <br/><br/>Rebalance your HDFS data by selecting the **HDFS** service and then choosing **Service Actions > Rebalance HDFS**. Follow the Ambari instructions to complete the rebalance action.
 20.  Speed up the clearing of the metadata cache by first selecting the **HAWQ** service and then selecting **Service Actions > Clear HAWQ's HDFS Metadata Cache**.
@@ -206,35 +209,36 @@ First ensure that the new node(s) has been configured per the instructions found
 
 23.  (Optional.) If you enabled temporary password-based authentication while preparing/configuring your HAWQ host systems, turn off password-based authentication as described in [Apache HAWQ System Requirements](../requirements/system-requirements.html#topic_pwdlessssh).
 
-#### <a id="manual-config-steps"></a>Manually Updating the HAWQ Configuration
-If you need to expand your HAWQ cluster without restarting the HAWQ service, follow these steps to manually apply the new HAWQ configuration. (Use these steps *instead* of following Step 7 in the above procedure.):
+#### <a id="manual-config-steps"></a>Workaround for Dynamic Cluster Expansion 
+If you need to expand your HAWQ cluster without restarting the HAWQ service, follow this procedure to manually apply the HAWQ configuration changes required for this operation. (Perform these steps *instead of* following Step 9b in the above procedure.)
 
-1.  Update your configuration to use the new `default_hash_table_bucket_number` value that you calculated:
-  1. SSH into the HAWQ master host as the `gpadmin` user:
-    ```shell
-    $ ssh gpadmin@<HAWQ_MASTER_HOST>
+1. Log in to the HAWQ master host as a HAWQ administrator and source greenplum_path.sh:
+
+    ``` shell
+    $ ssh gpadmin@<master>
+    gpadmin@master$ source /usr/local/hawq/greenplum_path.sh
     ```
-   2. Source the `greenplum_path.sh` file to update the shell environment:
-    ```shell
-    $ source /usr/local/hawq/greenplum_path.sh
+
+2. Set the configuration parameter to the new value:
+
+    ``` shell
+    gpadmin@master$ hawq config -c default_hash_table_bucket_number -v <new_value>
     ```
-   3. Verify the current value of `default_hash_table_bucket_number`:
-    ```shell
-    $ hawq config -s default_hash_table_bucket_number
+        
+3. Reload the HAWQ configuration; this operation does not restart the cluster:
+
+    ``` shell
+    gpadmin@master$ hawq stop cluster --reload
     ```
-   4. Update `default_hash_table_bucket_number` to the new value that you calculated:
+    
+4. Verify that the parameter was updated:
+
     ```shell
-    $ hawq config -c default_hash_table_bucket_number -v <new_value>
+    gpadmin@master$ hawq config -s default_hash_table_bucket_number
     ```
-   5. Reload the configuration without restarting the cluster:
-    ```shell
-    $ hawq stop cluster -u
-    ```
-   6. Verify that the `default_hash_table_bucket_number` value was updated:
-    ```shell
-    $ hawq config -s default_hash_table_bucket_number
-    ```
-2.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Separate multiple hosts with new lines. For example, after adding host4 and host5 to a cluster already contains hosts 1-3, the updated file contents would be:
+
+
+5.  Edit the `/usr/local/hawq/etc/slaves` file and add the new HAWQ hostname(s) to the end of the file. Identify each host on a separate line. For example, after adding host4 and host5 to a cluster already containing hosts 1-3, the `slaves` file would appear similar to the following:
 
      ```
      host1
@@ -243,7 +247,8 @@ If you need to expand your HAWQ cluster without restarting the HAWQ service, fol
      host4
      host5
      ```
-3.  Continue with Step 8 in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
+ 
+6.  Continue with [Step 10](#step-10) in the previous procedure, [Expanding the HAWQ Cluster](#amb-expand).  When the HAWQ service is ready to be restarted via Ambari, Ambari will refresh the new configurations.
 
 ## <a id="amb-activate-standby"></a>Activating the HAWQ Standby Master
 Activating the HAWQ Standby Master promotes the standby host as the new HAWQ Master host. The previous HAWQ Master configuration is automatically removed from the cluster.
@@ -306,7 +311,7 @@ This service action enables you to remove the HAWQ Standby Master component in s
 
 ### When to Perform
 * Execute this procedure if you need to decommission or replace theHAWQ Standby Master host.
-* Execute this procedure and then add the HAWQ Standby Master once again, if the HAWQ Standby Master is unable to synchronize with the HAWQ Master and you need to reinitialize the service.
+* Execute this procedure as a first step when [Resynchronizing the Standby with the Master](MasterMirroring.html#resync_master).
 * Execute this procedure during a scheduled maintenance period, because it requires a restart of the HAWQ service.
 
 ### Procedure
@@ -368,6 +373,49 @@ All of the listed steps are mandatory. This ensures that HAWQ service remains fu
     4. Restart HAWQ service to propagate the configuration change to all Ambari agents.
 
     This will synchronize the password on the host machines with the password that you specified in Ambari.
+    
+## <a id="manual-cfg-norestart"></a>Updating HAWQ Configuration Without Cluster Restart
+There may be circumstances, such as during dynamic cluster expansion, when you must update HAWQ configuration parameters but cannot tolerate cluster downtime in your Ambari-managed cluster. In these situations, perform the following workaround to update and reload HAWQ configuration changes without a complete cluster restart.
+
+**Note**: Use this procedure for setting or updating only those HAWQ server configuration parameters with a set classification of `reload`.
+
+1.  Use the Ambari console UI to set and save the desired HAWQ configuration parameter(s) via the **HAWQ** service **Settings**, **Configs >Settings**, and/or **Configs >Advanced** tabs. Make sure to note the configuration parameter names and new values. You may need to hover the mouse over the configuration field to identify the HAWQ parameter name.
+    
+    **Note**: After updating the configuration parameters, do *not* restart the HAWQ service. 
+
+1.  Use HAWQ command line utilities to update the same HAWQ configuration parameters:
+    1. Log in to the HAWQ master host as a HAWQ administrator and source greenplum_path.sh:
+
+        ``` shell
+        $ ssh gpadmin@<master>
+        gpadmin@master$ source /usr/local/hawq/greenplum_path.sh
+        ```
+        
+    2. Identify the current value of the HAWQ configuration parameter:
+
+        ``` shell
+        gpadmin@master$ hawq config -s <parameter_name>
+        ```
+        
+    3. Set the configuration parameter to the new value:
+
+        ``` shell
+        gpadmin@master$ hawq config -c <parameter_name> -v <new_value>
+        ```
+        
+        Perform Steps 2 and 3 for each configuration parameter you set or updated via Ambari.
+        
+3. Reload the HAWQ configuration; this operation does not restart the cluster:
+
+    ``` shell
+    gpadmin@master$ hawq stop cluster --reload
+    ```
+    
+4. Verify that each parameter was updated:
+
+    ```shell
+    gpadmin@master$ hawq config -s <parameter_name>
+    ```
 
 ## <a id="gpadmin-setup-alert"></a>Setting Up Alerts
  
