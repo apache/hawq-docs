@@ -105,7 +105,7 @@ The following configuration properties allow a user to control resource quotas w
 
 However, the changed resource quota for the virtual segment cannot exceed the resource queue’s maximum capacity in HAWQ.
 
-***Note:*** The value of `hawq_rm_stmt_vseg_memory` depends on `hawq_rm_stmt_nvseg`, which defines the number of virtual segments used for the query. You must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting the memory quota for each segment with  `hawq_rm_stmt_vseg_memory`. After running a query or completing the session, the value of `hawq_rm_stmt_nvseg` should be reset to 0 to disable the statement level resource quota.
+***Note:*** The value of `hawq_rm_stmt_vseg_memory` depends on `hawq_rm_stmt_nvseg`, which defines the number of virtual segments used for the query. You must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting the memory quota for each segment with  `hawq_rm_stmt_vseg_memory`. After running a query or completing the session, reset the value of `hawq_rm_stmt_nvseg` to 0 to disable the statement level resource quota.
 
 In the following example, when executing the next query statement, the HAWQ resource manager will attempt to allocate 10 virtual segments and each segment has a 256MB memory quota.
 
@@ -115,7 +115,7 @@ postgres=# SET hawq_rm_stmt_nvseg=10;
 SET
 postgres=# SET hawq_rm_stmt_vseg_memory='256mb';
 SET
-postgres=# SELECT <x> FROM <from_item> WHERE <condition>
+postgres=# SELECT <x> FROM <from_item> WHERE <condition>;
 postgres=# SET hawq_rm_stmt_nvseg=0;
 SET
 

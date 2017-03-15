@@ -114,9 +114,9 @@ postgres=# SET hawq_rm_stmt_nvseg=10;
 postgres=# SET hawq_rm_stmt_vseg_memory='2gb';
 postgres=# query1;
 postgres=# SET hawq_rm_stmt_nvseg=0;
-postgres=# SET
+SET
 ```
-***Note:*** To enable the statement level, you must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting `hawq_rm_stmt_vseg_memory`. After running a query or completing the session, the value of `hawq_rm_stmt_nvseg` should be reset to 0,  as shown in the example above.
+***Note:*** To set the parameters at the statement level, you must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting `hawq_rm_stmt_vseg_memory`. After running a query or completing the session, the value of `hawq_rm_stmt_nvseg` should be reset to 0,  as shown in the example above.
 
 
 ### Restricting Resource Consumption for Specific Queries
