@@ -110,11 +110,14 @@ ALTER RESOURCE queue1 WITH (VSEG_RESOURCE_QUOTA='mem:2gb');
 If there are only occasional queries on Parquet tables with a large page size, use a statement level specification instead of altering the resource queue. For example:
 
 ```sql
-SET HAWQ_RM_STMT_NVSEG=10;
-SET HAWQ_RM_STMT_VSEG_MEMORY='2gb';
-query1;
-SET HAWQ_RM_STMT_NVSEG=0;
+postgres=# SET hawq_rm_stmt_nvseg=10;
+postgres=# SET hawq_rm_stmt_vseg_memory='2gb';
+postgres=# query1;
+postgres=# SET hawq_rm_stmt_nvseg=0;
+SET
 ```
+***Note:*** To set the parameters at the statement level, you must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting `hawq_rm_stmt_vseg_memory`. After running a query or completing the session, the value of `hawq_rm_stmt_nvseg` should be reset to 0,  as shown in the example above.
+
 
 ### Restricting Resource Consumption for Specific Queries
 
@@ -159,5 +162,6 @@ In order to raise the minimum number of virtual segments available for a query s
     ```
 
     In the second DDL, if there are 10 nodes in the cluster, the actual minimum number of virtual segments is 50 (5 \* 10 = 50).
+
 
 
