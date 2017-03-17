@@ -1,0 +1,64 @@
+---
+Using Ranger to Manage Access to HAWQ Resources
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+HAWQ supports using Apache Ranger for authorizing user access to HAWQ resources. Using Ranger enables you to manage all of your Hadoop components' authorization policies using a single user interface, policy store, and auditing store.
+
+
+## <a id="arch"></a>Policy Management Architecture
+Each HAWQ installation includes a Ranger plug-in service to support Ranger Policy management. The Ranger plug-in service implements the Ranger REST API to bridge all requests between the Ranger Policy Manager and a HAWQ instance. 
+
+HAWQ also provides a JAR library that enables the Ranger Policy Manager to lookup HAWQ metadata (for example database, schema, and table names) to populate the user interface and assist in creating new policies. This JAR uses a JDBC connection to HAWQ, and requires a one-time registration with the Ranger Policy Manager. See [Configuring HAWQ to use Ranger Policy Management](ranger-integration-config.html#enable). 
+
+A single configuration parameter, `hawq_acl_type` determines whether HAWQ defers all policy management to Ranger via the plug-in service, or whether HAWQ handles authorization natively using catalog tables. By default, HAWQ uses SQL commands to create all access policies, and the policy information is stored in catalog tables.  When you enable Ranger integration for policy management, any authorization policies that you have configured in HAWQ using SQL no longer apply to your installation; you must create new policies using the Ranger interface. See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html)
+
+The Ranger plug-in service caches Ranger policies locally on each HAWQ node to avoid unnecessary round trips between the HAWQ node and the Ranger Policy Manager server. You can use the configuration parameter `that` to control how frequently the plug-in service contacts the Ranger Policy Manager to refresh cached policies. See [Changing the Frequency of Policy Caching](ranger-integration-config.html#caching).
+
+## <a id="limitations"></a>Limitations of Ranger Policy Management
+Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
+
+The Ranger plug-in service is not compatible Highly-Available Ranger deployments. The plug-in will not connect to another Ranger Policy Manager if a failure occurs.
+
+HAWQ supports setting user-level authorization policies with Ranger. These correspond to access policies that would typically be applied using the SQL `GRANT` command, and include authorization events for:
+
+- Databases
+- Schemas
+- Tables
+- Sequences
+- Functions
+- Languages
+- Protocols
+
+All authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. These superuser-restricted events include:
+
+- `CREATE CAST` command
+- `CREATE FILESPACE` command
+- `CREATE`, `DROP`, or `ALTER` commands that involve a foreign-data wrapper
+- `CREATE FUNCTION` command for untrusted languages.
+- `CREATE` or `DROP` commands for procedural Languages
+- `CREATE`, `DROP`, or `ALTER` commands for resource queues
+- `CREATE TABLESPACE` command. Note that Ranger does manage authorization for creating databases, tables, indexes, and so forth _within_ an existing tablespace.
+- `CREATE EXTERNAL TABLE` commands that include the `EXECUTE` clause.
+- `CREATE OPERATOR CLASS` command
+- `COPY` command. Use of the `COPY` command is always limited to the superuser. When Ranger policy management is enabled, the superuser must have `SELECT` or `INSERT` privileges on a table in order to `COPY` from or to that table.
+- Built-in functions such as pg_logdir_ls, pg_ls_dir, pg_read_file, pg_reload_conf, pg_rotate_logfile, pg_signal_backend, pg_start_backup,  pg_stat_file, pg_stat_get_activity, pg_stat_get_backend_activity_start, pg_stat_get_backend_activity, pg_stat_get_backend_client_addr, pg_stat_get_backend_client_port, pg_stat_get_backend_start, pg_stat_get_backend_waiting, pg_stop_backup, pg_switch_xlog, and pg_stat_reset.
+
