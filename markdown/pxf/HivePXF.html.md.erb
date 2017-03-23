@@ -205,10 +205,10 @@ The following diagram depicts how HAWQ integrates with HCatalog to query Hive ta
 To enable HCatalog query integration in HAWQ, perform the following steps:
 
 1.  Make sure your deployment meets the requirements listed in [Prerequisites](#installingthepxfhiveplugin).
-2.  If necessary, set the `pxf_service_address` global configuration property to the hostname or IP address and port where you have installed the PXF Hive plug-in. By default, the value is set to `localhost:51200`.
+2.  If necessary, set the `pxf_service_address` global configuration property to the hostname or IP address and port where you have installed the PXF Hive plug-in (preferably the HDFS NameNode). By default, the value is set to `localhost:51200`. For example:
 
     ``` sql
-    postgres=# SET pxf_service_address TO <hivenode>:51200
+    postgres=# SET pxf_service_address TO '<namenode>:51200';
     ```
 
 3.  HCatalog internally uses the `pxf` protocol to query.  Grant this protocol privilege to all roles requiring access:
