@@ -20,6 +20,16 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+
+Your HAWQ 2.2.0 installation includes the following HAWQ-related Ranger components:
+
+- Ranger Administrative UI
+- HAWQ Ranger Plug-in Service
+
+The Ranger Administrative UI is installed when you install HDP. You configure the Ranger service itself through Ambari. You configure HAWQ-Ranger authorization policies through the Ranger Administrative UI, which you can access at `http://<ranger-admin-node>:6080`. 
+
+Installing or upgrading to HAWQ 2.2.0 installs the HAWQ Ranger Plug-in Service, but neither configures nor registers the plug-in.  
+
 In order to use Ranger for managing HAWQ authentication events, you must first install and register several HAWQ JAR files on the Ranger Administration host. This is a one-time configuration that establishes connectivity to your HAWQ cluster from the Ranger Administration host. After you have installed the JAR files, you enable or disable Ranger integration in HAWQ by setting the `hawq_acl_type` configuration parameter.
 
 The following procedures describe each configuration activity.
