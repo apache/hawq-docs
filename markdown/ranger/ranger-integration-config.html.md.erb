@@ -89,6 +89,10 @@ The following procedures describe each configuration activity.
 
 ## <a id="enable"></a>Step 2: Configure HAWQ to Use Ranger Policy Management
 
+The default Ranger service definition for HAWQ assigns the HAWQ user (typically `gpadmin`) all privileges to all objects. 
+
+**Warning**: If you enable HAWQ-Ranger authorization with only the default HAWQ service policies defined, other HAWQ users will have no privileges, even for HAWQ objects (databases, tables) that they own.
+
 1. Select the **HAWQ** Service, and then select the **Configs** tab.
 2. Select the **Advanced** tab, and then expand **Custom hawq-site**.
 4. Click **Add Property...** and add the new property, `hawq_acl_type=ranger` property. (If the property already exists, change its value from `standalone` (the default) to `ranger`.)
