@@ -26,32 +26,56 @@ The following procedures describe each configuration activity.
 
 ## <a id="jar"></a>Step 1: Install Ranger Connectivity to HAWQ
 1. `ssh` into the Ranger Administration host as a user with root privileges:
+
     ``` bash
-    $ ssh root@<ranger-admin-host>
-    root@ranger-admin-host$
+    $ ssh root@<ranger-admin-node>
+    root@ranger-admin-node$ 
     ```
 2. Create the directory for the HAWQ JAR files:
+
     ``` bash
-    root@ranger-admin-host$ cd /usr/hdp/current/ranger-admin/ews/webapp/WEB-INF/classes/ranger-plugins
-    root@ranger-admin-host$ mkdir hawq
+    root@ranger-admin-node$ cd /usr/hdp/current/ranger-admin/ews/webapp/WEB-INF/classes/ranger-plugins
+    root@ranger-admin-node$ mkdir hawq
     ```
-3. Copy the necessary HAWQ JAR files (`postgresql-9.1-901-1.jdbc4.jar` and `ranger-plugin-admin-2.2.0.0.jar`) from a HAWQ node to the new directory:
+3. Copy the necessary HAWQ JAR files (`postgresql-9.1-901-1.jdbc4.jar` and `ranger-plugin-admin-2.2.0.0.jar`) from the HAWQ master node to the new directory:
+
     ``` bash
-    root@ranger-admin-host$ scp <hawq-node>:/usr/local/hawq/ranger/lib/*.jar ./hawq
+    root@ranger-admin-node$ scp <hawq-master>:/usr/local/hawq/ranger/lib/*.jar ./hawq
     ```
 4. Change the ownership of the new folder and JAR files to the `ranger` user:
+
     ``` bash
-    root@ranger-admin-host$ chown -R ranger:ranger hawq
+    root@ranger-admin-node$ chown -R ranger:ranger hawq
     ```
-5. From a HAWQ node as the `gpadmin` user, execute the `enable-ranger-plugin.sh` script to configure connectivity to your HAWQ cluster. The command has the syntax:
+5. The `enable-ranger-plugin.sh` script configures Ranger connectivity to your HAWQ cluster. The command has the syntax:
+
+    ``` pre
+    enable-ranger-plugin.sh -r <ranger_admin_node>:<ranger_port> -u <ranger_user> -p <ranger_password> -h <hawq_master>:<hawq_port> -w <hawq_user> -q <hawq_password>
+    ```
+
+    Log in to the HAWQ master node as the `gpadmin` user and execute the `enable-ranger-plugin.sh` script. For example:
+
     ``` bash
-    /usr/local/hawq/ranger/bin/enable-ranger-plugin.sh -r <ranger_host>:<ranger_port> -u <ranger_user> -p <ranger_password> -h <hawq_host>:<hawq_port> -w <hawq_user> -q <hawq_password>
+    gpadmin@master$ cd /usr/local/hawq/ranger/bin
+    gpadmin@master$ ./enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_master:5432 -w gpadmin -q gpadmin
     ```
-   For example:
-   ``` bash
-   gpadmin@hawq-node$ /usr/local/hawq/ranger/bin/enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_host:5432 -w gpadmin -q gpadmin
-   ```
-6. To validate connectivity between Ranger and HAWQ, access the Ranger Admin UI in Ambari and select the HAWQ service.  Ensure that the Active Status is set to Enabled, and click `Test Connection`. You should receive a message that Ranger connected succesfully.  If it fails to connect, edit your HAWQ connectivity properties directly in the Ranger Admin UI re-test the connection.
+
+    Ensure \<hawq_master\> identifies the fully qualified domain name of the HAWQ master node.
+
+6. Edit the `pg_hba.conf` file on the HAWQ master node to configure HAWQ access for \<hawq_user\> on the \<ranger-admin-node\>. For example, you would add an entry similar to the following for the example `enable-ranger-plugin.sh` call above:
+
+    ``` bash
+    host  all     gpadmin    ranger_host/32       trust
+    ```
+
+    And reload HAWQ configuration:
+
+    ``` bash
+    gpadmin@master$ hawq stop cluster --reload
+    ```
+
+7. To validate connectivity between Ranger and HAWQ, access the Ranger Admin UI in Ambari, click the edit icon associated with the `hawq` service definition. Ensure that the Active Status is set to Enabled, and click the **Test Connection** button. You should receive a message that Ranger connected succesfully.  If it fails to connect, edit your HAWQ connectivity properties directly in the Ranger Admin UI and re-test the connection.
+
 
 ## <a id="enable"></a>Step 2: Configure HAWQ to Use Ranger Policy Management
 
