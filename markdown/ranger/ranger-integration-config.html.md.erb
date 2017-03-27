@@ -63,14 +63,14 @@ The following procedures describe each configuration activity.
     enable-ranger-plugin.sh -r <ranger_admin_node>:<ranger_port> -u <ranger_user> -p <ranger_password> -h <hawq_master>:<hawq_port> -w <hawq_user> -q <hawq_password>
     ```
 
-    Log in to the HAWQ master node as the `gpadmin` user and execute the `enable-ranger-plugin.sh` script. For example:
+    Log in to the HAWQ master node as the `gpadmin` user and execute the `enable-ranger-plugin.sh` script. Ensure \<hawq_master\> identifies the fully qualified domain name of the HAWQ master node. For example:
 
     ``` bash
     gpadmin@master$ cd /usr/local/hawq/ranger/bin
     gpadmin@master$ ./enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_master:5432 -w gpadmin -q gpadmin
     ```
-
-    Ensure \<hawq_master\> identifies the fully qualified domain name of the HAWQ master node.
+    
+    When the script completes, the default HAWQ service definition is registered in the Ranger Admin UI. This service definition is named `hawq`.
 
 6. Edit the `pg_hba.conf` file on the HAWQ master node to configure HAWQ access for \<hawq_user\> on the \<ranger-admin-node\>. For example, you would add an entry similar to the following for the example `enable-ranger-plugin.sh` call above:
 
