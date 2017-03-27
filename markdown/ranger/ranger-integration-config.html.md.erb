@@ -30,7 +30,7 @@ The Ranger Administrative UI is installed when you install HDP. You configure th
 
 Installing or upgrading to HAWQ 2.2.0 installs the HAWQ Ranger Plug-in Service, but neither configures nor registers the plug-in.  
 
-In order to use Ranger for managing HAWQ authentication events, you must first install and register several HAWQ JAR files on the Ranger Administration host. This is a one-time configuration that establishes connectivity to your HAWQ cluster from the Ranger Administration host. After you have installed the JAR files, you enable or disable Ranger integration in HAWQ by setting the `hawq_acl_type` configuration parameter.
+In order to use Ranger for managing HAWQ authentication events, you must first install and register several HAWQ JAR files on the Ranger Administration host. This is a one-time configuration that establishes connectivity to your HAWQ cluster from the Ranger Administration host. After you have registered the JAR files, you enable or disable Ranger integration in HAWQ by setting the `hawq_acl_type` configuration parameter. After Ranger integration is enabled, you must use the Ranger interface to create all security policies to manage access to HAWQ resources. Ranger is pre-populated only with several policies to allow `gpadmin` superuser access to default resources. See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) for information about creating policies in Ranger.
 
 The following procedures describe each configuration activity.
 
