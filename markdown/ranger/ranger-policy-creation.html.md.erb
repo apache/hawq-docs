@@ -105,7 +105,7 @@ Ranger evaluates policies from most to least restrictive, searching for a policy
 Refer to the [Ranger User Guide ??apache or hortonworks??](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.4.0/bk_Ranger_User_Guide/bk_Ranger_User_Guide-20160301.pdf) and [Deny-conditions and excludes in Ranger policies](https://cwiki.apache.org/confluence/display/RANGER/Deny-conditions+and+excludes+in+Ranger+policies) for detailed information on the Ranger Admin UI and Ranger policy evaluation.
 
 
-## <a id="createpolicies"></a> HAWQ Policy Definition
+## <a id="policydef"></a> HAWQ Policy Definition
 
 When configuring a HAWQ-Ranger authorization policy, you:
 
@@ -162,7 +162,7 @@ You may identify one or more users and/or groups to which to provide or deny acc
 | User | \<user-name\> | The user(s) to which you want to provide or deny access. All users sync'd from \<ranger-admin-node\> or explicitly registered via the Ranger Admin UI are available in the picklist.  |
 
 
-#### <a id="conditionusergroup"></a> Identifying Permissions
+#### <a id="conditionperms"></a> Identifying Permissions
 
 You can assign users/groups the following permissions when allowing or denying access to specific HAWQ resources:
 
@@ -196,7 +196,7 @@ It may take a collection of policies to provide access to a specific HAWQ databa
 MORE HERE
 
 
-### <a id="scopingpolicies"></a> Wildcarding in HAWQ Policies
+### <a id="wildcardinpolicies"></a> Wildcarding in HAWQ Policies
 
 When defining a HAWQ policy, wildcarding (`*`) a leaf node resource will scope the policy at two levels:
 
@@ -349,7 +349,7 @@ specifying these permissions:
 | create | CREATE TABLE ... TABLESPACE |  GRANT CREATE ON \<tablespace-name\> TO \<user-name\> |
 
 
-### <a id="dbtblspaceops"></a> Policies for Protocol Operations
+### <a id="dbprotocolops"></a> Policies for Protocol Operations
 
 ??gpfdist(s) and http protocols - hawq-native or ranger? super-user? 
 
