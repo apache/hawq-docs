@@ -54,6 +54,7 @@ HAWQ *always* employs its native authorization for operations on its catalog. HA
 
 - operations on HAWQ catalog
 - HAWQ catalog-related built-in functions
+- `CREATE CAST` command when function is NULL
 - `CREATE DATABASE`, `DROP DATABASE`, `createdb`, `dropdb`
 - `hawq filespace`
 - `CREATE`, `DROP`, or `ALTER` commands for resource queues
@@ -71,7 +72,6 @@ When Ranger is enabled, HAWQ-Ranger authorization is employed for access to user
 
 In cases where an operation requires super-user privileges, HAWQ first performs a super-user check, then requests the Ranger access check. Those operations requiring super-user checks include:
 
-- `CREATE CAST` command when function is NULL
 - `CREATE`, `DROP`, or `ALTER` commands that involve a foreign-data wrapper
 - `CREATE LANGUAGE`, `DROP LANGUAGE` for non-built-in languages
 - `CREATE FUNCTION` command for untrusted languages.
