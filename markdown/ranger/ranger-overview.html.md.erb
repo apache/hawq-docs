@@ -31,7 +31,7 @@ HAWQ also provides a JAR library that enables the Ranger Policy Manager to looku
 
 A single configuration parameter, `hawq_acl_type` determines whether HAWQ defers all policy management to Ranger via the plug-in service, or whether HAWQ handles authorization natively using catalog tables. By default, HAWQ uses SQL commands to create all access policies, and the policy information is stored in catalog tables.  When you enable Ranger integration for policy management, any authorization policies that you have configured in HAWQ using SQL no longer apply to your installation; you must create new policies using the Ranger interface. See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html)
 
-The Ranger plug-in service caches Ranger policies locally on each HAWQ node to avoid unnecessary round trips between the HAWQ node and the Ranger Policy Manager server. You can use the configuration parameter `that` to control how frequently the plug-in service contacts the Ranger Policy Manager to refresh cached policies.
+The Ranger plug-in service caches Ranger policies locally on each HAWQ node to avoid unnecessary round trips between the HAWQ node and the Ranger Policy Manager server. You can use the configuration parameter `that` to control how frequently the plug-in service contacts the Ranger Policy Manager to refresh cached policies. See [Changing the Frequency of Policy Caching](ranger-integration-config.html#caching).
 
 ## <a id="limitations"></a>Limitations of Ranger Policy Management
 Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.

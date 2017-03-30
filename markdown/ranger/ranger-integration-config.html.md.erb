@@ -32,12 +32,9 @@ Installing or upgrading to HAWQ 2.2.0 installs the HAWQ Ranger Plug-in Service, 
 
 To use Ranger for managing HAWQ authentication events, you must first install and register several HAWQ JAR files on the Ranger Administration host. This one-time configuration establishes connectivity to your HAWQ cluster from the Ranger Administration host. 
 
-The `hawq_acl_type` configuration parameter allows you to shift between managing access policies through the HAWQ native interface or the Ranger policy manager. Ranger is initially started started with the `hawq_acl_type` parameter set to `standalone.` After configuring Ranger access policies, you set the `hawq_acl_type` configuration parameter to `ranger` to enable Ranger policy management. 
+After registering the JAR files, you enable or disable Ranger integration in HAWQ by setting the `hawq_acl_type` configuration parameter. After Ranger integration is enabled, you must use the Ranger interface to create all security policies to manage access to HAWQ resources. Ranger is only pre-populated with policies to allow `gpadmin` superuser access to default resources. See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) for information about creating policies in Ranger. When Ranger is enabled, all access to HAWQ resources is controlled by security policies on Ranger. 
 
-Once HAWQ Ranger is enabled, access to HAWQ resources is controlled by security policies on Ranger. Access policies must be explicitly set for all groups and users, as Ranger has no knowledge of any access policies set up in the HAWQ native interface and its default is to disallow access. When first integrated, Ranger is only pre-populated with policies that allow `gpadmin` superuser access to default resources. When Ranger is enabled, you cannot manage HAWQ access  through its native interface. 
-See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) for information about creating policies in Ranger.
-
-Perform the following procedures to configure your Ranger interface.
+Use the following procedures to register the HAWQ Ranger Plug-in Service and enable Ranger authorization for HAWQ..
 
 ## <a id="jar"></a>Step 1: Install Ranger Connectivity to HAWQ
 1. `ssh` into the Ranger Administration host as a user with root privileges:
@@ -71,6 +68,7 @@ Perform the following procedures to configure your Ranger interface.
     Log in to the HAWQ master node as the `gpadmin` user and execute the `enable-ranger-plugin.sh` script. Ensure \<hawq_master\> identifies the fully qualified domain name of the HAWQ master node. For example:
 
     ``` bash
+    sudo su - gpadmin
     gpadmin@master$ cd /usr/local/hawq/ranger/bin
     gpadmin@master$ ./enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_master:5432 -w gpadmin -q gpadmin
     ```
@@ -79,17 +77,12 @@ Perform the following procedures to configure your Ranger interface.
     
     When the script completes, the default HAWQ service definition is registered in the Ranger Admin UI. This service definition is named `hawq`.
 
-6. Locate the `pg_hba.conf` file on the HAWQ master node:
+6. Locate the `pg_hba.conf` file on the HAWQ master node, for example:
  
     ``` bash
-    $ hawq config --show hawq_master_directory
+    gpadmin@master$ hawq config --show hawq_master_directory
      GUC		: hawq_master_directory
      Value		: /data/hawq/master
-     $ ls /data/hawq/master
-     base               pg_distributedlog     pg_log        pg_tblspc              pg_xlog
-     global             pg_distributedxidmap  pg_multixact  pg_twophase            postgresql.conf
-     pg_changetracking  pg_hba.conf           pg_stat_tmp   pg_utilitymodedtmredo  postmaster.opts
-     pg_clog            pg_ident.conf         pg_subtrans   PG_VERSION             postmaster.pid
 
     ```
 
@@ -107,11 +100,10 @@ Perform the following procedures to configure your Ranger interface.
 
 7.  When setup is complete, use the fully-qualified domain name to log into the Ambari server. Use the Ranger link in the left nav to bring up the Ranger Summary pane in the HAWQ Ambari interface. Use the Quick Links to access Ranger. This link will take you to the Ranger Login interface. 
 
-8.  Log into the Ranger Access Manager. You will see a list of icons under the Service Manager. Click the click the icon marked `hawq` under the HAWQ icon to validate connectivity between Ranger and HAWQ. A list of HAWQ policies will appear. 
+8.  Log into the Ranger Access Manager. You will see a list of icons under the Service Manager. Click the **Edit** icon on the right, under the HAWQ service icon. Ensure that the Active Status is set to Enabled, and click the **Test Connection** button. You should receive a message that Ranger connected successfully.  If it fails to connect, you may need to edit your Ranger connection in  `pg_hba.conf,` perform 
 
-9.  Now return to the Service Manager and click the Edit icon on the right, under the HAWQ service icon. Ensure that the Active Status is set to Enabled, and click the **Test Connection** button. You should receive a message that Ranger connected succesfully.  If it fails to connect, you may need to edit your Ranger connection in  `pg_hba.conf,` perform 
   ``` bash
-   hawq restart cluster
+   gpadmin@masterhawq stop cluster --reload
    ```
   and re-test the connection.
 
@@ -122,7 +114,7 @@ The default Ranger service definition for HAWQ assigns the HAWQ administrator (t
 
 Once the connection between HAWQ and Ranger is configured, you can either set up policies for the HAWQ users according to the procedures in [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) or enable Ranger with only the default policies. 
 
-**Warning**: If you enable HAWQ-Ranger authorization with only the default HAWQ service policies defined, other HAWQ users will have no privileges, even for HAWQ objects (databases, tables) that they own.
+**Note**: Any authorization defined using GRANT commands will no longer apply after enabling HAWQ Ranger. Only gpadmin access is allowed when Ranger is first initialized.
 
 1. On Ambari, select the **HAWQ** Service, and then select the **Configs** tab.
 2. Select the **Advanced** tab, and then expand **Custom hawq-site**.
@@ -130,3 +122,7 @@ Once the connection between HAWQ and Ranger is configured, you can either set up
 5. Click **Save** to save your changes.
 6. Select **Service Actions > Restart All** and confirm that you want to restart the HAWQ cluster.
 
+
+## <a id="caching"></a>Changing the Frequency of Policy Caching
+ 
+You may wish to change the frequency of policy caching to suit your individual needs.
