@@ -282,6 +282,12 @@ PXF provides both service- and database-level logging. Refer to [PXF Logging](..
 
 Ambari log files may be useful in helping diagnose general cluster problems. The Ambari server log files are located in the `/var/log/ambari-server/` directory. Ambari agent log files are located in `/var/log/ambari-agent/`. Refer to [Reviewing Ambari Log Files](https://docs.hortonworks.com/HDPDocuments/Ambari-2.2.1.1/bk_ambari_troubleshooting/content/_reviewing_ambari_log_files.html) for additional information.
 
+## <a id="rangerlogs"></a> Ranger Log Files
+
+The HAWQ Ranger Plug-in Service log files may be useful in helping diagnose Ranger connectivity and authorization problems. You will find these log files in the `$GPHOME/ranger/plugin-service/logs/` directory. In addition to HAWQ Ranger Plug-in service-related logs, this directory includes the `log4j` provider `audit.log` file. (Refer to [Auditing Authorization Events](../ranger/ranger-auditing.html) for information on configuring HAWQ Ranger audit logging.)
+
+Ranger log files are located in the `/var/log/ranger/admin/` directory.
+
 
 ## <a id="logging_other"></a>Hadoop Log Files
 
