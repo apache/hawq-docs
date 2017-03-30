@@ -32,9 +32,9 @@ Installing or upgrading to HAWQ 2.2.0 installs the HAWQ Ranger Plug-in Service, 
 
 To use Ranger for managing HAWQ authentication events, you must first install and register several HAWQ JAR files on the Ranger Administration host. This one-time configuration establishes connectivity to your HAWQ cluster from the Ranger Administration host. 
 
-After registering the JAR files, you enable or disable Ranger integration in HAWQ by setting the `hawq_acl_type` configuration parameter. After Ranger integration is enabled, you must use the Ranger interface to create all security policies to manage access to HAWQ resources. Ranger is only pre-populated with policies to allow `gpadmin` superuser access to default resources. See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) for information about creating policies in Ranger. When Ranger is enabled, all access to HAWQ resources is controlled by security policies on Ranger. 
+After registering the JAR files, you enable or disable Ranger integration in HAWQ by setting the `hawq_acl_type` configuration parameter. When Ranger is enabled, all access to HAWQ resources is controlled through Ranger security policies. The HAWQ Ranger Plug-in pre-populates Ranger with HAWQ policies to allow `gpadmin` superuser access to all resources. See [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) for information about creating policies in Ranger.
 
-Use the following procedures to register the HAWQ Ranger Plug-in Service and enable Ranger authorization for HAWQ..
+Use the following procedures to register the HAWQ Ranger Plug-in Service and enable Ranger authorization for HAWQ.
 
 ## <a id="prereq"></a>Prerequisites
 To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apache Ranger 0.6. You must also have `admin` access to the **Ranger Admin UI**.
@@ -68,15 +68,14 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
     enable-ranger-plugin.sh -r <ranger_admin_node>:<ranger_port> -u <ranger_user> -p <ranger_password> -h <hawq_master>:<hawq_port> -w <hawq_user> -q <hawq_password>
     ```
 
-    Log in to the HAWQ master node as the `gpadmin` user and execute the `enable-ranger-plugin.sh` script. Ensure \<hawq_master\> identifies the fully qualified domain name of the HAWQ master node. For example:
+    Log in to the HAWQ master node as the `gpadmin` user and execute the `enable-ranger-plugin.sh` script. Ensure that \<hawq_master\> identifies the fully qualified domain name of the HAWQ master node. For example:
 
     ``` bash
-    sudo su - gpadmin
     gpadmin@master$ cd /usr/local/hawq/ranger/bin
     gpadmin@master$ ./enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_master:5432 -w gpadmin -q gpadmin
     ```
     
-    ***Note*** You can also enter the short form of the command: `./enable-ranger-plugin.sh -r` and the script will prompt you for entries. 
+    **Note**: You can also enter the short form of the command: `./enable-ranger-plugin.sh -r` and the script will prompt you for entries.
     
     When the script completes, the default HAWQ service definition is registered in the Ranger Admin UI. This service definition is named `hawq`.
 
@@ -84,9 +83,8 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
  
     ``` bash
     gpadmin@master$ hawq config --show hawq_master_directory
-     GUC		: hawq_master_directory
-     Value		: /data/hawq/master
-
+    GUC		: hawq_master_directory
+    Value		: /data/hawq/master
     ```
 
     Edit the `pg_hba.conf` file on the HAWQ master node to configure HAWQ access for \<hawq_user\> on the \<ranger-admin-node\>. For example, you would add an entry similar to the following for the example `enable-ranger-plugin.sh` call above:
@@ -103,13 +101,7 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
 
 7.  When setup is complete, use the fully-qualified domain name to log into the Ambari server. Use the Ranger link in the left nav to bring up the Ranger Summary pane in the HAWQ Ambari interface. Use the Quick Links to access Ranger. This link will take you to the Ranger Login interface. 
 
-8.  Log into the Ranger Access Manager. You will see a list of icons under the Service Manager. Click the **Edit** icon on the right, under the HAWQ service icon. Ensure that the Active Status is set to Enabled, and click the **Test Connection** button. You should receive a message that Ranger connected successfully.  If it fails to connect, you may need to edit your Ranger connection in  `pg_hba.conf,` perform 
-
-  ``` bash
-   gpadmin@masterhawq stop cluster --reload
-   ```
-  and re-test the connection.
-
+8.  Log into the Ranger Access Manager. You will see a list of icons under the Service Manager. Click the **Edit** icon on the right, under the HAWQ service icon. Ensure that the Active Status is set to Enabled, and click the **Test Connection** button. You should receive a message that Ranger connected successfully.  If the connection fails, verify the `hawq` service Config Properties, as well as your `pg_hba.conf` entries, and re-test the connection.
 
 ## <a id="enable"></a>Step 2: Configure HAWQ to Use Ranger Policy Management
 
@@ -126,6 +118,37 @@ Once the connection between HAWQ and Ranger is configured, you can either set up
 6. Select **Service Actions > Restart All** and confirm that you want to restart the HAWQ cluster.
 
 
-## <a id="caching"></a>Changing the Frequency of Policy Caching
+## <a id="customconfig"></a> Custom Configuration
+
+Configuration files for the HAWQ Ranger Plug-in Service are located in the `$GPHOME/ranger/etc` directory. These files include:
+
+| File     |  Description     |
+|-------------|---------------------------|
+| ranger-hawq-audit.xml |  HAWQ Ranger audit-related configuration, including the audit provider (log4j, Solr, HDFS) and provider-specific configuration |
+| ranger-hawq-security.xml |  HAWQ Ranger service configuration, including the policy change polling interval |
+| rps.properties |  HAWQ Ranger deployment-related configuration, including the RPS port definition and JVM parameters|
+
+You should not need to modify RPS configuration in a default installation.  Any configuration changes you do make after you have registered the HAWQ Ranger Plug-in requires a restart of the service. You can either restart the HAWQ cluster or restart just the HAWQ Ranger Plug-in Service:
+
+``` shell
+gpadmin@master$ /usr/local/hawq/ranger/bin/rps.sh stop
+gpadmin@master$ /usr/local/hawq/ranger/bin/rps.sh start
+```
+
+### <a id="caching"></a>Changing the Frequency of Policy Caching
  
-You may wish to change the frequency of policy caching to suit your individual needs.
+The default polling interval for HAWQ RPS policy updates is 30 seconds. To increase or decrease this value, update the `ranger.plugin.hawq.policy.pollIntervalMs` property setting in the `ranger-hawq-security.xml` file:
+
+<pre>
+&lt;property&gt;
+    &lt;name&gt;ranger.plugin.hawq.policy.pollIntervalMs&lt;/name&gt;
+    <b>&lt;value&gt;30000&lt;/value&gt;</b>
+    &lt;description&gt;
+        How often to poll for changes in policies?
+    &lt;/description&gt;
+&lt;/property&gt;
+</pre>
+
+Provide a value in milliseconds.
+
+You must restart the HAWQ Ranger Plug-in Service as described above after updating the polling interval.
