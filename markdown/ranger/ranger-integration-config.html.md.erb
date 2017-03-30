@@ -128,7 +128,7 @@ Configuration files for the HAWQ Ranger Plug-in Service are located in the `$GPH
 | ranger-hawq-security.xml |  HAWQ Ranger service configuration, including the policy change polling interval |
 | rps.properties |  HAWQ Ranger deployment-related configuration, including the RPS port definition and JVM parameters|
 
-You should not need to modify RPS configuration in a default installation.  Any configuration changes you do make after you have registered the HAWQ Ranger Plug-in requires a restart of the service. You can either restart the HAWQ cluster or restart just the HAWQ Ranger Plug-in Service:
+You should not need to modify RPS configuration in a default installation.  Any configuration changes you do make after you have registered the HAWQ Ranger Plug-in require a restart of the service. You can either restart the HAWQ cluster or restart just the HAWQ Ranger Plug-in Service:
 
 ``` shell
 gpadmin@master$ /usr/local/hawq/ranger/bin/rps.sh stop
