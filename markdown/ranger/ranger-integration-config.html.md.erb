@@ -73,18 +73,29 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
     ``` bash
     gpadmin@master$ cd /usr/local/hawq/ranger/bin
     gpadmin@master$ ./enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_master:5432 -w gpadmin -q gpadmin
+    RANGER URL  = localhost:6080
+    RANGER User = admin
+    RANGER Password = [*****]
+    HAWQ HOST = localhost
+    HAWQ PORT = 5432
+    HAWQ User = gpadmin
+    HAWQ Password = [*******]
+    HAWQ service definition was not found in Ranger Admin, creating it by uploading /usr/local/hawq_2_2_0_0/ranger/etc/ranger-servicedef-hawq.json
+    HAWQ service instance was not found in Ranger Admin, creating it.
+    Updated POLICY_MGR_URL to http://localhost:6080 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
+    Updated default value of JAVA_HOME to /usr/jdk64/jdk1.8.0_77 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
     ```
     
     **Note**: You can also enter the short form of the command: `./enable-ranger-plugin.sh -r` and the script will prompt you for entries.
     
     When the script completes, the default HAWQ service definition is registered in the Ranger Admin UI. This service definition is named `hawq`.
 
-6. Locate the `pg_hba.conf` file on the HAWQ master node, for example:
+6. Locate the `pg_hba.conf` file in the master directory of the HAWQ master node. To display the HAWQ master directory:
  
     ``` bash
     gpadmin@master$ hawq config --show hawq_master_directory
     GUC		: hawq_master_directory
-    Value		: /data/hawq/master
+    Value	: /data/hawq/master
     ```
 
     Edit the `pg_hba.conf` file on the HAWQ master node to configure HAWQ access for \<hawq_user\> on the \<ranger-admin-node\>. For example, you would add an entry similar to the following for the example `enable-ranger-plugin.sh` call above:
@@ -99,9 +110,9 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
     gpadmin@master$ hawq stop cluster --reload
     ```
 
-7.  When setup is complete, use the fully-qualified domain name to log into the Ambari server. Use the Ranger link in the left nav to bring up the Ranger Summary pane in the HAWQ Ambari interface. Use the Quick Links to access Ranger. This link will take you to the Ranger Login interface. 
+7.  After HAWQ reloads the configuration, use the fully-qualified domain name to log into the Ambari server. Click the **Ranger** link to display the Ranger Summary page, then select **Quick Links > Ranger Admin UI**. 
 
-8.  Log into the Ranger Access Manager. You will see a list of icons under the Service Manager. Click the **Edit** icon on the right, under the HAWQ service icon. Ensure that the Active Status is set to Enabled, and click the **Test Connection** button. You should receive a message that Ranger connected successfully.  If the connection fails, verify the `hawq` service Config Properties, as well as your `pg_hba.conf` entries, and re-test the connection.
+8.  Log into the Ranger Access Manager. Click the **Edit** button for the **HAWQ** service. Ensure that the Active Status is set to Enabled, and click **Test Connection**. You should receive a message that Ranger connected successfully.  If the connection fails, verify the `hawq` service Config Properties, as well as your `pg_hba.conf` entries, and re-test the connection.
 
 ## <a id="enable"></a>Step 2: Configure HAWQ to Use Ranger Policy Management
 
