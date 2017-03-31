@@ -36,7 +36,7 @@ The Ranger plug-in service caches Ranger policies locally on each HAWQ node to a
 ## <a id="limitations"></a>Limitations of Ranger Policy Management
 Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
 
-The Ranger plug-in service is not compatible Highly-Available Ranger deployments. The plug-in will not connect to another Ranger Policy Manager if a failure occurs.
+The Ranger plug-in service is not compatible Highly-Available Ranger deployments. The plug-in will not connect to another Ranger Policy Manager if a failure occurs. Should you need to activate the standby master in your HAWQ cluster, you must update the HAWQ Ranger service definition with the new master node connection information.
 
 HAWQ supports setting user-level authorization policies with Ranger. These correspond to access policies that would typically be applied using the SQL `GRANT` command, and include authorization events for:
 
@@ -48,17 +48,5 @@ HAWQ supports setting user-level authorization policies with Ranger. These corre
 - Languages
 - Protocols
 
-All authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. These superuser-restricted events include:
-
-- `CREATE CAST` command
-- `CREATE FILESPACE` command
-- `CREATE`, `DROP`, or `ALTER` commands that involve a foreign-data wrapper
-- `CREATE FUNCTION` command for untrusted languages.
-- `CREATE` or `DROP` commands for procedural Languages
-- `CREATE`, `DROP`, or `ALTER` commands for resource queues
-- `CREATE TABLESPACE` command. Note that Ranger does manage authorization for creating databases, tables, indexes, and so forth _within_ an existing tablespace.
-- `CREATE EXTERNAL TABLE` commands that include the `EXECUTE` clause.
-- `CREATE OPERATOR CLASS` command
-- `COPY` command. Use of the `COPY` command is always limited to the superuser. When Ranger policy management is enabled, the superuser must have `SELECT` or `INSERT` privileges on a table in order to `COPY` from or to that table.
-- Built-in functions such as pg_logdir_ls, pg_ls_dir, pg_read_file, pg_reload_conf, pg_rotate_logfile, pg_signal_backend, pg_start_backup,  pg_stat_file, pg_stat_get_activity, pg_stat_get_backend_activity_start, pg_stat_get_backend_activity, pg_stat_get_backend_client_addr, pg_stat_get_backend_client_port, pg_stat_get_backend_start, pg_stat_get_backend_waiting, pg_stop_backup, pg_switch_xlog, and pg_stat_reset.
+Some authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. See [HAWQ-Native Authorization](ranger-policy-creation.html#alwaysnative).
 
