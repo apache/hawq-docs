@@ -33,10 +33,10 @@ A single configuration parameter, `hawq_acl_type` determines whether HAWQ defers
 
 The Ranger plug-in service caches Ranger policies locally on each HAWQ node to avoid unnecessary round trips between the HAWQ node and the Ranger Policy Manager server. You can use the configuration property `ranger.plugin.hawq.policy.pollIntervalMs` to control how frequently the plug-in service contacts the Ranger Policy Manager to refresh cached policies. See [Changing the Frequency of Policy Caching](ranger-integration-config.html#caching).
 
-## <a id="limitations"></a>Limitations of Ranger Policy Management
+## <a id="limitations"></a>Limitations of Ranger Policy Management in HAWQ 2.2.0.0-incubating
 Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
 
-The Ranger plug-in service is not compatible Highly-Available Ranger deployments. The plug-in will not connect to another Ranger Policy Manager if a failure occurs. Should you need to activate the standby master in your HAWQ cluster, you must update the HAWQ Ranger service definition with the new master node connection information.
+The Ranger plug-in service is not compatible Highly-Available HAWQ deployments. Should you need to activate the standby master in your HAWQ cluster, you must manually update the HAWQ Ranger service definition with the new master node connection information.
 
 HAWQ supports setting user-level authorization policies with Ranger. These correspond to access policies that would typically be applied using the SQL `GRANT` command, and include authorization events for:
 
