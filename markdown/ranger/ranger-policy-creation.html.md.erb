@@ -53,13 +53,14 @@ The `pg_hba.conf` file on the HAWQ master node identifies the users you permit t
 HAWQ *always* employs its native authorization for operations on its catalog. HAWQ also uses only native authorization for the following HAWQ operations, *even when Ranger is enabled*. These operations are available to superusers and may be available those non-admin users to which access was specifically configured:
 
 - operations on HAWQ catalog
-- HAWQ catalog-related built-in functions
 - `CREATE CAST` command when function is NULL
 - `CREATE DATABASE`, `DROP DATABASE`, `createdb`, `dropdb`
 - `hawq filespace`
 - `CREATE`, `DROP`, or `ALTER` commands for resource queues
 - `CREATE ROLE`, `DROP ROLE`, `SET ROLE`, `createuser`, `dropuser`
 - `CREATE TABLESPACE`, `DROP TABLESPACE` (Ranger does manage authorization for creating tables and indexes _within_ an existing tablespace.)
+- HAWQ catalog-related built-in functions such as pg\_logdir\_ls, pg\_ls\_dir, pg\_read\_file, pg\_reload\_conf, pg\_rotate\_logfile, pg\_signal\_backend, pg\_start\_backup,  pg\_stat\_file, pg\_stat\_get\_activity, pg\_stat\_get\_backend\_activity\_start, pg\_stat\_get\_backend\_activity, pg\_stat\_get\_backend\_client\_addr, pg\_stat\_get\_backend\_client\_port, pg\_stat\_get\_backend\_start, pg\_stat\_get\_backend\_waiting, pg\_stop\_backup, pg\_switch\_xlog, and pg\_stat\_reset.
+
 
 The following SQL operations do not require any authorization checks:
 
