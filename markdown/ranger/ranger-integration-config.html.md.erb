@@ -73,16 +73,16 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
     ``` bash
     gpadmin@master$ cd /usr/local/hawq/ranger/bin
     gpadmin@master$ ./enable-ranger-plugin.sh -r ranger_host:6080 -u admin -p admin -h hawq_master:5432 -w gpadmin -q gpadmin
-    RANGER URL  = localhost:6080
+    RANGER URL  = ranger_host:6080
     RANGER User = admin
     RANGER Password = [*****]
-    HAWQ HOST = localhost
+    HAWQ HOST = hawq_master
     HAWQ PORT = 5432
     HAWQ User = gpadmin
     HAWQ Password = [*******]
     HAWQ service definition was not found in Ranger Admin, creating it by uploading /usr/local/hawq_2_2_0_0/ranger/etc/ranger-servicedef-hawq.json
     HAWQ service instance was not found in Ranger Admin, creating it.
-    Updated POLICY_MGR_URL to http://localhost:6080 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
+    Updated POLICY_MGR_URL to http://ranger_host:6080 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
     Updated default value of JAVA_HOME to /usr/jdk64/jdk1.8.0_77 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
     ```
     
