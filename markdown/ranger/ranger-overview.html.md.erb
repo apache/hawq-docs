@@ -23,6 +23,7 @@ under the License.
 
 HAWQ supports using Apache Ranger for authorizing user access to HAWQ resources. Using Ranger enables you to manage all of your Hadoop components' authorization policies using the same user interface, policy store, and auditing stores.
 
+See the [Apache Ranger documentation](http://ranger.apache.org/) for more information about the core functionality of Ranger.
 
 ## <a id="arch"></a>Policy Management Architecture
 
@@ -41,15 +42,7 @@ Neither Kerberos authentication nor SSL encryption is supported between a HAWQ n
 
 The Ranger plug-in service is not compatible with Highly-Available HAWQ deployments. Should you need to activate the standby master in your HAWQ cluster, you must manually update the HAWQ Ranger service definition with the new master node connection information.
 
-HAWQ supports setting user-level authorization policies with Ranger. These correspond to access policies that would typically be applied using the SQL `GRANT` command, and include authorization events for:
-
-- Databases
-- Schemas
-- Tables
-- Sequences
-- Functions
-- Languages
-- Protocols
+Ranger User Group policies cannot be used with HAWQ in this release. Only User Policies are currently supported.
 
 Some authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. See [HAWQ-Native Authorization](ranger-policy-creation.html#alwaysnative).
 
