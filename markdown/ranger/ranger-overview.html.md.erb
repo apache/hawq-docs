@@ -36,7 +36,7 @@ The Ranger plug-in service caches Ranger policies locally on each HAWQ node to a
 ## <a id="limitations"></a>Limitations of Ranger Policy Management in HAWQ 2.2.0.0-incubating
 Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
 
-The Ranger plug-in service is not compatible Highly-Available HAWQ deployments. Should you need to activate the standby master in your HAWQ cluster, you must manually update the HAWQ Ranger service definition with the new master node connection information.
+The Ranger plug-in service is not compatible with Highly-Available HAWQ deployments. Should you need to activate the standby master in your HAWQ cluster, you must manually update the HAWQ Ranger service definition with the new master node connection information.
 
 HAWQ supports setting user-level authorization policies with Ranger. These correspond to access policies that would typically be applied using the SQL `GRANT` command, and include authorization events for:
 
