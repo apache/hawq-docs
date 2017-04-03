@@ -23,22 +23,22 @@ under the License.
 
 Ranger secures your Hadoop services, providing a centralized console to manage user access to the data in your HAWQ cluster.
 
-Native HAWQ authorization provides SQL standard authorization at the database and table level for specific users/roles using `GRANT` and `REVOKE` SQL commands. HAWQ integration with Ranger provides policy-based authorization, enabling you to identify the conditions under which a user and/or group can access individual HAWQ resources, including the operations permitted on those resources. 
+Native HAWQ authorization provides SQL standard authorization at the database and table level for specific users/roles using the `GRANT` and `REVOKE` SQL commands. HAWQ integration with Ranger provides policy-based authorization, enabling you to identify the conditions under which a user and/or group can access individual HAWQ resources, including the operations permitted on those resources. 
 
-**Note**: The HAWQ `GRANT` and `REVOKE` operations are not permitted when Ranger authorization is enabled for HAWQ; you must configure all user and object access through Ranger policies.
+**Note**: The HAWQ `GRANT` and `REVOKE` operations are not permitted when Ranger authorization is enabled for HAWQ; you must configure all user and object access using Ranger policies.
 
-You will configure HAWQ-Ranger authorization through the Ranger Administrative UI, which you can access at `http://<ranger-admin-node>:6080`.
+You configure HAWQ-Ranger authorization with the Ranger Administrative UI, which you can access at `http://<ranger-admin-node>:6080`.
 
 
-## <a id="userrole"></a>User/Role Mapping
+## <a id="userrole"></a>User and Role Mapping
 
-When configuring your HAWQ cluster, you identify the HAWQ database objects to which you want specific users to have access. This configuration is required for both HAWQ-Native and HAWQ-Ranger authorization. 
+With either HAWQ native or Ranger authorization, you identify the HAWQ database objects to which you want specific users to have access. 
 
-You create HAWQ users with the `createuser` command line utility or `CREATE ROLE` SQL command. These HAWQ users may or may not reflect an underlying operating system user.
+You create HAWQ users with the `createuser` command line utility or `CREATE ROLE` SQL command. These HAWQ users may or may not correspond to an underlying operating system user.
 
-Ranger includes a `UserSync` process to synchronize users and groups on the \<ranger-admin-node\>. You can sync users and groups from the operating system (default), a file, or from LDAP/AD services. Once the sync source is identified, Ranger `UserSync` automatically detects new users provisioned on the \<ranger-admin-node\>.
+Ranger includes a `UserSync` process that synchronizes users and groups on the Ranger administration node. You can synchronize users and groups from the operating system (default), from a file, or from LDAP/AD services. After the synchronization source is identified, the Ranger `UserSync` process automatically detects when new users provisioned and adds them on the Ranger administration node.
 
-If your HAWQ cluster includes HAWQ-only roles (i.e. roles with no associated OS user), you must manually configure a Ranger user for each such role. You would use the Ranger Admin UI **Settings > Users/Groups** page for this purpose.
+If your HAWQ cluster includes HAWQ-only roles (roles that have no associated operating system user), then you must manually configure a Ranger user for each such role. Use the Ranger Admin UI **Settings > Users/Groups** page for this purpose.
 
 
 
@@ -49,13 +49,13 @@ If your HAWQ cluster includes HAWQ-only roles (i.e. roles with no associated OS 
 The `pg_hba.conf` file on the HAWQ master node identifies the users you permit to access the HAWQ cluster, and the hosts from which the access may be initiated. This authentication is the first line of defense for both HAWQ-Native and HAWQ-Ranger authorization.
 
 
-### <a id="alwaysnative"></a> HAWQ-Native Authorization
+### <a id="alwaysnative"></a> HAWQ Native Authorization
 HAWQ *always* employs its native authorization for operations on its catalog. HAWQ also uses only native authorization for the following HAWQ operations, *even when Ranger is enabled*. These operations are available to superusers and may be available those non-admin users to which access was specifically configured:
 
 - operations on HAWQ catalog
 - `CREATE CAST` command when function is NULL
 - `CREATE DATABASE`, `DROP DATABASE`, `createdb`, `dropdb`
-- `hawq filespace`
+- `hawq filespace` management tool
 - `CREATE`, `DROP`, or `ALTER` commands for resource queues
 - `CREATE ROLE`, `DROP ROLE`, `SET ROLE`, `createuser`, `dropuser`
 - `CREATE TABLESPACE`, `DROP TABLESPACE` (Ranger does manage authorization for creating tables and indexes _within_ an existing tablespace.)
@@ -68,22 +68,22 @@ The following SQL operations do not require any authorization checks:
 - `SET`, `RESET`
 
 
-### <a id="rangersuperuser"></a> HAWQ-Ranger Authorization
-When Ranger is enabled, HAWQ-Ranger authorization is employed for access to user  database objects outside of the operations mentioned above. HAWQ will deny an operation if no policy exists providing the appropriate permissions for the requesting user to access the specific resource(s). 
+### <a id="rangersuperuser"></a> Ranger Authorization
+When Ranger authorization is enabled, HAWQ uses Ranger policies to determine access to all user database objects, apart from the operations listed above. HAWQ denies a user operation if no policy exists to provide the necessary permissions for the requesting user to access the specific resource(s). 
 
-In cases where an operation requires super-user privileges, HAWQ first performs a super-user check, then requests the Ranger access check. Those operations requiring super-user checks include:
+In cases where an operation requires super-user privileges, HAWQ first performs a super-user check, and then requests the Ranger policy check. Operations that require super-user checks include:
 
 - `CREATE`, `DROP`, or `ALTER` commands that involve a foreign-data wrapper
-- `CREATE LANGUAGE`, `DROP LANGUAGE` for non-built-in languages
-- `CREATE FUNCTION` command for untrusted languages.
-- `CREATE EXTERNAL TABLE` commands that include the `EXECUTE` clause.
+- `CREATE LANGUAGE` and `DROP LANGUAGE` for non-built-in languages
+- `CREATE FUNCTION` command for untrusted languages
+- `CREATE EXTERNAL TABLE` commands that include the `EXECUTE` clause
 - `CREATE OPERATOR CLASS` command
-- `COPY` command. Use of the `COPY` command is always limited to the superuser. When Ranger policy management is enabled, the superuser must have `SELECT` or `INSERT` privileges on a table in order to `COPY` from or to that table.
+- `COPY` command. Using `COPY` is always limited to the super-user. When Ranger policy management is enabled, the super-user must have `SELECT` or `INSERT` privileges on a table in order to `COPY` from or to that table.
 
 
 ### <a id="authalgorithm"></a> Access Check Algorithm
 
-A simple algorithm describing the HAWQ access checks follows:
+This algorithm describes HAWQ access checking:
 
 ``` pre
 1. Confirm user access allowed by pg_hba.conf file
@@ -101,26 +101,26 @@ A simple algorithm describing the HAWQ access checks follows:
 ```
 
 ## <a id="policyeval"></a> Ranger Policy Evaluation
-Ranger evaluates policies from most to least restrictive, searching for a policy with sufficient privileges allowing the requesting user access to the identified resource(s). Deny conditions are evaluated before allow conditions. And policies for specific resources are evaluated before those identifying a wildcard `*` resource.
+Ranger evaluates policies from most to least restrictive, searching for a policy with sufficient privileges to allow the requesting user to access the identified resource(s). Deny conditions are evaluated before allow conditions. Policies for specific resources are evaluated before policies that specify a wildcard `*` resource.
 
-Refer to the [Ranger User Guide ??apache or hortonworks??](https://docs.hortonworks.com/HDPDocuments/HDP2/HDP-2.4.0/bk_Ranger_User_Guide/bk_Ranger_User_Guide-20160301.pdf) and [Deny-conditions and excludes in Ranger policies](https://cwiki.apache.org/confluence/display/RANGER/Deny-conditions+and+excludes+in+Ranger+policies) for detailed information on the Ranger Admin UI and Ranger policy evaluation.
+Refer to the [Ranger User Guide](https://cwiki.apache.org/confluence/display/RANGER/Apache+Ranger+0.5+-+User+Guide) and [Deny-conditions and excludes in Ranger policies](https://cwiki.apache.org/confluence/display/RANGER/Deny-conditions+and+excludes+in+Ranger+policies) for detailed information about the Ranger Admin UI and Ranger policy evaluation.
 
 
 ## <a id="policydef"></a> HAWQ Policy Definition
 
-When configuring a HAWQ-Ranger authorization policy, you:
+To configure a Ranger authorization policy for HAWQ, you:
 
-- Name and provide a description for the policy
-- Identify the HAWQ resource(s) to which the policy applies
-- Identify the conditions under which access to the HAWQ resource(s) should be allowed
-- Enable/Disable audit logging for the policy
+1.  Name and provide a description for the policy.
+2.  Identify the HAWQ resource(s) to which the policy applies.
+3.  Identify the conditions under which access to the HAWQ resource(s) should be allowed.
+4.  Enable/Disable audit logging for the policy.
 
 ![HAWQ Policy Details](../images/hawqpolicydetails.png)
 
 
 ### <a id="createpoliciesresource"></a> HAWQ Ranger Resources
 
-You configure the resources to which a HAWQ policy applies in the **Create Policy > Policy Details** pane of the Ranger HAWQ Policy editor. HAWQ resources whose access is managed by Ranger include:
+Configure the resources to which a HAWQ policy applies in the **Create Policy > Policy Details** page of the Ranger HAWQ Policy editor. Ranger manages access to the following HAWQ resources:
 
 | Resource    |  Description     |
 |-------------|------------------------|
@@ -133,7 +133,7 @@ You configure the resources to which a HAWQ policy applies in the **Create Polic
 | tablespace |  The tablespace to which you want to provide access to create databases and tables |
 | protocol |  The protocol to which you want to provide access |
 
-The HAWQ Ranger service definition supports only the combinations of resources that reflect the scoping of database objects with HAWQ:
+The HAWQ Ranger service definition supports only those combinations of resources that reflect the actual scoping of database objects with HAWQ. These scopes are:
 
 - database/schema/table
 - database/schema/sequence
@@ -142,20 +142,20 @@ The HAWQ Ranger service definition supports only the combinations of resources t
 - tablespace
 - protocol
 
-The Ranger policy editor provides resource name look-up. That is, when you start entering data into a resource field, HAWQ populates a pop-up list with all existing HAWQ object names matching your text. 
+The Ranger policy editor provides resource name look-ups. When you start entering characters into a resource field, HAWQ populates a pop-up list with all existing HAWQ object names that atch your text. 
 
-The policy editor also allows you to wildcard (`*`) resources in policy details. More restrictive policies will not use wildcarding, but rather will identify specific resource names.
+The policy editor also allows you to include wildcard (`*`) resources and patterns in policy details. More restrictive policies do not use wildcarding, but instead identify specific resource names.
 
-When specifying resources and permissions in your set of policy definitions, you will want to take into consideration the operations you wish to permit on a resource itself, as well as the operations you may wish to allow on subordinate resources. 
+When you specify resources and permissions in a policy definition, take into consideration the operations that you want to permit on the resource itself, as well as the operations that you may want to permit on subordinate resources. 
 
 
 ### <a id="createpoliciesconditions"></a> Resource Access Conditions
 
-When defining a HAWQ policy via the Ranger Admin UI, you identify the Groups/Users to which to permit or deny access to the specified HAWQ resource(s). You also identify the permissions for the resource(s) that you wish to assign or deny to these users. You provide this information in the **Create Policy > Allow Conditions** and **Deny Conditions** panes of the Ranger HAWQ Policy editor.
+When you define a HAWQ policy using the Ranger Admin UI, you identify the Groups/Users to which the policy will permit or deny access for the specified HAWQ resource(s). You also identify the permissions for the resource(s) that you want to assign or deny to those users. Specify this information in the **Create Policy > Allow Conditions** and **Deny Conditions** panes of the Ranger HAWQ Policy editor.
 
 #### <a id="conditionusergroup"></a> Identifying Users and Groups
 
-You may identify one or more users and/or groups to which to provide or deny access to HAWQ resources in the Allow/Deny Conditions of a HAWQ policy. These users/groups must be known to Ranger. 
+You can identify one or more users and/or groups to which a policy provides or denies access in the Allow/Deny Conditions of a HAWQ policy. These users/groups must be known to Ranger. 
 
 | Field   | Value   |  Description     |
 |-------------|----------------------|------------------------|
@@ -165,7 +165,7 @@ You may identify one or more users and/or groups to which to provide or deny acc
 
 #### <a id="conditionperms"></a> Identifying Permissions
 
-You can assign users/groups the following permissions when allowing or denying access to specific HAWQ resources:
+You can assign users/groups the following permissions for allowing or denying access to specific HAWQ resources:
 
 | Permission   |  Description     |
 |-------------|-----------------------|
@@ -182,40 +182,38 @@ You can assign users/groups the following permissions when allowing or denying a
 | create-schema | Create a schema |
 | usage-schema | Use a schema |
 
-These permissions map pretty closely to the privileges you assign when using specific HAWQ `GRANT` commands when configuring HAWQ-Native authorization.
+These permissions map closely to the privileges that you can assign using HAWQ `GRANT` commands with HAWQ native authorization.
 
-**Note**: The HAWQ Ranger policy editor always displays the complete list of HAWQ permissions. This list is not filtered on the operations supported by the specific resource(s) you identify in the **Policy Details**.
+**Note**: The HAWQ Ranger policy editor always displays the complete list of HAWQ permissions. This list is not filtered by the operations that are actually supported by the resource(s) you have selected.
 
 ## <a id="createpolicies"></a>Creating HAWQ Policies
 
-You will configure HAWQ-Ranger authorization policies through the Ranger Administrative UI, which you access at `http://<ranger-admin-node>:6080`.
+Configure HAWQ-Ranger authorization policies using the Ranger Administrative UI, which you access at `http://<ranger-admin-node>:6080`.
 
-Define more restrictive HAWQ policies first to ensure that you do not accidentally provide unwanted access to specific resources.
+As a best practice, define more restrictive HAWQ policies first to ensure that you do not accidentally provide unwanted access to specific resources.
 
-It may take a collection of policies to provide access to a specific HAWQ database resource.
-
-MORE HERE
+It generally requires a collection of Ranger policies to provide access to a given HAWQ database resource.
 
 
 ### <a id="wildcardinpolicies"></a> Wildcarding in HAWQ Policies
 
-When defining a HAWQ policy, wildcarding (`*`) a leaf node resource will scope the policy at two levels:
+When you define a HAWQ policy, using the wildcard character (`*`) in a leaf node resource works to scope the policy in one of the following ways:
 
-1. `*` = no resource - permissions you identify are assigned to the parent resource
-2. `*` = all resources - permissions you identify are assigned to all instances of the resource at that level
+- `*` = no resource. All permissions in the policy apply to the parent resource.
+- `*` = all resources. All permissions in the policy apply to all instances of the resource at the leaf level.
 
-For example, consider the following policies assigned to user `hawquser1` for a table named `table99` in the `public` schema of database `testdb`:
+For example, consider the following two policies that are assigned to user `hawquser1` for a table named `table99` in the `public` schema of database `testdb`:
 
     Policy 1: testdb/public/*(table), usage-schema permission  
     Policy 2: testdb/public/table99, select permission
 
-Policies 1 and 2 collectively permit `hawquser1` to access the `public` schema of `testdb` and select from `table99` residing in that schema. In Policy 1, wildcarding is used to scope the permissions to those operations you can perform within the schema (`usage-schema`). `*`\(table\) in this context effectively acts as no tables. Policy 2 restricts the `select` operation to the specific table named `table99`.
+Policies 1 and 2 collectively permit `hawquser1` to access the `public` schema of `testdb` and to select from `table99` in that schema. Policy 1 applies a schema-level permission (`usage-schema`), and the wildcard character scopes this permission to those operations can be performed in the schema `public`. `*`\(table\) in this context applies the policy permission to no tables. Policy 2 restricts the `select` operation to the specific table named `table99`.
 
-Contrast this with the single policy below:
+Contrast this with the single policy:
 
     Policy 10: testdb/public/*(table), usage-schema and select permissions
 
-Policy 10 permits the policy holder to use the `public` schema and select from *any* table in the schema. In this policy, you use wildcarding and a subordinate object privilege (`select`) to apply a permission to **all** instances of the resource. `*`\(table\) in this context effectively applies to all tables.
+Policy 10 permits the policy holder to use the `public` schema and select from *any* table in the schema. In this policy, using the wildcard character with a subordinate object privilege, `select`, applies that permission to **all** instances of the leaf resource. `*`\(table\) in this context applies the policy permission to all tables in schema `public`.
 
 
 ### <a id="dbops"></a> Policies for Database Operations
