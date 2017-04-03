@@ -118,18 +118,9 @@ Once the connection between HAWQ and Ranger is configured, you can either set up
 6. Select **Service Actions > Restart All** and confirm that you want to restart the HAWQ cluster.
 
 
-## <a id="rpsadminstate"></a>Obtaining the Status of HAWQ/Ranger Integration
+## <a id="rpsadminstate"></a>Displaying the Status of HAWQ/Ranger Integration
 
 Determine the status of HAWQ/Ranger integration in your cluster by:
-
-- Examining the HAWQ packages on your system to verify that you have installed the HAWQ Ranger Plug-in Service. The HAWQ Ranger Plug-in is installed when you install HAWQ.
-
-    ``` shell
-    gpadmin@master$ rpm -qa | grep hawq-ranger
-    hawq-ranger-plugin_2_2_0_0-2.2.0.0-4134.el6.noarch
-    ```
-
-- Examining the Ranger Admin UI **Service Manager** page. If this page includes a HAWQ service definition named `hawq`, you have successfully registered the HAWQ Ranger Plug-in Service.
 
 - Identifying the access control method currently in place in your HAWQ cluster. If the `hawq_acl_type` server configuration parameter value is  set to `ranger`, you have enabled Ranger authorization for HAWQ.
 
@@ -148,7 +139,6 @@ Determine the status of HAWQ/Ranger integration in your cluster by:
     20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   HAWQ Ranger plugin service state               = Active
     ...
     ```
-
 
 ## <a id="customconfig"></a> Custom Configuration
 
