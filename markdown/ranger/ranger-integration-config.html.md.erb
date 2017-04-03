@@ -113,17 +113,17 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
 
 7.  After HAWQ reloads the configuration, use the fully-qualified domain name to log into the Ambari server. Click the **Ranger** link to display the Ranger Summary page, then select **Quick Links > Ranger Admin UI**. 
 
-8.  Log into the Ranger Access Manager. Click the **Edit** button for the **HAWQ** service. Ensure that the Active Status is set to Enabled, and click **Test Connection**. You should receive a message that Ranger connected successfully.  If the connection fails, verify the `hawq` service Config Properties, as well as your `pg_hba.conf` entries, and re-test the connection.
+8.  Log in to the Ranger Access Manager. Click the **Edit** button for the **HAWQ** service. Ensure that the Active Status is set to Enabled, and click **Test Connection**. You should receive a message that Ranger connected successfully.  If the connection fails, verify the `hawq` service Config Properties, as well as your `pg_hba.conf` entries, and re-test the connection.
 
 ## <a id="enable"></a>Step 2: Configure HAWQ to Use Ranger Policy Management
 
 The default Ranger service definition for HAWQ assigns the HAWQ administrator (typically `gpadmin`) all privileges to all objects. 
 
-Once the connection between HAWQ and Ranger is configured, you can either set up policies for the HAWQ users according to the procedures in [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) or enable Ranger with only the default policies. 
+Once the connection between HAWQ and Ranger is configured, you may choose to set up policies for the HAWQ users according to the procedures in [Creating HAWQ Authorization Policies in Ranger](ranger-policy-creation.html) or enable Ranger with only the default policies. 
 
-**Note**: Any authorization defined using GRANT commands will no longer apply after enabling HAWQ Ranger. Only gpadmin access is allowed when Ranger is first initialized.
+**Note**: Any authorization defined using `GRANT` commands will no longer apply after enabling HAWQ Ranger. Enabling Ranger authorization for HAWQ with only the default policies defined provides access only to the `gpadmin` user.
 
-1. On Ambari, select the **HAWQ** Service, and then select the **Configs** tab.
+1. Log in to the Ambari UI, select the **HAWQ** Service, and then select the **Configs** tab.
 2. Select the **Advanced** tab, and then expand **Custom hawq-site**.
 4. Click **Add Property...** and add the new property, `hawq_acl_type=ranger` property. (If the property already exists, change its value from `standalone` (the default) to `ranger`.)
 5. Click **Save** to save your changes.
@@ -147,20 +147,11 @@ gpadmin@master$ /usr/local/hawq/ranger/bin/rps.sh stop
 gpadmin@master$ /usr/local/hawq/ranger/bin/rps.sh start
 ```
 
-### <a id="caching"></a>Changing the Frequency of Policy Caching
- 
-The default polling interval for HAWQ Ranger Plug-in Service policy updates is 30 seconds. To increase or decrease this value, update the `ranger.plugin.hawq.policy.pollIntervalMs` property setting in the `ranger-hawq-security.xml` file:
+## <a id="troubleshoot"></a> Troubleshooting Ranger Configuration
 
-<pre>
-&lt;property&gt;
-    &lt;name&gt;ranger.plugin.hawq.policy.pollIntervalMs&lt;/name&gt;
-    <b>&lt;value&gt;30000&lt;/value&gt;</b>
-    &lt;description&gt;
-        How often to poll for changes in policies?
-    &lt;/description&gt;
-&lt;/property&gt;
-</pre>
+If resource name lookup is not working in the Ranger Admin UI:
 
-Provide a value in milliseconds.
+1. Verify that the HAWQ Ranger plug-in JARs and JDBC driver have been copied to \<ranger-admin-node\>.
+2. Test the connection between the Ranger Admin UI and the HAWQ master node by clicking the edit icon associated with the active HAWQ service definition, then clicking the **Config Properties: > Test Connection** button.
+3. Verify that the HAWQ master node `pg_hba.conf` file includes a `host` entry for \<ranger-admin-node\>, HAWQ user (typically `gpadmin`).
 
-You must restart the HAWQ Ranger Plug-in Service as described above after updating the polling interval.

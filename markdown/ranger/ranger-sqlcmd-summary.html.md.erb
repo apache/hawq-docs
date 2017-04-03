@@ -1,0 +1,74 @@
+---
+title: SQL Command Permissions Summary
+---
+
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+The following table identifies the permissions required for common SQL commands.
+
+**Notes**: 
+
+- A `&&` in **SQL Command** column identifies a super-user operation.
+- A `##` in the **Resource** column signifies that additional policies may be required to provide access to resources used within the operation(s).
+
+
+| SQL Command    | Permission     |  Resource |
+|-------------|----------------------|------------------------|
+| \d | usage-schema | \<db-name\>/public/`*` |
+| ANALYZE \<table-name\>| usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| ALTER AGGREGATE ... RENAME TO  | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
+| ALTER SEQUENCE  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| ALTER TABLE ... RENAME  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| ALTER TABLE \<table-name\><p>SET DISTRIBUTED BY  | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| BEGIN ... COMMIT   | usage-schema | \<db-name\>/\<schema-name\>/`*`<p>## |
+| \c, CONNECT \<db-name\>| connect | \<db-name\>/`*`/`*` |
+| COPY \<table-name\> FROM && | usage-schema<p>insert, select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| COPY \<table-name\> TO | usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| CREATE AGGREGATE | usage-schema, create<p>execute | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<sfunc-name\> |
+| CREATE EXTERNAL TABLE  | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<protocol-name\> |
+| CREATE FUNCTION \<function-name\><p>(trusted \<language-name\>) | usage-schema, create<p>usage<p>execute | \<db-name\>/\<schema-name\>/`*`<p><p>\<db-name\>/\<language-name\><p>\<db-name\>/\<schema-name\>/\<function-name\><p>## |
+| CREATE FUNCTION \<function-name\><p>(untrusted \<language-name\>) && | usage-schema, create<p>usage<p>execute | \<db-name\>/\<schema-name\>/`*`<p><p>\<db-name\>/\<language-name\><p>\<db-name\>/\<schema-name\>/\<function-name\><p>## |
+| CREATE LANGUAGE &&  | usage | \<db-name\>/c |
+| CREATE OPERATOR<p>CREATE SEQUENCE<p>CREATE TABLE<p>CREATE TYPE<p>CREATE VIEW | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
+| CREATE OPERATOR CLASS && | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
+| CREATE SCHEMA | create-schema | \<db-name\>/`*`/`*` |
+| CREATE TABLE (\<private-schema\>)  | create | \<db-name\>/\<private-schema\>/`*` |
+| CREATE TABLE ... AS  | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| CREATE ... TABLESPACE<p>\<tablespace-name\>  | usage-schema, create<p>create | \<db-name\>/\<schema-name\>/`*`<p>\<tablespace-name\> |
+| CREATE TEMP SEQUENCE | temp | \<db-name\>/`*`/`*` |
+| CREATE TEMP TABLE | temp | \<db-name\>/`*`/`*` |
+| CREATE WRITABLE EXTERNAL<p> TABLE | usage-schema, create<p>insert | \<db-name\>/\<schema-name\>/`*`<p>\<protocol-name\> |
+| DROP AGGREGATE<p>DROP FUNCTION<p>DROP OPERATOR<p>DROP SCHEMA<p>DROP TABLE<p>DROP VIEW   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| DROP OPERATOR CLASS &&  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| EXECUTE   | usage-schema | \<db-name\>/\<schema-name\>/`*`<p>## |
+| EXPLAIN   | usage-schema | \<db-name\>/\<schema-name\>/`*`<p>## |
+| INSERT INTO \<table-name\>  | usage-schema<p>insert | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| PREPARE   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| SELECT \<aggregate-name\> | usage-schema<p>execute<p>execute | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<aggregate-name\> <p>\<db-name\>/\<schema-name\>/\<sfunc-name\> <p>##|
+| SELECT \<function-name\> | usage-schema<p>execute | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<function-name\> <p>##|
+| SELECT (using operator) | execute | \<db-name\>/\<schema-name\>/\<operator-procedure\> <p>## |
+| SELECT...FROM \<table-name\> | usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| SELECT...INTO...FROM \<table-name\> | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+| SELECT...FROM \<view-name\> | usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<view-name\><p>## |
+| TRUNCATE  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| VACUUM  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
+| VACUUM ANALYZE \<table-name\>| usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
+
+

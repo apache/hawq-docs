@@ -27,88 +27,10 @@ Native HAWQ authorization provides SQL standard authorization at the database an
 
 **Note**: The HAWQ `GRANT` and `REVOKE` operations are not permitted when Ranger authorization is enabled for HAWQ; you must configure all user and object access using Ranger policies.
 
-You configure HAWQ-Ranger authorization with the Ranger Administrative UI, which you can access at `http://<ranger-admin-node>:6080`.
 
+## <a id="policydef"></a> Defining HAWQ Policies
 
-## <a id="userrole"></a>User and Role Mapping
-
-With either HAWQ native or Ranger authorization, you identify the HAWQ database objects to which you want specific users to have access. 
-
-You create HAWQ users with the `createuser` command line utility or `CREATE ROLE` SQL command. These HAWQ users may or may not correspond to an underlying operating system user.
-
-Ranger includes a `UserSync` process that synchronizes users and groups on the Ranger administration node. You can synchronize users and groups from the operating system (default), from a file, or from LDAP/AD services. After the synchronization source is identified, the Ranger `UserSync` process automatically detects when new users provisioned and adds them on the Ranger administration node.
-
-If your HAWQ cluster includes HAWQ-only roles (roles that have no associated operating system user), then you must manually configure a Ranger user for each such role. Use the Ranger Admin UI **Settings > Users/Groups** page for this purpose.
-
-
-
-## <a id="authchecks"></a>HAWQ Authorization
-
-
-### <a id="pghbaconf"></a> pg_hba.conf
-The `pg_hba.conf` file on the HAWQ master node identifies the users you permit to access the HAWQ cluster, and the hosts from which the access may be initiated. This authentication is the first line of defense for both HAWQ-Native and HAWQ-Ranger authorization.
-
-
-### <a id="alwaysnative"></a> HAWQ Native Authorization
-HAWQ *always* employs its native authorization for operations on its catalog. HAWQ also uses only native authorization for the following HAWQ operations, *even when Ranger is enabled*. These operations are available to superusers and may be available those non-admin users to which access was specifically configured:
-
-- operations on HAWQ catalog
-- `CREATE CAST` command when function is NULL
-- `CREATE DATABASE`, `DROP DATABASE`, `createdb`, `dropdb`
-- `hawq filespace` management tool
-- `CREATE`, `DROP`, or `ALTER` commands for resource queues
-- `CREATE ROLE`, `DROP ROLE`, `SET ROLE`, `createuser`, `dropuser`
-- `CREATE TABLESPACE`, `DROP TABLESPACE` (Ranger does manage authorization for creating tables and indexes _within_ an existing tablespace.)
-- HAWQ catalog-related built-in functions such as pg\_logdir\_ls, pg\_ls\_dir, pg\_read\_file, pg\_reload\_conf, pg\_rotate\_logfile, pg\_signal\_backend, pg\_start\_backup,  pg\_stat\_file, pg\_stat\_get\_activity, pg\_stat\_get\_backend\_activity\_start, pg\_stat\_get\_backend\_activity, pg\_stat\_get\_backend\_client\_addr, pg\_stat\_get\_backend\_client\_port, pg\_stat\_get\_backend\_start, pg\_stat\_get\_backend\_waiting, pg\_stop\_backup, pg\_switch\_xlog, and pg\_stat\_reset.
-
-
-The following SQL operations do not require any authorization checks:
-
-- `DEALLOCATE`
-- `SET`, `RESET`
-
-
-### <a id="rangersuperuser"></a> Ranger Authorization
-When Ranger authorization is enabled, HAWQ uses Ranger policies to determine access to all user database objects, apart from the operations listed above. HAWQ denies a user operation if no policy exists to provide the necessary permissions for the requesting user to access the specific resource(s). 
-
-In cases where an operation requires super-user privileges, HAWQ first performs a super-user check, and then requests the Ranger policy check. Operations that require super-user checks include:
-
-- `CREATE`, `DROP`, or `ALTER` commands that involve a foreign-data wrapper
-- `CREATE LANGUAGE` and `DROP LANGUAGE` for non-built-in languages
-- `CREATE FUNCTION` command for untrusted languages
-- `CREATE EXTERNAL TABLE` commands that include the `EXECUTE` clause
-- `CREATE OPERATOR CLASS` command
-- `COPY` command. Using `COPY` is always limited to the super-user. When Ranger policy management is enabled, the super-user must have `SELECT` or `INSERT` privileges on a table in order to `COPY` from or to that table.
-
-
-### <a id="authalgorithm"></a> Access Check Algorithm
-
-This algorithm describes HAWQ access checking:
-
-``` pre
-1. Confirm user access allowed by pg_hba.conf file
-2. Perform HAWQ access checks
-     user-is-superuser = (is user superuser?)
-     op-needs-superuser = (does operation require superuser?)
-     use-hawq-native-auth = (does operation require hawq-native authorization?)
-     ranger-enabled = (is ranger enabled?)
-     - If( op-needs-superuser && !user-is-superuser )
-          Denied
-     - If( use-hawq-native-auth || !ranger-enabled )
-          HAWQ-Native authorization check
-       Else   
-          HAWQ-Ranger policy check
-```
-
-## <a id="policyeval"></a> Ranger Policy Evaluation
-Ranger evaluates policies from most to least restrictive, searching for a policy with sufficient privileges to allow the requesting user to access the identified resource(s). Deny conditions are evaluated before allow conditions. Policies for specific resources are evaluated before policies that specify a wildcard `*` resource.
-
-Refer to the [Ranger User Guide](https://cwiki.apache.org/confluence/display/RANGER/Apache+Ranger+0.5+-+User+Guide) and [Deny-conditions and excludes in Ranger policies](https://cwiki.apache.org/confluence/display/RANGER/Deny-conditions+and+excludes+in+Ranger+policies) for detailed information about the Ranger Admin UI and Ranger policy evaluation.
-
-
-## <a id="policydef"></a> HAWQ Policy Definition
-
-To configure a Ranger authorization policy for HAWQ, you:
+You configure HAWQ-Ranger authorization with the Ranger Administrative UI, which you can access at `http://<ranger-admin-node>:6080`. To configure a Ranger authorization policy for HAWQ, you:
 
 1.  Name and provide a description for the policy.
 2.  Identify the HAWQ resource(s) to which the policy applies.
@@ -133,7 +55,7 @@ Configure the resources to which a HAWQ policy applies in the **Create Policy > 
 | tablespace |  The tablespace to which you want to provide access to create databases and tables |
 | protocol |  The protocol to which you want to provide access |
 
-The HAWQ Ranger service definition supports only those combinations of resources that reflect the actual scoping of database objects with HAWQ. These scopes are:
+The HAWQ Ranger service definition supports only those combinations of resources that reflect the actual scoping of database objects with HAWQ. These combinations are:
 
 - database/schema/table
 - database/schema/sequence
@@ -142,18 +64,19 @@ The HAWQ Ranger service definition supports only those combinations of resources
 - tablespace
 - protocol
 
-The Ranger policy editor provides resource name look-ups. When you start entering characters into a resource field, HAWQ populates a pop-up list with all existing HAWQ object names that atch your text. 
-
-The policy editor also allows you to include wildcard (`*`) resources and patterns in policy details. More restrictive policies do not use wildcarding, but instead identify specific resource names.
-
-When you specify resources and permissions in a policy definition, take into consideration the operations that you want to permit on the resource itself, as well as the operations that you may want to permit on subordinate resources. 
-
-
+The Ranger policy editor provides resource name look-ups. When you start entering characters into a resource field, HAWQ populates a pop-up list with all existing HAWQ object names that match your text. 
+ 
 ### <a id="createpoliciesconditions"></a> Resource Access Conditions
 
 When you define a HAWQ policy using the Ranger Admin UI, you identify the Groups/Users to which the policy will permit or deny access for the specified HAWQ resource(s). You also identify the permissions for the resource(s) that you want to assign or deny to those users. Specify this information in the **Create Policy > Allow Conditions** and **Deny Conditions** panes of the Ranger HAWQ Policy editor.
 
-#### <a id="conditionusergroup"></a> Identifying Users and Groups
+#### <a id="conditionusergroup"></a> HAWQ Roles
+
+You create HAWQ users with the `createuser` command line utility or `CREATE ROLE` SQL command. These HAWQ users may or may not correspond to an underlying operating system user. With either HAWQ native or Ranger authorization, you identify the HAWQ database objects to which you want these users/roles to have access. 
+
+Ranger includes a `UserSync` process that synchronizes users and groups on the Ranger administration node. You can synchronize users and groups from the operating system (default), from a file, or from LDAP/AD services. After the synchronization source is identified, the Ranger `UserSync` process automatically detects when new users are provisioned on the Ranger administration node.
+
+**Note**: If your HAWQ cluster includes HAWQ-only roles (roles that have no associated operating system user), then you must manually configure a Ranger user for each such role. Use the Ranger Admin UI **Settings > Users/Groups** page for this purpose.
 
 You can identify one or more users and/or groups to which a policy provides or denies access in the Allow/Deny Conditions of a HAWQ policy. These users/groups must be known to Ranger. 
 
@@ -162,10 +85,11 @@ You can identify one or more users and/or groups to which a policy provides or d
 | Group | \<group-name\> | The group(s) to which you want to provide or deny access. All groups sync'd from \<ranger-admin-node\> are available in the picklist. |
 | User | \<user-name\> | The user(s) to which you want to provide or deny access. All users sync'd from \<ranger-admin-node\> or explicitly registered via the Ranger Admin UI are available in the picklist.  |
 
+**Note**: Group-based assignment of policies is not yet supported in HAWQ. Assign policies to users only.
 
-#### <a id="conditionperms"></a> Identifying Permissions
+#### <a id="conditionperms"></a> Permissions
 
-You can assign users/groups the following permissions for allowing or denying access to specific HAWQ resources:
+You can assign users the following permissions for allowing or denying access to specific HAWQ resources:
 
 | Permission   |  Description     |
 |-------------|-----------------------|
@@ -177,331 +101,240 @@ You can assign users/groups the following permissions for allowing or denying ac
 | usage | Use a language or sequence |
 | create | Create a table, function, sequence, etc. |
 | connect | Connect to a specific database |
-| execute | ?Create and? Execute a function |
+| execute | Create and execute a function |
 | temp | Create a temporary table or sequence |
 | create-schema | Create a schema |
 | usage-schema | Use a schema |
 
-These permissions map closely to the privileges that you can assign using HAWQ `GRANT` commands with HAWQ native authorization.
+These permissions map closely to the privileges that you can assign using HAWQ `GRANT` commands with native HAWQ authorization.
 
-**Note**: The HAWQ Ranger policy editor always displays the complete list of HAWQ permissions. This list is not filtered by the operations that are actually supported by the resource(s) you have selected.
-
-## <a id="createpolicies"></a>Creating HAWQ Policies
-
-Configure HAWQ-Ranger authorization policies using the Ranger Administrative UI, which you access at `http://<ranger-admin-node>:6080`.
-
-As a best practice, define more restrictive HAWQ policies first to ensure that you do not accidentally provide unwanted access to specific resources.
-
-It generally requires a collection of Ranger policies to provide access to a given HAWQ database resource.
+**Note**: The HAWQ Ranger policy editor always displays the complete list of HAWQ permissions. This list is not filtered by the operations that are actually supported by the resource(s) you have selected. Refer to [HAWQ Resources and Permissions](ranger-resource-perms.html) for the specific permissions supported by each HAWQ resource. Additionally, [SQL Command Permissions Summary](ranger-sqlcmd-summary.html) summarizes the policies and permissions required for some common HAWQ SQL commands.
 
 
-### <a id="wildcardinpolicies"></a> Wildcarding in HAWQ Policies
+## <a id="policyeval"></a> Ranger Policy Evaluation
+Ranger evaluates policies from most to least restrictive, searching for a policy with sufficient privileges to allow the requesting user to access the identified resource(s). Deny conditions are evaluated before allow conditions.
 
-When you define a HAWQ policy, using the wildcard character (`*`) in a leaf node resource works to scope the policy in one of the following ways:
+Refer to the [Ranger User Guide](https://cwiki.apache.org/confluence/display/RANGER/Apache+Ranger+0.5+-+User+Guide) and [Deny-conditions and excludes in Ranger policies](https://cwiki.apache.org/confluence/display/RANGER/Deny-conditions+and+excludes+in+Ranger+policies) for detailed information about the Ranger Admin UI and Ranger policy evaluation.
 
-- `*` = no resource. All permissions in the policy apply to the parent resource.
-- `*` = all resources. All permissions in the policy apply to all instances of the resource at the leaf level.
+
+## <a id="excreatepolicies"></a>Example Scenario: Creating HAWQ Policies
+
+In this example scenario:
+
+Step 1:
+
+- Your HAWQ cluster includes a HAWQ user named `hawquser1` who has default privileges on a database named `testdb`. 
+- `hawquser1` creates `table99` in the `public` schema of `testdb` and inserts data into this table.
+
+Step 2:
+
+- You enable Ranger authorization.
+
+Step 3:
+
+- You create the HAWQ policies necessary to restore `hawquser1` access to the database `testdb` and the table `table99`.
+
+### <a id="exstep1"></a>Step 1: Creating HAWQ User and Database
+
+Create the HAWQ user and database resources:
+
+1. Create OS user `hawquser1` and assign a password:
+
+    ``` shell
+    root@ranger-admin-node$ useradd hawquser1
+    root@ranger-admin-node$ passwd hawquser1
+    ```
+
+2. Create database `testdb`:
+
+    ``` shell
+    gpadmin@master$ createdb testdb
+    ```
+
+3. Create a HAWQ user/role associated with OS user `hawquser1`:
+
+    ``` shell
+    gpadmin@master$ creatuser hawquser1
+    Shall the new role be a superuser? (y/n) n
+    Shall the new role be allowed to create databases? (y/n) y
+    Shall the new role be allowed to create more new roles? (y/n) n
+    ```
+
+4. Add a `pg_hba.conf` entry to allow `hawquser1` to access `testdb`:
+
+    ``` pre
+    host    testdb       hawquser1    client_host/32   trust
+    ```
+
+    And reload HAWQ configuration:
+
+    ``` shell
+    gpadmin@master$ hawq stop cluster --reload
+    ```
+
+6. `hawquser1` creates `table99` in `public` schema of `testdb` database:
+
+    ``` shell
+    hawquser1@hawq-node$ psql -d testdb
+    ```
+    
+    ``` sql
+    testdb=> CREATE TABLE table99( id int );
+    CREATE TABLE
+    testdb=> INSERT INTO table99 SELECT generate_series(1, 11);
+    INSERT 0 11
+    testdb=> SELECT * FROM table99;
+     id
+    ----
+      1
+      2
+    ...
+    ```
+
+### <a id="exstep2"></a>Step 2: Enabling Ranger Authorization for HAWQ
+
+When you enable Ranger authorization for HAWQ with the default service definition in place, the configured policies assign the `gpadmin` administrative HAWQ user all permissions on all database objects. Other HAWQ users have no privileges, *even for the objects they own*.
+
+When `hawquser1` attempts to connect to `testdb` after Ranger authorization for HAWQ is enabled:
+
+``` shell
+hawquser1@hawq-node$ psql -d testdb
+psql: FATAL:  permission denied for database "testdb2"
+DETAIL:  User does not have CONNECT privilege.
+```
+    
+Notice that `hawquser1` no longer has permission to access `testdb` after Ranger authorization for HAWQ is enabled.
+
+
+### <a id="exstep3"></a>Step 3: Creating HAWQ Policies to Restore Access
+
+Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table99`:
+
+1. You configure HAWQ Ranger authorization policies using the Ranger Administrative UI, which you access at `http://<ranger-admin-node>:6080`. Log in to the Ranger Administrative UI as the Ranger `admin` user.
+
+2. Open the **Settings > Users/Groups** page, and verify the `hawquser1` user has been sync'd to Ranger.
+
+3. Click the **Access Manager** button and select the default HAWQ service definition named `hawq`.
+
+    The **List of Policies: hawq** page identifies all currently defined HAWQ policies. These policies provide all permissions on all HAWQ database resources only to the `gpadmin` user.
+
+3. Create a policy for `hawquser1` that provides `CONNECT` privilege to the `testdb` database. 
+
+    Click the **Add New Policy** button and enter the following information in the **Policy Details** and **Allow Conditions** fields:
+    
+    ![HAWQ Policy Details](../images/testdb-policy.png)
+    
+    Notice that both the `schema` and `table` field values are set to `*` in this policy. Wild-carding both of these fields is **required** when defining a database-level policy.
+    
+6. Save the policy named `testdb-connect`.
+
+4. Verify that `hawquser1` can now connect to `testdb`:
+
+    ``` shell
+    hawquser1@hawq-node$ psql -d testdb
+    ```
+    
+    ``` sql
+    testdb=>
+    ```
+
+5. `hawquser1` attempts to select from `table99`:
+
+    ``` sql
+    testdb=> SELECT * FROM table99;
+    WARNING:  usage privilege of namespace public is required.
+    ```
+    
+    Connect privilege to the `testdb` database is not sufficient for `hawquser1` to access `table99`. The WARNING message indicates that `hawquser1` is missing privileges for the `public` schema.
+    
+6. Create a policy for `hawquser1` that provides `USAGE` privileges on the `testdb` database `public` schema. 
+
+    Click the **Add New Policy** button and enter the following information in the **Policy Details** and **Allow Conditions** fields:
+    
+    ![HAWQ Policy Details](../images/schema-policy.png)
+    
+    Notice that the `table` field value is set to `*` in this policy and that  you assign the schema-level `usage-schema` and `create` permissions. The `usage-schema` permission allows `hawquser1` to use the `public` schema. The `create` permission allows `hawquser1` to create objects in this schema.
+    
+6. Save the policy named `testdb-public`.
+
+7. `hawquser1` again attempts to select from `table99`:
+
+    ``` sql
+    testdb=> SELECT * FROM table99;
+    ERROR:  permission denied for relation(s): public.table99
+    ```
+    
+    Access to the `testdb` database and `public` schema is still not sufficient for `hawquser1` to select the data in `table99`. You must explicitly configure access to this table.
+    
+8. Create a policy for `hawquser1` that provides `SELECT` permission on the table named `table99`. 
+
+    Click the **Add New Policy** button and enter the following information in the **Policy Details** and **Allow Conditions** fields:
+    
+    ![HAWQ Policy Details](../images/table-policy.png)
+
+6. Save the policy named `testdb-public-table99`.
+
+7. `hawquser1` again attempts to select from `table99`:
+
+    ``` sql
+    testdb=> SELECT * FROM table99;
+     id
+    ----
+      1
+      2
+    ...
+    ```
+    
+    `hawquser1` regains access to `table99` only after the `testdb-connect`, `testdb-public`, and `testdb-public-table99` policies are assigned.
+
+
+## <a id="wildcardinpolicies"></a> Wildcarding in HAWQ Policies
+
+The policy editor allows you to wildcard (`*`) resources and patterns in policy details. The permissions you provide to the leaf node resource in a  wild-carded policy scope the policy in one of the following ways:
+
+- parent-level permission - the permission applies to the parent resource
+- leaf permission -  the permission applies to all instances of the resource at the leaf level.
 
 For example, consider the following two policies that are assigned to user `hawquser1` for a table named `table99` in the `public` schema of database `testdb`:
 
     Policy 1: testdb/public/*(table), usage-schema permission  
     Policy 2: testdb/public/table99, select permission
 
-Policies 1 and 2 collectively permit `hawquser1` to access the `public` schema of `testdb` and to select from `table99` in that schema. Policy 1 applies a schema-level permission (`usage-schema`), and the wildcard character scopes this permission to those operations can be performed in the schema `public`. `*`\(table\) in this context applies the policy permission to no tables. Policy 2 restricts the `select` operation to the specific table named `table99`.
+Policies 1 and 2 collectively permit `hawquser1` to access the `public` schema of `testdb` and to select from `table99` in that schema. The wildcard in Policy 1 applies the `usage-schema` permission to the parent resource (the schema `public`). Policy 2 restricts the `select` operation to the specific table named `table99`.
 
 Contrast this with the single policy:
 
     Policy 10: testdb/public/*(table), usage-schema and select permissions
 
-Policy 10 permits the policy holder to use the `public` schema and select from *any* table in the schema. In this policy, using the wildcard character with a subordinate object privilege, `select`, applies that permission to **all** instances of the leaf resource. `*`\(table\) in this context applies the policy permission to all tables in schema `public`.
+Policy 10 permits the policy holder to use the `public` schema (equivalent to Policy 1 above) and select from *any* table in the schema. In this policy, `select` is a table-level permission, and the wildcard character applies this permission to all instances of the leaf table resource.
 
 
-### <a id="dbops"></a> Policies for Database Operations
-
-The database operations governed by HAWQ-Ranger authorization are those that you perform at the purely database-level. These operations include connecting to the database, creating schemas, and creating temporary tables and sequences. Use the following HAWQ Ranger Policy Details to assign permissions for these operations:
-
-| Resource    | Value   |  Description     |
-|-------------|----------------------|------------------------|
-| database | \<db-name\> | The database to which you want to provide access |
-| schema | `*` | No schema |
-| table | `*` | No table |
-
-specifying the permissions you wish to assign:
-
-| Permission    | Allows SQL Commands     |  Equivalent GRANT Command |
-|-------------|----------------------|------------------------|
-| connect | CONNECT | GRANT CONNECT ON DATABASE \<db-name\> TO \<user-name\> |
-| create-schema | CREATE SCHEMA | GRANT CREATE ON DATABASE \<db-name\> TO \<user-name\> |
-| temp| CREATE TEMP TABLE<p>CREATE TEMP SEQUENCE | GRANT TEMP ON DATABASE \<db-name\> TO \<user-name\> |
-
-
-### <a id="dbschemaops"></a> Policies for Schema Operations
-
-You perform many HAWQ operations within the scope of a specific database and schema, including creating/dropping/altering database objects. These operations will require permission to use the specified schema. 
-
-The HAWQ schema named `public` is the default schema. When HAWQ-Native authorization is in effect, users are automatically granted access to this schema. When Ranger is enabled, users must be explicitly assigned the `usage-schema` permission to the `public` schema.
-
-Use these HAWQ Ranger Policy Details to assign permission for schema-related operations:
-
-| Resource    | Value   |  Description     |
-|-------------|----------------------|------------------------|
-| database | \<db-name\> | The database to which you want to provide access |
-| schema | \<schema-name\> | The schema in which you want to provide access |
-| table &#124; sequence &#124; function | `* `| No table/sequence/function |
-
-specifying these permissions:
-
-| Permission    | Allows SQL Commands     | Equivalent GRANT Command |
-|-------------|------------------------------|----------------------|
-| usage-schema | TOO MANY TO LIST?, built-in HAWQ functions |  GRANT USAGE ON SCHEMA \<schema-name\> TO \<user-name\> |
-| create | CREATE [EXTERNAL] TABLE, CREATE SEQUENCE, CREATE FUNCTION, CREATE OPERATOR, CREATE OPERATOR CLASS (superuser only), CREATE AGGREGATE, CREATE VIEW, CREATE TYPE, SELECT INTO, ?MORE?  |    GRANT CREATE ON SCHEMA \<schema-name\> TO \<user-name\> |
-
-
-### <a id="tblops"></a> Policies for Table Operations
-
-You can insert data into and select a table within schemas in which you have `usage-schema` permissions. Use the following HAWQ Ranger Policy Details to assign permission for these operations:
-
-| Resource    | Value   |  Description     |
-|-------------|---------------|-------------------|
-| database | \<db-name\> | The database to which you want to provide access |
-| schema | \<schema-name\> | The schema in which you want to provide access |
-| table | \<table-name\> | The table to which you want to provide access |
-
-specifying the permissions you wish to assign:
-
-| Permission    | Allows SQL Commands     | Equivalent GRANT Command |
-|-------------|---------------------------|-----------------|
-| select  | ANALYZE, COPY INTO, SELECT, VACUUM ANALYZE | GRANT SELECT ON TABLE \<table-name\> TO \<user-name\> |
-| insert  | COPY FROM, INSERT | GRANT INSERT ON TABLE \<table-name\> TO \<user-name\> |
-
-
-### <a id="sequenceops"></a> Policies for Sequence Operations
-
-You can use and select sequences and update sequence values in schemas in which you have `usage-schema` permissions. You can also use the `nextval()` and `setval()` HAWQ built-in functions to return and set sequence values. Use the following HAWQ Ranger Policy Details to assign permission for these operations:
-
-| Resource    | Value   |  Description     |
-|-------------|----------------------|------------------------|
-| database | \<db-name\> | The database to which you want to provide access |
-| schema | \<schema-name\> | The schema in which you want to provide access |
-| sequence | \<sequence-name\> | The sequence to which you want to provide access |
-
-specifying the permissions you wish to assign:
-
-| Permission    | Allows SQL Commands, built-in functions   | Equivalent GRANT Command |
-|-------------|---------------------------|------|
-| select | SELECT \<sequence-name\> | GRANT SELECT ON SEQUENCE \<sequence-name\> TO \<user-name\> |
-| usage, update | nextval() | GRANT USAGE, UPDATE ON SEQUENCE \<sequence-name\> TO \<user-name\> |
-| update | setval() | GRANT UPDATE ON SEQUENCE \<sequence-name\> TO \<user-name\> |
-
-
-### <a id="functionops"></a> Policies for Function Operations
-
-You can execute user-defined functions in schemas in which you have `usage-schema` permissions. Use the following HAWQ Ranger Policy Details to assign permission for this operation:
-
-| Resource    | Value   |  Description     |
-|-------------|----------------------|------------------------|
-| database | \<db-name\> | The database to which you want to provide access |
-| schema | \<schema-name\> | The schema in which you want to provide access |
-| function | \<function-name\> | The user-defined function to which you want to provide access |
-
-specifying the permissions you wish to assign:
-
-| Permission    | Allows SQL Commands     | Equivalent GRANT Command |
-|-------------|---------------------------|-------|
-| execute | SELECT \<function-name\>() | GRANT EXECUTE ON FUNCTION \<function-name\> TO \<user-name\>  |
-
-**Note**: Functions typically access database objects such as tables, views, sequences, etc and other functions. When setting up your HAWQ policies, ensure you have also provided access to all database resources referenced within the function (recursively).
-
-
-### <a id="dblangops"></a> Policies for Language Operations
-
-Only super-users may register and drop languages for a specific database. These operations are governed by HAWQ-Native authorization. 
-
-You may choose to permit users to use a specific language to create user-defined functions. Use these HAWQ Ranger Policy Details to assign such permission:
-
-| Resource    | Value   |  Description     |
-|-------------|----------------------|------------------------|
-| database | \<db-name\> | The database to which you want to provide access |
-| language | \<language-name\> | The language to which you want to provide access (plpgsql, sql, other languages explicitly registered in the database) |
-
-specifying these permissions:
-
-| Permission    | Allows SQL Commands     | Equivalent GRANT Command |
-|-------------|------------------------------|----------------------|
-| usage | CREATE FUNCTION ... LANGUAGE \<language-name\> |    GRANT USAGE ON LANGUAGE\<language-name\> TO \<user-name\> |
-
-
-### <a id="dbtblspaceops"></a> Policies for Tablespace Operations
-
-Only super-users may create and drop tablespaces. These operations are governed by HAWQ-Native authorization. 
-
-You may choose to allow specific users to create tables within an existing tablespace. Use these HAWQ Ranger Policy Details to assign such permissions:
-
-| Resource    | Value   |  Description     |
-|-------------|----------------------|------------------------|
-| tablespace | \<tablespace-name\> | The tablespace to which you want to provide access |
-
-specifying these permissions:
-
-| Permission    | Allows SQL Commands     | Equivalent GRANT Command |
-|-------------|------------------------------|----------------------|
-| create | CREATE TABLE ... TABLESPACE |  GRANT CREATE ON \<tablespace-name\> TO \<user-name\> |
-
-
-### <a id="dbprotocolops"></a> Policies for Protocol Operations
-
-??gpfdist(s) and http protocols - hawq-native or ranger? super-user? 
-
-You may choose to permit access to the `pxf` protocol to create readable and writable external tables. Use the following HAWQ Ranger Policy Details to assign permission for these operations:
-
-| Resource    | Value   |  Description     |
-|-------------|---------------|-------------------|
-| protocol | \<protocol-name\> | The protocol to which you want to provide access \(pxf\) |
-
-specifying the permissions you wish to assign:
-
-| Permission    | Allows SQL Commands     | Equivalent GRANT Command |
-|-------------|---------------------------|-----------------|
-| select | CREATE READABLE EXTERNAL TABLE | GRANT SELECT ON PROTOCOL \<protocol-name\> TO \<user-name\> |
-| insert  | CREATE WRITABLE EXTERNAL TABLE | GRANT INSERT ON PROTOCOL \<protocol-name\> TO \<user-name\> |
-
-Refer to [Using PXF with Ranger Authorization](#pxfranger) later in this topic for additional considerations when accessing HAWQ PXF external tables with Ranger enabled.
-
-
-## <a id="admintasks"></a>Policy Creation for HAWQ Maintenance Tasks
-
-Administrators periodically perform maintentance tasks on the HAWQ cluster, including vacuuming and analyzing databases. Users performing these operations must be the owner of the databases, and must be explicitly assigned the permissions to do so, just as you would for general database operations.
-
-The `ANALYZE` operation requires `select` permission on the table to be analyzed, as well as `usage-schema` permissions on the schema in which the table resides.
-
-The `VACUUM ANALYZE` operation requires `select` permission on all table(s) specified, as well as `usage-schema` permissions on the schema(s) in which the tables reside.
-
-The `VACUUM` and `TRUNCATE` operations require `usage-schema` permissions on the schema in which the table resides. 
-
-
-## <a id="specialconsider"></a>Special Considerations
-
-- The `psql` `search_path` session configuration parameter affects Ranger access control checks for `CREATE` operations.  (?all of them?) The object will be created under the *first* schema in the `search_path` in which `usage-schema` permissions were assigned to the user. The schema `search_path` does not affect `SELECT` or other operations.
-
-- When Ranger authorization is enabled for HAWQ, members of HAWQ roles assigned create database permissions must be provided `pg_hba.conf` access to the `postgres` database to use the `createdb` command line utility. This configuration step is not required for `CREATE DATABASE` operations invoked within the `psql` shell.
-
-- `CREATE LANGUAGE` commands (super-user-only) issued for non-built-in languages (pljava, plpython, ..) require the `usage` permission for the `c` language.
-
-- The HAWQ Ranger service definition includes identifying information for the HAWQ master hostname and port. Should you need to activate the standby master in your HAWQ cluster, you must update the HAWQ Ranger service definition with the new master node identifying information.  ?WHEN - before or after activating the standby master?.
-
-
-## <a id="permsummary"></a>Summary of Permissions per SQL Command
-
-| SQL Command    | Permission     |  Resource |
-|-------------|----------------------|------------------------|
-| \d | usage-schema | \<db-name\>/public/`*` |
-| ANALYZE \<table-name\>| usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| ALTER AGGREGATE ... RENAME TO  | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| ALTER SEQUENCE  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| ALTER TABLE ... RENAME  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| ALTER TABLE \<table-name\> SET DISTRIBUTED BY  | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| BEGIN ... COMMIT   | usage-schema | \<db-name\>/\<schema-name\>/`*`<p>## |
-| \c, CONNECT \<db-name\>| connect | \<db-name\>/`*`/`*` |
-| COPY \<table-name\> FROM ** | usage-schema<p>insert, select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| COPY \<table-name\> TO | usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| CREATE AGGREGATE | usage-schema, create<p>execute | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<sfunc-name\> |
-| CREATE EXTERNAL TABLE (pxf protocol) | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>pxf |
-| CREATE FUNCTION \<function-name\> (trusted \<language-name\>) | usage-schema, create<p>usage<p>execute | \<db-name\>/\<schema-name\>/`*`<p><p>\<db-name\>/\<language-name\><p>\<db-name\>/\<schema-name\>/\<function-name\><p>## |
-| CREATE FUNCTION \<function-name\> (untrusted \<language-name\>) ** | usage-schema, create<p>usage<p>execute | \<db-name\>/\<schema-name\>/`*`<p><p>\<db-name\>/\<language-name\><p>\<db-name\>/\<schema-name\>/\<function-name\><p>## |
-| CREATE LANGUAGE **  | usage | \<db-name\>/c |
-| CREATE OPERATOR | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| CREATE OPERATOR CLASS * | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| CREATE SCHEMA | create-schema | \<db-name\>/`*`/`*` |
-| CREATE SEQUENCE  | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| CREATE TABLE  | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| CREATE TABLE (in <\private-schema\>)  | create | \<db-name\>/\<private-schema\>/`*` |
-| CREATE TABLE ... AS  | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| CREATE ... TABLESPACE \<tablespace-name\>  | usage-schema, create<p>create | \<db-name\>/\<schema-name\>/`*`<p>\<tablespace-name\> |
-| CREATE TEMP SEQUENCE | temp | \<db-name\>/`*`/`*` |
-| CREATE TEMP TABLE | temp | \<db-name\>/`*`/`*` |
-| CREATE TYPE  | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| CREATE VIEW  | usage-schema, create | \<db-name\>/\<schema-name\>/`*` |
-| CREATE WRITABLE EXTERNAL TABLE (pxf protocol) | usage-schema, create<p>insert | \<db-name\>/\<schema-name\>/`*`<p>pxf |
-| DROP AGGREGATE   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| DROP FUNCTION   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| DROP SCHEMA   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| DROP TABLE   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| DROP VIEW    | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| DROP OPERATOR  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| DROP OPERATOR CLASS **  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| EXECUTE   | usage-schema | \<db-name\>/\<schema-name\>/`*`<p>## |
-| EXPLAIN   | usage-schema | \<db-name\>/\<schema-name\>/`*`<p>## |
-| INSERT INTO \<table-name\>  | usage-schema<p>insert | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| PREPARE   | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| SELECT \<aggregate-name\> | usage-schema<p>execute<p>execute | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<aggregate-name\> <p>\<db-name\>/\<schema-name\>/\<sfunc-name\> <p>##|
-| SELECT \<built-in-function\>  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| SELECT \<function-name\> (trusted ??) | usage-schema<p>execute | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<function-name\> <p>##|
-| SELECT (using operator) | execute | \<db-name\>/\<schema-name\>/\<operator-procedure\> <p>## |
-| SELECT ... FROM \<table-name\> | usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| SELECT ... INTO ... FROM \<table-name\> | usage-schema, create<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-| SELECT ... FROM \<view-name\> | usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<view-name\><p>## |
-| TRUNCATE  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| VACUUM  | usage-schema | \<db-name\>/\<schema-name\>/`*` |
-| VACUUM ANALYZE \<table-name\>| usage-schema<p>select | \<db-name\>/\<schema-name\>/`*`<p>\<db-name\>/\<schema-name\>/\<table-name\> |
-
-
-**Notes**: 
-
-- A `**` in **SQL Command** column identifies a super-user operation.
-
-- A `##` in the **Resource** column signifies that additional policies may be required to provide access to resources used within the operation(s).
-
-
-## <a id="pxfranger"></a>Using PXF with Ranger Authorization
-
-### <a id="pxfrangerhive"></a>Accessing Hive Data
-
-If Ranger is enabled for Hive authorization, you must create Hive policies that allow user `pxf` to access the desired Hive tables.
-
-The HAWQ policies providing access to PXF HCatalog integration must identify database `hcatalog`, schema `<hive-schema-name>`, and table `<hive-table-name>` resources.  These privileges are required in addition to any Hive policies for user `pxf` when Ranger is enabled for Hive authorization.
-
-**Note**: When creating HAWQ policies for PXF HCatalog authorization, resource name look up is not available for Hive schema and table names.
-
-### <a id="pxfrangerhdfs"></a>Accessing HDFS Data
-
-If Ranger is enabled for HDFS authorization, you must create HDFS policies that allow user `pxf` to access the HDFS directories backing the PXF tables.
-
-
-## <a id="madlibranger"></a>Using MADLib with Ranger Authorization
-
-You can use MADlib, an open source library for in-database analytics, with your HAWQ installation. MADlib functions typically operate on source, output, and model tables. When Ranger is enabled for HAWQ authorization, you will need to provide access to all MADLib-related databases, schemas, tables, and functions to the appropriate users.  
-
-Consider the following when setting up HAWQ policies for MADlib access:
-
-- Assign `temp` permission to the database on which users will run MADlib functions.
-- MADlib users often share their output tables. If this is the case in your deployment, create a shared schema dedicated to output tables, assigning `usage-schema` and `create` privileges for all MADlib users to this shared schema.
-- Assign `create-schema` database permission to those MADlib users that do not choose to share their output tables.
-
-- `madlib` Schema-Level Permissions
-    - Assign `usage-schema` and `create` privileges to the `madlib` schema.
-    - Assign `execute` permissions on all functions within the `madlib` schema, including any functions called within.
-    - Assign `insert` and `select` permissions to all tables within the `madlib` schema.
-    - Assign the `usage-schema` and `create` permissions for the current schema, and any schema in which the source, output, and model tables may reside.
-
-- Function-Specific Permissions 
-    - Assign `insert` and `select` permissions for the source, output, and model tables.
-    - Assign `insert` and `select` permissions for the output \_summary and \__group tables.
-
-
-## <a id="bestpractices"></a>Best Practices
+## <a id="bestpract"></a>Best Practices
+The following best practices are recommended when considering Ranger authorization for HAWQ:
 
 - Create policies *before* enabling HAWQ-Ranger authorization. This will ensure access is available to users without any downtime.
 - Define more restrictive HAWQ policies first to ensure that you do not accidentally provide unwanted access to specific resources.
 - Identify and configure your Ranger auditing requirements *before* enabling HAWQ-Ranger authorization.
-- If you use Ranger authorization for Hive, create Hive policy(s) providing the user `pxf` access to any Hive tables you want to expose via PXF HCatalog integration or HAWQ PXF external tables.
-- If you have enabled Ranger authorization for HDFS:
-    -  Create an HDFS policy(s) providing user `gpadmin` access to the HDFS HAWQ filespace (?hawq\_dfs\_url?).
+- Administrators periodically perform maintentance tasks on the HAWQ cluster, including vacuuming and analyzing databases. Users performing these operations must be the owner of the databases, and must be explicitly assigned the permissions to do so, just as you would for general database operations.
+    - The `ANALYZE` operation requires `select` permission on the table to be analyzed, as well as `usage-schema` permissions on the schema in which the table resides.
+    - The `VACUUM ANALYZE` operation requires `select` permission on all table(s) specified, as well as `usage-schema` permissions on the schema(s) in which the tables reside.
+    - The `VACUUM` and `TRUNCATE` operations require `usage-schema` permissions on the schema in which the table resides.
+
+ 
+## <a id="specialconsider"></a>Special Considerations
+
+Make note of the following considerations when employing Ranger authorization for HAWQ:
+
+- The `psql` `search_path` session configuration parameter affects Ranger access control checks for `CREATE` operations. The object will be created under the *first* schema in the `search_path` in which `usage-schema` permissions were assigned to the user. The schema `search_path` does not affect `SELECT` or other operations.
+
+- When Ranger authorization is enabled for HAWQ, members of HAWQ roles assigned create database permissions must be provided `pg_hba.conf` access to the `postgres` database to use the `createdb` command line utility. This configuration step is not required for `CREATE DATABASE` operations invoked within the `psql` shell.
+
+- `CREATE LANGUAGE` commands (superuser-only) issued for non-built-in languages (pljava, plpython, ..) require the `usage` permission for the `c` language.
+
+- If Ranger is enabled for Hive authorization in your HAWQ cluster:
+    -  Create Hive policy(s) providing the user `pxf` access to any Hive tables you want to expose via PXF HCatalog integration or HAWQ PXF external tables.
+    - The HAWQ policies providing access to PXF HCatalog integration must identify database `hcatalog`, schema `<hive-schema-name>`, and table `<hive-table-name>` resources.  These privileges are required in addition to any Hive policies for user `pxf` when Ranger is enabled for Hive authorization.
+
+- If you have enabled Ranger authorization for HDFS in your HAWQ cluster:
+    -  Create an HDFS policy(s) providing user `gpadmin` access to the HDFS HAWQ filespace.
     -  If you plan to use PXF external tables to read and write HDFS data, create HDFS policies providing user `pxf` access to the HDFS files backing your PXF external tables.
-
-
-## <a id="troubleshooting"></a>Troubleshooting
-
-| Problem/Error    | Discussion    |
-|-------------|---------------------------|
-| HAWQ object lookup in Ranger Admin UI not working | If object lookup is not working:<p> 1. Verify that the HAWQ Ranger plug-in JARs and JDBC driver have been copied to \<ranger-admin-node\>.<p> 2. Test the connection between the Ranger Admin UI and the HAWQ master node by clicking the edit icon associated with the active HAWQ service definition, then clicking the **Config Properties: > Test Connection** button.<p> 3. Verify that the HAWQ master node `pg_hba.conf` file includes a `host` entry for \<ranger-admin-node\>, HAWQ user (typically `gpadmin`).|
-
