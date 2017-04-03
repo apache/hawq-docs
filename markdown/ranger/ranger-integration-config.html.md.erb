@@ -130,6 +130,28 @@ Once the connection between HAWQ and Ranger is configured, you may choose to set
 6. Select **Service Actions > Restart All** and confirm that you want to restart the HAWQ cluster.
 
 
+## <a id="rpsadminstate"></a>Displaying the Status of HAWQ/Ranger Integration
+
+Determine the status of HAWQ/Ranger integration in your cluster by:
+
+- Identifying the access control method currently in place in your HAWQ cluster. If the `hawq_acl_type` server configuration parameter value is  set to `ranger`, you have enabled Ranger authorization for HAWQ.
+
+    ``` shell
+    gpadmin@master$ hawq config -s hawq_acl_type
+    GUC       : hawq_acl_type
+    Value     : ranger
+    ```
+
+- Querying the state of your HAWQ cluster. If `hawq state` or Ambari **HAWQ Service Check** output identifies that the HAWQ Ranger Plug-in Service status is Active, the plug-in is up and running:
+
+    ``` shell
+    gpadmin@master$ hawq state
+    ...
+    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   Current HAWQ acl type                          = ranger
+    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   HAWQ Ranger plugin service state               = Active
+    ...
+    ```
+
 ## <a id="customconfig"></a> Custom Configuration
 
 Configuration files for the HAWQ Ranger Plug-in Service are located in the `$GPHOME/ranger/etc` directory. These files include:
