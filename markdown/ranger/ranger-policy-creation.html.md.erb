@@ -119,24 +119,14 @@ Refer to the [Ranger User Guide](https://cwiki.apache.org/confluence/display/RAN
 
 ## <a id="excreatepolicies"></a>Example Scenario: Creating HAWQ Policies
 
-In this example scenario:
-
-Step 1:
+When you enable Ranger authorization for HAWQ with the default service definition in place, the configured policies assign the `gpadmin` administrative HAWQ user all permissions on all database objects. Other HAWQ users have no privileges, *even for the objects that they own*. In this example scenario:
 
 - Your HAWQ cluster includes a HAWQ user named `hawquser1` who has default privileges on a database named `testdb`. 
 - `hawquser1` creates `table99` in the `public` schema of `testdb` and inserts data into this table.
-
-Step 2:
-
-- You enable Ranger authorization.
-
-Step 3:
-
+- You enable Ranger authorization for HAWQ.
 - You create the HAWQ policies necessary to restore `hawquser1` access to the database `testdb` and the table `table99`.
 
-### <a id="exstep1"></a>Step 1: Creating HAWQ User and Database
-
-Create the HAWQ user and database resources:
+Perform the following steps to set up the example scenario:
 
 1. Create OS user `hawquser1` and assign a password:
 
@@ -172,7 +162,7 @@ Create the HAWQ user and database resources:
     gpadmin@master$ hawq stop cluster --reload
     ```
 
-6. `hawquser1` creates `table99` in `public` schema of `testdb` database:
+5. `hawquser1` creates `table99` in `public` schema of `testdb` database:
 
     ``` shell
     hawquser1@hawq-node$ psql -d testdb
@@ -191,22 +181,20 @@ Create the HAWQ user and database resources:
     ...
     ```
 
-### <a id="exstep2"></a>Step 2: Enabling Ranger Authorization for HAWQ
+6. You enable Ranger authorization for HAWQ.
 
-When you enable Ranger authorization for HAWQ with the default service definition in place, the configured policies assign the `gpadmin` administrative HAWQ user all permissions on all database objects. Other HAWQ users have no privileges, *even for the objects they own*.
+    When you enable Ranger authorization for HAWQ with the default service definition in place, the configured policies assign the `gpadmin` administrative HAWQ user all permissions on all database objects. Other HAWQ users have no privileges, *even for the objects that they own*.
 
-When `hawquser1` attempts to connect to `testdb` after Ranger authorization for HAWQ is enabled:
+7. `hawquser1` attempts to connect to `testdb` after Ranger authorization for HAWQ is enabled:
 
-``` shell
-hawquser1@hawq-node$ psql -d testdb
-psql: FATAL:  permission denied for database "testdb2"
-DETAIL:  User does not have CONNECT privilege.
-```
-    
-Notice that `hawquser1` no longer has permission to access `testdb` after Ranger authorization for HAWQ is enabled.
+    ``` shell
+    hawquser1@hawq-node$ psql -d testdb
+    psql: FATAL:  permission denied for database "testdb"
+    DETAIL:  User does not have CONNECT privilege.
+    ```
 
+    Notice that `hawquser1` no longer has permission to access `testdb` after Ranger authorization for HAWQ is enabled.
 
-### <a id="exstep3"></a>Step 3: Creating HAWQ Policies to Restore Access
 
 Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table99`:
 
@@ -218,7 +206,7 @@ Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table9
 
     The **List of Policies: hawq** page identifies all currently defined HAWQ policies. These policies provide all permissions on all HAWQ database resources only to the `gpadmin` user.
 
-3. Create a policy for `hawquser1` that provides `CONNECT` privilege to the `testdb` database. 
+4. Create a policy for `hawquser1` that provides `CONNECT` privilege to the `testdb` database. 
 
     Click the **Add New Policy** button and enter the following information in the **Policy Details** and **Allow Conditions** fields:
     
@@ -226,9 +214,9 @@ Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table9
     
     Notice that both the `schema` and `table` field values are set to `*` in this policy. Wild-carding both of these fields is **required** when defining a database-level policy.
     
-6. Save the policy named `testdb-connect`.
+5. Save the policy named `testdb-connect`.
 
-4. Verify that `hawquser1` can now connect to `testdb`:
+6. Verify that `hawquser1` can now connect to `testdb`:
 
     ``` shell
     hawquser1@hawq-node$ psql -d testdb
@@ -238,7 +226,7 @@ Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table9
     testdb=>
     ```
 
-5. `hawquser1` attempts to select from `table99`:
+7. `hawquser1` attempts to select from `table99`:
 
     ``` sql
     testdb=> SELECT * FROM table99;
@@ -247,7 +235,7 @@ Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table9
     
     Connect privilege to the `testdb` database is not sufficient for `hawquser1` to access `table99`. The WARNING message indicates that `hawquser1` is missing privileges for the `public` schema.
     
-6. Create a policy for `hawquser1` that provides `USAGE` privileges on the `testdb` database `public` schema. 
+8. Create a policy for `hawquser1` that provides `USAGE` privileges on the `testdb` database `public` schema. 
 
     Click the **Add New Policy** button and enter the following information in the **Policy Details** and **Allow Conditions** fields:
     
@@ -255,9 +243,9 @@ Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table9
     
     Notice that the `table` field value is set to `*` in this policy and that  you assign the schema-level `usage-schema` and `create` permissions. The `usage-schema` permission allows `hawquser1` to use the `public` schema. The `create` permission allows `hawquser1` to create objects in this schema.
     
-6. Save the policy named `testdb-public`.
+9. Save the policy named `testdb-public`.
 
-7. `hawquser1` again attempts to select from `table99`:
+10. `hawquser1` again attempts to select from `table99`:
 
     ``` sql
     testdb=> SELECT * FROM table99;
@@ -266,15 +254,15 @@ Create the policies(s) that restore `hawquser1`'s access to `testdb` and `table9
     
     Access to the `testdb` database and `public` schema is still not sufficient for `hawquser1` to select the data in `table99`. You must explicitly configure access to this table.
     
-8. Create a policy for `hawquser1` that provides `SELECT` permission on the table named `table99`. 
+11. Create a policy for `hawquser1` that provides `SELECT` permission on the table named `table99`. 
 
     Click the **Add New Policy** button and enter the following information in the **Policy Details** and **Allow Conditions** fields:
     
     ![HAWQ Policy Details](../images/table-policy.png)
 
-6. Save the policy named `testdb-public-table99`.
+12. Save the policy named `testdb-public-table99`.
 
-7. `hawquser1` again attempts to select from `table99`:
+13. `hawquser1` again attempts to select from `table99`:
 
     ``` sql
     testdb=> SELECT * FROM table99;
