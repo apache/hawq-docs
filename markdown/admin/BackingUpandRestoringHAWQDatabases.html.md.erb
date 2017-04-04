@@ -173,11 +173,11 @@ This section discusses `gpfdist` and shows an example of how to backup and resto
 
 To use `gpfdist`, start the `gpfdist` server program on the host where you want to store backup files. You can start multiple `gpfdist` instances on the same host or on different hosts. For each `gpfdist` instance, you specify a directory from which `gpfdist` will serve files for readable external tables or create output files for writable external tables. For example, if you have a dedicated machine for backup with two disks, you can start two `gpfdist` instances, each using one disk:
 
-![](../mdimages/gpfdist_instances_backup.png "Deploying multiple gpfdist instances on a backup host")
+![](../images/gpfdist_instances_backup.png "Deploying multiple gpfdist instances on a backup host")
 
 You can also run `gpfdist` instances on each segment host. During backup, table data will be evenly distributed to all `gpfdist` instances specified in the `LOCATION` clause in the `CREATE EXTERNAL TABLE` definition.
 
-![](../mdimages/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
+![](../images/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
 
 ### <a id="example"></a>Example 
 

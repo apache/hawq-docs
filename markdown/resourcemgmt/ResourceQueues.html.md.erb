@@ -29,7 +29,7 @@ Resource queues are the main tool for managing the degree of concurrency in a HA
 
 Internally, HAWQ manages its resources dynamically based on a system of hierarchical resource queues. HAWQ uses resource queues to allocate resources efficiently to concurrently running queries. Resource queues are organized as a n-ary tree, as depicted in the diagram below.
 
-![](../mdimages/svg/hawq_resource_queues.svg)
+![](../images/svg/hawq_resource_queues.svg)
 
 When HAWQ is initialized, there is always one queue named `pg_root` at the root of the tree and one queue named `pg_default`. If YARN is configured, HAWQ's resource manager automatically fetches the capacity of this root queue from the global resource manager. When you create a new resource queue, you must specify a parent queue. This forces all resource queues to organize into a tree.
 

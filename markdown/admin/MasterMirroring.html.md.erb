@@ -33,7 +33,7 @@ Since the master does not house user data, only system catalog tables are synchr
 
 *Figure 1: Master Mirroring in HAWQ*
 
-![](../mdimages/standby_master.jpg)
+![](../images/standby_master.jpg)
 
 
 If the primary master fails, the replication process stops, and an administrator can activate the standby master. Upon activation of the standby master, the replicated logs reconstruct the state of the primary master at the time of the last successfully committed transaction. The activated standby then functions as the HAWQ master, accepting connections on the port specified when the standby master was initialized.
