@@ -164,17 +164,9 @@ The following table identifies the permissions required for common SQL commands.
 
 
 <tr class="even">
-<td rowspan="4">CREATE FUNCTION<p>&lt;func-name&gt;<p>(untrusted &lt;language-name&gt;) &&</td>
+<td rowspan="2">CREATE FUNCTION<p>&lt;func-name&gt;<p>(untrusted &lt;language-name&gt;) &&</td>
 <td>usage-schema, create</td>
 <td>&lt;db-name&gt;/&lt;schema-name&gt;/*</td>
-</tr>
-<tr class="odd">
-<td>usage</td>
-<td>&lt;db-name&gt;/&lt;language-name&gt;</td>
-</tr>
-<tr class="even">
-<td>execute</td>
-<td>&lt;db-name&gt;/&lt;schema-name&gt;/&lt;func-name&gt;</td>
 </tr>
 <tr class="odd">
 <td></td>
@@ -217,7 +209,7 @@ The following table identifies the permissions required for common SQL commands.
 </tr>
 
 <tr class="even">
-<td rowspan="2">CREATE ... TABLESPACE<p>&lt;tablespace-name&gt;</td>
+<td rowspan="2">CREATE TABLE ...<p>TABLESPACE<p>&lt;tablespace-name&gt;</td>
 <td>usage-schema, create</td>
 <td>&lt;db-name&gt;/&lt;schema-name&gt;/*</td>
 </tr>

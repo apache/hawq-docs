@@ -65,8 +65,8 @@ specifying these permissions:
 
 | Permission    | Allows SQL Commands     | Equivalent GRANT Command |
 |-------------|------------------------------|----------------------|
-| usage-schema | TOO MANY TO LIST?, built-in HAWQ functions |  GRANT USAGE ON SCHEMA \<schema-name\> TO \<user-name\> |
-| create | CREATE [EXTERNAL] TABLE, CREATE SEQUENCE, CREATE FUNCTION, CREATE OPERATOR, CREATE OPERATOR CLASS (superuser only), CREATE AGGREGATE, CREATE VIEW, CREATE TYPE, SELECT INTO, ?MORE?  |    GRANT CREATE ON SCHEMA \<schema-name\> TO \<user-name\> |
+| usage-schema | MANY |  GRANT USAGE ON SCHEMA \<schema-name\> TO \<user-name\> |
+| create | ALTER/CREATE AGGREGATE, ALTER TABLE, CREATE [EXTERNAL] TABLE, CREATE FUNCTION, CREATE OPERATOR, CREATE OPERATOR CLASS (superuser only), CREATE SEQUENCE, CREATE VIEW, CREATE TYPE, SELECT INTO  |    GRANT CREATE ON SCHEMA \<schema-name\> TO \<user-name\> |
 
 
 ## <a id="tblops"></a> Policies for Table Operations
