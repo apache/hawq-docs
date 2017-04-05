@@ -21,14 +21,14 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Your HAWQ 2.2.0 installation includes the following HAWQ-related Ranger components:
+Your HAWQ installation includes the following HAWQ-related Ranger components:
 
 - Ranger Administrative UI
 - HAWQ Ranger Plug-in Service
 
 The Ranger Administrative UI is installed when you install HDP. You configure the Ranger service itself through Ambari. You configure HAWQ-Ranger authorization policies through the Ranger Administrative UI, which you can access at `http://<ranger-admin-node>:6080`. 
 
-Installing or upgrading to HAWQ 2.2.0 installs the HAWQ Ranger Plug-in Service, but neither configures nor registers the plug-in.  
+Installing or upgrading to HAWQ installs the HAWQ Ranger Plug-in Service, but neither configures nor registers the plug-in.  
 
 To use Ranger for managing HAWQ authentication events, you must first install and register several HAWQ JAR files on the Ranger Administration host. This one-time configuration establishes connectivity to your HAWQ cluster from the Ranger Administration host. 
 
@@ -52,7 +52,7 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
     root@ranger-admin-node$ cd /usr/hdp/current/ranger-admin/ews/webapp/WEB-INF/classes/ranger-plugins
     root@ranger-admin-node$ mkdir hawq
     ```
-3. Copy the necessary HAWQ JAR files (`postgresql-9.1-901-1.jdbc4.jar` and `ranger-plugin-admin-2.2.0.0.jar`) from the HAWQ master node to the new directory:
+3. Copy the necessary HAWQ JAR files (`postgresql-9.1-901-1.jdbc4.jar` and `ranger-plugin-admin-<version>.jar`) from the HAWQ master node to the new directory:
 
     ``` bash
     root@ranger-admin-node$ scp <hawq-master>:/usr/local/hawq/ranger/lib/*.jar ./hawq
@@ -81,10 +81,10 @@ To use HAWQ Ranger integration, install a compatible Hadoop distribution and Apa
     HAWQ PORT = 5432
     HAWQ User = gpadmin
     HAWQ Password = [*******]
-    HAWQ service definition was not found in Ranger Admin, creating it by uploading /usr/local/hawq_2_2_0_0/ranger/etc/ranger-servicedef-hawq.json
+    HAWQ service definition was not found in Ranger Admin, creating it by uploading /usr/local/hawq_<version>/ranger/etc/ranger-servicedef-hawq.json
     HAWQ service instance was not found in Ranger Admin, creating it.
-    Updated POLICY_MGR_URL to http://ranger_host:6080 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
-    Updated default value of JAVA_HOME to /usr/jdk64/jdk1.8.0_77 in /usr/local/hawq_2_2_0_0/ranger/etc/rps.properties
+    Updated POLICY_MGR_URL to http://ranger_host:6080 in /usr/local/hawq_<version>/ranger/etc/rps.properties
+    Updated default value of JAVA_HOME to /usr/jdk64/jdk1.8.0_77 in /usr/local/hawq_<version>/ranger/etc/rps.properties
     ```
     
     **Note**: You can also enter the short form of the command: `./enable-ranger-plugin.sh -r` and the script will prompt you for entries.
