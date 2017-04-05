@@ -37,12 +37,15 @@ A single configuration parameter, `hawq_acl_type` determines whether HAWQ defers
 
 The Ranger plug-in service caches Ranger policies locally on each HAWQ node to avoid unnecessary round trips between the HAWQ node and the Ranger Policy Manager server.
 
-## <a id="limitations"></a>Limitations of Ranger Policy Management in HAWQ 2.2.0.0-incubating
-Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
+## <a id="limitations"></a>Limitations of Ranger Policy Management
 
-The Ranger plug-in service is not compatible with Highly-Available HAWQ deployments. Should you need to activate the standby master in your HAWQ cluster, you must manually update the HAWQ Ranger service definition with the new master node connection information.
+In this release, HAWQ integration with Ranger has several limitations:
 
-Ranger User Group policies cannot be used with HAWQ in this release. Only User Policies are currently supported.
+- Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
 
-Some authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. See [HAWQ-Native Authorization](../clientaccess/hawq-access-checks.html#alwaysnative).
+- The Ranger plug-in service is not compatible with Highly-Available HAWQ deployments. Should you need to activate the standby master in your HAWQ cluster, you must manually update the HAWQ Ranger service definition with the new master node connection information.
+
+- Ranger User Group policies cannot be used with HAWQ in this release. Only User Policies are currently supported.
+
+- Some authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. See [HAWQ-Native Authorization](../clientaccess/hawq-access-checks.html#alwaysnative).
 
