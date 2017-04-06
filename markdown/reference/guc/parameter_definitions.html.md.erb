@@ -264,6 +264,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[gp\_workfile\_limit\_per\_segment](../../reference/guc/parameter_definitions.html#gp_workfile_limit_per_segment)**
 
+-   **[hawq\_acl\_type](../../reference/guc/parameter_definitions.html#hawq_acl_type)**
+
 -   **[hawq\_dfs\_url](../../reference/guc/parameter_definitions.html#hawq_dfs_url)**
 
 -   **[hawq\_global\_rm\_type](../../reference/guc/parameter_definitions.html#hawq_global_rm_type)**
@@ -323,6 +325,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[hawq\_rm\_yarn\_queue\_name](../../reference/guc/parameter_definitions.html#hawq_rm_yarn_queue_name)**
 
 -   **[hawq\_rm\_yarn\_scheduler\_address](../../reference/guc/parameter_definitions.html#hawq_rm_yarn_scheduler_address)**
+
+-   **[hawq\_rps\_address\_port](../../reference/guc/parameter_definitions.html#hawq_rps_address_port)**
 
 -   **[hawq\_segment\_address\_port](../../reference/guc/parameter_definitions.html#hawq_segment_address_port)**
 
@@ -1854,6 +1858,15 @@ Sets the maximum total disk size that all running queries are allowed to use for
 |-------------|---------|------------------------|
 | kilobytes   | 0       | local, system, restart |
 
+## <a name="hawq_acl_type"></a>hawq\_acl\_type
+
+Identifies the authorization method currently configured in your HAWQ cluster. HAWQ supports native and Ranger authorization. Refer to [Configuring HAWQ to Use Ranger Policy Management](../../ranger/ranger-integration-config.html) for detailed information on configuring Ranger authorization for HAWQ.
+
+| Value Range                                                             | Default             | Set Classifications     |
+|-------------------------------------------------------------------------|---------------------|-------------------------|
+| standalone<p>ranger | standalone | master, restart |
+
+
 ## <a name="hawq_dfs_url"></a>hawq\_dfs\_url
 
 URL for HAWQ data directories on HDFS. The directory that you specify must be writeable by the `gpadmin` user. For example 'localhost:8020/hawq\_default'. If you have high availability enabled for your HDFS NameNodes, then this configuration parameter must be set to the service ID you configured in HDFS. See "HAWQ Filespaces and High Availability Enabled HDFS" for more information.
@@ -2123,6 +2136,17 @@ Server address (host and port) of the YARN resource manager scheduler (the value
 | Value Range             | Default | Set Classifications |
 |-------------------------|---------|---------------------|
 | valid hostname and port |         | master              |
+
+
+
+## <a name="hawq_rps_address_port"></a>hawq\_rps\_address\_port
+
+Identifies the port on which the HAWQ Ranger Plug-in Service runs. The `hawq_rps_address_port` configuration parameter value must match the  `rps.properties` `RPS_HTTP_PORT` environment variable setting. If you update the port, you must restart your HAWQ cluster, or reload HAWQ configuration and restart the HAWQ Ranger Plug-in Service.
+
+| Value Range                                                             | Default             | Set Classifications     |
+|-------------------------------------------------------------------------|---------------------|-------------------------|
+| 1-65535 | 8432 | master, reload |
+
 
 ## <a name="hawq_segment_address_port"></a>hawq\_segment\_address\_port
 
