@@ -21,9 +21,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-Data in many HAWQ deployments may already reside in external sources. The HAWQ Extension Framework (PXF) provides access to this external data via built-in connectors called plug-ins. These plug-ins facilitate mapping the data source to a HAWQ external table definition. PXF includes HDFS, Hive, HBase, and JSON plug-ins. For additional information about PXF, refer to [Using PXF with Unmanaged Data](../../pxf/HawqExtensionFrameworkPXF.html).
+Data in many HAWQ deployments may already reside in external sources. The HAWQ Extension Framework (PXF) provides access to this external data via built-in connectors called plug-ins. PXF plug-ins facilitate mapping a data source to a HAWQ external table definition. PXF is installed with HDFS, Hive, HBase, and JSON plug-ins.
 
-In this exercise, you will use the PXF HDFS plug-in to create HAWQ external table definitions to access the dimension data you loaded into HDFS in an earlier exercise. You will perform queries on the HDFS data via HAWQ.  You will also run more complex queries accessing both HAWQ-managed and the external HDFS data.
+In this exercise, you will use the PXF HDFS plug-in to create HAWQ external table definitions to access the dimension data you loaded into HDFS in Lesson 4. You will perform queries on the HDFS data via HAWQ. You will also run more complex queries accessing both HAWQ-managed and the external HDFS data.
 
 ## <a id="tut_intropxfprereq"></a>Prerequisites
 
@@ -32,21 +32,22 @@ Ensure that you have:
 - [Set Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup),
 - [Created the HAWQ Tutorial Database](basicdbadmin.html#tut_ex_createdb),
 - [Downloaded the Retail Data and Script Files](dataandscripts.html#tut_exdownloadfilessteps),
-- [Created the Retail Data Set Schema](dataandscripts.html#tut_dsschema_ex),
+- [Created the Retail Demo HAWQ Schema](dataandscripts.html#tut_dsschema_ex),
 - [Loaded the Dimension Data to HDFS](dataandscripts.html#tut_loadhdfs_ex),
 - [Created the HAWQ Retail Demo Fact Tables](introhawqtbls.html#tut_excreatehawqtblsteps),
 
-and that your HAWQ cluster is up and running.
+and that your HAWQ cluster is up and running. 
 
-## <a id="tut_excreatepxftblsteps"></a>Exercise: Create  and Query PXF Retail Demo External Tables
+You should also retrieve the hostname or IP address of the HDFS NameNode that you noted in [Viewing and Updating HAWQ Configuration](basichawqadmin.html#tut_ex_cmdline_cfg).
 
-Perform the following steps to create HAWQ external table definitions to access the dimension data stored in HDFS.
+## <a id="tut_excreatepxftblsteps"></a>Exercise: Creating and Querying PXF Retail Demo External Tables
 
-1. Log in to the HAWQ master node as the `gpadmin` user and set up your HAWQ environment:
+Perform the following steps to create HAWQ external table definitions to read the dimension data you previously loaded into HDFS.
+
+1. Log in to the HAWQ master node as the `gpadmin` user:
 
     ``` shell
     $ ssh gpadmin@<master>
-    gpadmin@master$ source /usr/local/hawq/greenplum_path.sh
     ```
 
 2. Navigate to the PXF script directory:
@@ -55,7 +56,7 @@ Perform the following steps to create HAWQ external table definitions to access 
     gpadmin@master$ cd $HAWQGSBASE/tutorials/getstart/pxf
     ```
 
-5. PXF communicates with HDFS nodes in your cluster. Obtain the hostname or IP address associated with the HDFS NameNode, and then run the following script:
+5. PXF communicates with HDFS nodes in your cluster. Run the following script, providing the hostname or IP address of your HDFS NameNode (or the HDFS NameService if HDFS High Availability mode is enabled):
 
     ``` shell
     gpadmin@master$ ./set_namenode.sh <name-node>
@@ -74,24 +75,24 @@ Perform the following steps to create HAWQ external table definitions to access 
 	 hawqgsdb=#
 	 ```
 
-8. Create a HAWQ external table definition to represent the Retail `customers_dim` dimension data you loaded into HDFS in an earlier exercise; substitute your `namenode` hostname or IP address in the `LOCATION` clause:
+8. Create a HAWQ external table definition to represent the Retail demo `customers_dim` dimension data you loaded into HDFS in Lesson 4; substitute your NameNode hostname or IP address in the \<namenode\> field of the `LOCATION` clause:
 
 	 ``` sql
     hawqgsdb=# CREATE EXTERNAL TABLE retail_demo.customers_dim_pxf
                 (customer_id TEXT, first_name TEXT,
                  last_name TEXT, gender TEXT)
-               LOCATION ('pxf://namenode:51200/retail_demo/customers_dim/customers_dim.tsv.gz?profile=HdfsTextSimple')
+               LOCATION ('pxf://<namenode>:51200/retail_demo/customers_dim/customers_dim.tsv.gz?profile=HdfsTextSimple')
                FORMAT 'TEXT' (DELIMITER = E'\t');
     ```
 
     The `LOCATION` clause of a `CREATE EXTERNAL TABLE` statement specifying the `pxf` protocol must include:
-    - The hostname or IP address of your HAWQ cluster's HDFS `namenode`.
+    - The hostname or IP address of your HAWQ cluster's HDFS \<namenode\>.
     - The location and/or name of the external data source. You specified the HDFS file path to the `customer_dim` data above.
-    - The PXF `profile` you use to access the external data. The PXF HDFS plug-in supports the `HdfsTextSimple` profile to access delimited text format data. (Refer to [Accessing HDFS File Data](../../pxf/HDFSFileDataPXF.html) for detailed information about the PXF HDFS Plug-in.)
+    - The PXF `profile` you use to access the external data. The PXF HDFS plug-in supports the `HdfsTextSimple` profile to access delimited text format data.
 
     The `FORMAT` clause of a `CREATE EXTERNAL TABLE` statement specifying the `pxf` protocol and `HdfsTextSimple` profile must identify `TEXT` format and include the `DELIMITER` character used to access the external data source. You identified a tab delimiter character above.
 
-6. Use the tutorial work files to create HAWQ external table definitions for the remainder of the Retail data set, then exit the `psql` subsystem:
+6. Use the tutorial script files to create HAWQ external table definitions for the remainder of the Retail dimension data, then exit the `psql` subsystem:
 
     ``` sql
     hawqgsdb=# \i create_pxf_tables.sql
@@ -170,7 +171,7 @@ Perform the following steps to create HAWQ external table definitions to access 
     ```
 
 
-## <a id="tut_exhawqpxfquerysteps"></a>Exercise: Query HAWQ and PXF Retail Demo Tables
+## <a id="tut_exhawqpxfquerysteps"></a>Exercise: Querying HAWQ and PXF Retail Demo Tables
 
 Often, data will reside in both HAWQ tables and external data sources. In these instances, you can use both HAWQ internal and PXF external tables to relate and query the data.
 
@@ -186,7 +187,7 @@ Perform the following steps to identify the names and email addresses of all cus
 	 hawqgsdb=#
 	 ```
 
-2. The orders fact data is accessible via the `orders_hawq` table created in the previous lesson. The customers data is accessible via the `customers_dim_pxf` table created in a previous exercise. Using these internal and external HAWQ  tables, construct a query to identify the names and email addresses of all customers who made gift certificate purchases; also include an overall order total for such purchases:
+2. The orders fact data is accessible via the `orders_hawq` table created in the previous lesson. The customers data is accessible via the `customers_dim_pxf` table created in the previous exercise. Using these internal and external HAWQ  tables, construct a query to identify the names and email addresses of all customers who made gift certificate purchases; also include an overall order total for such purchases:
 
     ``` sql
     hawqgsdb=# SELECT substring(retail_demo.orders_hawq.customer_email_address for 37) AS email_address, last_name, 
@@ -222,7 +223,10 @@ Perform the following steps to identify the names and email addresses of all cus
 ## <a id="tut_intropxf_summary"></a>Summary    
 You created PXF external tables to access HDFS data and queried these tables. You also performed a query using this external and the HAWQ internal fact tables created previously, executing business logic on both your managed and unmanaged data.
 
-This lesson wraps up the *Getting Started with HAWQ* tutorial. Now that you are familiar with basic environment set-up, cluster, database, and data management activities, you are ready to administer your HAWQ cluster.
+For additional information about PXF, refer to [Using PXF with Unmanaged Data](../../pxf/HawqExtensionFrameworkPXF.html).
 
-**Previous Lesson**: [Introduction to HAWQ Tables](introhawqtbls.html)  
+Refer to [Accessing HDFS File Data](../../pxf/HDFSFileDataPXF.html) for detailed information about the PXF HDFS Plug-in.
+
+This lesson wraps up the *Getting Started with HAWQ* tutorial. Now that you are familiar with basic environment set-up, cluster, database, and data management activities, you should feel more confident interacting with your HAWQ cluster.
+ 
 **Next Steps**: View HAWQ documentation related to [Running a HAWQ Cluster](../../admin/RunningHAWQ.html).
