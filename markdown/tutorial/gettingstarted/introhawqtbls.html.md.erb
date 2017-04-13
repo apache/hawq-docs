@@ -21,7 +21,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-HAWQ writes data to, and reads data from, HDFS natively. HAWQ tables are similar to tables in any relational database, except that table rows (data) are distributed across the different segments in the system.
+HAWQ writes data to, and reads data from, HDFS natively. HAWQ tables are similar to tables in any relational database, except that table rows (data) are distributed across the different segments in the cluster.
 
 In this exercise, you will run scripts that use the SQL `CREATE TABLE` command to create HAWQ tables. You will load the Retail demo fact data into the HAWQ tables using the SQL `COPY` command. You will then perform simple and complex queries on the data.
 
@@ -67,7 +67,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     gpadmin@master$ vi create_hawq_tables.sql
     ```
 
-    Notice the use of the `retail_demo.` schema name prefix to the `order_lineitems_hawq` and `orders_hawq` table names:
+    Notice the use of the `retail_demo.` schema name prefix to the `order_lineitems_hawq` table name:
     
     ``` sql
     DROP TABLE IF EXISTS retail_demo.order_lineitems_hawq;
@@ -111,13 +111,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     
     The `CREATE TABLE` statement above creates a table named `order_lineitems_hawq` in the `retail_demo` schema. `order_lineitems_hawq` has several columns. `order_id` and `customer_id` provide keys into the orders fact and customers dimension tables. The data in `order_lineitems_hawq` is distributed randomly and is compressed using the `zlib` compression algorithm.
     
-    `create_hawq_tables.sql` also creates the `orders_hawq` fact table.
-
-6. Use the provided script to load the Retail demo fact data into the newly-created tables. This process may take some time to complete.
-
-    ``` shell
-    gpadmin@master$ ./load_hawq_tables.sh
-    ```
+    The `create_hawq_tables.sql` script also creates the `orders_hawq` fact table.
 
 6. Take a look at the `load_hawq_tables.sh` script:
 
@@ -125,13 +119,21 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     gpadmin@master$ vi load_hawq_tables.sh
     ```
 
-    Again, notice the use of the `retail_demo.` schema name prefix to the table names. Examine the `psql -c` `COPY` commands:
+    Again, notice the use of the `retail_demo.` schema name prefix to the table names. 
+    
+    Examine the `psql -c` `COPY` commands:
     
     ``` shell
     zcat $DATADIR/order_lineitems.tsv.gz | psql -d hawqgsdb -c "COPY retail_demo.order_lineitems_hawq FROM STDIN DELIMITER E'\t' NULL E'';"
     zcat $DATADIR/orders.tsv.gz | psql -d hawqgsdb -c "COPY retail_demo.orders_hawq FROM STDIN DELIMITER E'\t' NULL E'';"
     ```
     The `load_hawq_tables.sh` shell script uses the `zcat` command to uncompress the `.tsv.gz` data files. The SQL `COPY` command copies `STDIN` (i.e. the output of the `zcat` command) to the HAWQ table. The `COPY` command also identifies the `DELIMITER` used in the file (tab) and the `NULL` string (''). While probably not the most efficient way to load the data, it gets the job done.
+    
+6. Use the `load_hawq_tables.sh` script to load the Retail demo fact data into the newly-created tables. This process may take some time to complete.
+
+    ``` shell
+    gpadmin@master$ ./load_hawq_tables.sh
+    ```
 
 6. Use the provided script to verify that the Retail demo fact tables were loaded successfully:
 

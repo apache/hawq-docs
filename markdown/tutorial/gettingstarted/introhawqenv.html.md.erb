@@ -80,7 +80,7 @@ Perform the following steps to set up your HAWQ runtime environment:
     source /usr/local/hawq/greenplum_path.sh
     ```
     
-4. Set the HAWQ-specific environment variables relevant to your deployment in your shell initialization file. These include `PGDATABASE`, `PGHOST`, `PGOPTIONS`, `PGPORT`, and `PGUSER.` (You may not need to set any of these environment variables.) For example, if you use a custom HAWQ master port number, make this port number the default by setting the `PGPORT` environment variable in your shell initialization file; add:
+4. Set the HAWQ-specific environment variables relevant to your deployment in your shell initialization file. These include `PGDATABASE`, `PGHOST`, `PGOPTIONS`, `PGPORT`, and `PGUSER.` You may not need to set any of these environment variables. For example, if you use a custom HAWQ master port number, make this port number the default by setting the `PGPORT` environment variable in your shell initialization file; add:
 
     ``` shell
     export PGPORT=10432
@@ -102,7 +102,7 @@ Perform the following steps to set up your HAWQ runtime environment:
   
 6. View the current state of your HAWQ cluster, and if it is not already running, start the cluster. In practice, you will perform different procedures depending upon whether you manage your cluster from the command line or use Ambari. While you are introduced to both in this tutorial, lessons will focus on command line instructions, as not every HAWQ deployment will utilize Ambari.<p>
 
-    ***Command Line***:
+    *Command Line*:
 
     ``` shell
     gpadmin@master$ hawq state
@@ -156,7 +156,7 @@ Perform the following steps to set up your HAWQ runtime environment:
     
     State information returned includes the status of the master node, standby master, number of segment instances, and for each segment, the number valid and failed.<p>
 
-    ***Ambari***:
+    *Ambari*:
     
     If your deployment includes an Ambari server, perform the following steps to start and view the current state of your HAWQ cluster. 
     
@@ -173,6 +173,8 @@ Perform the following steps to set up your HAWQ runtime environment:
         The Ambari dashboard provides an at-a-glance status of the health of your HAWQ cluster. A list of each running service and its status is provided in the left panel. The main display area includes a set of configurable tiles providing specific information about your cluster, including HAWQ segment status, HDFS disk usage, and resource manager metrics. 
         
     3. Navigate to the **HAWQ** service listed in the left pane. If the service is not running (i.e. no green checkmark to the left of the service name), start your HAWQ cluster by clicking the **HAWQ** service name, and then selecting the **Start** operation from the **Service Actions** menu button.
+
+    4. Log out of the Ambari console by clicking the **admin** button and selecting the **Sign out** drop down menu item.
 
 ## <a id="tut_runtime_sumary"></a>Summary
 Your HAWQ cluster is now running. For additional information:

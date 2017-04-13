@@ -23,7 +23,7 @@ under the License.
 
 This and later exercises operate on an example data set that models an online retail store. The data set is provided in a set of `gzip`'d `.tsv` (tab-separated values) text files. The exercises also reference scripts and other supporting files that operate on the data set.
 
-In this section, you are introduced to the example data set schema. You will download and examine the data set and work files. You will also load some of the data into HDFS.
+In this section, you are introduced to the Retail demo data schema. You will download and examine the data set and work files. You will also load some of the data into HDFS.
 
 ## <a id="tut_dataset_prereq"></a>Prerequisites
 
@@ -52,15 +52,15 @@ Perform the following steps to download the sample data set and scripts:
 4. Download the tutorial work and data files from `github`, checking out the appropriate tag/branch:
 
     ``` shell
-    gpadmin@sandbox$ git clone https://github.com/pivotalsoftware/hawq-samples.git
-    gpadmin@sandbox$ cd hawq-samples
-    gpadmin@sandbox$ git checkout hawq21x_getstart
+    gpadmin@master$ git clone https://github.com/pivotalsoftware/hawq-samples.git
+    gpadmin@master$ cd hawq-samples
+    gpadmin@master$ git checkout hawq2x_tutorial
     ```
 
 5. Save the path to the work files base directory:
 
     ``` shell
-    gpadmin@sandbox$ export HAWQGSBASE=/tmp/hawq_getstart/hawq-samples
+    gpadmin@master$ export HAWQGSBASE=/tmp/hawq_getstart/hawq-samples
     ```
     
     (If you chose a different base work directory, modify the command as appropriate.) 
@@ -77,10 +77,10 @@ Perform the following steps to download the sample data set and scripts:
     | tutorials/getstart/pxf/   | SQL and shell scripts used by the PXF exercises                                                                                                                                                                                 |
     <p>
 
-    `hawq-samples` repository directories not mentioned in the table above are not used by the *Getting Started with HAWQ* guide exercises.
+    (`hawq-samples` repository directories not mentioned in the table above are not used by the *Getting Started with HAWQ* exercises.)
 
 
-## <a id="tut_datasetschema"></a>Retail Data Set
+## <a id="tut_datasetschema"></a>Retail Demo Data Set
 
 The sample Retail demo data set used in the tutorial exercises models an online retail store operation. The store carries different categories of products.  Customers order the products. The company delivers the products to the customers.
 
@@ -98,7 +98,7 @@ The Retail demo data set includes the entities described in the table below. Ord
 | orders  |  Details of an order: includes id, payment method, billing address, day/time, and other fields; orders are associated with a specific customer |
 | order\_lineitems  |  Line item for each order: includes id, item id, category, store, shipping address, and other fields; references a specific product from a specific order from a specific customer |
 
-### <a id="tut_dsschema_ex"></a>Exercise: Create the Retail Demo HAWQ Schema
+### <a id="tut_dsschema_ex"></a>Exercise: Creating the Retail Demo HAWQ Schema
 
 A HAWQ schema is a namespace for a database. It contains named objects like tables, data types, functions, and operators. These named objects are accessed by qualifying their name with the prefix `<schema-name>`.
 
@@ -133,7 +133,7 @@ Perform the following steps to create the Retail demo data schema:
     (7 rows)
     ```
     
-    Every database includes a schema named `public`. Database objects you create without specifying a schema are created in the default schema. This schema is the `public` schema, unless you explicitly set it to another schema. (More about this later.)
+    Every database includes a schema named `public`. Database objects you create without specifying a schema are created in the default schema. The default HAWQ schema is the `public` schema, unless you explicitly set it to another schema. (More about this later.)
 
 3. Display the tables in the `public` schema:
 
@@ -146,7 +146,7 @@ Perform the following steps to create the Retail demo data schema:
     (1 row)
     ```
     
-    You created the Lesson 3 `first_tbl` table in the `public` schema.
+    In Lesson 3, you created the `first_tbl` table in the `public` schema.
 
 4. Create a schema named `retail_demo` to represent the Retail demo namespace:
 
@@ -155,7 +155,7 @@ Perform the following steps to create the Retail demo data schema:
     CREATE SCHEMA
     ```
 
-5. The `search_path` server configuration parameter identifies the order in which HAWQ should search or apply schemas for objects. Set the schema search path to include your newly-created `retail_demo` schema first:
+5. The `search_path` server configuration parameter identifies the order in which HAWQ should search or apply schemas for objects. Set the schema search path to include the new `retail_demo` schema first:
 
     ``` sql
     hawqgsdb=# SET search_path TO retail_demo, public;
@@ -164,7 +164,7 @@ Perform the following steps to create the Retail demo data schema:
     
     `retail_demo`, the first schema in your `search_path`, becomes your default schema.
     
-    Note: Setting `search_path` in this manner sets the parameter only for the current `psql` session. You must re-set `search_path` in subsequent `psql` sessions.
+    (Note: Setting `search_path` in this manner sets the parameter only for the current `psql` session. You must re-set `search_path` in subsequent `psql` sessions.)
 
 4. Create another table named `first_tbl`:
 
@@ -209,9 +209,9 @@ Perform the following steps to create the Retail demo data schema:
     (5 rows)
     ```
 
-    You must prepend the table name with `public.` to explicitly identify that the `first_tbl` table in which you are interested resides in the `public` schema. 
+    You must prepend the table name with `public.` to explicitly identify the `first_tbl` table in which you are interested. 
 
-7. Exit the `psql` subsystem:
+7. Exit `psql`:
 
     ``` sql
     hawqgsdb=# \q
@@ -227,7 +227,7 @@ A fact table consists of business facts. Dimension tables provide descriptive in
     gpadmin@master$ cd $HAWQGSBASE/tutorials/getstart/pxf
     ```
 
-2. Using the provided script, load the sample data files representing dimension data into the `/retail_demo` HDFS directory. Note that any existing `/retail_demo` directory and contents are removed before the script loads the data: 
+2. Using the provided script, load the sample data files representing dimension data into an HDFS directory named `/retail_demo`. The script removes any existing `/retail_demo` directory and contents before loading the data: 
 
     ``` shell
     gpadmin@master$ ./load_data_to_HDFS.sh
@@ -241,7 +241,7 @@ A fact table consists of business facts. Dimension tables provide descriptive in
 	
 	 `load_to_HDFS.sh` loads the dimension data `.tsv.gz` files directly into HDFS. Each file is loaded to its respective `/retail_demo/<basename>/<basename>.tsv.gz` file path.
 	 
-3. View the HDFS `/retail_demo` directory hierarchy:
+3. View the contents of the HDFS `/retail_demo` directory hierarchy:
 
     ``` shell
     gpadmin@master$ sudo -u hdfs hdfs dfs -ls /retail_demo/*
@@ -258,6 +258,6 @@ A fact table consists of business facts. Dimension tables provide descriptive in
 
 You created the `retail_demo` HAWQ schema and loaded the Retail demo dimension data into HDFS. 
 
-In Lessons 5 and 6, you will create and query HAWQ internal and external tables in this new schema.
+In Lessons 5 and 6, you will create and query HAWQ internal and external tables in the `retail_demo` schema.
 
 **Lesson 5**: [Introduction to HAWQ Tables](introhawqtbls.html)

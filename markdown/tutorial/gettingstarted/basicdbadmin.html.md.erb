@@ -23,7 +23,7 @@ under the License.
 
 The HAWQ database administrator, and those users specifically granted the privileges, can execute SQL commands to create HAWQ databases and tables. These commands may be invoked via scripts, programs, and from the `psql` client utility.
 
-In this lesson, you are introduced to basic HAWQ database administration commands and tasks. You will create a database and a simple table, and add data to and query the table.
+In this lesson, you are introduced to basic HAWQ database administration commands and tasks using `psql`. You will create a database and a simple table, and add data to and query the table.
 
 ## <a id="tut_adminprereq"></a> Prerequisites
 
@@ -91,9 +91,9 @@ In this exercise, you use the `psql` command line utility to create a HAWQ datab
     hawqgsdb=# \q
     ```
 
-## <a id="tut_ex_usepsql"></a>Exercise: Using psql
+## <a id="tut_ex_usepsql"></a>Exercise: Using psql for Table Operations
 
-You can manage and access HAWQ databases via the `psql` utility, an interactive front-end to the HAWQ database. In this exercise, you use `psql` to create, add data to, and query a simple HAWQ table.
+You manage and access HAWQ databases and tables via the `psql` utility, an interactive front-end to the HAWQ database. In this exercise, you use `psql` to create, add data to, and query a simple HAWQ table.
 
 1. Start the `psql` subsystem:
 
@@ -111,7 +111,7 @@ You can manage and access HAWQ databases via the `psql` utility, an interactive 
     CREATE TABLE 
     ```
 
-3. Display descriptive information for table `first_tbl`:
+3. Display descriptive information about table `first_tbl`:
 
     ``` sql
     hawqgsdb=# \d first_tbl
@@ -139,10 +139,10 @@ You can manage and access HAWQ databases via the `psql` utility, an interactive 
     
     Each `INSERT` command adds a row to `first_tbl`, the first adding a row with the value `i=1`, and the second, a row with the value `i=2`. Each `INSERT` also displays the number of rows added (1).
 
-4. HAWQ provides several built-in functions for data manipuliation. The  `generate_series(<start>, <end>)` function generates a series of numbers beginning with `<start>` and finishing at `<end>`. Use the `generate_series()` HAWQ built-in function to add rows for `i=3`, `i=4`, and `i=5` to `first_tbl`:
+4. HAWQ provides several built-in functions for data manipulation. The  `generate_series(<start>, <end>)` function generates a series of numbers beginning with `<start>` and finishing at `<end>`. Use the `generate_series()` HAWQ built-in function to add rows for `i=3`, `i=4`, and `i=5` to `first_tbl`:
 
     ``` sql
-    hawqgsdb=# INSERT INTO first_tbl SELECT generate_series(3,5);
+    hawqgsdb=# INSERT INTO first_tbl SELECT generate_series(3, 5);
     INSERT 0 3
     ```
     
@@ -175,7 +175,7 @@ You can manage and access HAWQ databases via the `psql` utility, an interactive 
     (2 rows)
     ```
     
-    The `SELECT` command returns the 2 rows (`i=4` and `i=5`) in the table where `i` is larger than 3.
+    The `SELECT` command returns the 2 rows (`i=4` and `i=5`) in the table where `i` is larger than 3 and displays the value of `i`.
 
 7. Exit the `psql` subsystem:
 
@@ -183,11 +183,13 @@ You can manage and access HAWQ databases via the `psql` utility, an interactive 
     hawqgsdb=# \q
     ```
     
-8. `psql` includes an option (`-c`) to run a single SQL command from the shell command line. Perform the same query you ran in Step 7 using this option:
+8. `psql` includes an option, `-c`, to run a single SQL command from the shell command line. Perform the same query you ran in Step 7 using the `-c <sql-command>` option:
 
     ``` shell
     gpadmin@master$ psql -d hawqgsdb -c 'SELECT i FROM first_tbl WHERE i>3'
     ```
+    
+    Notice that you enclose the SQL command in single quotes.
 
 9. Set the HAWQ `PGDATABASE` environment variable to identify `hawqsgdb`:
 

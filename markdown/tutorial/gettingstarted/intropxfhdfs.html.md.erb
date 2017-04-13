@@ -87,8 +87,8 @@ Perform the following steps to create HAWQ external table definitions to read th
 
     The `LOCATION` clause of a `CREATE EXTERNAL TABLE` statement specifying the `pxf` protocol must include:
     - The hostname or IP address of your HAWQ cluster's HDFS \<namenode\>.
-    - The location and/or name of the external data source. You specified the HDFS file path to the `customer_dim` data above.
-    - The PXF `profile` you use to access the external data. The PXF HDFS plug-in supports the `HdfsTextSimple` profile to access delimited text format data.
+    - The location and/or name of the external data source. You specified the HDFS file path to the `customer_dim` data file above.
+    - The PXF `profile` to use to access the external data. The PXF HDFS plug-in supports the `HdfsTextSimple` profile to access delimited text format data.
 
     The `FORMAT` clause of a `CREATE EXTERNAL TABLE` statement specifying the `pxf` protocol and `HdfsTextSimple` profile must identify `TEXT` format and include the `DELIMITER` character used to access the external data source. You identified a tab delimiter character above.
 
@@ -101,7 +101,7 @@ Perform the following steps to create HAWQ external table definitions to read th
     	
     Note: The `create_pxf_tables.sql` script deletes each external table before attempting to create it. If this is your first time performing this exercise, you can safely ignore the `psql` "table does not exist, skipping" NOTICE messages.
     
-6. Run the following script to verify that you created the external table definitions successfully:
+6. Run the following script to verify that you successfully created the external table definitions:
 
     ``` shell
     gpadmin@master$ ./verify_create_pxf_tables.sh 

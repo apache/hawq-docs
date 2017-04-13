@@ -35,7 +35,7 @@ Ensure that you have performed the steps in [Setting Up your HAWQ Runtime Enviro
 
 ## <a id="tut_adminclustermgmt"></a>HAWQ Cluster Administration - Command Line
 
-You may choose to manage your HAWQ cluster from the command line.
+If you choose to manage your HAWQ cluster from the command line, you will perform many administrative functions using the `hawq` utility. The `hawq` command line utility provides subcommands including `start`, `stop`, `config`, and `state`.
 
 ### <a id="tut_ex_cmdline_cfg"></a>Exercise: Viewing and Updating HAWQ Configuration from the Command Line
 
@@ -51,17 +51,17 @@ Perform the following steps to view the HAWQ HDFS filespace URL and set the `plj
     Value  : <hdfs-namenode>:8020/hawq_default
     ```
     
-    Make note of the <hdfs-namenode> hostname or IP address returned, you will need this in Lesson 6: Introduction to the HAWQ Extension Framework (PXF).
+    Make note of the <hdfs-namenode> hostname or IP address returned, you will need this in *Lesson 6: Introduction to the HAWQ Extension Framework (PXF)*.
 
 2. The HAWQ PL/Java `pljava_classpath` server configuration parameter identifies the classpath used by the HAWQ PL/Java extension. View the current `pljava_classpath` configuration parameter setting:
 
     ``` shell
     gpadmin@master$ hawq config -s pljava_classpath
     GUC		: pljava_classpath
-    Value		:
+    Value    :
     ```
     
-    The value is currently unset, as indicate by the empty `Value`.
+    The value is currently not set, as indicated by the empty `Value`.
 
 3. Your HAWQ installation includes an example PL/Java JAR file. Set `pljava_classpath` to include the `examples.jar` file installed with HAWQ:
 
@@ -73,9 +73,9 @@ Perform the following steps to view the HAWQ HDFS filespace URL and set the `plj
     Value   : examples.jar
     ```
 
-    The message 'GUC pljava\_classpath does not exist in hawq-site.xml; Try to add it with value: examples.jar' indicates that HAWQ could not find a previous setting for `pljava_classpath` and attempts to set this configuration parameter to `examples.jar`, the value you provided in the `v` option.
+    The message 'GUC pljava\_classpath does not exist in hawq-site.xml; Try to add it with value: examples.jar' indicates that HAWQ could not find a previous setting for `pljava_classpath` and attempts to set this configuration parameter to `examples.jar`, the value you provided with the `-v` option.
 
-3. HAWQ configuration must be reloaded after setting a configuration parameter: 
+3. You must reload the HAWQ configuration after setting a configuration parameter: 
 
     ``` shell
     gpadmin@master$ hawq stop cluster --reload
@@ -128,7 +128,7 @@ Perform the following steps to view the state of your HAWQ cluster via the Ambar
     
     Ambari runs on port 8080.
 
-2. Log in to the Ambari UI using the Ambari user credentials (the default username and password is `admin`.)
+2. Log in to the Ambari UI using the Ambari user credentials.
 
     The Ambari UI dashboard window displays.
 
@@ -179,7 +179,7 @@ Perform the following steps to view the HDFS NodeName and set the HAWQ PL/Java `
 
 5. Select the **Custom hawq-site** drop down.
 
-    Currently configured custom parameters and values are displayed in the pane.  The pane will be empty if no configuration parameters are set.
+    Currently configured custom parameters and values are displayed in the pane.  If no configuration parameters are set, the pane will be empty.
 
 6. Select **Add Property ...**.
 
@@ -195,10 +195,10 @@ Perform the following steps to view the HDFS NodeName and set the HAWQ PL/Java `
     (Your version of Ambari may not present separate Key/Value fields, but may require you to enter the configuration parameter and value together in the text field, for example `pljava_classpath=examples.jar`.)
 
 8. **Add** the custom property, then **Save** the updated configuration, optionally providing a **Note** in the **Save Configuration** dialog.
-
-    Notice the orange-colored **Restart** button in the right corner of the window. You must restart the HAWQ service after adding or updating configuration parameter values through Ambari.
     
     ![Restart Button](imgs/orangerestart.png)
+    
+    Notice the now orange-colored **Restart** button in the right corner of the window. You must restart the HAWQ service after adding or updating configuration parameter values through Ambari.
 
 9. Select the orange **Restart** button to **Restart All Affected** HAWQ nodes.
 
