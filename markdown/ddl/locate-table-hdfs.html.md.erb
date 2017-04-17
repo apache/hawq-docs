@@ -32,7 +32,7 @@ Only an HDFS or HAWQ superuser may access HAWQ table HDFS files.
 The format of the HDFS file path for a HAWQ table is:
 
 ``` pre
-hdfs://<name-node>:<port>/<hawq-filespace-dir>/<tablespace-oid>/<database-oid>/<table-oid>/<file-number>
+hdfs://<name-node>:<port>/<hawq-filespace-dir>/<tablespace-oid>/<database-oid>/<table-relfilenode>/<file-number>
 ```
 
 The HDFS file path components are described in the table below.
@@ -44,10 +44,10 @@ The HDFS file path components are described in the table below.
 | \<hawq-filespace-dir\>  |  The HDFS directory location of the HAWQ filespace. The default HAWQ filespace HDFS directory is `hawq_default`. |
 | \<tablespace-oid\>  |  The tablespace object identifier. The default HAWQ tablespace identifier is `16385`. |
 | \<database-oid\>  |  The database object identifier. |
-| \<table-oid\>  |  The table object identifier. |
+| \<table-relfilenode\>  |  The table object identifier. |
 | \<file-number\>  |  The file number. |
 
-**Note**: The HAWQ filespace name and its HDFS directory location must be specified when you create a new HAWQ filespace. You must know both to locate the HDFS files for a specific HAWQ table.
+**Note**: The HAWQ filespace name and its HDFS directory location must be identified when you create a new HAWQ filespace. You must know both to locate the HDFS files for a specific HAWQ table.
 
 The \<name-node\>:\<port\>/\<default-hawq-filespace-dir\> together comprise the `hawq_dfs_url` server configuration parameter. To display the value of the HAWQ default filespace URL:
 
@@ -66,9 +66,9 @@ You can determine the tablespace, database, and table object identifiers through
 
 The number of data files associated with a HAWQ table is determined differently for hash-distributed and randomly-distributed HAWQ tables.
 
-Hash-distributed HAWQ tables use a fixed number of virtual segments (vsegs). This number is determined by the `default_hash_table_bucket_number` server configuration parameter setting. HAWQ creates an HDFS file for each bucket of a hash-distributed table.
+Hash-distributed HAWQ tables use a fixed number of virtual segments (vsegs). This number is determined by the `default_hash_table_bucket_number` server configuration parameter setting, or the `BUCKETNUM` value you provide in the `CREATE TABLE` call. The number of HDFS files HAWQ creates for a hash-distributed table depends on the number of concurrent inserts into the table, and will always be a multiple of the `default_hash_table_bucket_number` or `BUCKETNUM` value.
 
-HAWQ creates a single HDFS file for randomly-distributed HAWQ tables.
+The number of HDFS files generated for a randomly-distributed HAWQ table varies, and will depend on the number of virtual segments writing the data.
 
 
 ## <a id="ex_hdfslochash"></a> Example: Locating the HDFS Files of a Hash-Distributed HAWQ Table
@@ -83,10 +83,10 @@ Perform the following steps to identify the HDFS location of the data files asso
     gpadmin@master$ psql -d testdb
     ```
     
-2. Create a hash-distributed table and insert some data:
+2. Create a hash-distributed table with 4 buckets and insert some data:
 
     ``` sql
-    testdb=# CREATE TABLE hash_tbl (id int) DISTRIBUTED BY (id);
+    testdb=# CREATE TABLE hash_tbl (id int) WITH (BUCKETNUM=4) DISTRIBUTED BY (id);
     CREATE TABLE
     testdb=# INSERT INTO hash_tbl SELECT i FROM generate_series(1,100) AS i;
     INSERT 0 100
@@ -107,7 +107,7 @@ Perform the following steps to identify the HDFS location of the data files asso
     (2 rows)
     ```
     
-    The default HAWQ filespace name is `dfs_system`. The tablespace identifier associated with the default HAWQ tablespace named `dfs_default` is `16385`. 
+    The default HAWQ filespace name is `dfs_system`. The tablespace identifier associated with the default HAWQ tablespace named `dfs_default` is `16385`. Make note of this identifier.
     
     The example above includes a second HAWQ filespace named `tryfs`. The tablespace identifier associated with the tablespace named `try_tablespace` is `16619`.
     
@@ -123,23 +123,24 @@ Perform the following steps to identify the HDFS location of the data files asso
     
     Make note of this identifier.
     
-4.  Determine the object identifier of the `hash_tbl` table:
+4.  Tables of the same name may reside in different schemas. The catalog query you use to determine the identifier for the `hash_tbl` table also includes the schema name (`public`):
 
     ``` sql
-    testdb=# SELECT oid FROM pg_class WHERE relname = 'hash_tbl';
-      oid  
-    -------
-     16611
-    (1 row)
+    testdb=# SELECT relname, relfilenode, nspname, relnamespace  
+               FROM pg_class, pg_namespace  
+               WHERE relname = 'hash_tbl' AND nspname = 'public' AND relnamespace=pg_namespace.oid;
+     relname  | relfilenode |  nspname  | relnamespace 
+    ----------+-------------+-----------+--------------
+     hash_tbl |       55784 | public    |         2200
     ```
     
-    Make note of this identifier as well.
+    Make note of the `relfilenode` value for `hash_tbl`.
 
 4. Construct an HDFS file path for `hash_tbl`. For example, using the HDFS directory location of the HAWQ default filespace:
 
     ``` pre
-    hdfs://<name-node>:<port>/<hawq-filespace-name>/<tablespace-oid>/<database-oid>/<table-oid>/<file-number>
-    hdfs://<name-node>:8020/hawq_default/16385/16508/16611
+    hdfs://<name-node>:<port>/<hawq-filespace-name>/<tablespace-oid>/<database-oid>/<table-relfilenode>/<file-number>
+    hdfs://<name-node>:8020/hawq_default/16385/16508/55784
     ```
     
     Substitute your HDFS NameNode for \<name-node\>.
@@ -147,26 +148,12 @@ Perform the following steps to identify the HDFS location of the data files asso
 4. Locate the HDFS file(s):
 
     ``` shell
-    gpadmin@master$ sudo -u hdfs hdfs dfs -ls hdfs://<name-node>:8020/hawq_default/16385/16508/16611
+    gpadmin@master$ hdfs dfs -ls hdfs://<name-node>:8020/hawq_default/16385/16508/55784
     Found 6 items
-    -rw-------   3 gpadmin gpadmin        176 2017-04-12 21:20 /hawq_default/16385/16508/16611/1
-    -rw-------   3 gpadmin gpadmin        168 2017-04-12 21:20 /hawq_default/16385/16508/16611/2
-    -rw-------   3 gpadmin gpadmin        192 2017-04-12 21:20 /hawq_default/16385/16508/16611/3
-    -rw-------   3 gpadmin gpadmin        168 2017-04-12 21:20 /hawq_default/16385/16508/16611/4
-    -rw-------   3 gpadmin gpadmin        192 2017-04-12 21:20 /hawq_default/16385/16508/16611/5
-    -rw-------   3 gpadmin gpadmin        216 2017-04-12 21:20 /hawq_default/16385/16508/16611/6
+    -rw-------   3 gpadmin gpadmin        176 2017-04-17 15:24 hdfs://name-node:8020/hawq_default/16385/16508/55784/1
+    -rw-------   3 gpadmin gpadmin        168 2017-04-17 15:24 hdfs://name-node:8020/hawq_default/16385/16508/55784/2
+    -rw-------   3 gpadmin gpadmin        192 2017-04-17 15:24 hdfs://name-node:8020/hawq_default/16385/16508/55784/3
+    -rw-------   3 gpadmin gpadmin        168 2017-04-17 15:24 hdfs://name-node:8020/hawq_default/16385/16508/55784/4
     ```
     
-    `hash_tbl` has 6 HDFS data files.
-
-4. Display the default number of hash table buckets:
-
-    ``` sql
-    testdb=# SHOW default_hash_table_bucket_number;
-     default_hash_table_bucket_number 
-    ----------------------------------
-     6
-    (1 row)
-    ```
-    
-    As expected, `default_hash_table_bucket_number` is 6, the number of HDFS data files created for `hash_tbl`.
+    As expected, `hash_tbl` is comprised of 4 HDFS data files, a multiple of the `BUCKETNUM` you specified when creating the table in Step 2.
