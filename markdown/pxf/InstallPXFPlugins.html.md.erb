@@ -21,7 +21,7 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This topic describes how to install the built-in PXF service plug-ins that are required to connect PXF to HDFS, Hive, HBase, and JSON. 
+This topic describes how to install the built-in PXF service plug-ins that are required to connect PXF to HDFS, Hive, HBase, JDBC, and JSON. 
 
 **Note:** PXF requires that you run Tomcat on the host machine. Tomcat reserves ports 8005, 8080, and 8009. If you have configured Oozie JXM reporting on a host that will run PXF, make sure that the reporting service uses a port other than 8005. This helps to prevent port conflict errors from occurring when you start the PXF service.
 
@@ -48,7 +48,7 @@ Each PXF service plug-in resides in its own RPM.  You may have built these RPMs 
 
 Perform the following steps on **_each_** node in your cluster to install PXF:
 
-1. Install the PXF software, including Apache, the PXF service, and all PXF plug-ins: HDFS, HBase, Hive, JSON:
+1. Install the PXF software, including Apache, the PXF service, and all PXF plug-ins: HDFS, HBase, Hive, JDBC, JSON:
 
     ```shell
     $ sudo yum install -y pxf
