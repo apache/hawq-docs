@@ -109,7 +109,7 @@ Perform the following steps to view the HAWQ HDFS filespace URL and set the `plj
     20170411:19:58:25:428600 hawq_stop:master:gpadmin-[INFO]:-Cluster reloaded successfully
     ```
 
-    Configuration parameter value changes made by `hawq config` are system-wide; they are propagate to all segments across the cluster.
+    Configuration parameter value changes made by `hawq config` are system-wide; they are propagated to all segments across the cluster.
 
 
 ## <a id="tut_adminclustermgmt"></a>HAWQ Cluster Administration - Ambari Web UI
@@ -185,15 +185,13 @@ Perform the following steps to view the HDFS NodeName and set the HAWQ PL/Java `
 
     The **Add Property** dialog displays. This dialog includes **Type**, **Key**, and **Value** entry fields.
 
-7. Fill in the **Add Property** fields:
+7. Select the single property add mode (single label icon) in the **Add Property** dialog and fill in the fields:
 
     **Key**: pljava_classpath  
     **Value**: examples.jar
     
     ![Add Property](imgs/addprop.png)
     
-    (Your version of Ambari may not present separate Key/Value fields, but may require you to enter the configuration parameter and value together in the text field, for example `pljava_classpath=examples.jar`.)
-
 8. **Add** the custom property, then **Save** the updated configuration, optionally providing a **Note** in the **Save Configuration** dialog.
     
     ![Restart Button](imgs/orangerestart.png)
