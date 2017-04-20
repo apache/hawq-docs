@@ -49,7 +49,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
 2. Create tables for the Retail demo fact data using the script provided:
     
     ``` shell
-    gpadmin@master$ psql -d hawqgsdb -f ./create_hawq_tables.sql 
+    gpadmin@master$ psql -f ./create_hawq_tables.sql 
     psql:./create_hawq_tables.sql:2: NOTICE:  table "order_lineitems_hawq" does not exist, skipping
     DROP TABLE
     CREATE TABLE

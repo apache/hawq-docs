@@ -26,7 +26,7 @@ Data in many HAWQ deployments may already reside in external sources. The HAWQ E
 In this exercise, you use the PXF HDFS plug-in to: 
 
 - Create PXF external table definitions
-- Perform queries on the HDFS data
+- Perform queries on the data you loaded into HDFS
 - Run more complex queries on HAWQ and PXF tables
 
 ## <a id="tut_intropxfprereq"></a>Prerequisites
@@ -74,6 +74,7 @@ Perform the following steps to create HAWQ external table definitions to read th
                  last_name TEXT, gender TEXT)
                LOCATION ('pxf://<namenode>:51200/retail_demo/customers_dim/customers_dim.tsv.gz?profile=HdfsTextSimple')
                FORMAT 'TEXT' (DELIMITER = E'\t');
+    CREATE EXTERNAL TABLE
     ```
 
     The `LOCATION` clause of a `CREATE EXTERNAL TABLE` statement specifying the `pxf` protocol must include:
@@ -83,9 +84,10 @@ Perform the following steps to create HAWQ external table definitions to read th
 
     The `FORMAT` clause of a `CREATE EXTERNAL TABLE` statement specifying the `pxf` protocol and `HdfsTextSimple` profile must identify `TEXT` format and include the `DELIMITER` character used to access the external data source. You identified a tab delimiter character above.
 
-5. The `create_pxf_tables.sql` SQL script creates HAWQ external table definitions for the remainder of the Retail dimension data. Edit `create_pxf_tables.sql`, replacing each occurrence of NAMENODE with the hostname or IP address you specified in the previous step. For example:
+5. The `create_pxf_tables.sql` SQL script creates HAWQ external table definitions for the remainder of the Retail dimension data. In another terminal window, edit `create_pxf_tables.sql`, replacing each occurrence of NAMENODE with the hostname or IP address you specified in the previous step. For example:
 
     ``` shell
+    gpadmin@master$ cd $HAWQGSBASE/tutorials/getstart/pxf
     gpadmin@master$ vi create_pxf_tables.sql
     ```
 
@@ -201,6 +203,8 @@ Perform the following steps to identify the names and email addresses of all cus
      Luvenia.Abad@mediabiz.de              | Abad           |            107.99
      ...
     ```
+    
+    Enter `q` at any time to exit the query results.
 
 3. Exit the `psql` subsystem:
 

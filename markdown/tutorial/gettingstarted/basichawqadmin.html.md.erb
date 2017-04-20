@@ -46,10 +46,10 @@ Perform the following steps to view the HAWQ HDFS filespace URL and set the `plj
     ``` shell
     gpadmin@master$ hawq config -s hawq_dfs_url
     GUC	   : hawq_dfs_url
-    Value  : <hdfs-namenode>:8020/hawq_default
+    Value  : <hdfs-namenode>:8020/hawq_data
     ```
     
-    Make note of the <hdfs-namenode> hostname or IP address returned, you will need this in *Lesson 6: Introduction to the HAWQ Extension Framework (PXF)*.
+    Make note of the <hdfs-namenode> hostname or IP address returned, you will need this in *Lesson 6: HAWQ Extension Framework (PXF)*.
 
 2. The HAWQ PL/Java `pljava_classpath` server configuration parameter identifies the classpath used by the HAWQ PL/Java extension. View the current `pljava_classpath` configuration parameter setting:
 
@@ -198,7 +198,7 @@ Perform the following steps to view the HDFS NodeName and set the HAWQ PL/Java `
 
     You can monitor the restart operation from the **Background Operations Running** dialog.
 
-10. Log out of the Ambari console by clicking the **admin** button and selecting the **Sign out** drop down menu item.
+10. When the restart operation completes, log out of the Ambari console by clicking the **admin** button and selecting the **Sign out** drop down menu item.
 
 ## <a id="tut_hawqadmin_summary"></a>Summary
 
