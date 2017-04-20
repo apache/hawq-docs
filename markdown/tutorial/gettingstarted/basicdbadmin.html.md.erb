@@ -1,5 +1,5 @@
 ---
-title: Lesson 3 - HAWQ Database Administration Basics
+title: Lesson 3 - Database Administration
 ---
 
 <!--
@@ -27,17 +27,17 @@ In this lesson, you are introduced to basic HAWQ database administration command
 
 ## <a id="tut_adminprereq"></a> Prerequisites
 
-Ensure that you have performed the steps in [Setting Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup) and that your HAWQ cluster is up and running.
+Ensure that you have [Set Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup) and that your HAWQ cluster is up and running.
 
 
-## <a id="tut_ex_createdb"></a>Exercise: Creating the HAWQ Tutorial Database
+## <a id="tut_ex_createdb"></a>Exercise: Create the HAWQ Tutorial Database
 
 In this exercise, you use the `psql` command line utility to create a HAWQ database.
 
 1. Start the `psql` subsystem:
 
     ``` shell
-    $ gpadmin@master$ psql -d postgres
+    gpadmin@master$ psql -d postgres
     ```
 
     You enter the `psql` interpreter, connecting to the `postgres` database. `postgres` is a default template database created during HAWQ installation.
@@ -72,15 +72,14 @@ In this exercise, you use the `psql` command line utility to create a HAWQ datab
 
     ``` sql
     hawqgsdb=# \l
-    ```
-    
-    ``` pre
+                         List of databases
           Name       |  Owner  | Encoding | Access privileges 
     -----------------+---------+----------+-------------------
      hawqgsdb        | gpadmin | UTF8     | 
      postgres        | gpadmin | UTF8     | 
      template0       | gpadmin | UTF8     | 
      template1       | gpadmin | UTF8     | 
+    (4 rows)
     ```
     
     HAWQ creates two additional template databases during installation, `template0` and `template1`, as you see above.
@@ -91,14 +90,14 @@ In this exercise, you use the `psql` command line utility to create a HAWQ datab
     hawqgsdb=# \q
     ```
 
-## <a id="tut_ex_usepsql"></a>Exercise: Using psql for Table Operations
+## <a id="tut_ex_usepsql"></a>Exercise: Use psql for Table Operations
 
 You manage and access HAWQ databases and tables via the `psql` utility, an interactive front-end to the HAWQ database. In this exercise, you use `psql` to create, add data to, and query a simple HAWQ table.
 
 1. Start the `psql` subsystem:
 
     ``` shell
-    $ gpadmin@master$ psql -d hawqgsdb
+    gpadmin@master$ psql -d hawqgsdb
     ```
 
     The `-d hawqgsdb` option instructs `psql` to connect directly to the `hawqgsdb` database.
@@ -193,7 +192,7 @@ You manage and access HAWQ databases and tables via the `psql` utility, an inter
 
 9. Set the HAWQ `PGDATABASE` environment variable to identify `hawqsgdb`:
 
-    ```
+    ``` shell
     gpadmin@master$ export PGDATABASE=hawqgsdb
     ```
 
@@ -227,4 +226,4 @@ For detailed information on the `psql` subsystem, refer to the [psql](../../refe
 
 In Lesson 4, you are introduced to the Retail demo, a more complicated data set used in upcoming lessons. You will download and examine the data set and work files. You will also load some of the data set into HDFS.
  
-**Lesson 4**: [Introduction to HAWQ Schemas](dataandscripts.html)
+**Lesson 4**: [Sample Data Set and HAWQ Schemas](dataandscripts.html)

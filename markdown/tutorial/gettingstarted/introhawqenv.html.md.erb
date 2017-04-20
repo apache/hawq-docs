@@ -1,5 +1,5 @@
 ---
-title: Lesson 1 - HAWQ Runtime Environment
+title: Lesson 1 - Runtime Environment
 ---
 
 <!--
@@ -37,7 +37,7 @@ This section introduces you to the HAWQ runtime environment. You will examine yo
 
     - Obtain the Ambari UI user name and password (optional, if Ambari is installed in your HAWQ deployment). The default Ambari user name and password are both `admin`.
 
-## <a id="tut_runtime_setup"></a> Exercise: Setting Up your HAWQ Runtime Environment
+## <a id="tut_runtime_setup"></a> Exercise: Set Up your HAWQ Runtime Environment
 
 HAWQ installs a script that you can use to set up your HAWQ cluster environment. The `greenplum_path.sh` script, located in your HAWQ root install directory, sets `$PATH` and other environment variables to find HAWQ files.  Most importantly, `greenplum_path.sh` sets the `$GPHOME` environment variable to point to the root directory of the HAWQ installation.  If you installed HAWQ from a product distribution or are running a HAWQ sandbox environment, the HAWQ root is typically `/usr/local/hawq`. If you built HAWQ from source or downloaded the tarball, your `$GPHOME` may differ.
 
@@ -185,4 +185,4 @@ Your HAWQ cluster is now running. For additional information:
 
 In Lesson 2, you are introduced to basic HAWQ cluster administration activities and commands.
  
-**Lesson 2**: [HAWQ Cluster Administration Basics](basichawqadmin.html)
+**Lesson 2**: [Cluster Administration](basichawqadmin.html)

@@ -1,5 +1,5 @@
 ---
-title: Lesson 4 - Introduction to HAWQ Schemas
+title: Lesson 4 - Sample Data Set and HAWQ Schemas
 ---
 
 <!--
@@ -21,7 +21,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-This and later exercises operate on an example data set that models an online retail store. The data set is provided in a set of `gzip`'d `.tsv` (tab-separated values) text files. The exercises also reference scripts and other supporting files that operate on the data set.
+The sample Retail demo data set used in the tutorial exercises models an online retail store operation. The store carries different categories of products. Customers order the products. The company delivers the products to the customers.
+
+This and later exercises operate on this example data set. The data set is provided in a set of `gzip`'d `.tsv` (tab-separated values) text files. The exercises also reference scripts and other supporting files that operate on the data set.
 
 In this section, you are introduced to the Retail demo data schema. You will download and examine the data set and work files. You will also load some of the data into HDFS.
 
@@ -30,7 +32,7 @@ In this section, you are introduced to the Retail demo data schema. You will dow
 Ensure that you have [Created the HAWQ Tutorial Database](basicdbadmin.html#tut_ex_createdb) and that your HAWQ cluster is up and running.
 
 
-## <a id="tut_exdownloadfilessteps"></a>Exercise: Downloading the Retail Demo Data and Script Files
+## <a id="tut_exdownloadfilessteps"></a>Exercise: Download the Retail Demo Data and Script Files
 
 Perform the following steps to download the sample data set and scripts:
 
@@ -53,6 +55,11 @@ Perform the following steps to download the sample data set and scripts:
 
     ``` shell
     gpadmin@master$ git clone https://github.com/pivotalsoftware/hawq-samples.git
+    Cloning into 'hawq-samples'...
+    remote: Counting objects: 42, done.
+    remote: Total 42 (delta 0), reused 0 (delta 0), pack-reused 42
+    Unpacking objects: 100% (42/42), done.
+    Checking out files: 100% (18/18), done.
     gpadmin@master$ cd hawq-samples
     gpadmin@master$ git checkout hawq2x_tutorial
     ```
@@ -80,25 +87,7 @@ Perform the following steps to download the sample data set and scripts:
     (`hawq-samples` repository directories not mentioned in the table above are not used by the *Getting Started with HAWQ* exercises.)
 
 
-## <a id="tut_datasetschema"></a>Retail Demo Data Set
-
-The sample Retail demo data set used in the tutorial exercises models an online retail store operation. The store carries different categories of products.  Customers order the products. The company delivers the products to the customers.
-
-The Retail demo data set includes the entities described in the table below. Orders and order line items are fact tables. The other entities are represented in dimension tables.
-
-|   Entity   | Description  |
-|---------------------|----------------------------|
-| customers\_dim  |  Customer data: first/last name, id, gender  |
-| customer\_addresses\_dim  |  Address and phone number of each customer |
-| email\_addresses\_dim  |  Customer e-mail addresses |
-| categories\_dim  |  Product category name, id |
-| products\_dim  |  Product details including name, id, category, and price |
-| date\_dim  |  Date information including year, quarter, month, week, day of week |
-| payment\_methods  |  Payment method code, id |
-| orders  |  Details of an order: includes id, payment method, billing address, day/time, and other fields; orders are associated with a specific customer |
-| order\_lineitems  |  Line item for each order: includes id, item id, category, store, shipping address, and other fields; references a specific product from a specific order from a specific customer |
-
-### <a id="tut_dsschema_ex"></a>Exercise: Creating the Retail Demo HAWQ Schema
+## <a id="tut_dsschema_ex"></a>Exercise: Create the Retail Demo HAWQ Schema
 
 A HAWQ schema is a namespace for a database. It contains named objects like tables, data types, functions, and operators. These named objects are accessed by qualifying their name with the prefix `<schema-name>`.
 
@@ -108,9 +97,6 @@ Perform the following steps to create the Retail demo data schema:
 
     ``` shell
     gpadmin@master$ psql
-    ```
-
-    ``` sql
     hawqgsdb=#
     ```
     
@@ -193,6 +179,7 @@ Perform the following steps to create the Retail demo data schema:
        Schema    |         Name         | Type  |  Owner  |   Storage   
     -------------+----------------------+-------+---------+-------------
      retail_demo | first_tbl            | table | gpadmin | append only
+    (1 row)
     ```
 
 6. Query the `first_tbl` table that you created in Lesson 3:
@@ -217,9 +204,23 @@ Perform the following steps to create the Retail demo data schema:
     hawqgsdb=# \q
     ```
 
-## <a id="tut_loadhdfs_ex"></a>Exercise: Loading the Dimension Data to HDFS
+## <a id="tut_loadhdfs_ex"></a>Exercise: Load the Dimension Data to HDFS
 
-A fact table consists of business facts. Dimension tables provide descriptive information for the measurements in a fact table. Perform the following steps to load the Retail demo dimension data into HDFS for later consumption:
+The Retail demo data set includes the entities described in the table below. A fact table consists of business facts. Orders and order line items are fact tables. Dimension tables provide descriptive information for the measurements in a fact table. The other entities are represented in dimension tables. 
+
+|   Entity   | Description  |
+|---------------------|----------------------------|
+| customers\_dim  |  Customer data: first/last name, id, gender  |
+| customer\_addresses\_dim  |  Address and phone number of each customer |
+| email\_addresses\_dim  |  Customer e-mail addresses |
+| categories\_dim  |  Product category name, id |
+| products\_dim  |  Product details including name, id, category, and price |
+| date\_dim  |  Date information including year, quarter, month, week, day of week |
+| payment\_methods  |  Payment method code, id |
+| orders  |  Details of an order: includes id, payment method, billing address, day/time, and other fields; orders are associated with a specific customer |
+| order\_lineitems  |  Line item for each order: includes id, item id, category, store, shipping address, and other fields; references a specific product from a specific order from a specific customer |
+
+Perform the following steps to load the Retail demo dimension data into HDFS for later consumption:
 
 1. Navigate to the PXF script directory:
 
@@ -256,8 +257,8 @@ A fact table consists of business facts. Dimension tables provide descriptive in
 
 ## <a id="tut_dataset_summary"></a>Summary
 
-You created the `retail_demo` HAWQ schema and loaded the Retail demo dimension data into HDFS. 
+You created downloaded the tutorial data set and work files, created the `retail_demo` HAWQ schema, and loaded the Retail demo dimension data into HDFS. 
 
 In Lessons 5 and 6, you will create and query HAWQ internal and external tables in the `retail_demo` schema.
 
-**Lesson 5**: [Introduction to HAWQ Tables](introhawqtbls.html)
+**Lesson 5**: [HAWQ Tables](introhawqtbls.html)

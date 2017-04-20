@@ -1,5 +1,5 @@
 ---
-title: Lesson 5 - Introduction to HAWQ Tables
+title: Lesson 5 - HAWQ Tables
 ---
 
 <!--
@@ -30,14 +30,13 @@ In this exercise, you will run scripts that use the SQL `CREATE TABLE` command t
 
 Ensure that you have:
 
-- [Set Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup),
-- [Created the HAWQ Tutorial Database](basicdbadmin.html#tut_ex_createdb),
-- [Downloaded the Retail Data and Script Files](dataandscripts.html#tut_exdownloadfilessteps),
-- [Created the Retail Demo HAWQ Schema](dataandscripts.html#tut_dsschema_ex),
+- [Set Up your HAWQ Runtime Environment](introhawqenv.html#tut_runtime_setup)
+- [Created the HAWQ Tutorial Database](basicdbadmin.html#tut_ex_createdb)
+- [Downloaded the Retail Data and Script Files](dataandscripts.html#tut_exdownloadfilessteps)
+- [Created the Retail Demo HAWQ Schema](dataandscripts.html#tut_dsschema_ex)
+- And that your HAWQ cluster is up and running.
 
-and that your HAWQ cluster is up and running.
-
-## <a id="tut_excreatehawqtblsteps"></a>Exercise: Creating, Adding Data to, and Querying HAWQ Retail Demo Tables
+## <a id="tut_excreatehawqtblsteps"></a>Exercise: Create, Add Data to, and Query HAWQ Retail Demo Tables
 
 Perform the following steps to create and load HAWQ tables from the sample Retail demo data set. 
 
@@ -59,9 +58,9 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     CREATE TABLE
     ```
 	
-    Note: The `create_hawq_tables.sql` script deletes each table before attempting to create it. If this is your first time performing this exercise, you can safely ignore the `psql` "table does not exist, skipping" NOTICE messages.)
+    Note: The `create_hawq_tables.sql` script deletes each table before attempting to create it. If this is your first time performing this exercise, you can safely ignore the `psql` "table does not exist, skipping" messages.)
     
-3. Let's take a look at the `create_hawq_tables.sql` script:
+3. Let's take a look at the `create_hawq_tables.sql` script; for example:
 
     ``` shell
     gpadmin@master$ vi create_hawq_tables.sql
@@ -146,7 +145,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     ``` shell						    
         Table Name                |    Count 
     ------------------------------+------------------------
-     order_lineitems_hawq         |   1024158
+     order_lineitems_hawq         |   744196
      orders_hawq                  |   512071
     ------------------------------+------------------------
     ```
@@ -155,15 +154,9 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
 
     ``` shell
     gpadmin@master$ psql
-    ```
-
-    ``` sql
     hawqgsdb=# SELECT product_id, item_quantity, item_price, coupon_amount 
                  FROM retail_demo.order_lineitems_hawq 
                  WHERE order_id='8467975147' ORDER BY item_price;
-    ```
-
-    ``` pre
      product_id | item_quantity | item_price | coupon_amount 
     ------------+---------------+------------+---------------
      1611429    | 1             | 11.38      | 0.00000
@@ -208,9 +201,6 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
                  FROM retail_demo.order_lineitems_hawq, retail_demo.orders_hawq
                WHERE retail_demo.order_lineitems_hawq.order_id=retail_demo.orders_hawq.order_id AND retail_demo.order_lineitems_hawq.product_id=1869831
                  ORDER BY retail_demo.order_lineitems_hawq.order_id, product_id;
-    ```
-    
-    ``` pre
       order_id  | product_id | item_quantity | item_price 
     ------------+------------+---------------+------------
      4831097728 | 1869831    | 1             | 11.87
@@ -229,4 +219,4 @@ You created and loaded Retail order and order line item data into HAWQ fact tabl
 
 In Lesson 6, you use PXF external tables to similarly access dimension data stored in HDFS.
  
-**Lesson 6**: [Introduction to the HAWQ Extension Framework (PXF)](intropxfhdfs.html)
+**Lesson 6**: [HAWQ Extension Framework (PXF)](intropxfhdfs.html)
