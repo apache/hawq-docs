@@ -64,16 +64,16 @@ You can determine the tablespace, database, and table object identifiers through
 
 ## <a id="idnumfiles"></a> Number of Data Files
 
-The number of data files associated with a HAWQ table is determined differently for hash-distributed and randomly-distributed HAWQ tables.
+The number of data files that are created for a HAWQ table differs for hash-distributed and randomly-distributed HAWQ tables.
 
-Hash-distributed HAWQ tables use a fixed number of virtual segments (vsegs). This number is determined by the `default_hash_table_bucket_number` server configuration parameter setting, or the `BUCKETNUM` value you provide in the `CREATE TABLE` call. The number of HDFS files HAWQ creates for a hash-distributed table depends on the number of concurrent inserts into the table, and will always be a multiple of the `default_hash_table_bucket_number` or `BUCKETNUM` value.
+Hash-distributed HAWQ tables use a fixed number of virtual segments (vsegs). This number is determined by the `default_hash_table_bucket_number` server configuration parameter setting, or the `BUCKETNUM` value you provide in the `CREATE TABLE` call. The number of HDFS files that HAWQ creates for a hash-distributed table also depends on the maximum number of concurrent inserts that have been executed against the table. The number of HDFS files is always the `default_hash_table_bucket_number` or `BUCKETNUM` value multiplied by the maximum number of concurrent inserts.
 
-The number of HDFS files generated for a randomly-distributed HAWQ table varies, and will depend on the number of virtual segments writing the data.
+The number of HDFS files generated for a randomly-distributed HAWQ table varies depending on the total number of virtual segments that have written data to the table.
 
 
-## <a id="ex_hdfslochash"></a> Example: Locating the HDFS Files of a Hash-Distributed HAWQ Table
+## <a id="ex_hdfslochash"></a> Example: Locating HDFS Files for a HAWQ Table
 
-Perform the following steps to identify the HDFS location of the data files associated with a hash-distributed HAWQ table. 
+Perform the following steps to identify the HDFS location of the data files associated with a hash-distributed HAWQ table. The SQL queries used in this example are applicable to randomly-distributed HAWQ tables as well.
 
 **Note**: Your HAWQ catalog object identifier query results may differ.
 
