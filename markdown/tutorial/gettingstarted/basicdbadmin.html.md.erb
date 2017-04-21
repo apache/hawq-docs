@@ -21,9 +21,9 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-As the HAWQ database administrator, you and those users specifically granted the privileges can execute SQL commands to create HAWQ databases and tables. These commands may be invoked via scripts, programs, and from the `psql` client utility.
+The HAWQ `gpadmin` user and other users who are granted the necessary privileges can execute SQL commands to create HAWQ databases and tables. These commands may be invoked via scripts, programs, and from the `psql` client utility.
 
-In this lesson, you are introduced to basic HAWQ database administration commands and tasks using `psql`. You will create a database and a simple table, and add data to and query the table.
+This lesson introduces basic HAWQ database administration commands and tasks using `psql`. You will create a database and a simple table, and add data to and query the table.
 
 ## <a id="tut_adminprereq"></a> Prerequisites
 
@@ -161,7 +161,7 @@ You manage and access HAWQ databases and tables via the `psql` utility, an inter
     (5 rows)
     ```
     
-    The `SELECT *` command queries `first_tbl`, returning all columns and all rows. `SELECT` also displays the total number of rows returned after the query results.
+    The `SELECT *` command queries `first_tbl`, returning all columns and all rows. `SELECT` also displays the total number of rows returned in the query.
 
 6. Perform a query to return column `i` for all rows in `first_tbl` where `i` is greater than 3:
 
@@ -206,7 +206,11 @@ You manage and access HAWQ databases and tables via the `psql` utility, an inter
     
     When no database is specified on the command line, `psql` attempts to connect to the database identified by `$PGDATABASE`.
 
-11. Add the `PGDATABASE` setting to your `.bash_profile`.  
+11. Add the `PGDATABASE` setting to your `.bash_profile`:
+
+    ``` shell
+    export PGDATABASE=hawqgsdb
+    ```  
 
     
 ## <a id="tut_dbadmin_summary"></a>Summary
@@ -224,6 +228,6 @@ For detailed information on the `psql` subsystem, refer to the [psql](../../refe
 | Execute an SQL script     | `\i <script-name>`                                                                                         |
 | Quit/Exit    | `\q`                                                                                         |
 
-In Lesson 4, you are introduced to the Retail demo, a more complicated data set used in upcoming lessons. You will download and examine the data set and work files. You will also load some of the data set into HDFS.
+Lesson 4 introduces the Retail demo, a more complicated data set used in upcoming lessons. You will download and examine the data set and work files. You will also load some of the data set into HDFS.
  
 **Lesson 4**: [Sample Data Set and HAWQ Schemas](dataandscripts.html)

@@ -34,7 +34,7 @@ Ensure that you have:
 - [Created the HAWQ Tutorial Database](basicdbadmin.html#tut_ex_createdb)
 - [Downloaded the Retail Data and Script Files](dataandscripts.html#tut_exdownloadfilessteps)
 - [Created the Retail Demo HAWQ Schema](dataandscripts.html#tut_dsschema_ex)
-- And that your HAWQ cluster is up and running.
+- Started your HAWQ cluster.
 
 ## <a id="tut_excreatehawqtblsteps"></a>Exercise: Create, Add Data to, and Query HAWQ Retail Demo Tables
 
@@ -58,7 +58,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     CREATE TABLE
     ```
 	
-    Note: The `create_hawq_tables.sql` script deletes each table before attempting to create it. If this is your first time performing this exercise, you can safely ignore the `psql` "table does not exist, skipping" messages.)
+    **Note**: The `create_hawq_tables.sql` script deletes each table before attempting to create it. If this is your first time performing this exercise, you can safely ignore the `psql` "table does not exist, skipping" messages.)
     
 3. Let's take a look at the `create_hawq_tables.sql` script; for example:
 
@@ -126,7 +126,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     zcat $DATADIR/order_lineitems.tsv.gz | psql -d hawqgsdb -c "COPY retail_demo.order_lineitems_hawq FROM STDIN DELIMITER E'\t' NULL E'';"
     zcat $DATADIR/orders.tsv.gz | psql -d hawqgsdb -c "COPY retail_demo.orders_hawq FROM STDIN DELIMITER E'\t' NULL E'';"
     ```
-    The `load_hawq_tables.sh` shell script uses the `zcat` command to uncompress the `.tsv.gz` data files. The SQL `COPY` command copies `STDIN` (i.e. the output of the `zcat` command) to the HAWQ table. The `COPY` command also identifies the `DELIMITER` used in the file (tab) and the `NULL` string (''). While probably not the most efficient way to load the data, it gets the job done.
+    The `load_hawq_tables.sh` shell script uses the `zcat` command to uncompress the `.tsv.gz` data files. The SQL `COPY` command copies `STDIN` (i.e. the output of the `zcat` command) to the HAWQ table. The `COPY` command also identifies the `DELIMITER` used in the file (tab) and the `NULL` string ('').
     
 6. Use the `load_hawq_tables.sh` script to load the Retail demo fact data into the newly-created tables. This process may take some time to complete.
 
@@ -215,7 +215,7 @@ Perform the following steps to create and load HAWQ tables from the sample Retai
     ```
 
 ## <a id="tut_introhawqtbl_summary"></a>Summary
-You created and loaded Retail order and order line item data into HAWQ fact tables. You also queried these tables, learning how to filter the data to your needs. 
+In this lesson, you created and loaded Retail order and order line item data into HAWQ fact tables. You also queried these tables, learning how to filter the data to your needs. 
 
 In Lesson 6, you use PXF external tables to similarly access dimension data stored in HDFS.
  

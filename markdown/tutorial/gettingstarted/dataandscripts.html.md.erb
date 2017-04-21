@@ -89,7 +89,7 @@ Perform the following steps to download the sample data set and scripts:
 
 ## <a id="tut_dsschema_ex"></a>Exercise: Create the Retail Demo HAWQ Schema
 
-A HAWQ schema is a namespace for a database. It contains named objects like tables, data types, functions, and operators. These named objects are accessed by qualifying their name with the prefix `<schema-name>`.
+A HAWQ schema is a namespace for a database. It contains named objects like tables, data types, functions, and operators. Access these objects by qualifying their name with the prefix `<schema-name>`.
 
 Perform the following steps to create the Retail demo data schema:
 
@@ -150,7 +150,7 @@ Perform the following steps to create the Retail demo data schema:
     
     `retail_demo`, the first schema in your `search_path`, becomes your default schema.
     
-    (Note: Setting `search_path` in this manner sets the parameter only for the current `psql` session. You must re-set `search_path` in subsequent `psql` sessions.)
+    **Note**: Setting `search_path` in this manner sets the parameter only for the current `psql` session. You must re-set `search_path` in subsequent `psql` sessions.
 
 4. Create another table named `first_tbl`:
 
@@ -217,8 +217,8 @@ The Retail demo data set includes the entities described in the table below. A f
 | products\_dim  |  Product details including name, id, category, and price |
 | date\_dim  |  Date information including year, quarter, month, week, day of week |
 | payment\_methods  |  Payment method code, id |
-| orders  |  Details of an order: includes id, payment method, billing address, day/time, and other fields; orders are associated with a specific customer |
-| order\_lineitems  |  Line item for each order: includes id, item id, category, store, shipping address, and other fields; references a specific product from a specific order from a specific customer |
+| orders  |  Details of an order such as the id, payment method, billing address, day/time, and other fields. Each order is associated with a specific customer. |
+| order\_lineitems  |  Details of an order line item such as the id, item id, category, store, shipping address, and other fields. Each line item references a specific product from a specific order from a specific customer. |
 
 Perform the following steps to load the Retail demo dimension data into HDFS for later consumption:
 
@@ -253,11 +253,13 @@ Perform the following steps to load the Retail demo dimension data into HDFS for
     -rw-r--r--   3 hdfs hdfs    4646775 2017-04-10 19:59 /retail_demo/customers_dim/customers_dim.tsv.gz
     Found 1 items
     ...
+    
+    Because the retail demo data exists only as `.tsv.gz` files in HDFS, you cannot immediately query the data using HAWQ. In the next lesson, you create HAWQ external tables that reference these data files, after which you can query them via PXF.
     ```
 
 ## <a id="tut_dataset_summary"></a>Summary
 
-You created downloaded the tutorial data set and work files, created the `retail_demo` HAWQ schema, and loaded the Retail demo dimension data into HDFS. 
+In this lesson, you downloaded the tutorial data set and work files, created the `retail_demo` HAWQ schema, and loaded the Retail demo dimension data into HDFS. 
 
 In Lessons 5 and 6, you will create and query HAWQ internal and external tables in the `retail_demo` schema.
 

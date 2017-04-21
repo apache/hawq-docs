@@ -21,13 +21,13 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-As the HAWQ `gpadmin` administrative user, you have super-user capabilities on all HAWQ databases and HAWQ cluster management commands. Before installing HAWQ, you will choose to configure and manage the HAWQ cluster via the command line or via the Ambari UI.
+The HAWQ `gpadmin` administrative user has super-user capabilities on all HAWQ databases and HAWQ cluster management commands.
 
 HAWQ configuration parameters affect the behaviour of both the HAWQ cluster and individual HAWQ nodes.
 
-In this lesson, you are introduced to basic HAWQ cluster administration tasks. You will view and update HAWQ configuration parameters.
+This lesson introduces basic HAWQ cluster administration tasks. You will view and update HAWQ configuration parameters.
 
-**Note**: You will perform command line and Ambari exercises for managing your HAWQ cluster in this lesson. Although you are introduced to both, command line and Ambari HAWQ cluster management modes should not be mixed.
+**Note**: Before installing HAWQ, you or your administrator choose to configure and manage the HAWQ cluster either using the command line or using the Ambari UI. You will perform command line and Ambari exercises for managing your HAWQ cluster in this lesson. Although you are introduced to both, command line and Ambari HAWQ cluster management modes should not be mixed.
 
 ## <a id="tut_adminprereq"></a> Prerequisites
 
@@ -202,7 +202,7 @@ Perform the following steps to view the HDFS NodeName and set the HAWQ PL/Java `
 
 ## <a id="tut_hawqadmin_summary"></a>Summary
 
-Your HAWQ cluster is running, configured, and ready for use. 
+In this lesson, you viewed the state of the HAWQ cluster and learned how to change cluster configuration parameters. 
 
 For additional information on HAWQ server configuration parameters, see [Server Configuration Parameter Reference](../../reference/HAWQSiteConfig.html).
 
@@ -220,6 +220,6 @@ The following table identifies HAWQ management commands used in the tutorial exe
 | Reload HAWQ configuration        | `$ hawq stop cluster --reload`                                                                                         |
 
 
-In Lesson 3, you are introduced to basic HAWQ database administration activities and commands.
+Lesson 3 introduces basic HAWQ database administration activities and commands.
 
 **Lesson 3**: [Database Administration](basicdbadmin.html)

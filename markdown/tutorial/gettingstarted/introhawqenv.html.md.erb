@@ -83,7 +83,7 @@ Perform the following steps to set up your HAWQ runtime environment:
 4. Set the HAWQ-specific environment variables relevant to your deployment in your shell initialization file. These include `PGDATABASE`, `PGHOST`, `PGOPTIONS`, `PGPORT`, and `PGUSER.` You may not need to set any of these environment variables. For example, if you use a custom HAWQ master port number, make this port number the default by setting the `PGPORT` environment variable in your shell initialization file; add:
 
     ``` shell
-    export PGPORT=10432
+    export PGPORT=5432
     ```
     
     Setting `PGPORT` simplifies `psql` invocation by providing a default for the port option value.
@@ -109,7 +109,7 @@ Perform the following steps to set up your HAWQ runtime environment:
     Failed to connect to database, this script can only be run when the database is up.
     ```
     
-    The cluster is not running, start it:
+    If your cluster is not running, start it:
     
     ``` shell
     gpadmin@master$ hawq start cluster
@@ -183,6 +183,6 @@ Your HAWQ cluster is now running. For additional information:
 - [Environment Variables](../../reference/HAWQEnvironmentVariables.html#optionalenvironmentvariables) includes a complete list of HAWQ deployment-specific environment variables.
 - [Running a HAWQ Cluster](../../admin/RunningHAWQ.html) provides an overview of the components comprising a HAWQ cluster, including the users (administrative and operating), deployment systems (HAWQ master, standby, and segments), databases, and data sources.
 
-In Lesson 2, you are introduced to basic HAWQ cluster administration activities and commands.
+Lesson 2 introduces basic HAWQ cluster administration activities and commands.
  
 **Lesson 2**: [Cluster Administration](basichawqadmin.html)
