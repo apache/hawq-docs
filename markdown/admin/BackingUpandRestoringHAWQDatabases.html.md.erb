@@ -2,6 +2,25 @@
 title: Backing Up and Restoring HAWQ
 ---
 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 This chapter provides information on backing up and restoring databases in HAWQ system.
 
 As an administrator, you will need to back up and restore your database. HAWQ provides three utilities to help you back up your data:
@@ -154,11 +173,11 @@ This section discusses `gpfdist` and shows an example of how to backup and resto
 
 To use `gpfdist`, start the `gpfdist` server program on the host where you want to store backup files. You can start multiple `gpfdist` instances on the same host or on different hosts. For each `gpfdist` instance, you specify a directory from which `gpfdist` will serve files for readable external tables or create output files for writable external tables. For example, if you have a dedicated machine for backup with two disks, you can start two `gpfdist` instances, each using one disk:
 
-![](../mdimages/gpfdist_instances_backup.png "Deploying multiple gpfdist instances on a backup host")
+![](../images/gpfdist_instances_backup.png "Deploying multiple gpfdist instances on a backup host")
 
 You can also run `gpfdist` instances on each segment host. During backup, table data will be evenly distributed to all `gpfdist` instances specified in the `LOCATION` clause in the `CREATE EXTERNAL TABLE` definition.
 
-![](../mdimages/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
+![](../images/gpfdist_instances.png "Deploying gpfdist instances on each segment host")
 
 ### <a id="example"></a>Example 
 

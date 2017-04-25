@@ -2,6 +2,25 @@
 title: Troubleshooting PXF
 ---
 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 ## <a id="pxerrortbl"></a>PXF Errors
 
 The following table lists some common errors encountered while using PXF:
@@ -62,7 +81,7 @@ The following table lists some common errors encountered while using PXF:
 </tr>
 <tr class="odd">
 <td>ERROR: fail to get filesystem credential for uri hdfs://&lt;namenode&gt;:8020/</td>
-<td>Secure PXF: Wrong HDFS host or port is not 8020 (this is a limitation that will be removed in the next release)</td>
+<td>Secure PXF: Wrong HDFS host or port is not 8020</td>
 </tr>
 <tr class="even">
 <td>ERROR: remote component error (413) from '&lt;x&gt;': HTTP status code is 413 but HTTP response string is empty</td>
@@ -176,6 +195,8 @@ Examine/collect the log messages from `pxf-service.log`.
 
 ### <a id="pxfdblogmsg"></a>Database-Level Logging
 
+Database-level logging may provide insight into internal PXF service operations. Additionally, when you access Hive tables using `hcatalog` or the `Hive*` profiles, log messages identify the underlying `Hive*` profile(s) employed to access the data.
+
 Enable HAWQ and PXF debug message logging during operations on PXF external tables by setting the `client_min_messages` server configuration parameter to `DEBUG2` in your `psql` session.
 
 ``` shell
@@ -191,6 +212,8 @@ DEBUG2:  churl http header: cell #20: X-GP-URL-PORT: 51200
 DEBUG2:  churl http header: cell #21: X-GP-DATA-DIR: pxf_hive1
 DEBUG2:  churl http header: cell #22: X-GP-profile: Hive
 DEBUG2:  churl http header: cell #23: X-GP-URI: pxf://namenode:51200/pxf_hive1?profile=Hive
+...
+DEBUG2:  pxf: set_current_fragment_headers: using profile: Hive
 ...
 ```
 

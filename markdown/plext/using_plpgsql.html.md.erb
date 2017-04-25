@@ -2,141 +2,300 @@
 title: Using PL/pgSQL in HAWQ
 ---
 
-SQL is the language of most other relational databases use as query language. It is portable and easy to learn. But every SQL statement must be executed individually by the database server. 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
 
-PL/pgSQL is a loadable procedural language. PL/SQL can do the following:
+  http://www.apache.org/licenses/LICENSE-2.0
 
--   create functions
--   add control structures to the SQL language
--   perform complex computations
--   inherit all user-defined types, functions, and operators
--   be trusted by the server
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+--> 
 
-You can use functions created with PL/pgSQL with any database that supports built-in functions. For example, it is possible to create complex conditional computation functions and later use them to define operators or use them in index expressions.
+PL/pgSQL is a trusted procedural language that is automatically installed and registered in all HAWQ databases. With PL/pgSQL, you can:
 
-Every SQL statement must be executed individually by the database server. Your client application must send each query to the database server, wait for it to be processed, receive and process the results, do some computation, then send further queries to the server. This requires interprocess communication and incurs network overhead if your client is on a different machine than the database server.
+-   Create functions
+-   Add control structures to the SQL language
+-   Perform complex computations
+-   Use all of the data types, functions, and operators defined in SQL
 
-With PL/pgSQL, you can group a block of computation and a series of queries inside the database server, thus having the power of a procedural language and the ease of use of SQL, but with considerable savings of client/server communication overhead.
+SQL is the language most relational databases use as a query language. While it is portable and easy to learn, every SQL statement is individually executed by the database server. Your client application sends each query to the database server, waits for it to be processed, receives and processes the results, does some computation, then sends further queries to the server. This back-and-forth requires interprocess communication and incurs network overhead if your client is on a different host than the HAWQ master.
+
+The PL/pgSQL language addresses some of these limitations. When creating functions with PL/pgSQL, you can group computation blocks and queries inside the database server, combining the power of a procedural language and the ease of use of SQL, but with considerable savings of client/server communication overhead. With PL/pgSQL:
 
 -   Extra round trips between client and server are eliminated
--   Intermediate results that the client does not need do not have to be marshaled or transferred between server and client
--   Multiple rounds of query parsing can be avoided
+-   Intermediate, and perhaps unneeded, results do not have to be marshaled or transferred between the server and client
+-   Re-using prepared queries avoids multiple rounds of query parsing
+ 
 
-This can result in a considerable performance increase as compared to an application that does not use stored functions.
+## <a id="plpgsql_structure"></a>PL/pgSQL Function Syntax
 
-PL/pgSQL supports all the data types, operators, and functions of SQL.
+PL/pgSQL is a block-structured language. The complete text of a function definition must be a block, which is defined as:
 
-**Note:**  PL/pgSQL is automatically installed and registered in all HAWQ databases.
-
-## <a id="supportedargumentandresultdatatypes"></a>Supported Data Types for Arguments and Results 
-
-Functions written in PL/pgSQL accept as arguments any scalar or array data type supported by the server, and they can return a result containing this data type. They can also accept or return any composite type (row type) specified by name. It is also possible to declare a PL/pgSQL function as returning record, which means that the result is a row type whose columns are determined by specification in the calling query. See <a href="#tablefunctions" class="xref">Table Functions</a>.
-
-PL/pgSQL functions can be declared to accept a variable number of arguments by using the VARIADIC marker. This works exactly the same way as for SQL functions. See <a href="#sqlfunctionswithvariablenumbersofarguments" class="xref">SQL Functions with Variable Numbers of Arguments</a>.
-
-PL/pgSQLfunctions can also be declared to accept and return the polymorphic typesanyelement,anyarray,anynonarray, and anyenum. The actual data types handled by a polymorphic function can vary from call to call, as discussed in <a href="http://www.postgresql.org/docs/8.4/static/extend-type-system.html#EXTEND-TYPES-POLYMORPHIC" class="xref">Section 34.2.5</a>. An example is shown in <a href="http://www.postgresql.org/docs/8.4/static/plpgsql-declarations.html#PLPGSQL-DECLARATION-ALIASES" class="xref">Section 38.3.1</a>.
-
-PL/pgSQL functions can also be declared to return a "set" (or table) of any data type that can be returned as a single instance. Such a function generates its output by executing RETURN NEXT for each desired element of the result set, or by using RETURN QUERY to output the result of evaluating a query.
-
-Finally, a PL/pgSQL function can be declared to return void if it has no useful return value.
-
-PL/pgSQL functions can also be declared with output parameters in place of an explicit specification of the return type. This does not add any fundamental capability to the language, but it is often convenient, especially for returning multiple values. The RETURNS TABLE notation can also be used in place of RETURNS SETOF .
-
-This topic describes the following PL/pgSQLconcepts:
-
--   [Table Functions](#tablefunctions)
--   [SQL Functions with Variable number of Arguments](#sqlfunctionswithvariablenumbersofarguments)
--   [Polymorphic Types](#polymorphictypes)
-
-
-## <a id="tablefunctions"></a>Table Functions 
-
-
-Table functions are functions that produce a set of rows, made up of either base data types (scalar types) or composite data types (table rows). They are used like a table, view, or subquery in the FROM clause of a query. Columns returned by table functions can be included in SELECT, JOIN, or WHERE clauses in the same manner as a table, view, or subquery column.
-
-If a table function returns a base data type, the single result column name matches the function name. If the function returns a composite type, the result columns get the same names as the individual attributes of the type.
-
-A table function can be aliased in the FROM clause, but it also can be left unaliased. If a function is used in the FROM clause with no alias, the function name is used as the resulting table name.
-
-Some examples:
-
-```sql
-CREATE TABLE foo (fooid int, foosubid int, fooname text);
-
-CREATE FUNCTION getfoo(int) RETURNS SETOF foo AS $$
-    SELECT * FROM foo WHERE fooid = $1;
-$$ LANGUAGE SQL;
-
-SELECT * FROM getfoo(1) AS t1;
-
-SELECT * FROM foo
-    WHERE foosubid IN (
-                        SELECT foosubid
-                        FROM getfoo(foo.fooid) z
-                        WHERE z.fooid = foo.fooid
-                      );
-
-CREATE VIEW vw_getfoo AS SELECT * FROM getfoo(1);
-
-SELECT * FROM vw_getfoo;
+``` sql
+[ <label> ]
+[ DECLARE
+    declarations ]
+BEGIN
+    statements
+END [ label ];
 ```
 
-In some cases, it is useful to define table functions that can return different column sets depending on how they are invoked. To support this, the table function can be declared as returning the pseudotype record. When such a function is used in a query, the expected row structure must be specified in the query itself, so that the system can know how to parse and plan the query. Consider this example:
+Each declaration and each statement within a block is terminated by a semicolon. A block that appears within another block must have a semicolon after `END`, as shown above; however the final `END` that concludes a function body does not require a semicolon.
 
-```sql
-SELECT *
-    FROM dblink('dbname=mydb', 'SELECT proname, prosrc FROM pg_proc')
-      AS t1(proname name, prosrc text)
-    WHERE proname LIKE 'bytea%';
+You can specify all key words and identifiers in mixed upper and lower case. Identifiers are implicitly converted to lowercase unless they are double-quoted.
+
+PL/pgSQL supports two types of comments. A double dash (`--`) starts a comment that extends to the end of the line. A `/*` starts a block comment that extends to the next occurrence of `*/`. Block comments cannot be nested, but you can enclose double dash comments into a block comment and a double dash can hide the block comment delimiters `/*` and `*/`.
+
+This example PL/pgSQL function adds thirteen to an integer:
+
+``` sql
+=> CREATE FUNCTION add_thirteen(i integer) RETURNS integer AS 
+   $$
+   DECLARE
+       incvalue integer := 13;
+   BEGIN
+       -- add thirteen to i
+       RETURN i + incvalue;
+   END;
+   $$ LANGUAGE plpgsql;
+=> SELECT add_thirteen( 11 );
+    increment 
+   -----------
+           24
+   (1 row)
 ```
 
-The `dblink` function executes a remote query (see `contrib/dblink`). It is declared to return `record` since it might be used for any kind of query. The actual column set must be specified in the calling query so that the parser knows, for example, what `*` should expand to.
+**Note**: Do not to confuse the use of `BEGIN/END` for grouping statements in PL/pgSQL with the database commands for transaction control. PL/pgSQL's BEGIN/END are only for statement grouping; they do not start or end a transaction. 
 
 
-## <a id="sqlfunctionswithvariablenumbersofarguments"></a>SQL Functions with Variable Numbers of Arguments 
+## <a id="plpgsql_structure"></a>PL/pgSQL Statements and Control Structures
 
-SQL functions can be declared to accept variable numbers of arguments, so long as all the "optional" arguments are of the same data type. The optional arguments will be passed to the function as an array. The function is declared by marking the last parameter as VARIADIC; this parameter must be declared as being of an array type. For example:
+Refer to the PostgreSQL documentation for detailed information on the statements and control structures supported by the PL/pgSQL language:
 
-```sql
-CREATE FUNCTION mleast(VARIADIC numeric[]) RETURNS numeric AS $$
-    SELECT min($1[i]) FROM generate_subscripts($1, 1) g(i);
-$$ LANGUAGE SQL;
+-  You can execute SQL commands in PL/pgSQL functions using `EXECUTE`, `PERFORM`, and `SELECT ... INTO` statements.  Refer to [Basic Statements](https://www.postgresql.org/docs/8.2/static/plpgsql-statements.html) for PL/pgSQL specifics in this area.
 
-SELECT mleast(10, -1, 5, 4.4);
- mleast 
---------
-     -1
-(1 row)
+- [Control Structures](https://www.postgresql.org/docs/8.2/static/plpgsql-control-structures.html) identifies the data manipulation and control constructs supported by PL/pgSQL, including those for looping through query results and trapping errors.
+
+
+## <a id="supportedargumentandresultdatatypes"></a>PL/pgSQL Argument and Result Data Types 
+
+Functions written in PL/pgSQL accept as arguments any base or array data type supported by the server, and they can return a result containing any of these data types. PL/pgSQL functions can also accept and return any composite type (row-type) specified by name.
+
+You can declare PL/pgSQL functions to accept and return the polymorphic `anyelement` and `anyarray` types. PL/pgSQL functions can also be declared to return a set (or table) of any data type that can be returned as a single instance. Finally, you can declare a PL/pgSQL function to return `void` if it has no useful return value.
+
+In place of an explicit specification of the return type, you can declare PL/pgSQL functions with output parameters. This does not add any fundamental capability to the language, but it is often convenient, especially when returning multiple values.
+
+Upcoming sections provide specific PL/pgSQL examples using base, composite, and polymorphic argument and return types.
+
+
+### <a id="plpgsql_namingargs"></a>Naming PL/pgSQL Function Arguments
+
+Arguments passed to PL/pgSQL functions are named with identfiers `$1`, `$2`, `$3`, etc. If you choose, you can also declare aliases for the `$<n>` argument names.
+
+One way to declare an alias is to give the argument a name in the PL/pgSQL function signature. In the following example, the single input argument `$1` is named `subtotal`. `subtotal` is used by name in the sales tax calculation in the body of the function.
+
+``` sql
+=> CREATE FUNCTION calculate_sales_tax(subtotal real) RETURNS real AS $$
+   BEGIN
+     RETURN subtotal * 0.06;
+   END;
+   $$ LANGUAGE plpgsql;
+=> SELECT calculate_sales_tax( 123.45 );
+    calculate_sales_tax 
+   ---------------------
+                  7.407
+   (1 row)
 ```
 
-Effectively, all the actual arguments at or beyond the VARIADIC position are gathered up into a one-dimensional array, as if you had written
+You can also explicitly use the `DECLARE` block to declare an alias for a function argument:
 
-```sql
-SELECT mleast(ARRAY[10, -1, 5, 4.4]);    -- doesn't work
+``` sql
+=> CREATE FUNCTION calculate_sales_tax(real) RETURNS real AS $$
+   DECLARE
+      subtotal ALIAS FOR $1;
+   BEGIN
+     RETURN subtotal * 0.06;
+   END;
+   $$ LANGUAGE plpgsql;
 ```
 
-You can't actually write that, though; or at least, it will not match this function definition. A parameter marked VARIADIC matches one or more occurrences of its element type, not of its own type.
+### <a id="plpgsql_inoutargs"></a>Input and Output PL/pgSQL Function Arguments
 
-Sometimes it is useful to be able to pass an already-constructed array to a variadic function; this is particularly handy when one variadic function wants to pass on its array parameter to another one. You can do that by specifying VARIADIC in the call:
+You can declare PL/pgSQL functions with both input (default) and output arguments.  Output arguments provide a convenient way of defining functions that return several values or columns. 
 
-```sql
-SELECT mleast(VARIADIC ARRAY[10, -1, 5, 4.4]);
+Output arguments are named `$<n>` and aliased in the same way as input arguments. You identify output arguments in the function signature using the `OUT` keyword.
+
+In this example, you re-write the `calculate_sales_tax()` function to return the tax in an output argument.
+
+``` sql
+=> CREATE FUNCTION calculate_sales_tax(subtotal real, OUT tax real) AS $$
+   BEGIN
+      tax := subtotal * 0.06;
+   END;
+   $$ LANGUAGE plpgsql;
+=> SELECT calculate_sales_tax( 123.45 );
 ```
 
-This prevents expansion of the function's variadic parameter into its element type, thereby allowing the array argument value to match normally. VARIADIC can only be attached to the last actual argument of a function call.
+Notice that you do not include the output arguments when you invoke the `calculate_sales_tax()` function. HAWQ considers only the input arguments to define the function's calling signature.
 
+## <a id="plpgsqltypes"></a>Identifying Column and Row Data Types
 
+You may need your PL/pgSQL function to operate on column or row data of which you do not know the data type. PL/pgSQL provides `%TYPE` and `%ROWTYPE` keywords for this purpose.
 
-## <a id="polymorphictypes"></a>Polymorphic Types 
+For additional information on PL/pgSQL declarations, see [Declarations](https://www.postgresql.org/docs/8.2/static/plpgsql-declarations.html) in the PostgreSQL documentation.
 
-Four pseudo-types of special interest are anyelement,anyarray, anynonarray, and anyenum, which are collectively called *polymorphic types*. Any function declared using these types is said to be a*polymorphic function*. A polymorphic function can operate on many different data types, with the specific data type(s) being determined by the data types actually passed to it in a particular call.
+### <a id="plpgsqltypes_column"></a>Column Type
 
-Polymorphic arguments and results are tied to each other and are resolved to a specific data type when a query calling a polymorphic function is parsed. Each position (either argument or return value) declared as anyelement is allowed to have any specific actual data type, but in any given call they must all be the sam eactual type. Each position declared as anyarray can have any array data type, but similarly they must all be the same type. If there are positions declared anyarray and others declared anyelement, the actual array type in the anyarray positions must be an array whose elements are the same type appearing in the anyelement positions.anynonarray is treated exactly the same as anyelement, but adds the additional constraint that the actual type must not be an array type. anyenum is treated exactly the same as anyelement, but adds the additional constraint that the actual type must be an enum type.
+Use the `<variable>%TYPE` notation to access the data type of a variable. You would use this syntax when you want to declare a variable with the same type as a specific table column.
 
-Thus, when more than one argument position is declared with a polymorphic type, the net effect is that only certain combinations of actual argument types are allowed. For example, a function declared as equal(anyelement, anyelement) will take any two input values, so long as they are of the same data type.
+For example, if you have a column named `order_id` in your `orders` table and you want to declare a variable with the same data type as `orders.order_id`:
 
-When the return value of a function is declared as a polymorphic type, there must be at least one argument position that is also polymorphic, and the actual data type supplied as the argument determines the actual result type for that call. For example, if there were not already an array subscripting mechanism, one could define a function that implements subscripting `assubscript(anyarray, integer)` returns `anyelement`. This declaration constrains the actual first argument to be an array type, and allows the parser to infer the correct result type from the actual first argument's type. Another example is that a function declared `asf(anyarray)` returns `anyenum` will only accept arrays of `enum` types.
+``` sql
+DECLARE
+    local_order_id orders.order_id%TYPE
+```
 
-Note that `anynonarray` and `anyenum` do not represent separate type variables; they are the same type as `anyelement`, just with an additional constraint. For example, declaring a function as `f(anyelement,           anyenum)` is equivalent to declaring it as `f(anyenum, anyenum)`; both actual arguments have to be the same enum type.
+`%TYPE` is particularly valuable in polymorphic functions, as the data types required for internal variables may change from one function invocation to the next.
 
-Variadic functions described in <a href="#sqlfunctionswithvariablenumbersofarguments" class="xref">SQL Functions with Variable Numbers of Arguments</a> can be polymorphic: this is accomplished by declaring its last parameter as `VARIADIC anyarray`. For purposes of argument matching and determining the actual result type, such a function behaves the same as if you had written the appropriate number of `anynonarray` parameters.
+### <a id="plpgsqltypes_row"></a>Row Type
+
+A variable of a composite type is called a row-type variable. Row-type variables can hold a whole row of a query result, providing that the query's column set matches the declared type of the variable.
+
+You can declare a row-type variable to have the same type as the rows of an existing table or view using the `<table_name>%ROWTYPE` notation. The fields of the row-type variable inherit the table's field sizes and precisions. You access the individual fields of a row-type variable using dot notation, for example `<row_variable>.<field>`.
+
+When a function argument is a composite type, the corresponding argument `$<n>` is a row-type variable; you would use the `$<n>.<field>` syntax to access a specific field or column in the row.
+
+**Note**: Only user-defined columns of a table row are accessible via a row-type variable; system and OID columns are not available. 
+
+An example using a row-type variable follows. `table1` has integer fields named `order_id` and `order_item_id` and a text field named `product_name`. You will create and execute a `get_order_product()` function to return the order item and product concatenated together in a text string.
+
+``` sql
+=> CREATE TABLE table1 (order_id integer, order_item_id integer, product_name text );
+=> INSERT INTO table1 VALUES( 1, 13, 'Paper Towels' );
+=> INSERT INTO table1 VALUES( 1, 17, 'Pencils' );
+=> INSERT INTO table1 VALUES( 2, 19, 'Light Bulbs' );
+=> CREATE FUNCTION get_order_product( oid integer ) RETURNS text AS $$
+   DECLARE
+     table1_row table1%ROWTYPE;
+   BEGIN
+     SELECT * FROM table1 WHERE table1.order_id = oid INTO table1_row;
+     RETURN table1_row.order_item_id || table1_row.product_name;
+   END;
+   $$ LANGUAGE plpgsql;
+=> SELECT get_order_product(2);
+    get_order_product 
+   -------------------
+    19Light Bulbs
+   (1 row)
+```
+
+## <a id="plpgsqlexamples"></a>PL/pgSQL Functions as Table Sources
+
+You can use PL/pgSQL functions in the same way you specify a table, view, or subquery in the `FROM` clause of a query. These functions are referred to as table functions, and can return both base and composite types. Functions that return base types produce a one-column table. Functions that return composite types produce a table column for each attribute of the composite type. You can use the columns returned by table functions in `SELECT`, `JOIN`, or `WHERE` clauses in the same manner as you would a table, view, or subquery column.
+
+If a table function returns a base data type, the name of the single result column matches the function name. If the function returns a composite type, the result columns are assigned the same names as the individual attributes of the type.
+
+You can choose to alias a table function in the `FROM` clause. If you do not alias a table function in the `FROM` clause, the resulting table name is assigned the function name.
+
+In the following example, you populate a table and create a function to return the results of a specific query on the table:
+
+```sql
+=> CREATE TABLE sample1 (id int, name text);
+=> INSERT INTO sample1 VALUES (1, 'Bill');
+=> INSERT INTO sample1 VALUES (1, 'Jill');
+=> INSERT INTO sample1 VALUES (2, 'Will');
+
+=> CREATE OR REPLACE FUNCTION getfrom_sample1(int) RETURNS sample1 AS $$ 
+   DECLARE                          
+     sample1_row sample1%ROWTYPE;
+   BEGIN                                                     
+     SELECT * INTO sample1_row FROM sample1 WHERE id = $1;
+     RETURN sample1_row;
+   END;
+   $$ LANGUAGE plpgsql;
+```
+
+Note the use of `sample1%ROWTYPE` to identify the type of a row of the `sample1` table.
+
+Perform a query that executes the table function you created above:
+
+``` sql
+=> SELECT * getfrom_sample1(1);
+    getfrom_sample1 
+   -----------------
+       (1,Bill)
+   (1 row)
+```
+
+Even though the query filter matched 2 rows, the query returned only one row from the table because you specified a single `RETURNS` type when you created the `getfrom_sample1()` function. To return the full result of the query, you need to use the `SETOF` keyword.
+
+When a PL/pgSQL function is decared as returning a `SETOF <type>`, each row of the function's final `SELECT` query is output as an element of the result set. `SETOF` is most often used when the function is called in the `FROM` clause of a query. In this case, each row returned by the function becomes a row input to the query. Using the above example:
+
+``` sql
+=> CREATE OR REPLACE FUNCTION getfrom_sample1(int) RETURNS SETOF sample1 AS $$         
+   DECLARE                          
+     sample1_row sample1%ROWTYPE;
+   BEGIN                                                     
+     FOR sample1_row IN SELECT * FROM sample1 WHERE id = $1 LOOP
+       RETURN NEXT sample1_row;
+     END LOOP;
+     RETURN;
+   END;
+   $$ LANGUAGE plpgsql;
+=> SELECT * FROM getfrom_sample1(1);
+    id | name 
+   ----+------
+     1 | Bill
+     1 | Jill
+   (2 rows)
+```
+
+## <a id="plpgsqlpolymorphic"></a>Polymorphic PL/pgSQL Functions
+
+PL/pgSQL supports the polymorphic `anyelement` and `anyarray` types. Using these types, you can create a single PL/pgSQL function that operates on multiple data types. Refer to [Polymorphic Types](../reference/HAWQDataTypes.html#polymorphictypes) for additional information in this area.
+
+A special parameter named `$0` is created when the return type of a PL/pgSQL function is declared as a polymorphic type. The data type of `$0` identifies the return type of the function as deduced from the actual input types.
+
+In this example, you create a polymorphic function that returns the sum of two values.
+
+``` sql
+=> CREATE FUNCTION add_two_values(v1 anyelement, v2 anyelement)
+     RETURNS anyelement AS $$
+   DECLARE
+     sum ALIAS FOR $0;
+   BEGIN
+     sum := v1 + v2;
+     RETURN sum;
+   END;
+   $$ LANGUAGE plpgsql;
+```
+
+Execute the function with integer input values:
+
+``` sql
+=> SELECT add_two_values( 1, 2 );
+    add_two_values 
+   ----------------
+                 3
+   (1 row)
+```
+
+Now execute the same function with float input values:
+
+``` sql
+=> SELECT add_two_values( 1.1, 2.2 );
+    add_two_values 
+   ----------------
+                3.3
+   (1 row)
+```

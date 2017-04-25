@@ -2,6 +2,25 @@
 title: Configuration Parameters
 ---
 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[add\_missing\_from](../../reference/guc/parameter_definitions.html#add_missing_from)**
@@ -65,8 +84,6 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[default\_transaction\_isolation](../../reference/guc/parameter_definitions.html#default_transaction_isolation)**
 
 -   **[default\_transaction\_read\_only](../../reference/guc/parameter_definitions.html#default_transaction_read_only)**
-
--   **[dfs\_url](../../reference/guc/parameter_definitions.html#dfs_url)**
 
 -   **[dynamic\_library\_path](../../reference/guc/parameter_definitions.html#dynamic_library_path)**
 
@@ -167,16 +184,31 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[gp\_hashjoin\_tuples\_per\_bucket](../../reference/guc/parameter_definitions.html#gp_hashjoin_tuples_per_bucket)**
 
 -   **[gp\_idf\_deduplicate](../../reference/guc/parameter_definitions.html#gp_idf_deduplicate)**
+ 
+-   **[gp\_interconnect\_cache\_future\_packets](../../reference/guc/parameter_definitions.html#gp_interconnect_cache_future_packets)**
+
+-   **[gp\_interconnect\_default\_rtt](../../reference/guc/parameter_definitions.html#gp_interconnect_default_rtt)**
 
 -   **[gp\_interconnect\_fc\_method](../../reference/guc/parameter_definitions.html#gp_interconnect_fc_method)**
 
 -   **[gp\_interconnect\_hash\_multiplier](../../reference/guc/parameter_definitions.html#gp_interconnect_hash_multiplier)**
 
+-  **[gp\_interconnect\_min\_retries\_before\_timeout](../../reference/guc/parameter_definitions.html#gp_interconnect_min_retries_before_timeout)**
+
+-  **[gp\_interconnect\_min\_rto](../../reference/guc/parameter_definitions.html#gp_interconnect_min_rto)**
 -   **[gp\_interconnect\_queue\_depth](../../reference/guc/parameter_definitions.html#gp_interconnect_queue_depth)**
 
 -   **[gp\_interconnect\_setup\_timeout](../../reference/guc/parameter_definitions.html#gp_interconnect_setup_timeout)**
 
 -   **[gp\_interconnect\_snd\_queue\_depth](../../reference/guc/parameter_definitions.html#gp_interconnect_snd_queue_depth)**
+
+-  **[gp\_interconnect\_timer\_period
+](../../reference/guc/parameter_definitions.html#gp_interconnect_timer_period
+)**
+
+-  **[gp\_interconnect\_timer\_checking\_period
+](../../reference/guc/parameter_definitions.html#gp_interconnect_timer_checking_period
+)**
 
 -   **[gp\_interconnect\_type](../../reference/guc/parameter_definitions.html#gp_interconnect_type)**
 
@@ -231,6 +263,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[gp\_workfile\_limit\_per\_query](../../reference/guc/parameter_definitions.html#gp_workfile_limit_per_query)**
 
 -   **[gp\_workfile\_limit\_per\_segment](../../reference/guc/parameter_definitions.html#gp_workfile_limit_per_segment)**
+
+-   **[hawq\_acl\_type](../../reference/guc/parameter_definitions.html#hawq_acl_type)**
 
 -   **[hawq\_dfs\_url](../../reference/guc/parameter_definitions.html#hawq_dfs_url)**
 
@@ -291,6 +325,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 -   **[hawq\_rm\_yarn\_queue\_name](../../reference/guc/parameter_definitions.html#hawq_rm_yarn_queue_name)**
 
 -   **[hawq\_rm\_yarn\_scheduler\_address](../../reference/guc/parameter_definitions.html#hawq_rm_yarn_scheduler_address)**
+
+-   **[hawq\_rps\_address\_port](../../reference/guc/parameter_definitions.html#hawq_rps_address_port)**
 
 -   **[hawq\_segment\_address\_port](../../reference/guc/parameter_definitions.html#hawq_segment_address_port)**
 
@@ -875,13 +911,6 @@ Controls the default read-only status of each new transaction. A read-only SQL t
 | Boolean     | off     | master, session, reload |
 
 
-
-
-## <a name="dfs_url"></a>dfs\_url 
-
-See [hawq\_dfs\_url](#hawq_dfs_url).
-
-
 ## <a name="dynamic_library_path"></a>dynamic\_library\_path 
 
 If a dynamically loadable module needs to be opened and the file name specified in the `CREATE FUNCTION` or `LOAD` command does not have a directory component (i.e. the name does not contain a slash), the system will search this path for the required file. The compiled-in PostgreSQL package library directory is substituted for $libdir. This is where the modules provided by the standard PostgreSQL distribution are installed.
@@ -1371,6 +1400,41 @@ Changes the strategy to compute and process MEDIAN, and PERCENTILE\_DISC.
 </tbody>
 </table>
 
+## <a name="gp_interconnect_cache_future_packets"></a>gp\_interconnect\_cache\_future\_packets
+
+Controls whether future packets are cached.
+
+| Value Range | Default   | Set Classifications     |
+|-------------|-----------|-------------------------|
+| Boolean     | true (on) | master, session, reload |
+
+
+## <a name="gp_interconnect_default_rtt"></a>gp\_interconnect\_default\_rtt
+
+Sets the default rtt (in ms) for UDP interconnect.
+
+<table>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Value Range</th>
+<th>Default</th>
+<th>Set Classifications</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1-1000ms</td>
+<td>20ms</td>
+<td>master, session, reload</td>
+</tr>
+</tbody>
+</table>
+
 ## <a name="gp_interconnect_fc_method"></a>gp\_interconnect\_fc\_method
 
 Specifies the flow control method used for UDP interconnect when the value of [gp\_interconnect\_type](#gp_interconnect_type) is UDPIFC.
@@ -1410,6 +1474,25 @@ Sets the size of the hash table used by the UDP interconnect to track connection
 |-------------|---------|-------------------------|
 | 2-25        | 2       | master, session, reload |
 
+## <a name="gp_interconnect_min_retries_before\_timeout"></a>gp\_interconnect\_min\_retries\_before\_timeout
+
+Sets the minimum number of retries before reporting a transmit timeout in the interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-4096        | 100       | master, session, reload |
+
+
+## <a name="gp_interconnect_min_rto"></a>gp\_interconnect\_min\_rto
+
+Sets the minimum rto (in ms) for UDP interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+|1-1000ms        | 20ms       | master, session, reload |
+
+
+
 ## <a name="gp_interconnect_queue_depth"></a>gp\_interconnect\_queue\_depth
 
 Sets the amount of data per-peer to be queued by the UDP interconnect on receivers (when data is received but no space is available to receive it the data will be dropped, and the transmitter will need to resend it). Increasing the depth from its default value will cause the system to use more memory; but may increase performance. It is reasonable for this to be set between 1 and 10. Queries with data skew potentially perform better when this is increased. Increasing this may radically increase the amount of memory used by the system.
@@ -1420,9 +1503,11 @@ Sets the amount of data per-peer to be queued by the UDP interconnect on receive
 
 ## <a name="gp_interconnect_setup_timeout"></a>gp\_interconnect\_setup\_timeout
 
-When the interconnect type is UDP, the time to wait for the Interconnect to complete setup before it times out.
+When the interconnect type is UDP, the time to wait for the Interconnect to complete setup before it times out. 
 
 This parameter is used only when [gp\_interconnect\_type](#gp_interconnect_type) is set to UDP.
+
+**Warning**: The `gp_interconnect_setup_timeout` server configuration parameter is deprecated and will be removed in a future HAWQ release.
 
 | Value Range                                 | Default | Set Classifications     |
 |---------------------------------------------|---------|-------------------------|
@@ -1437,6 +1522,36 @@ This parameter is used only when [gp\_interconnect\_type](#gp_interconnect_type)
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
 | 1 - 4096    | 2       | master, session, reload |
+
+## <a name="gp_interconnect_timer_period"></a>gp\_interconnect\_timer\_period
+
+Sets the timer period (in ms) for UDP interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-100ms        | 5ms       | master, session, reload |
+
+
+
+## <a name="gp_interconnect_timer_checking_period"></a>gp\_interconnect\_timer\_checking\_period
+
+Sets the timer checking period (in ms) for UDP interconnect.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-100ms        | 20ms       | master, session, reload |
+
+
+
+## <a name="gp_interconnect_transmit_timeout"></a>gp\_interconnect\_transmit\_timeout
+
+Timeout (in seconds) on interconnect to transmit a packet.
+
+| Value Range | Default | Set Classifications     |
+|-------------|---------|-------------------------|
+| 1-7200s        | 3600s       | master, session, reload |
+
+
 
 ## <a name="gp_interconnect_type"></a>gp\_interconnect\_type
 
@@ -1743,6 +1858,15 @@ Sets the maximum total disk size that all running queries are allowed to use for
 |-------------|---------|------------------------|
 | kilobytes   | 0       | local, system, restart |
 
+## <a name="hawq_acl_type"></a>hawq\_acl\_type
+
+Identifies the authorization method currently configured in your HAWQ cluster. HAWQ supports native and Ranger authorization. Refer to [Configuring HAWQ to Use Ranger Policy Management](../../ranger/ranger-integration-config.html) for detailed information on configuring Ranger authorization for HAWQ.
+
+| Value Range                                                             | Default             | Set Classifications     |
+|-------------------------------------------------------------------------|---------------------|-------------------------|
+| standalone<p>ranger | standalone | master, restart |
+
+
 ## <a name="hawq_dfs_url"></a>hawq\_dfs\_url
 
 URL for HAWQ data directories on HDFS. The directory that you specify must be writeable by the `gpadmin` user. For example 'localhost:8020/hawq\_default'. If you have high availability enabled for your HDFS NameNodes, then this configuration parameter must be set to the service ID you configured in HDFS. See "HAWQ Filespaces and High Availability Enabled HDFS" for more information.
@@ -1919,7 +2043,7 @@ Amount of time, in seconds, before idle resources are returned to YARN.
 
 ## <a name="hawq_rm_return_percent_on_overcommit"></a>hawq\_rm\_return\_percent\_on\_overcommit
 
-Determines how many containers the global resource manager should return to the global resource manager (YARN for example.) This configuration only applies when HAWQ's YARN queue is busy, and HAWQ makes the YARN queue overuse its resources. The default value is 10, which means HAWQ will return 10% of acquired YARN containers by pausing the allocation of resources to HAWQ queries.
+Determines how many containers HAWQ should return to the global resource manager (YARN for example.) This configuration only applies when HAWQ's YARN queue is busy, and HAWQ makes the YARN queue overuse its resources. The default value is 10, which means HAWQ will return 10% of acquired YARN containers by pausing the allocation of resources to HAWQ queries.
 
 In a typical deployment, you do not need to modify the default value of this parameter.
 
@@ -1947,7 +2071,7 @@ HAWQ resource manager segment server port number.
 
 ## <a name="hawq_rm_stmt_nvseg"></a>hawq\_rm\_stmt\_nvseg
 
-Defines the number of virtual segments to use for the next query's execution. The default value is 0 which means statement level resource quota setting is disabled.
+Defines the number of virtual segments to use for the next query's execution. The default value is 0, which means statement level resource quota setting is disabled.
 
 | Value Range | Default | Set Classifications     |
 |-------------|---------|-------------------------|
@@ -1955,7 +2079,7 @@ Defines the number of virtual segments to use for the next query's execution. Th
 
 ## <a name="hawq_rm_stmt_vseg_memory"></a>hawq\_rm\_stmt\_vseg\_memory
 
-Defines the memory quota of one virtual segment.
+Defines the memory quota of one virtual segment. You must set the number of virtual segments to a number greater than 0 in `hawq_rm_stmt_nvseg` before specifying the memory quota.  
 
 | Value Range                                                                         | Default | Set Classifications     |
 |-------------------------------------------------------------------------------------|---------|-------------------------|
@@ -2012,6 +2136,17 @@ Server address (host and port) of the YARN resource manager scheduler (the value
 | Value Range             | Default | Set Classifications |
 |-------------------------|---------|---------------------|
 | valid hostname and port |         | master              |
+
+
+
+## <a name="hawq_rps_address_port"></a>hawq\_rps\_address\_port
+
+Identifies the port on which the HAWQ Ranger Plug-in Service runs. The `hawq_rps_address_port` configuration parameter value must match the  `rps.properties` `RPS_HTTP_PORT` environment variable setting. If you update the port, you must restart your HAWQ cluster, or reload HAWQ configuration and restart the HAWQ Ranger Plug-in Service.
+
+| Value Range                                                             | Default             | Set Classifications     |
+|-------------------------------------------------------------------------|---------------------|-------------------------|
+| valid port number | 8432 | master, reload |
+
 
 ## <a name="hawq_segment_address_port"></a>hawq\_segment\_address\_port
 
@@ -2593,19 +2728,7 @@ For information about the legacy query optimizer and GPORCA, see [About GPORCA](
 
 ## <a name="optimizer_minidump"></a>optimizer\_minidump
 
-GPORCA generates minidump files to describe the optimization context for a given query. Use the minidump files to analyze HAWQ issues. The minidump file is located under the master data directory and uses the following naming format:
-
-`Minidump_date_time.mdp`
-
-The minidump file contains this query related information:
-
--   Catalog objects including data types, tables, operators, and statistics required by GPORCA
--   An internal representation (DXL) of the query
--   An internal representation (DXL) of the plan produced by GPORCA
--   System configuration information passed to GPORCA such as server configuration parameters, cost and statistics configuration, and number of segments
--   A stack trace of errors generated while optimizing the query
-
-Setting this parameter to `ALWAYS` generates a minidump for all queries.
+GPORCA generates minidump files to describe the optimization context for a given query. Set this parameter to `ALWAYS` to generate a minidump for all queries.
 
 **Note:** Set this parameter to `ONERROR` in production environments to minimize total optimization time.
 

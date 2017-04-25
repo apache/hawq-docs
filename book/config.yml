@@ -5,8 +5,8 @@ public_host: http://localhost:9292/
 sections:
  - repository:
      name: incubator-hawq-docs/markdown
-   directory: docs/userguide/2.1.0.0-incubating
-   subnav_template: apache-hawq-nav-210
+   directory: docs/userguide/2.2.0.0-incubating
+   subnav_template: apache-hawq-nav
 
 template_variables:
   use_global_header: true

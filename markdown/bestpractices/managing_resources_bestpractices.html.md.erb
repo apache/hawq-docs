@@ -2,6 +2,25 @@
 title: Best Practices for Managing Resources
 ---
 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 This topic describes best practices for managing resources in HAWQ.
 
 ## <a id="topic_ikz_ndx_15"></a>Best Practices for Configuring Resource Management
@@ -91,11 +110,14 @@ ALTER RESOURCE queue1 WITH (VSEG_RESOURCE_QUOTA='mem:2gb');
 If there are only occasional queries on Parquet tables with a large page size, use a statement level specification instead of altering the resource queue. For example:
 
 ```sql
-SET HAWQ_RM_STMT_NVSEG=10;
-SET HAWQ_RM_STMT_VSEG_MEMORY='2gb';
-query1;
-SET HAWQ_RM_STMT_NVSEG=0;
+postgres=# SET hawq_rm_stmt_nvseg=10;
+postgres=# SET hawq_rm_stmt_vseg_memory='2gb';
+postgres=# query1;
+postgres=# SET hawq_rm_stmt_nvseg=0;
+SET
 ```
+***Note:*** To set the parameters at the statement level, you must set `hawq_rm_stmt_nvseg` to a value greater than 0 before setting `hawq_rm_stmt_vseg_memory`. After running a query or completing the session, the value of `hawq_rm_stmt_nvseg` should be reset to 0,  as shown in the example above.
+
 
 ### Restricting Resource Consumption for Specific Queries
 
@@ -140,5 +162,6 @@ In order to raise the minimum number of virtual segments available for a query s
     ```
 
     In the second DDL, if there are 10 nodes in the cluster, the actual minimum number of virtual segments is 50 (5 \* 10 = 50).
+
 
 

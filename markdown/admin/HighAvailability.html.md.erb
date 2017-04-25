@@ -2,6 +2,25 @@
 title: High Availability in HAWQ
 ---
 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 A HAWQ cluster can be made highly available by providing fault-tolerant hardware, by enabling HAWQ or HDFS high-availability features, and by performing regular monitoring and maintenance procedures to ensure the health of all system components.
 
 Hardware components eventually fail either due to normal wear or to unexpected circumstances. Loss of power can lead to temporarily unavailable components. You can make a system highly available by providing redundant standbys for components that can fail so services can continue uninterrupted when a failure does occur. In some cases, the cost of redundancy is higher than a user’s tolerance for interruption in service. When this is the case, the goal is to ensure that full service is able to be restored, and can be restored within an expected timeframe.

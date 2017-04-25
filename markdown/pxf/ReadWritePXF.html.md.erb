@@ -2,6 +2,25 @@
 title: Using Profiles to Read and Write Data
 ---
 
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
 PXF profiles are collections of common metadata attributes that can be used to simplify the reading and writing of data. You can use any of the built-in profiles that come with PXF or you can create your own.
 
 For example, if you are writing single line records to text files on HDFS, you could use the built-in HdfsTextSimple profile. You specify this profile when you create the PXF external table used to write the data to HDFS.
@@ -15,7 +34,7 @@ PXF comes with a number of built-in profiles that group together a collection o
 -   HBase (Read only)
 -   JSON (Read only)
 
-You can specify a built-in profile when you want to read data that exists inside HDFS files, Hive tables, HBase tables, and JSON files and for writing data into HDFS files.
+You can specify a built-in profile when you want to read data that exists inside HDFS files, Hive tables, HBase tables, or JSON files, and when you want to write data into HDFS files.
 
 <table>
 <colgroup>
@@ -27,7 +46,7 @@ You can specify a built-in profile when you want to read data that exists inside
 <tr class="header">
 <th>Profile</th>
 <th>Description</th>
-<th>Fragmenter/Accessor/Resolver</th>
+<th>Fragmenter/Accessor/Resolver/Metadata/OutputFormat</th>
 </tr>
 </thead>
 <tbody>
@@ -56,6 +75,8 @@ You can specify a built-in profile when you want to read data that exists inside
 <li>org.apache.hawq.pxf.plugins.hive.HiveDataFragmenter</li>
 <li>org.apache.hawq.pxf.plugins.hive.HiveAccessor</li>
 <li>org.apache.hawq.pxf.plugins.hive.HiveResolver</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveMetadataFetcher</li>
+<li>org.apache.hawq.pxf.service.io.GPDBWritable</li>
 </ul></td>
 </tr>
 <tr class="even">
@@ -68,6 +89,20 @@ Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
 <li>org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter</li>
 <li>org.apache.hawq.pxf.plugins.hive.HiveRCFileAccessor</li>
 <li>org.apache.hawq.pxf.plugins.hive.HiveColumnarSerdeResolver</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveMetadataFetcher</li>
+<li>org.apache.hawq.pxf.service.io.Text</li>
+</ul></td>
+</tr>
+<tr class="odd">
+<td>HiveORC</td>
+<td>Optimized read of a Hive table where each partition is stored as an ORC file.
+</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveORCAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveORCSerdeResolver</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveMetadataFetcher</li>
+<li>org.apache.hawq.pxf.service.io.GPDBWritable</li>
 </ul></td>
 </tr>
 <tr class="odd">
@@ -80,6 +115,8 @@ Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
 <li>org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter</li>
 <li>org.apache.hawq.pxf.plugins.hive.HiveLineBreakAccessor</li>
 <li>org.apache.hawq.pxf.plugins.hive.HiveStringPassResolver</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveMetadataFetcher</li>
+<li>org.apache.hawq.pxf.service.io.Text</li>
 </ul></td>
 </tr>
 <tr class="even">
@@ -111,6 +148,8 @@ Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
 </tr>
 </tbody>
 </table>
+
+**Notes**: Metadata identifies the Java class that provides field definitions in the relation. OutputFormat identifies the output serialization format (text or binary) for which a specific profile is optimized. While the built-in `Hive*` profiles provide Metadata and OutputFormat classes, other profiles may have no need to implement or specify these classes.
 
 ## <a id="addingandupdatingprofiles"></a>Adding and Updating Profiles
 
