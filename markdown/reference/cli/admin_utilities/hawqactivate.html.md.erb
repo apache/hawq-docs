@@ -23,7 +23,7 @@ under the License.
 
 Activates a standby master host and makes it the active master for the HAWQ system.
 
-**Note:** If HAWQ was installed using Ambari, do not use `hawq activate` to activate a standby master host. The system catalogs could become unsynchronized if you mix Ambari and command line functions. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to activate a standby master. For more information, see [Manging HAWQ Using Ambari](../../../admin/ambari-admin.html#topic1).
+**Note:** If HAWQ was installed using Ambari, do not use `hawq activate` to activate a standby master host. The system catalogs could become unsynchronized if you mix Ambari and command line functions. For Ambari-managed HAWQ clusters, always use the Ambari administration interface to activate a standby master. For more information, see [Managing HAWQ Using Ambari](../../../admin/ambari-admin.html#topic1).
 
 ## <a id="topic1__section2"></a>Synopsis
 
@@ -88,6 +88,10 @@ Immediate shutdown aborts transactions in progress and kills all `postgres` proc
 
 <dt>-h, -\\\-help (help)  </dt>
 <dd>Displays the online help.</dd>
+
+## <a id="topic1__section515"></a>Notes
+
+If you have enabled HAWQ Ranger Authentication in high availability mode in your cluster, you must perform an additional configuration procedure after activating a HAWQ standby master node. Refer to [Failover to HAWQ Standby Master](../../../ranger/ranger-ha.html#rps_ha_cfg_masterfailover) in the HAWQ Ranger documentation for additional information.
 
 ## <a id="topic1__section5"></a>Example
 

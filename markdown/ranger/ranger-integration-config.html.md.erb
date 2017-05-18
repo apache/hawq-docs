@@ -129,6 +129,62 @@ Once the connection between HAWQ and Ranger is configured, you may choose to set
 5. Click **Save** to save your changes.
 6. Select **Service Actions > Restart All** and confirm that you want to restart the HAWQ cluster.
 
+## <a id="enableha"></a>Step 3: (Optional) Register a Standby Ranger Plug-in Service
+
+The HAWQ Ranger Plug-in Service runs on the HAWQ master node. If this service goes down, all HAWQ database operations will fail. Configure a highly available HAWQ Ranger Plug-in Service to eliminate possible downtime should this situation occur.
+
+### Prerequisites <a id="rps_ha_cfg_prereq"></a>
+
+Before you configure HAWQ Ranger authentication in high availability mode, ensure that you have:
+
+- Installed or upgraded to a version of HAWQ that includes support for HAWQ Ranger Authentication.
+
+- Configured Ranger Admin for high availability.
+
+- Configured a HAWQ standby master node for your HAWQ cluster.
+
+    You must configure a standby master for your HAWQ deployment before enabling HAWQ Ranger high availability mode. If you have not configured your HAWQ standby master, follow the instructions in [Adding a HAWQ Standby Master](../admin/ambari-admin.html#amb-add-standby) (if you manage your HAWQ cluster with Ambari) or [Configuring Master Mirroring](../admin/MasterMirroring.html#standby_master_configure) (for a command-line-managed HAWQ cluster).
+
+- Registered the HAWQ Ranger Plug-in Service on your HAWQ master node.
+
+    The HAWQ Ranger Plug-in Service runs on the HAWQ master node. If you have not yet enabled the Ranger Plug-in Service, refer to [Install Ranger Connectivity to HAWQ](ranger-integration-config.html#jar) for registration instructions. Make sure to identify the Ranger Admin HA proxy when you enable the plug-in.
+
+
+### Configuring the Standby Ranger Plug-in Service <a id="rps_ha_cfg_standbyrps"></a>
+
+The standby Ranger Plug-in Service runs on the HAWQ standby master node, utilizing the same port number as that when running on the master node. To enable HAWQ Ranger high availability, you must register the standby Ranger Plug-in Service on the standby master node, and then restart the standby.
+
+**Note**: If you configured and registered the master HAWQ Ranger Plug-in Service before you activated your HAWQ standby master node, you do not need to perform the steps in this section.
+
+
+1. Synchronize the HAWQ Ranger Plug-in Service configuration files from the HAWQ master node to the standby master node by either manually copying the files, or by running `enable-ranger-plugin.sh` on the standby master. For example (where `$GPHOME` represents your base HAWQ install directory):
+
+    ``` shell
+	gpadmin@master$ scp $GPHOME/ranger/etc/* gpadmin@standby:$GPHOME/ranger/etc/
+	```
+
+	If you choose to execute `enable-ranger-plugin.sh` on the HAWQ standby master, provide the same arguments you used in your invocation of this command on the HAWQ master node:
+
+	``` shell
+	gpadmin@standby$ $GPHOME/ranger/bin/enable-ranger-plugin.sh -r <ranger_admin_node>:<ranger_port> -u <ranger_user> -p <ranger_password> -h <hawq_master>:<hawq_port> -w <hawq_user> -q <hawq_password>
+	```
+
+2. Restart the HAWQ standby master node. You will perform different procedures depending upon whether you manage your HAWQ cluster from the command line or you use Ambari to manage your cluster.
+
+    If you manage your HAWQ cluster from the command line:
+
+    ``` shell
+    gpadmin@master$ hawq stop standby
+    gpadmin@master$ hawq start standby
+    ```
+
+    If you manage your HAWQ cluster with Ambari:
+
+    1. Follow the instructions in [Removing the HAWQ Standby Master](../admin/ambari-admin.html#amb-remove-standby) to remove the HAWQ standby master.
+    2. Follow the instructions in [Adding a HAWQ Standby Master](../admin/ambari-admin.html#amb-add-standby) to re-add the HAWQ standby master.
+
+
+
 
 ## <a id="rpsadminstate"></a>Displaying the Status of HAWQ/Ranger Integration
 
@@ -147,9 +203,15 @@ Determine the status of HAWQ/Ranger integration in your cluster by:
     ``` shell
     gpadmin@master$ hawq state
     ...
-    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   Current HAWQ acl type                          = ranger
-    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   HAWQ Ranger plugin service state               = Active
+    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   Current HAWQ acl type                         = ranger
+    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   HAWQ master Ranger plugin service state       = Active
     ...
+    ```
+
+    If you have registered a standby Ranger Plug-in Service, `hawq state` also displays the status of that standby service:
+
+    ``` shell
+    20170327:16:35:06:508426 hawq_state:master:gpadmin-[INFO]:--   HAWQ standby Ranger plugin service state      = Active
     ```
 
 ## <a id="customconfig"></a> Custom Configuration

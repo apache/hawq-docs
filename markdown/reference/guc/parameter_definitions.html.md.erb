@@ -328,6 +328,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[hawq\_rps\_address\_port](../../reference/guc/parameter_definitions.html#hawq_rps_address_port)**
 
+-   **[hawq\_rps\_check\_local\_interval](../../reference/guc/parameter_definitions.html#hawq_rps_check_local_interval)**
+
 -   **[hawq\_segment\_address\_port](../../reference/guc/parameter_definitions.html#hawq_segment_address_port)**
 
 -   **[hawq\_segment\_directory](../../reference/guc/parameter_definitions.html#hawq_segment_directory)**
@@ -2146,6 +2148,14 @@ Identifies the port on which the HAWQ Ranger Plug-in Service runs. The `hawq_rps
 | Value Range                                                             | Default             | Set Classifications     |
 |-------------------------------------------------------------------------|---------------------|-------------------------|
 | valid port number | 8432 | master, reload |
+
+## <a name="hawq_rps_check_local_interval"></a>hawq\_rps\_check\_local\_interval
+
+When HAWQ Ranger authentication high availability mode is enabled and the Ranger Plug-in Service is active on the standby master node, HAWQ attempts to switch back to the service located on the master node as soon as it becomes available. The HAWQ master periodically attempts to re-establish contact with the service on the local node, using `hawq_rps_check_local_interval` as the polling time interval (in seconds) for this contact.
+
+| Value Range                                                             | Default             | Set Classifications     |
+|-------------------------------------------------------------------------|---------------------|-------------------------|
+| 1-65563 | 300 | master, reload |
 
 
 ## <a name="hawq_segment_address_port"></a>hawq\_segment\_address\_port

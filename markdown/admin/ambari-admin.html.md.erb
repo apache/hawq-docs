@@ -284,10 +284,12 @@ Activating the HAWQ Standby Master promotes the standby host as the new HAWQ Mas
 5.  Ambari displays the host name of the current HAWQ Master that will be removed from the cluster, as well as the HAWQ Standby Master host that will be activated. The information is provided only for review and cannot be edited on this page. Click **Next** to confirm the operation.
 6. Click **OK** to confirm that you want to perform the procedure, as it is not possible to roll back the operation using Ambari.
 
-   Ambari displays a list of tasks that are performed to activate the standby server and remove the previous HAWQ Master host. Click on any of the tasks to view progress or to view the actual log messages that are generated while performing the task.
+    Ambari displays a list of tasks that are performed to activate the standby server and remove the previous HAWQ Master host. Click on any of the tasks to view progress or to view the actual log messages that are generated while performing the task.
 7. Click **Complete** after the Wizard finishes all tasks.
 
-   **Important:** After the Wizard completes, your HAWQ cluster no longer includes a HAWQ Standby Master host. As a best practice, follow the instructions in [Adding a HAWQ Standby Master](#amb-add-standby) to configure a new one.
+    **Important:** After the Wizard completes, your HAWQ cluster no longer includes a HAWQ Standby Master host. As a best practice, follow the instructions in [Adding a HAWQ Standby Master](#amb-add-standby) to configure a new one.
+   
+8. If your cluster employs HAWQ Ranger Authentication in high availability mode, you must manually update the HAWQ service definition in Ranger to identify the new master node. Refer to [Failover to HAWQ Standby Master](../ranger/ranger-ha.html#rps_ha_cfg_masterfailover) in the HAWQ Ranger documentation for additional information.
 
 ## <a id="amb-add-standby"></a>Adding a HAWQ Standby Master
 
