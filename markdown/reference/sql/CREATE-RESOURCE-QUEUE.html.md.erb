@@ -58,6 +58,8 @@ Resource queues with an `ACTIVE_STATEMENTS` threshold set a maximum limit on the
 
 When creating the resource queue, use the MEMORY\_LIMIT\_CLUSTER and CORE\_LIMIT\_CLUSTER queue attributes to tune the allowed resource usage of the resource queue. MEMORY\_LIMIT\_CLUSTER and CORE\_LIMIT\_CLUSTER must set to the same value for a resource queue. In addition the sum of the percentages of MEMORY\_LIMIT\_CLUSTER (and CORE\_LIMIT\_CLUSTER) for resource queues that share the same parent cannot exceed 100%.
 
+Note: Either the hawq\_rm\_stmt\_vseg\_memory or VSEG\_RESOURCE\_QUOTA of a resource queue assigns the quota to operators in a query plan, so memory limits may not truly limit memory consumption for a query. 
+
 You can optionally configure the maximum or minimum number of virtual segments to use when executing a query by setting NVSEG\_UPPER\_LIMIT/NVSEG\_LOWER\_LIMIT or NVSEG\_UPPER\_LIMIT\_PERSEG/NVSEG\_LOWER\_LIMIT\_PERSEG attributes for the resource queue.
 
 After defining a resource queue, you can assign a role to the queue by using the [ALTER ROLE](ALTER-ROLE.html) or [CREATE ROLE](CREATE-ROLE.html) command. You can only assign roles to the leaf-level resource queues (resource queues that do not have any children.)
@@ -75,7 +77,7 @@ See also [Best Practices for Using Resource Queues](../../bestpractices/managing
 The parent queue cannot have any roles assigned.</dd>
 
 <dt>MEMORY\_LIMIT\_CLUSTER=\<percentage\>  </dt>
-<dd>Required. Defines how much memory a resource queue can consume from its parent resource queue and consequently dispatch to the execution of parallel statements. Since a resource queue obtains its memory from its parent, the actual memory limit is based from its parent queue. The valid values are 1% to 100%. The value of MEMORY\_ LIMIT\_CLUSTER must be identical to the value of CORE\_LIMIT\_CLUSTER. The sum of values for MEMORY\_LIMIT\_CLUSTER of this queue plus other queues that share the same parent cannot exceed 100%. The HAWQ resource manager periodically validates this restriction.</dd>
+<dd>Required. Defines how much memory a resource queue can consume from its parent resource queue and consequently dispatch to the execution of parallel statements. Since a resource queue obtains its memory from its parent, the actual memory limit is based from its parent queue. The valid values are 1% to 100%. The value of MEMORY\_ LIMIT\_CLUSTER must be identical to the value of CORE\_LIMIT\_CLUSTER. The sum of values for MEMORY\_LIMIT\_CLUSTER of this queue plus other queues that share the same parent cannot exceed 100%. The HAWQ resource manager periodically validates this restriction. Despite its name, the actual memory consumed by a resource queue may exceed a limit inferred from this value.</dd>
 
 <dt>CORE\_LIMIT\_CLUSTER=\<percentage\> </dt>
 <dd>Required. The percentage of consumable CPU (virtual core) resources that the resource queue can take from its parent resource queue. The valid values are 1% to 100%. The value of MEMORY\_ LIMIT\_CLUSTER must be identical to the value of CORE\_LIMIT\_CLUSTER. The sum of values for CORE\_LIMIT\_CLUSTER of this queue and queues that share the same parent cannot exceed 100%.</dd>
