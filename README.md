@@ -33,24 +33,24 @@ For Apache HAWQ (incubating), a preconfigured **book** is provided in the `/book
 2. Install bookbinder and its dependent gems. Make sure you are in the `book` directory and enter:
 
     ``` bash
-$ bundle install
-```
+    $ bundle install
+    ```
 
 3. The installed `config.yml` file configures the book for building from your local HAWQ source files.  Build the output HTML files by executing the command:
 
     ``` bash
-$ bundle exec bookbinder bind local
-```
+    $ bundle exec bookbinder bind local
+    ```
 
    Bookbinder converts the XML source into HTML, and puts the final output in the `final_app` directory.
   
 5. The `final_app` directory stages the HTML into a web application that you can view using the rack gem. To view the documentation build:
 
     ``` bash
-$ cd final_app
-$ bundle install
-$ rackup
-```
+    $ cd final_app
+    $ bundle install
+    $ rackup
+    ```
 
    Your local documentation is now available for viewing at[http://localhost:9292](http://localhost:9292)
 

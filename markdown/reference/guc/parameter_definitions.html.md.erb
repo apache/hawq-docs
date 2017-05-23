@@ -2043,7 +2043,7 @@ Amount of time, in seconds, before idle resources are returned to YARN.
 
 ## <a name="hawq_rm_return_percent_on_overcommit"></a>hawq\_rm\_return\_percent\_on\_overcommit
 
-Determines how many containers the global resource manager should return to the global resource manager (YARN for example.) This configuration only applies when HAWQ's YARN queue is busy, and HAWQ makes the YARN queue overuse its resources. The default value is 10, which means HAWQ will return 10% of acquired YARN containers by pausing the allocation of resources to HAWQ queries.
+Determines how many containers HAWQ should return to the global resource manager (YARN for example.) This configuration only applies when HAWQ's YARN queue is busy, and HAWQ makes the YARN queue overuse its resources. The default value is 10, which means HAWQ will return 10% of acquired YARN containers by pausing the allocation of resources to HAWQ queries.
 
 In a typical deployment, you do not need to modify the default value of this parameter.
 

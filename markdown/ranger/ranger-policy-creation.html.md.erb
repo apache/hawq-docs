@@ -319,10 +319,13 @@ Make note of the following considerations when employing Ranger authorization fo
 
 - `CREATE LANGUAGE` commands (superuser-only) issued for non-built-in languages (pljava, plpython, ..) require the `usage` permission for the `c` language.
 
-- If Ranger is enabled for Hive authorization in your HAWQ cluster:
-    -  Create Hive policy(s) providing the user `pxf` access to any Hive tables you want to expose via PXF HCatalog integration or HAWQ PXF external tables.
-    - The HAWQ policies providing access to PXF HCatalog integration must identify database `hcatalog`, schema `<hive-schema-name>`, and table `<hive-table-name>` resources.  These privileges are required in addition to any Hive policies for user `pxf` when Ranger is enabled for Hive authorization.
+- Using built-in functions may generate the message:  “WARNING: usage privilege of namespace \<schema-name\> is required.” This message is displayed even though the usage permission on \<schema-name\> is not actually required to execute the built-in function.
 
-- If you have enabled Ranger authorization for HDFS in your HAWQ cluster:
-    -  Create an HDFS policy(s) providing user `gpadmin` access to the HDFS HAWQ filespace.
-    -  If you plan to use PXF external tables to read and write HDFS data, create HDFS policies providing user `pxf` access to the HDFS files backing your PXF external tables.
+- When Ranger authorization is enabled for HDFS in your HAWQ cluster:
+    - The HDFS `xasecure.add-hadoop-authorization` property determines whether or not HDFS access controls are used as a fallback when no policy exists for a given HDFS resource. HAWQ access to HDFS is not affected when the `xasecure.add-hadoop-authorization` property is set to `true`. When this property is set to `false`, you must define HDFS Ranger policies permitting the `gadmin` HAWQ user read/write/execute access to the HAWQ HDFS filespace. 
+    - Access to HDFS-backed PXF external tables is not affected by the `xasecure.add-hadoop-authorization` property value, since the `pxf` user is a member of the `hdfs` superuser group.
+
+- Hive Ranger policies cannot control PXF access to Hive tables.
+    -  When Ranger authorization is enabled for HAWQ, the `gpadmin` user has access permissions to all Hive tables exposed through PXF external tables and HCatalog integration.
+    - Other HAWQ users may gain access to Hive-backed PXF external tables when provided `usage-schema` and `create` permissions on the `public` or any private schema. To restrict this access, selectively assign permissions to the `pxf` protocol. 
+    - HCatalog access to Hive tables is restricted by default when Ranger authorization is enabled for HAWQ; you must create policies to explicitly allow this access.
