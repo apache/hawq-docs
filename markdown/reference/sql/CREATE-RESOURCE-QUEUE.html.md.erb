@@ -58,7 +58,7 @@ Resource queues with an `ACTIVE_STATEMENTS` threshold set a maximum limit on the
 
 When creating the resource queue, use the MEMORY\_LIMIT\_CLUSTER and CORE\_LIMIT\_CLUSTER queue attributes to tune the allowed resource usage of the resource queue. MEMORY\_LIMIT\_CLUSTER and CORE\_LIMIT\_CLUSTER must set to the same value for a resource queue. In addition the sum of the percentages of MEMORY\_LIMIT\_CLUSTER (and CORE\_LIMIT\_CLUSTER) for resource queues that share the same parent cannot exceed 100%.
 
-Note: Either the hawq\_rm\_stmt\_vseg\_memory or VSEG\_RESOURCE\_QUOTA of a resource queue assigns the quota to operators in a query plan, so memory limits may not truly limit memory consumption for a query. 
+Note: The MEMORY\_LIMIT of a resource queue assigns the quota to operators in a query plan during planning, before actual execution. Actual memory consumption during query might exceed the limit. 
 
 You can optionally configure the maximum or minimum number of virtual segments to use when executing a query by setting NVSEG\_UPPER\_LIMIT/NVSEG\_LOWER\_LIMIT or NVSEG\_UPPER\_LIMIT\_PERSEG/NVSEG\_LOWER\_LIMIT\_PERSEG attributes for the resource queue.
 
