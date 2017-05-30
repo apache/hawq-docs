@@ -133,13 +133,15 @@ Once the connection between HAWQ and Ranger is configured, you may choose to set
 
 The HAWQ Ranger Plug-in Service runs on the HAWQ master node. If this service goes down, all HAWQ database operations will fail. Configure a highly available HAWQ Ranger Plug-in Service to eliminate possible downtime should this situation occur.
 
+Ranger Admin high availability and HAWQ Ranger Plug-in Service high availability are independent; you can configure HAWQ Ranger Plug-in Service HA without configuring HA for Ranger Admin.
+
 ### Prerequisites <a id="rps_ha_cfg_prereq"></a>
 
 Before you configure HAWQ Ranger authentication in high availability mode, ensure that you have:
 
 - Installed or upgraded to a version of HAWQ that includes support for HAWQ Ranger Authentication.
 
-- Configured Ranger Admin for high availability.
+- (Optional) Configured Ranger Admin for high availability.
 
 - Configured a HAWQ standby master node for your HAWQ cluster.
 
@@ -147,14 +149,14 @@ Before you configure HAWQ Ranger authentication in high availability mode, ensur
 
 - Registered the HAWQ Ranger Plug-in Service on your HAWQ master node.
 
-    The HAWQ Ranger Plug-in Service runs on the HAWQ master node. If you have not yet enabled the Ranger Plug-in Service, refer to [Install Ranger Connectivity to HAWQ](ranger-integration-config.html#jar) for registration instructions. Make sure to identify the Ranger Admin HA proxy when you enable the plug-in.
+    The HAWQ Ranger Plug-in Service runs on the HAWQ master node. If you have not yet enabled the Ranger Plug-in Service, refer to [Install Ranger Connectivity to HAWQ](ranger-integration-config.html#jar) for registration instructions. (Optional) If you have configured Ranger Admin HA, make sure to identify the Ranger Admin HA proxy when you enable the plug-in.
 
 
 ### Configuring the Standby Ranger Plug-in Service <a id="rps_ha_cfg_standbyrps"></a>
 
-The standby Ranger Plug-in Service runs on the HAWQ standby master node, utilizing the same port number as that when running on the master node. To enable HAWQ Ranger high availability, you must register the standby Ranger Plug-in Service on the standby master node, and then restart the standby.
+The standby Ranger Plug-in Service runs on the HAWQ standby master node, utilizing the same port number as that when the service runs on the master node. To enable HAWQ Ranger high availability, you must register the standby Ranger Plug-in Service on the standby master node, and then restart the standby.
 
-**Note**: If you configured and registered the master HAWQ Ranger Plug-in Service before you activated your HAWQ standby master node, you do not need to perform the steps in this section.
+**Note**: If you configured and registered the master HAWQ Ranger Plug-in Service before you initialized your HAWQ standby master node, you do not need to perform the steps in this section.
 
 
 1. Synchronize the HAWQ Ranger Plug-in Service configuration files from the HAWQ master node to the standby master node by either manually copying the files, or by running `enable-ranger-plugin.sh` on the standby master. For example (where `$GPHOME` represents your base HAWQ install directory):
