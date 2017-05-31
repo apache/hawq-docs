@@ -53,6 +53,8 @@ The HBase profile is equivalent to the following PXF parameters:
 -   Accessor=org.apache.hawq.pxf.plugins.hbase.HBaseAccessor
 -   Resolver=org.apache.hawq.pxf.plugins.hbase.HBaseResolver
 
+**Note**: `ANALYZE` operations are not supported on external tables you create with the `HBase` profile.
+
 ## <a id="columnmapping"></a>Column Mapping
 
 Most HAWQ external tables (PXF or others) require that the HAWQ table attributes match the source data record layout, and include all the available attributes. With HAWQ, however, you use the PXF HBase plug-in to specify the subset of HBase qualifiers that define the HAWQ PXF table. To set up a clear mapping between each attribute in the PXF table and a specific qualifier in the HBase table, you can use either direct mapping or indirect mapping. In addition, the HBase row key is handled in a special way.

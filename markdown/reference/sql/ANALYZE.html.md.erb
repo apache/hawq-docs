@@ -67,13 +67,15 @@ For large tables, `ANALYZE` takes a random sample of the table contents, rather 
 
 The largest statistics target among the columns being analyzed determines the number of table rows sampled to prepare the statistics. Increasing the target causes a proportional increase in the time and space needed to do `ANALYZE`.
 
-The `pxf_enable_stat_collection` server configuration parameter determines if `ANALYZE` calculates statistics for PXF readable tables. When `pxf_enable_stat_collection` is true, the default setting, `ANALYZE` estimates the number of tuples in the table from the total size of the table, the size of the first fragment, and the number of tuples in the first fragment. Then it builds a sample table and calculates statistics for the PXF table by running statistics queries on the sample table, the same as it does with native tables. A sample table is always created to calculate PXF table statistics, even when the table has a small number of rows.
+The `pxf_enable_stat_collection` server configuration parameter determines if `ANALYZE` calculates statistics for PXF readable external tables. When `pxf_enable_stat_collection` is true, the default setting, `ANALYZE` estimates the number of tuples in the table from the total size of the table, the size of the first fragment, and the number of tuples in the first fragment. Then it builds a sample table and calculates statistics for the PXF table by running statistics queries on the sample table, the same as it does with native tables. A sample table is always created to calculate PXF table statistics, even when the table has a small number of rows.
 
 The `pxf_stat_max_fragments` configuration parameter, default 100, sets the maximum number of fragments that are sampled to build the sample table. Setting `pxf_stat_max_fragments` to a higher value provides a more uniform sample, but decreases `ANALYZE` performance. Setting it to a lower value increases performance, but the statistics are calculated on a less uniform sample.
 
-When `pxf_stat_max_fragments` is false, `ANALYZE` outputs a message to warn that it is skipping the PXF table because `pxf_stat_max_fragments` is turned off.
+When `pxf_stat_max_fragments` is false, `ANALYZE` outputs a message to warn that it is skipping the analyze operation on the PXF table because `pxf_stat_max_fragments` is turned off.
 
 There may be situations where the remote statistics retrieval could fail to perform a task on a PXF table. For example, if a PXF Java component is down, the remote statistics retrieval might not occur, and the database transaction would not succeed. In these cases, the statistics remain with the default external table values.
+
+**Note**: `ANALYZE` operations are not supported on PXF external tables created with the `HBase` or `Json` profiles.
 
 ## <a id="examples"></a>Examples
 
