@@ -2151,7 +2151,7 @@ Identifies the port on which the HAWQ Ranger Plug-in Service runs. The `hawq_rps
 
 ## <a name="hawq_rps_check_local_interval"></a>hawq\_rps\_check\_local\_interval
 
-When HAWQ Ranger authentication high availability mode is enabled and the Ranger Plug-in Service is active on the standby master node, HAWQ attempts to switch back to the service located on the master node as soon as it becomes available. The HAWQ master periodically attempts to re-establish contact with the service on the local node, using `hawq_rps_check_local_interval` as the polling time interval (in seconds) for this contact.
+Should the HAWQ master node fail to communicate with the local Ranger Plug-in Service and the Ranger Plug-in Service is active on the standby master node, HAWQ attempts to switch back to the service located on the master node as soon as it becomes available. The HAWQ master periodically attempts to re-establish contact with the service on the local node, using `hawq_rps_check_local_interval` as the polling time interval (in seconds) for this contact.
 
 | Value Range                                                             | Default             | Set Classifications     |
 |-------------------------------------------------------------------------|---------------------|-------------------------|
