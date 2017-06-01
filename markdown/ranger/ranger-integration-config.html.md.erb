@@ -155,9 +155,6 @@ Before you configure HAWQ Ranger authentication in high availability mode, ensur
 
 ### Procedure <a id="rps_ha_cfg_standbyrps"></a>
 
-**Note**: If you configured and registered the master HAWQ Ranger Plug-in Service before you initialized your HAWQ standby master node, you do not need to perform the steps in this section.
-
-
 1. Synchronize the HAWQ Ranger Plug-in Service configuration files from the HAWQ master node to the standby master node by either manually copying the files, or by running `enable-ranger-plugin.sh` on the standby master. For example (where `$GPHOME` represents your base HAWQ install directory):
 
     ``` shell
