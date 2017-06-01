@@ -75,7 +75,7 @@ When `pxf_stat_max_fragments` is false, `ANALYZE` outputs a message to warn that
 
 There may be situations where the remote statistics retrieval could fail to perform a task on a PXF table. For example, if a PXF Java component is down, the remote statistics retrieval might not occur, and the database transaction would not succeed. In these cases, the statistics remain with the default external table values.
 
-**Note**: `ANALYZE` operations are not supported on PXF external tables created with the `HBase` or `Json` profiles.
+**Note**: The `ANALYZE` command is not supported on PXF external tables created with the `HBase` or `Json` profiles.
 
 ## <a id="examples"></a>Examples
 
