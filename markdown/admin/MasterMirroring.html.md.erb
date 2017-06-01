@@ -103,6 +103,8 @@ Upon activation of the standby master, HAWQ reconstructs the state of the master
 	```
 	
 	The newly-activated master's status should be **Active**. If you configured a new standby master, its status is **Passive**. When a standby master is not configured, the command displays `-No entries found`, the message indicating that no standby master instance is configured.
+	
+6. If you have enabled HAWQ Ranger Authentication in high availability mode in your cluster, you must manually update the Ranger HAWQ service definition to identify the new master node. Refer to [Failover to HAWQ Standby Master](../ranger/ranger-ha.html#rps_ha_cfg_masterfailover) in the HAWQ Ranger documentation for additional information.
 
 6. Query the `gp_segment_configuration` table to verify that segments have registered themselves to the new master:
 
