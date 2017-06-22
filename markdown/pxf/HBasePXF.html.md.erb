@@ -41,7 +41,7 @@ Before trying to access HBase data with PXF, verify the following:
 To create an external HBase table, use the following syntax:
 
 ``` sql
-CREATE [READABLE|WRITABLE] EXTERNAL TABLE table_name 
+CREATE READABLE EXTERNAL TABLE table_name 
     ( column_name data_type [, ...] | LIKE other_table )
 LOCATION ('pxf://host[:port]/hbase-table-name?Profile=HBase')
 FORMAT 'CUSTOM' (Formatter='pxfwritable_import');
