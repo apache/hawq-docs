@@ -30,7 +30,7 @@ This section describes how to use PXF with JDBC, including an example of creatin
 Before accessing external SQL databases using HAWQ and PXF, ensure that:
 
 -   The JDBC plug-in is installed on all cluster nodes. See [Installing PXF Plug-ins](InstallPXFPlugins.html) for PXF plug-in installation information.
--   The JDBC JAR files for the external SQL database are installed on all cluster nodes.
+-   The JDBC driver JAR files for the external SQL database are installed on all cluster nodes.
 -   The file locations of external SQL database JDBC JAR files are added to `pxf-public.classpath`. If you manage your HAWQ cluster with Ambari, add the JARS via the Ambari UI. If you managed your cluster from the command line, edit the `/etc/pxf/conf/pxf-public.classpath` file directly.
 
 
