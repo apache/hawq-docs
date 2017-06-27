@@ -58,7 +58,7 @@ FORMAT 'custom' (formatter='pxfwritable_import|pxfwritable_export');
 | \<host\>    | The PXF host. While \<host\> may identify any PXF agent node, use the HDFS NameNode as it is guaranteed to be available in a running HDFS cluster. If HDFS High Availability is enabled, \<host\> must identify the HDFS NameService. |
 | \<port\>    | The PXF port. If \<port\> is omitted, PXF assumes \<host\> identifies a High Availability HDFS Nameservice and connects to the port number designated by the `pxf_service_port` server configuration parameter value. Default is 51200. |
 | \<path\-to\-data\>        | A directory, file name, wildcard pattern, table name, etc.                                                                                                                                                                                                                     |
-| PROFILE              | The profile PXF uses to access the data. PXF supports multiple plug-ins that currently expose profiles named `HBase`, `Hive`, `HiveRC`, `HiveText`, `HiveORC`,  `HdfsTextSimple`, `HdfsTextMulti`, `Avro`, `SequenceWritable`, and `Json`.                                                                                                                                                                                   |
+| PROFILE              | The profile PXF uses to access the data. PXF supports multiple plug-ins that currently expose profiles named `HBase`, `Hive`, `HiveRC`, `HiveText`, `HiveORC`,  `HiveVectorizedORC`, `HdfsTextSimple`, `HdfsTextMulti`, `Avro`, `SequenceWritable`, and `Json`.                                                                                                                                                                                   |
 | FRAGMENTER              | The Java class the plug-in uses for fragmenting data. Used for READABLE external tables only.                                                                                                                                                                                   |
 | ACCESSOR                | The Java class the plug-in uses for accessing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                                                  |
 | RESOLVER                | The Java class the plug-in uses for serializing and deserializing the data. Used for READABLE and WRITABLE tables.                                                                                                                                                                                                                                                                                                                     |
@@ -504,6 +504,10 @@ The `Accessor` retrieves specific fragments and passes records back to the Resol
 <td>org.apache.hawq.pxf.plugins.hive.HiveORCAccessor</td>
 <td>Accessor for Hive tables stored as ORC format </td>
 </tr>
+<tr class="even">
+<td>org.apache.hawq.pxf.plugins.hive.HiveORCVectorizedAccessor</td>
+<td>Accessor for Hive tables stored as ORC format </td>
+</tr>
 </tr>
 <tr class="odd">
 <td>org.apache.hawq.pxf.plugins.json.JsonAccessor</td>
@@ -664,9 +668,13 @@ DataType.TIMESTAMP</code></pre></td>
 <td>org.apache.hawq.pxf.plugins.hive.HiveColumnarSerdeResolver</td>
 <td>Specialized <code class="ph codeph">HiveResolver</code> for a Hive table stored as RC file. Should be used together with <code class="ph codeph">HiveInputFormatFragmenter</code>/<code class="ph codeph">HiveRCFileAccessor</code>.</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>org.apache.hawq.pxf.plugins.hive.HiveORCSerdeResolver</td>
 <td>Specialized <code class="ph codeph">HiveResolver</code> for a Hive table stored in ORC format. Should be used together with <code class="ph codeph">HiveInputFormatFragmenter</code>/<code class="ph codeph">HiveORCAccessor</code>.</td>
+</tr>
+<tr class="odd">
+<td>org.apache.hawq.pxf.plugins.hive.HiveORCVectorizedResolver</td>
+<td>Specialized <code class="ph codeph">HiveResolver</code> for a Hive table stored in ORC format. Should be used together with <code class="ph codeph">HiveInputFormatFragmenter</code>/<code class="ph codeph">HiveORCVectorizedAccessor</code>.</td>
 </tr>
 </tbody>
 </table>
@@ -1103,12 +1111,8 @@ String colName = filterColumn.columnName();
 
 This section contains the following information:
 
--   [External Table Examples](#externaltableexamples)
--   [Plug-in Examples](#pluginexamples)
-
--   **[External Table Examples](../pxf/PXFExternalTableandAPIReference.html#externaltableexamples)**
-
--   **[Plug-in Examples](../pxf/PXFExternalTableandAPIReference.html#pluginexamples)**
+-   **[External Table Examples](#externaltableexamples)**
+-   **[Plug-in Examples](#pluginexamples)**
 
 ### <a id="externaltableexamples"></a>External Table Examples
 
