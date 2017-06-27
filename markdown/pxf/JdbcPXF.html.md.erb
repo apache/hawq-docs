@@ -78,7 +78,7 @@ The JDBC plug-in `Jdbc` profile supports the following \<custom-option\>s:
 | USER | The database user name. |
 | PASS | The database password for USER. |
 | PARTITION_BY | The partition column, \<column-name\>:\<column-type\>. The JDBC plug-in supports `date`, `int`, and `enum` \<column-type\>s. Use the  `yyyy-MM-dd` format for the `date` \<column-type\>. A null `PARTITION_BY` defaults to a single fragment. |
-| RANGE | The query range, \<start-value\>[:\<end-value\>]. `RANGE` may be empty for an `enum` \<column-type\>. \<end-value\> may be empty for an `int` \<column-type\>. |
+| RANGE | The query range, \<start-value\>[:\<end-value\>]. \<end-value\> may be empty for an `int` \<column-type\>. |
 | INTERVAL | The interval, \<interval-num\>[:\<interval-unit\>], of one fragment.  `INTERVAL` may be empty for an `enum` \<column-type\>. \<interval-unit\> may be empty for an `int` \<column-type\>. |
 
 **Note**: The partition `RANGE` interval is left closed, right open. That is, the range includes the \<start-value\> but does *not* include the \<end-value\>.
