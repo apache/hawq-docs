@@ -50,7 +50,7 @@ The PXF Hive plug-in supports several file formats and profiles for accessing th
 | TextFile | Flat file with data in comma-, tab-, or space-separated value format or JSON notation. | Hive, HiveText |
 | SequenceFile | Flat file consisting of binary key/value pairs. | Hive |
 | RCFile | Record columnar data consisting of binary key/value pairs; high row compression rate. | Hive, HiveRC |
-| ORCFile | Optimized row columnar data with stripe, footer, and postscript sections; reduces data size. | Hive, HiveORC |
+| ORCFile | Optimized row columnar data with stripe, footer, and postscript sections; reduces data size. | Hive, HiveORC, HiveVectorizedORC |
 | Parquet | Compressed columnar data representation. | Hive |
 | Avro | JSON-defined, schema-based data serialization format. | Hive |
 
@@ -78,12 +78,15 @@ The following table summarizes external mapping rules for Hive primitive types.
 | timestamp   | timestamp |
 
 
+**Note**: The `HiveVectorizedORC` profile does not support the timestamp data type.
+
 ### <a id="topic_b4v_g3n_25"></a>Complex Data Types
 
 Hive supports complex data types including array, struct, map, and union. PXF maps each of these complex types to `text`.  While HAWQ does not natively support these types, you can create HAWQ functions or application code to extract subcomponents of these complex data types.
 
 Examples using complex data types with the `Hive` and `HiveORC` profiles are provided later in this topic.
 
+**Note**: The `HiveVectorizedORC` profile does not support complex types.
 
 ## <a id="hive_sampledataset"></a>Sample Data Set
 
@@ -316,7 +319,7 @@ HCatalog integration has the following limitations:
 
 In the previous section, you used HCatalog integration to query a Hive table. You can also create a PXF/HAWQ external table to access Hive table data. This Hive table access mechanism requires that you identify an appropriate Hive profile.
 
-The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`, and `HiveORC`. The `HiveText` and `HiveRC` profiles are specifically optimized for text and RC file formats, respectively. The `HiveORC` profile is optimized for ORC file formats. The `Hive` profile is optimized for all file storage types; use the `Hive` profile when the underlying Hive table is composed of multiple partitions with differing file formats.
+The PXF Hive plug-in supports several Hive-related profiles. These include `Hive`, `HiveText`, and `HiveRC`, `HiveORC`, and `HiveVectorizedORC`. The `HiveText` and `HiveRC` profiles are specifically optimized for text and RC file formats, respectively. The `HiveORC` and `HiveVectorizedORC` profiles are optimized for ORC file formats. The `Hive` profile is optimized for all file storage types; use the `Hive` profile when the underlying Hive table is composed of multiple partitions with differing file formats.
 
 Use the following syntax to create a HAWQ external table representing Hive data:
 
@@ -324,7 +327,7 @@ Use the following syntax to create a HAWQ external table representing Hive data:
 CREATE EXTERNAL TABLE <table_name>
     ( <column_name> <data_type> [, ...] | LIKE <other_table> )
 LOCATION ('pxf://<host>[:<port>]/<hive-db-name>.<hive-table-name>
-    ?PROFILE=Hive|HiveText|HiveRC|HiveORC[&DELIMITER=<delim>'])
+    ?PROFILE=Hive|HiveText|HiveRC|HiveORC|HiveVectorizedORC[&DELIMITER=<delim>'])
 FORMAT 'CUSTOM|TEXT' (formatter='pxfwritable_import' | delimiter='<delim>')
 ```
 
@@ -336,9 +339,9 @@ Hive-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 | \<port\>    | The PXF port. If \<port\> is omitted, PXF assumes \<host\> identifies a High Availability HDFS Nameservice and connects to the port number designated by the `pxf_service_port` server configuration parameter value. Default is 51200. |
 | \<hive-db-name\>    | The name of the Hive database. If omitted, defaults to the Hive database named `default`. |
 | \<hive-table-name\>    | The name of the Hive table. |
-| PROFILE    | The `PROFILE` keyword must specify one of the values `Hive`, `HiveText`, `HiveRC`, or `HiveORC`. |
+| PROFILE    | The `PROFILE` keyword must specify one of the values `Hive`, `HiveText`, `HiveRC`, `HiveORC`, or `HiveVectorizedORC`. |
 | DELIMITER    | The `DELIMITER` clause is required for both the `HiveText` and `HiveRC` profiles and identifies the field delimiter used in the Hive data set.  \<delim\> must be a single ascii character or specified in hexadecimal representation. |
-| FORMAT (`Hive` and `HiveORC` profiles)   | The `FORMAT` clause must specify `CUSTOM`. The `CUSTOM` format supports only the built-in `pxfwritable_import` `formatter`.   |
+| FORMAT (`Hive`, `HiveORC`, and `HiveVectorizedORC` profiles)   | The `FORMAT` clause must specify `CUSTOM`. The `CUSTOM` format supports only the built-in `pxfwritable_import` `formatter`.   |
 | FORMAT (`HiveText` and `HiveRC` profiles) | The `FORMAT` clause must specify `TEXT`. The `delimiter` must be specified a second time in '\<delim\>'. |
 
 
@@ -348,9 +351,9 @@ Use the `Hive` profile with any Hive file storage format. With the `Hive` profil
 
 ### <a id="profile_hive_using"></a>Example: Using the Hive Profile
 
-Use the `Hive` profile to create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier.
+Use the `Hive` profile to create a readable HAWQ external table from the Hive `sales_info` textfile format table created earlier.
 
-1. Create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier:
+1. Create a readable HAWQ external table from the Hive `sales_info` textfile format table created earlier:
 
     ``` sql
     postgres=# CREATE EXTERNAL TABLE salesinfo_hiveprofile(location text, month text, num_orders int, total_sales float8)
@@ -382,7 +385,7 @@ Use the `HiveText` profile to query text format files.
 
 ### <a id="profile_hivetext_using"></a>Example: Using the HiveText Profile
 
-Use the PXF `HiveText` profile to create a queryable HAWQ external table from the Hive `sales_info` textfile format table created earlier.
+Use the PXF `HiveText` profile to create a readable HAWQ external table from the Hive `sales_info` textfile format table created earlier.
 
 1. Create the external table:
 
@@ -449,7 +452,7 @@ Use the `HiveRC` profile to query RCFile-formatted data in Hive tables.
     hive> SELECT * FROM sales_info_rcfile;
     ```
 
-4. Use the PXF `HiveRC` profile to create a queryable HAWQ external table from the Hive `sales_info_rcfile` table created in the previous step. You *must* specify a delimiter option in both the `LOCATION` and `FORMAT` clauses.:
+4. Use the PXF `HiveRC` profile to create a readable HAWQ external table from the Hive `sales_info_rcfile` table created in the previous step. You *must* specify a delimiter option in both the `LOCATION` and `FORMAT` clauses.:
 
     ``` sql
     postgres=# CREATE EXTERNAL TABLE salesinfo_hivercprofile(location text, month text, num_orders int, total_sales float8)
@@ -475,7 +478,7 @@ Use the `HiveRC` profile to query RCFile-formatted data in Hive tables.
      ...
     ```
 
-## <a id="hiveorc-intro"></a>HiveORC Profile
+## <a id="hiveorc-intro"></a>ORC File Format
 
 The Optimized Row Columnar (ORC) file format is a columnar file format that provides a highly efficient way to both store and access HDFS data. ORC format offers improvements over text and RCFile formats in terms of both compression and performance. HAWQ/PXF supports ORC version 1.2.1.
 
@@ -485,7 +488,9 @@ ORC also supports predicate pushdown with built-in indexes at the file, stripe, 
 
 Refer to the [Apache orc](https://orc.apache.org/docs/) and the Apache Hive [LanguageManual ORC](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+ORC) websites for detailed information about the ORC file format.
 
-Use the `HiveORC` profile to access ORC format data. The `HiveORC` profile provides:
+### <a id="orc-profiles"></a>Profiles Supporting the ORC File Format
+
+Use the `HiveORC` or `HiveVectorizedORC` profiles to access ORC format data. These profiles provide:
 
 - Enhanced query performance - Column projection information is leveraged to enhance query performance by reducing disk I/O and data payload.
 
@@ -495,9 +500,16 @@ Use the `HiveORC` profile to access ORC format data. The `HiveORC` profile provi
     - `=`, `>`, `<`, `>=`, `<=`, `IS NULL`, and `IS NOT NULL` operators and comparisons between the `float8` and `float4` types
     - `IN` operator on arrays of `int2`, `int4`, `int8`, `boolean`, and `text`
 
-- Complex type support - You can access Hive tables composed of array, map, struct, and union data types. PXF serializes each of these complex types to `text`.
+When choosing an ORC-supporting profile, consider the following:
 
-**Note**: The `HiveORC` profile currently supports access to data stored in ORC format only through a Hive mapped table.
+- The `HiveORC` profile supports complex types. You can access Hive tables composed of array, map, struct, and union data types. PXF serializes each of these complex types to `text`.  
+
+    The `HiveVectorizedORC` profile does not support complex types.
+
+- The `HiveVectorizedORC` profile reads up to 1024 rows of data at once, while the `HiveORC` profile reads only a single row at a time.
+
+
+**Note**: The `HiveORC` and `HiveVectorizedORC` profiles currently support access to data stored in ORC format only through a Hive mapped table.
 
 ### <a id="using-hiveorc-profile"></a>Example: Using the HiveORC Profile
 
@@ -540,7 +552,7 @@ In the following example, you will create a Hive table stored in ORC format and 
     Timing is on.
     ```
 
-4. Use the PXF `HiveORC` profile to create a queryable HAWQ external table from the Hive table named `sales_info_ORC` you created in Step 1. The `FORMAT` clause must specify `'CUSTOM'`. The `HiveORC` `CUSTOM` format supports only the built-in `'pxfwritable_import'` `formatter`.
+4. Use the PXF `HiveORC` profile to create a readable HAWQ external table from the Hive table named `sales_info_ORC` you created in Step 1. The `FORMAT` clause must specify `'CUSTOM'`. The `HiveORC` `CUSTOM` format supports only the built-in `'pxfwritable_import'` `formatter`.
 
     ``` sql
     postgres=> CREATE EXTERNAL TABLE salesinfo_hiveORCprofile(location text, month text, num_orders int, total_sales float8)
@@ -564,6 +576,44 @@ In the following example, you will create a Hive table stored in ORC format and 
 
     Time: 425.416 ms
     ```
+
+### <a id="using-hiveorc-profile"></a>Example: Using the HiveVectorizedORC Profile
+
+In the following example, you will use the `HiveVectorizedORC` profile to query the `sales_info_ORC` Hive table you created in the previous example.
+
+**Note**: The `HiveVectorizedORC` profile does not support the timestamp data type or complex types.
+
+1. Start the `psql` subsystem:
+
+    ``` shell
+    $ psql -d postgres
+    ```
+
+2. Use the PXF `HiveVectorizedORC` profile to create a readable HAWQ external table from the Hive table named `sales_info_ORC` that you created in Step 1 of the previous example. The `FORMAT` clause must specify `'CUSTOM'`. The `HiveVectorizedORC` `CUSTOM` format supports only the built-in `'pxfwritable_import'` `formatter`.
+
+    ``` sql
+    postgres=> CREATE EXTERNAL TABLE salesinfo_hiveVectORC(location text, month text, num_orders int, total_sales float8)
+                 LOCATION ('pxf://namenode:51200/default.sales_info_ORC?PROFILE=HiveVectorizedORC')
+                 FORMAT 'CUSTOM' (formatter='pxfwritable_import');
+    ```
+
+3. Query the external table:
+
+    ``` sql
+    postgres=> SELECT * FROM salesinfo_hiveVectORC;
+    ```
+
+    ``` pre
+       location    | month | number_of_orders | total_sales 
+    ---------------+-------+------------------+-------------
+     Prague        | Jan   |              101 |     4875.33
+     Rome          | Mar   |               87 |     1557.39
+     Bangalore     | May   |              317 |     8936.99
+     ...
+
+    Time: 425.416 ms
+    ```
+
 
 ## <a id="topic_dbb_nz3_ts"></a>Accessing Parquet-Format Hive Tables
 
@@ -664,7 +714,7 @@ When specifying an array field in a Hive table, you must identify the terminator
     ...
     ```
 
-6. Use the PXF `Hive` profile to create a queryable HAWQ external table representing the Hive `table_complextypes`:
+6. Use the PXF `Hive` profile to create a readable HAWQ external table representing the Hive `table_complextypes`:
 
     ``` sql
     postgres=# CREATE EXTERNAL TABLE complextypes_hiveprofile(index int, name text, intarray text, propmap text)
@@ -744,7 +794,7 @@ In the following example, you will create a Hive table stored in ORC format. You
     $ psql -d postgres
     ```
 
-4. Use the PXF `HiveORC` profile to create a queryable HAWQ external table from the Hive table named `table_complextypes_ORC` you created in Step 1. The `FORMAT` clause must specify `'CUSTOM'`. The `HiveORC` `CUSTOM` format supports only the built-in `'pxfwritable_import'` `formatter`.
+4. Use the PXF `HiveORC` profile to create a readable HAWQ external table from the Hive table named `table_complextypes_ORC` you created in Step 1. The `FORMAT` clause must specify `'CUSTOM'`. The `HiveORC` `CUSTOM` format supports only the built-in `'pxfwritable_import'` `formatter`.
 
     ``` sql
     postgres=> CREATE EXTERNAL TABLE complextypes_hiveorc(index int, name text, intarray text, propmap text)

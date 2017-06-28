@@ -105,6 +105,18 @@ Note: The <code class="ph codeph">DELIMITER</code> parameter is mandatory.
 <li>org.apache.hawq.pxf.service.io.GPDBWritable</li>
 </ul></td>
 </tr>
+<tr class="even">
+<td>HiveVectorizedORC</td>
+<td>Optimized bulk/batch read of a Hive table where each partition is stored as an ORC file.
+</td>
+<td><ul>
+<li>org.apache.hawq.pxf.plugins.hive.HiveInputFormatFragmenter</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveORCVectorizedAccessor</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveORCVectorizedResolver</li>
+<li>org.apache.hawq.pxf.plugins.hive.HiveMetadataFetcher</li>
+<li>org.apache.hawq.pxf.service.io.GPDBWritable</li>
+</ul></td>
+</tr>
 <tr class="odd">
 <td>HiveText</td>
 <td>Optimized read of a Hive table where each partition is stored as a text file.
