@@ -62,26 +62,24 @@ JDBC-plug-in-specific keywords and values used in the [CREATE EXTERNAL TABLE](..
 | \<custom-option\>  | The custom options supported by the `Jdbc` profile are discussed later in this section.|
 | FORMAT 'CUSTOM' | The JDBC `CUSTOM` `FORMAT` supports only the built-in `'pxfwritable_import'` `FORMATTER` property. |
 
-*Note*: When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
+**Note**: When creating PXF external tables, you cannot use the `HEADER` option in your `FORMAT` specification.
 
 
 ### <a id="profile_jdbcoptipns"></a>JDBC Custom Options
 
-You may include one or more custom options in the `LOCATION` URI. Preface each option with an ampersand `&`. 
+You include custom options in the `LOCATION` URI. Preface each option with an ampersand `&`.
 
-The JDBC plug-in `Jdbc` profile supports the following \<custom-option\>s:
+The JDBC plug-in `Jdbc` profile supports the following \<custom-option\>s. The JDBC connection set up options are required.
 
 | Option Name   | Description
 |---------------|--------------------|
-| JDBC_DRIVER | The JDBC driver class name. |
-| DB_URL | The URL to the database; includes the hostname, port, and database name. |
-| USER | The database user name. |
-| PASS | The database password for USER. |
+| JDBC_DRIVER | The JDBC driver class name. (Required) |
+| DB_URL | The URL to the database; includes the hostname, port, and database name. (Required) |
+| USER | The database user name. (Required) |
+| PASS | The database password for USER. (Required) |
 | PARTITION_BY | The partition column, \<column-name\>:\<column-type\>. The JDBC plug-in supports `date`, `int`, and `enum` \<column-type\>s. Use the  `yyyy-MM-dd` format for the `date` \<column-type\>. A null `PARTITION_BY` defaults to a single fragment. |
-| RANGE | The query range, \<start-value\>[:\<end-value\>]. \<end-value\> may be empty for an `int` \<column-type\>. |
-| INTERVAL | The interval, \<interval-num\>[:\<interval-unit\>], of one fragment.  `INTERVAL` may be empty for an `enum` \<column-type\>. \<interval-unit\> may be empty for an `int` \<column-type\>. |
-
-**Note**: The partition `RANGE` interval is left closed, right open. That is, the range includes the \<start-value\> but does *not* include the \<end-value\>.
+| RANGE | (Used only when `PARTITION_BY` is specified.) The query range, \<start-value\>[:\<end-value\>]. \<end-value\> may be empty for an `int` \<column-type\>. The `RANGE` is left closed, right open. That is, the range includes the \<start-value\> but does *not* include the \<end-value\>.|
+| INTERVAL | (Used only when `PARTITION_BY` is specified.) The interval, \<interval-num\>[:\<interval-unit\>], of one fragment.  `INTERVAL` may be empty for an `enum` \<column-type\>. \<interval-unit\> may be empty for an `int` \<column-type\>. |
 
 Example JDBC \<custom-option\> connection string:
 
