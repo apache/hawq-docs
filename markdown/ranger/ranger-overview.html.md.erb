@@ -41,7 +41,7 @@ The Ranger plug-in service caches Ranger policies locally on each HAWQ node to a
 
 In this release, HAWQ integration with Ranger has several limitations:
 
-- Neither Kerberos authentication nor SSL encryption is supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
+- SSL encryption is not supported between a HAWQ node and the Ranger plug-in service, or between the plug-in service and the Ranger Policy Manager.
 
 - Some authorization checks for superuser-restricted authorization events are handled by HAWQ natively, even when Ranger integration is enabled. See [HAWQ-Native Authorization](../clientaccess/hawq-access-checks.html#alwaysnative).
 
