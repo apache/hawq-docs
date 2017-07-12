@@ -87,6 +87,8 @@ Example JDBC \<custom-option\> connection string:
 &JDBC_DRIVER=com.mysql.jdbc.Driver&DB_URL=jdbc:mysql://<dbhost>:<dbport>/testdb&USER=user1&PASS=changeme
 ```
 
+When specifying the `PARTITION_BY` option, tune the `INTERVAL` value and unit based upon the optimal number of JDBC connections to the target database and the optimal distribution of fragments across HAWQ segments. The `INTERVAL` low boundary is driven by the number of HAWQ segments (`default_hash_table_bucket_number`), while the high boundary is driven by the acceptable number of JDBC connections to the target database. `INTERVAL` settings influence the number of fragments, and should ideally not be set too high nor too low. Testing with multiple values may help you select the optimal settings. 
+
 Example JDBC \<custom-option\> substrings identifying partitioning parameters:
 
 ``` pre
