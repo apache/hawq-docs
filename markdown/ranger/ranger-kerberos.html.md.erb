@@ -82,18 +82,27 @@ Perform the following procedure to enable the Ranger Administration Host to look
     ```
     
     You do not need to generate a keytab file for the `rangerlookup_hawq` principal because you will provide the password in the HAWQ service definition of the Ranger Admin UI.
+    
+4. Validate the `rangerlookup_hawq` role and principal by generating a ticket and attempting to connect to HAWQ. For example:
 
-4. Start the Ranger Admin UI in a supported web browser. The default URL is \<ranger-admin-node\>:6080. 
+    ``` shell
+    $ ssh gpadmin@<hawq-node>
+    gpadmin@hawq-node$ kinit rangerlookup_hawq
+    Password for rangerlookup_hawq@REALM.DOMAIN
+    gpadmin@hawq-node$ psql -d postgres -p 5432 -U rangerlookup_hawq -h master
+    ```
 
-5. Locate the HAWQ service definition and click the **Edit** button. 
+5. Start the Ranger Admin UI in a supported web browser. The default URL is \<ranger-admin-node\>:6080. 
 
-6. Update the applicable **Config Properties** fields:
+6. Locate the HAWQ service definition and click the **Edit** button. 
+
+7. Update the applicable **Config Properties** fields:
 
     **HAWQ User Name*** : Enter the HAWQ Ranger lookup role you identified or created in Step 2 above.  
     **HAWQ User Password*** : Enter the password you assigned to the HAWQ Ranger lookup role principal.  
     **HAWQ Kerberos Service Name** : Enter `postgres` or your custom HAWQ service name.
 
-7. Click the **Test Connection** button. If you connect successfully, Ranger displays a dialog with the message:
+8. Click the **Test Connection** button. If you connect successfully, Ranger displays a dialog with the message:
 
     ``` pre
     Connected Successfully.
@@ -101,7 +110,7 @@ Perform the following procedure to enable the Ranger Administration Host to look
 
     You successfully configured Ranger to use Kerberos authentication when looking up HAWQ resource names.
 
-8. **Save** your changes to permanently configure Kerberos authentication for HAWQ Ranger resource lookup.
+9. **Save** your changes to permanently configure Kerberos authentication for HAWQ Ranger resource lookup.
 
 
 ## Configure HAWQ for Kerberized Ranger<a id="rps2ra_kerb_cfg"></a>
