@@ -100,7 +100,8 @@ Perform the following procedure to enable the Ranger Administration Host to look
 
     **HAWQ User Name*** : Enter the HAWQ Ranger lookup role you identified or created in Step 2 above.  
     **HAWQ User Password*** : Enter the password you assigned to the HAWQ Ranger lookup role principal.  
-    **HAWQ Kerberos Service Name** : Enter `postgres` or your custom HAWQ service name.
+    **HAWQ Kerberos Service Name** : Enter `postgres` or your custom HAWQ service name.  
+    **HAWQ Authentication Type** : Select **Kerberos** from the drop-down list.  
 
 8. Click the **Test Connection** button. If you connect successfully, Ranger displays a dialog with the message:
 
@@ -121,7 +122,6 @@ This procedure includes:
 
 - Adding an administrative Ranger user named `postgres`
 - Updating the HAWQ Ranger Plug-in Service configuration to utilize Kerberos
-- Updating the HAWQ service definition in the Ranger Admin UI
 
 
 ### Procedure <a id="kerb_rps2ra_proc"></a>
@@ -138,7 +138,7 @@ Perform the following steps to enable Ranger Plug-in Service policy refresh from
         **User Name*** : Enter `postgres`.  
         **New Password*** : Enter the user's password.  
         **Password Confirm*** : Enter the password again.  
-        **First Name*** : Enter the first name of the user. 
+        **First Name*** : Enter the first name of the user.  
         **Select Role*** : Select the **Admin** role.
 
 2. Update the HAWQ Ranger Plug-in Service configuration to use Kerberos authentication when communicating with Ranger.
@@ -175,18 +175,7 @@ Perform the following steps to enable Ranger Plug-in Service policy refresh from
 
 6. If you have enabled HAWQ Ranger High Availability, synchronize the HAWQ Ranger Plug-in Service configuration files from the HAWQ master node to the standby master node as described in the [Register a Standby Ranger Plug-in Service](ranger-integration-config.html#rps_ha_cfg_standbyrps) procedure, including restarting the standby master node.
 
-7. Navigate to the Ranger Admin UI in a supported web browser. The default URL is \<ranger-admin-node\>:6080. 
-
-8. Locate the **HAWQ** service definition and click the **Edit** button. 
-
-9. Update the applicable **Config Properties** fields:
-  
-    **HAWQ Authentication Type** : Select **Kerberos** from the drop-down list.  
-    **HAWQ Kerberos Service Name** : Enter `postgres` or your custom HAWQ service name.   
-
-10. **Save** your changes to permanently configure Kerberos authentication for Ranger policy retrieval.
-
-11. Verify the configuration.
+7. Verify the configuration.
 
     1. Examine the HAWQ Ranger Plug-in Service log file:
 
