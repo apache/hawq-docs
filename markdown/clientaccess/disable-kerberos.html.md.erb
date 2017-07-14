@@ -48,13 +48,13 @@ If you manage your cluster from the command line, follow these instructions to d
     2.  Start HAWQ if necessary:
 
         ``` bash
-        gpadmin@master$ hawq start cluster -a
+        gpadmin@master$ hawq start cluster
         ```
 
     3.  Update HAWQ configuration to disable security:
 
         ``` bash
-        gpadmin@master$ hawq config --masteronly -c enable_secure_filesystem -v “off”
+        gpadmin@master$ hawq config -c enable_secure_filesystem -v “off”
         ```
 
     4.  Change the permission of the HAWQ HDFS data directory:
@@ -133,3 +133,4 @@ Perform the following procedure to disable Kerberos user authentication for HAWQ
     ```
 
 4. Notify your HAWQ users that `kinit` ticket requests are no longer required to authenticate to HAWQ.
+
