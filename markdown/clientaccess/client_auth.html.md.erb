@@ -99,20 +99,20 @@ This example shows how to edit the `pg_hba.conf` file of the master to allow rem
 
 HAWQ allocates some resources on a per-connection basis, so setting the maximum number of connections allowed is recommended.
 
-To limit the number of active concurrent sessions to your HAWQ system, you can configure the `max_connections` server configuration parameter. This parameter is a *local* parameter, meaning that you must set them in the `hawq-site.xml` file of all HAWQ instances.
+To limit the number of active concurrent sessions to your HAWQ system, you can configure the `max_connections` server configuration parameter on the master instance or the `seg_max_connections` server configuration parameter on segments. 
 
-When you set `max_connections`, you can also set the value for the maximum concurrent connections for the segments by using `seg_max_connections`. Setting this parameter overrides the value of `max_connections` on the segment instances.
+When you set `max_connections`, you can also set the value for the maximum concurrent connections for the segments by using `seg_max_connections`. 
 
 Example `$GPHOME/etc/hawq-site.xml` configuration:
 
 ``` xml
   <property>
       <name>max_connections</name>
-      <value>200</value>
+      <value>1280</value>
   </property>
   <property>
       <name>seg_max_connectionss</name>
-      <value>1000</value>
+      <value>3000</value>
   </property>
 ```
 
@@ -141,8 +141,8 @@ If you manage your cluster from the command line:
 2.  Use the `hawq config` utility to set the values of the `max_connections` and `seg_max_connections` parameters to values appropriate for your deployment. For example: 
 
     ``` bash
-    $ hawq config -c max_connections -v 500
-    $ hawq config -c seg_max_connections -v 2500
+    $ hawq config -c max_connections -v 1280
+    $ hawq config -c seg_max_connections -v 3000
     ```
 
 
