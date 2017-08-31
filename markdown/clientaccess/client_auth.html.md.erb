@@ -99,26 +99,24 @@ This example shows how to edit the `pg_hba.conf` file of the master to allow rem
 
 HAWQ allocates some resources on a per-connection basis, so setting the maximum number of connections allowed is recommended.
 
-To limit the number of active concurrent sessions to your HAWQ system, you can configure the `max_connections` server configuration parameter on master or the `seg_max_connections` server configuration parameter on segments. These parameters are *local* parameters, meaning that you must set them in the `hawq-site.xml` file of all HAWQ instances.
+To limit the number of active concurrent sessions to your HAWQ system, you can configure the `max_connections` server configuration parameter on the master instance or the `seg_max_connections` server configuration parameter on segments. 
 
-When you set `max_connections`, you must also set the dependent parameter `max_prepared_transactions`. This value must be at least as large as the value of `max_connections`, and all HAWQ instances should be set to the same value.
+When you set `max_connections`, you can also set the value for the maximum concurrent connections for the segments by using `seg_max_connections`. 
 
 Example `$GPHOME/etc/hawq-site.xml` configuration:
 
 ``` xml
   <property>
       <name>max_connections</name>
-      <value>500</value>
+      <value>1280</value>
   </property>
   <property>
-      <name>max_prepared_transactions</name>
-      <value>1000</value>
-  </property>
-  <property>
-      <name>seg_max_connections</name>
-      <value>3200</value>
+      <name>seg_max_connectionss</name>
+      <value>3000</value>
   </property>
 ```
+
+HAWQ is configured to allow a maximum of 1280 concurrent user connections on the master and 3000 connections on a segment. For best practices, the recommended value for `seg_max_connections` is its default value of 3000.
 
 **Note:** Raising the values of these parameters may cause HAWQ to request more shared memory. To mitigate this effect, consider decreasing other memory-related server configuration parameters such as [gp\_cached\_segworkers\_threshold](../reference/guc/parameter_definitions.html#gp_cached_segworkers_threshold).
 
@@ -129,7 +127,7 @@ You will perform different procedures to set connection-related server configura
 
 If you use Ambari to manage your cluster:
 
-1. Set the `max_connections`, `seg_max_connections`, and `max_prepared_transactions` configuration properties via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down.
+1. Set the `max_connections` and `seg_max_connections` configuration properties via the HAWQ service **Configs > Advanced > Custom hawq-site** drop down.
 2. Select **Service Actions > Restart All** to load the updated configuration.
 
 If you manage your cluster from the command line:
@@ -140,15 +138,13 @@ If you manage your cluster from the command line:
     $ source /usr/local/hawq/greenplum_path.sh
     ```
     
-2.  Use the `hawq config` utility to set the values of the `max_connections`, `seg_max_connections`, and `max_prepared_transactions` parameters to values appropriate for your deployment. For example: 
+2.  Use the `hawq config` utility to set the values of the `max_connections` and `seg_max_connections` parameters to values appropriate for your deployment. For example: 
 
     ``` bash
-    $ hawq config -c max_connections -v 100
-    $ hawq config -c seg_max_connections -v 6400
-    $ hawq config -c max_prepared_transactions -v 200
+    $ hawq config -c max_connections -v 1280
+    $ hawq config -c seg_max_connections -v 3000
     ```
 
-    The value of `max_prepared_transactions` must be greater than or equal to `max_connections`.
 
 5.  Load the new configuration values by restarting your HAWQ cluster:
 
@@ -160,7 +156,6 @@ If you manage your cluster from the command line:
 
     ``` bash
     $ hawq config -s max_connections
-    $ hawq config -s seg_max_connections
     ```
 
 
