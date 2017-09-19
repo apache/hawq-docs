@@ -1805,7 +1805,7 @@ Adds a checksum value to each block of a work file (or spill file) used by `Hash
 
 ## <a name="gp_workfile_compress_algorithm"></a>gp\_workfile\_compress\_algorithm
 
-When a hash aggregation or hash join operation spills to disk during query processing, specifies the compression algorithm to use on the spill files. If using zlib, it must be in your $PATH on all segments.
+When a hash aggregation or hash join operation spills to disk during query processing, specifies the compression algorithm to use on the spill files. 
 
 If your HAWQ database installation uses serial ATA (SATA) disk drives, setting the value of this parameter to `zlib` might help to avoid overloading the disk subsystem with IO operations.
 
