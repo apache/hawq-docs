@@ -254,6 +254,8 @@ If you have enabled high-availability for your YARN resource managers, then spec
 
 where {0} and {1} are substituted with the fully qualified hostnames of the YARN resource manager host machines.
 
+To reduce the time needed to locate the resource manager, the master resource manager for YARN should be first in this list, followed by the standby resource manager.
+
 ## <a id="topic_wp3_4bx_15"></a>Tune HAWQ Resource Negotiations with YARN 
 
 To ensure efficient management of resources and highest performance, you can configure some aspects of how HAWQ's resource manager negotiate resources from YARN.

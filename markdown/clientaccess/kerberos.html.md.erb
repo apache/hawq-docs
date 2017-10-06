@@ -476,7 +476,8 @@ Perform the following steps to configure Kerberos authentication for specific HA
 
 ### <a id="hawq_kerb_dbaccess"></a>Authenticating User Access to HAWQ 
 
-When Kerberos user authentication is enabled for HAWQ, users must request a ticket from the Kerberos KDC server before connecting to HAWQ. You must request the ticket for a principal matching the requested database user name. When granted, the ticket expires after a set period of time, after which you will need to request another ticket.
+When Kerberos user authentication is enabled for HAWQ, users must request a ticket from the Kerberos KDC server before connecting to HAWQ. You must request the ticket for a principal matching the requested database user name. When granted, the ticket expires after a set period of time, after which you must either request another ticket or have the ticket renewed. The default expiration time is 12 hours, set in the parameter `server_ticket_renew_interval`. To avoid KDC access issues, the ticket should be renewed before it expires.
+See 
    
 To generate a Kerberos ticket, run the `kinit` command. Specify the Kerberos principal for which you are requesting the ticket in a command option. You may optionally specify a path to a keytab file.
 
@@ -514,6 +515,47 @@ Valid starting     Expires            Service principal
 ```
 
 After generating a ticket, you can connect to a HAWQ database as a kerberos-authenticated user using `psql` or other client programs.
+
+### <a id="change_ticket"></a>Changing the Ticket Renewal Interval
+
+The lifetime of the Kerberos ticket may need to be changed. The ticket lifetime is the minimum of the following values:
+
+* `max_life` in `kdc.conf` on the KDC servers.
+* `ticket_lifetime` in `krb5.conf` on the client
+* maxlife for the user principal
+* maxlife for the service principal in krbtgt\[REALM\]
+* maxlife for the AFS service principal "afs/[realm_in_lower_case]"
+* the requested lifetime in the ticket request
+
+**Note:** The kdc.conf file supplements krb5.conf for programs using KDC. The kdc.conf file contains defaults used when issuing Kerberos tickets, as well as KDC configuration information. 
+
+On starting HAWQ, the Resource Manager initializes the  kerberos ticket to expire after 12 hours. On KDC servers, this interval can be even longer. Reset the `server_ticket_renew_interval`  to renew prior to the 12 hour default.
+
+You will perform different procedures if you use Ambari for cluster management or manage your cluster from the command line.
+
+  1. If you manage your cluster using Ambari:
+    
+       1.  Login to the Ambari UI from a supported web browser.
+
+        2. Navigate to the **HAWQ** service, **Configs > Advanced** tab and expand the **Custom hawq-site** drop down.
+
+        3. Set the value of  `server_ticket_renew_interval` to 18000000. This will renew the ticket every five hours.
+
+        4. **Save** this configuration change and then select the now orange **Restart > Restart All Affected** menu button to restart your HAWQ cluster.
+
+        5. Exit the Ambari UI.  
+    
+    2. If you manage your cluster from the command line:
+      1.  On all KDC servers, open the KDC configuration file `/etc/krb5kdc/kdc.conf` and change `max_life` to a value less than the renewal interval.
+
+      2. Use `hawq config` to change `server_ticket_renew_interval` to 18000000 to renew the ticket every five hours. (Or edit kdc.conf or krb5.conf to add `server_ticket_renew_interval = 18000000`?
+      3. Restart the HAWQ cluster:
+
+        ``` shell
+        gpadmin@master$ hawq restart cluster 
+        ``` 
+      
+Note that when a client asks the KDC for a session ticket to a service, it can request a specific start time. If the start time is missing or already past, the KDC sets the ticket's `starttime` field to the current time. The KDC determines the end time by adding the maximum ticket life to the `starttime` value. 
 
 #### <a id="topic7"></a>Name Mapping 
 
@@ -622,7 +664,7 @@ Follow these steps to install and configure a Kerberos KDC server on a Red Hat E
     root@kdc-server$ yum install krb5-libs krb5-server krb5-workstation
     ```
 
-3.  Define the Kerberos realm for your cluster by editting the `/etc/krb5.conf` configuration file. The following example configures a Kerberos server with a realm named `REALM.DOMAIN` residing on a host named `hawq-kdc`.
+3.  Define the Kerberos realm for your cluster by editing the `/etc/krb5.conf` configuration file. The following example configures a Kerberos server with a realm named `REALM.DOMAIN` residing on a host named `hawq-kdc`.
 
     ```
     [logging]
@@ -664,7 +706,7 @@ Follow these steps to install and configure a Kerberos KDC server on a Red Hat E
 
     The `kdc` and `admin_server` keys in the `[realms]` section specify the host \(`hawq-kdc`\) and port on which the Kerberos server is running. You can use an IP address in place of a host name.
 
-    If your Kerberos server manages authentication for other realms, you would instead add the `REALM.DOMAINM` realm in the `[realms]` and `[domain_realm]` sections of the `krb5.conf` file. See the [Kerberos documentation](http://web.mit.edu/kerberos/krb5-latest/doc/) for detailed information about the `krb5.conf` configuration file.
+    If your Kerberos server manages authentication for other realms, you would instead add the `REALM.DOMAIN` realm in the `[realms]` and `[domain_realm]` sections of the `krb5.conf` file. See the [Kerberos documentation](http://web.mit.edu/kerberos/krb5-latest/doc/) for detailed information about the `krb5.conf` configuration file.
 
 4. Note the Kerberos KDC server host name or IP address and the name of the realm in which your cluster resides. You will need this information in later procedures.
 5.  Create a Kerberos KDC database by running the `kdb5_util` command:
