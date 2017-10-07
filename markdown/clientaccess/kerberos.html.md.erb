@@ -537,18 +537,24 @@ You will perform different procedures if you use Ambari for cluster management o
     
        1.  Login to the Ambari UI from a supported web browser.
 
-        2. Navigate to the **HAWQ** service, **Configs > Advanced** tab and expand the **Custom hawq-site** drop down.
+       2. Navigate to the **HAWQ** service, **Configs > Advanced** tab and expand the **Custom hawq-site** drop down.
 
-        3. Set the value of  `server_ticket_renew_interval` to 18000000. This will renew the ticket every five hours.
+       3. Set the value of  `server_ticket_renew_interval` to 18000000. This will renew the ticket every five hours.
 
-        4. **Save** this configuration change and then select the now orange **Restart > Restart All Affected** menu button to restart your HAWQ cluster.
+       4. **Save** this configuration change and then select the now orange **Restart > Restart All Affected** menu button to restart your HAWQ cluster.
 
-        5. Exit the Ambari UI.  
+       5. Exit the Ambari UI.  
     
-    2. If you manage your cluster from the command line:
+   2. If you manage your cluster from the command line:
+
       1.  On all KDC servers, open the KDC configuration file `/etc/krb5kdc/kdc.conf` and change `max_life` to a value less than the renewal interval.
 
       2. Use `hawq config` to change `server_ticket_renew_interval` to 18000000 to renew the ticket every five hours. (Or edit kdc.conf or krb5.conf to add `server_ticket_renew_interval = 18000000`?
+
+        ``` shell
+        gpadmin@kdc_server$ hawq config -v server_ticket_renew_interval = 18000000 
+        ``` 
+        
       3. Restart the HAWQ cluster:
 
         ``` shell
