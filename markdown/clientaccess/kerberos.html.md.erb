@@ -529,7 +529,7 @@ The lifetime of the Kerberos ticket may need to be changed. The ticket lifetime 
 
 **Note:** The kdc.conf file supplements krb5.conf for programs using KDC. The kdc.conf file contains defaults used when issuing Kerberos tickets, as well as KDC configuration information. 
 
-On starting HAWQ, the Resource Manager initializes the  kerberos ticket to expire after 12 hours. On KDC servers, this interval can be even longer. Reset the `server_ticket_renew_interval`  to renew prior to the 12 hour default.
+On starting HAWQ, the Resource Manager initializes the  kerberos ticket to expire after 12 hours. On KDC servers, this interval can be even longer. (Your specific configuration may differ from these standards, so set the ticket to renew before your system ticket lifetime.) Reset the `server_ticket_renew_interval`  to renew prior to the default value and restart the cluster to have the new value take effect.
 
 You will perform different procedures if you use Ambari for cluster management or manage your cluster from the command line.
 
@@ -539,7 +539,7 @@ You will perform different procedures if you use Ambari for cluster management o
 
        2. Navigate to the **HAWQ** service, **Configs > Advanced** tab and expand the **Custom hawq-site** drop down.
 
-       3. Set the value of  `server_ticket_renew_interval` to 18000000. This will renew the ticket every five hours.
+       3. Set the value of  `server_ticket_renew_interval` to renew prior to the default interval. For example set `server_ticket_renew_interval` to 18000000. This will renew the ticket every five hours.
 
        4. **Save** this configuration change and then select the now orange **Restart > Restart All Affected** menu button to restart your HAWQ cluster.
 
@@ -549,17 +549,17 @@ You will perform different procedures if you use Ambari for cluster management o
 
       1.  On all KDC servers, open the KDC configuration file `/etc/krb5kdc/kdc.conf` and change `max_life` to a value less than the renewal interval.
 
-      2. Use `hawq config` to change `server_ticket_renew_interval` to 18000000 to renew the ticket every five hours. (Or edit kdc.conf or krb5.conf to add `server_ticket_renew_interval = 18000000`?
+      2. Use `hawq config` to change `server_ticket_renew_interval` to 18000000 to renew the ticket every five hours. The following example shows setting it to 18000000.
 
         ``` shell
         gpadmin@kdc_server$ hawq config -v server_ticket_renew_interval = 18000000 
         ``` 
         
-      3. Restart the HAWQ cluster:
+Restart the HAWQ cluster:
 
-        ``` shell
-        gpadmin@master$ hawq restart cluster 
-        ``` 
+``` shell
+gpadmin@master$ hawq restart cluster 
+``` 
       
 Note that when a client asks the KDC for a session ticket to a service, it can request a specific start time. If the start time is missing or already past, the KDC sets the ticket's `starttime` field to the current time. The KDC determines the end time by adding the maximum ticket life to the `starttime` value. 
 
