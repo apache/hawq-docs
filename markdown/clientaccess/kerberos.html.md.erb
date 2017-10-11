@@ -525,12 +525,12 @@ The lifetime of the Kerberos ticket may need to be changed. The ticket lifetime 
 * `ticket_lifetime` in `krb5.conf` on the client
 * maxlife for the user principal
 * maxlife for the service principal in krbtgt\[REALM\]
-* maxlife for the AFS service principal "afs/[realm_in_lower_case]"
+* maxlife for the AFS service principal afs\[realm\_in\_lower\_case\]
 * the requested lifetime in the ticket request
 
 **Note:** The kdc.conf file supplements krb5.conf for programs using KDC. The kdc.conf file contains defaults used when issuing Kerberos tickets, such as the HAWQ `server_ticket_renewal_interval` value, as well as KDC configuration information. 
 
-On starting HAWQ, the Resource Manager initializes the  kerberos ticket to expire after 12 hours. On KDC servers, this interval can be even longer. (Your specific configuration may differ from these standards, so set the ticket to renew before your system ticket lifetime.) Reset the `server_ticket_renew_interval`  to renew prior to the default value and restart the cluster to have the new value take effect.
+On starting HAWQ, the Resource Manager initializes the  kerberos ticket to expire after 12 hours. On KDC servers, this interval can be even longer. (Your specific configuration may differ from these standards, so set the ticket to renew before your own system ticket lifetime.) Reset the `server_ticket_renew_interval`  to renew prior to the default interval value and restart the cluster to have the new value take effect.
 
 You will perform different procedures if you use Ambari for cluster management or manage your cluster from the command line.
 
@@ -546,21 +546,19 @@ You will perform different procedures if you use Ambari for cluster management o
 
        5. Exit the Ambari UI.  
     
-   2. If you manage your cluster from the command line:
+  2. If you manage your cluster from the command line:
 
-      1.  On all KDC servers, open the KDC configuration file `/etc/krb5kdc/kdc.conf` and change `max_life` to a value (in milliseconds) less than the renewal interval.
-
-      2. Use `hawq config` to change the value (in milliseconds) of `server_ticket_renew_interval` to 18000000 to renew the ticket every five hours. The following example shows setting it to 18000000.
+      Use `hawq config` to change the value (in milliseconds) of `server_ticket_renew_interval` to to renew the ticket before its default expiration value. The following example shows setting it to 18000000 (every 5 hours).
 
         ``` shell
         gpadmin@kdc_server$ hawq config -v server_ticket_renew_interval = 18000000 
         ``` 
         
-Restart the HAWQ cluster:
+  Restart the HAWQ cluster:
 
-``` shell
-gpadmin@master$ hawq restart cluster 
-``` 
+  ``` shell
+  gpadmin@master$ hawq restart cluster 
+  ``` 
       
 Note that when a client asks the KDC for a session ticket to a service, it can request a specific start time. If the start time is missing or already past, the KDC sets the ticket's `starttime` field to the current time. The KDC determines the end time by adding the maximum ticket life to the `starttime` value. 
 
@@ -827,9 +825,6 @@ Change the ownership of the keytab file to `gpadmin:gpadmin` and the mode to `60
 12. Change the ticket renewal interval.
 
 13. Edit the `.etc/krb5.conf` configuration file to define the Kerberos realm for the cluster. 
-
-   **Can you set up with PS C:\Users\Administrator> ? What if you use Ambari? This page has commands for Powershell: 
-   https://hortonworks.com/blog/enabling-kerberos-hdp-active-directory-integration/**
 
    The following example shows configuring the Kerberos server for the default DATA.LOCAL realm on the KDC host `my-kdc`.
    
