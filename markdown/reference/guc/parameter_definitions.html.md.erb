@@ -478,6 +478,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[server\_encoding](../../reference/guc/parameter_definitions.html#server_encoding)**
 
+-   **[server\_encoding](../../reference/guc/parameter_definitions.html#server_ticket_renew_interval)**
+
 -   **[server\_version](../../reference/guc/parameter_definitions.html#server_version)**
 
 -   **[server\_version\_num](../../reference/guc/parameter_definitions.html#server_version_num)**
@@ -3006,6 +3008,14 @@ Reports the database encoding (character set). It is determined when the HAWQ ar
 | Value Range              | Default | Set Classifications |
 |--------------------------|---------|---------------------|
 | &lt;system dependent&gt; | UTF8    | read only           |
+
+## <a name="server_ticket_renew_interval"></a>server\__ticket\_renew\_interval
+
+Sets the Kerberos ticket renew interval in milliseconds.
+
+| Value Range              | Default | Set Classifications |
+|--------------------------|---------|---------------------|
+| integer | 43200000    |master, system, restart           |
 
 ## <a name="server_version"></a>server\_version
 
