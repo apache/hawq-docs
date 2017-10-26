@@ -124,7 +124,7 @@ Perform the following procedure to configure a HAWQ Kerberos principal when you 
    
 4. Fill in the **New Object - User** fields:
 
-    **First name:**  gpadmin
+    **First name:**  gpadmin  
     **User logon name:**  gpadmin
     
 5. Click **Next** to advance to the next screen.
@@ -148,6 +148,8 @@ Perform the following procedure to configure a HAWQ Kerberos principal when you 
     ```shell
     PS C:\Users\Administrator> ktpass -princ postgres/<master>@<realm> -pass changeme -mapuser gpadmin -crypto ALL -ptype KRB5_NT_PRINCIPAL -out hawq-krb5.keytab -kvno 0
     ```
+
+    The `ktpass` command generates a keytab file named `hawq-krb5.keytab`.
 
 11. Copy the keytab file to the HAWQ master node.
 
