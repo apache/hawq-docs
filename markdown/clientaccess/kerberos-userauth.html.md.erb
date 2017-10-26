@@ -21,23 +21,23 @@ specific language governing permissions and limitations
 under the License.
 -->
 
-When Kerberos authentication is enabled at the user level, HAWQ uses the Generic Security Service Application Program Interface \(GSSAPI\) to provide automatic authentication \(single sign-on\). When HAWQ uses Kerberos user authentication, HAWQ itself and the HAWQ users \(roles\) that require Kerberos authentication require a principal and keytab. When a user attempts to log in to HAWQ, HAWQ uses its Kerberos principal to connect to the Kerberos server, and presents the user's principal for Kerberos validation. If the user principal is valid, login succeeds and the user can access HAWQ. Conversely, the login fails and HAWQ denies access to the user if the principal is not valid.
+When Kerberos authentication is enabled at the user level, HAWQ uses the Generic Security Service Application Program Interface \(GSSAPI\) to provide automatic authentication \(single sign-on\). When HAWQ uses Kerberos user authentication, both the HAWQ server and those HAWQ users \(roles\) that use Kerberos authentication require a principal and a keytab. When a user attempts to log in to HAWQ, the HAWQ server uses its Kerberos principal to connect to the Kerberos server, and presents the user's principal for Kerberos validation. If the user's principal is valid, then login succeeds and the user can access HAWQ. Conversely, the login fails and HAWQ denies access to the user if the principal is not valid.
 
-When HAWQ utilizes Kerberos for user authentication, it uses a standard principal to connect to the Kerberos KDC. The format of this principal is `postgres/<FQDN_of_master>@<realm>`, where \<FQDN\_of\_master\> refers to the fully qualified distinguish name of the HAWQ master node.
+When HAWQ utilizes Kerberos for user authentication, it uses a single HAWQ server principal to connect to the Kerberos KDC. The format of the HAWQ server principal is `postgres/<FQDN_of_master>@<realm>`, where \<FQDN\_of\_master\> refers to the fully qualified distinguish name of the HAWQ master node.
 
 (You may choose to configure HAWQ user principals before you enable Kerberos user authentication for HAWQ. See [Configuring Kerberos-Authenticated HAWQ Users](#hawq_kerb_user_cfg).)
 
 The procedure to configure Kerberos user authentication for HAWQ includes:
 
-If you use an MIT Kerberos KDC Server:  
-**Step 1a**: [Configuring the HAWQ Principals using an MIT KDC Server](#hawq_kerb_cfg_mitkdc)  
+1. Configuring the HAWQ principal:
 
-If you use an Active Directory Kerberos KDC Server:  
-**Step 1b**: [Configuring the HAWQ Principal using an AD KDC Server](#hawq_kerb_cfg_adkdc)  
+    1. If you use an MIT Kerberos KDC Server, refer to [Configuring the HAWQ Principals using an MIT KDC Server](#hawq_kerb_cfg_mitkdc).  
 
-**Step 2**: [Configuring HAWQ to use Kerberos Authentication](#hawq_kerb_cfg)  
-**Step 3**: [Configuring Kerberos-Authenticated HAWQ Users](#hawq_kerb_user_cfg)  
-**Step 4**: [Authenticating User Access to HAWQ](#hawq_kerb_dbaccess)  
+    2. If you use an Active Directory Kerberos KDC Server, refer to [Configuring the HAWQ Principal using an AD KDC Server](#hawq_kerb_cfg_adkdc).  
+
+2. [Configuring HAWQ to use Kerberos Authentication](#hawq_kerb_cfg)  
+3. [Configuring Kerberos-Authenticated HAWQ Users](#hawq_kerb_user_cfg)  
+4. [Authenticating User Access to HAWQ](#hawq_kerb_dbaccess)  
 
 ## <a id="hawq_kerb_cfg_mitkdc"></a>Step 1a: Configuring the HAWQ Principals using an MIT KDC Server
 
@@ -52,7 +52,7 @@ Perform the following procedure to configure HAWQ Kerberos and `gpadmin` princip
     root@kdc-server$ 
     ```
 
-2. Create a keytab entry for the HAWQ `postgres/<master>` principal using the `kadmin.local` command. Substitute the HAWQ master node fully qualified distinguished hostname and your Kerberos realm. For example:
+2. Create a keytab entry for the HAWQ server principal using the `kadmin.local` command. Substitute the HAWQ master node fully qualified distinguished hostname and your Kerberos realm. For example:
 
     ``` shell
     root@kdc-server$ kadmin.local -q "addprinc -randkey postgres/<master>@REALM.DOMAIN"
@@ -60,7 +60,7 @@ Perform the following procedure to configure HAWQ Kerberos and `gpadmin` princip
     
     The `addprinc` command adds the principal `postgres/<master>` to the KDC managing your \<realm\>.
 
-3. Generate a keytab file for the HAWQ `postgres/<master>` principal. Provide the same name you used to create the principal.
+3. Generate a keytab file for the HAWQ server principal. Provide the same name you used to create the principal.
 
     **If you have configured Kerberos for your HDFS filesystem**, add the keytab to the HAWQ client HDFS keytab file:
     
@@ -114,7 +114,7 @@ Perform the following procedure to configure a HAWQ Kerberos principal when you 
 
 1. Log on to the Windows Active Directory Kerberos KDC server system as a user with administrator privileges.
 
-2. From the **Start** menu, select **Control Panel > Administrative Tools > Active Directory Users and Computers**. (If the **Active Directory Users and Computers** menu item is not available, the Active Directory service may not have been (correctly) installed.)
+2. From the **Start** menu, select **Control Panel > Administrative Tools > Active Directory Users and Computers**. (If the **Active Directory Users and Computers** menu item is not available, the Active Directory service may not have been correctly installed.)
 
     The **Active Directory Users and Computers** window displays.
 
@@ -184,7 +184,7 @@ Perform the following procedure to configure Kerberos user authentication for HA
    
     **Note**: Place the Kerberos entry in the appropriate location in the `pg_hba.conf` file. For example, you may choose to retain `pg_hba.conf` entries for the `gpadmin` user that grant `trust` or `ident` authentication for local connections. Locate the Kerberos entry after these line(s). Refer to [Configuring Client Authentication](client_auth.html) for additional information about the `pg_hba.conf` file.
 
-4. Update HAWQ configuration and restart your cluster. You will perform different procedures if you manage your cluster from the command line or use Ambari to manage your cluster.
+4. Update the HAWQ configuration and restart your cluster. You will perform different procedures if you manage your cluster from the command line or use Ambari to manage your cluster.
 
     **Note**: After you restart your hawq cluster, Kerberos user authentication is enabled for HAWQ, and all users, including `gpadmin`, must authenticate before performing any HAWQ operations.
 
