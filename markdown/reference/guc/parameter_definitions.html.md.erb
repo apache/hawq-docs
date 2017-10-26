@@ -478,6 +478,8 @@ Descriptions of the HAWQ server configuration parameters listed alphabetically.
 
 -   **[server\_encoding](../../reference/guc/parameter_definitions.html#server_encoding)**
 
+-   **[server\_ticket\_renew\_interval](../../reference/guc/parameter_definitions.html#server_ticket_renew_interval)**
+
 -   **[server\_version](../../reference/guc/parameter_definitions.html#server_version)**
 
 -   **[server\_version\_num](../../reference/guc/parameter_definitions.html#server_version_num)**
@@ -1805,7 +1807,7 @@ Adds a checksum value to each block of a work file (or spill file) used by `Hash
 
 ## <a name="gp_workfile_compress_algorithm"></a>gp\_workfile\_compress\_algorithm
 
-When a hash aggregation or hash join operation spills to disk during query processing, specifies the compression algorithm to use on the spill files. 
+When a hash aggregation or hash join operation spills to disk during query processing, specifies the compression algorithm to use on the spill files.
 
 If your HAWQ database installation uses serial ATA (SATA) disk drives, setting the value of this parameter to `zlib` might help to avoid overloading the disk subsystem with IO operations.
 
@@ -3006,6 +3008,16 @@ Reports the database encoding (character set). It is determined when the HAWQ ar
 | Value Range              | Default | Set Classifications |
 |--------------------------|---------|---------------------|
 | &lt;system dependent&gt; | UTF8    | read only           |
+
+
+## <a name="server_ticket_renew_interval"></a>server\_ticket\_renew\_interval
+
+Sets the HAWQ HDFS client Kerberos ticket renewal interval in milliseconds.
+
+| Value Range              | Default | Set Classifications |
+|--------------------------|---------|---------------------|
+| 0-INT\_MAX | 43200000    | master, system, restart       |
+
 
 ## <a name="server_version"></a>server\_version
 
