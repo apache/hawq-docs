@@ -254,7 +254,7 @@ If you have enabled high-availability for your YARN resource managers, then spec
 
 where {0} and {1} are substituted with the fully qualified hostnames of the YARN resource manager host machines.
 
-To reduce connection time between HAWQ and YARN, be sure to specify the YARN master and standby resource manager hostnames first in the `yarn.resourcemanager.*` property lists.
+To reduce connection time between HAWQ and YARN, be sure to specify the YARN master hostname first in the `yarn.resourcemanager.*` property lists, and the YARN standby resource manager hostname second in the lists.
 
 ## <a id="topic_wp3_4bx_15"></a>Tune HAWQ Resource Negotiations with YARN 
 
