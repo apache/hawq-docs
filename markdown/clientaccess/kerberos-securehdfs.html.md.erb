@@ -217,3 +217,39 @@ Perform the following steps to configure HAWQ and PXF for a secure HDFS. You wil
         ``` shell
         gpadmin@master$ hawq restart cluster -a -M fast
         ```
+
+## <a id="server_ticket_renew"></a>Setting the HAWQ Kerberos Ticket Renewal Interval
+
+The HAWQ [`server_ticket_renew_interval`](../reference/guc/parameter_definitions.html#server_ticket_renew_interval) server configuration parameter governs the HAWQ HDFS client Kerberos ticket renewal interval. The default ticket renewal interval is 12 hours.
+
+You configure the lifetime of a Kerberos ticket when you set up your KDC. To avoid ticket expiration, set the `server_ticket_renew_interval` to a value that is less than the lifetime of the ticket. 
+
+#### <a id="task_kerbhdfs_ticket_renew"></a>Procedure
+
+You will perform different procedures to set the ticket renewal interval if you manage your cluster from the command line or use Ambari to manage your cluster.
+
+1. If you manage your cluster using Ambari:
+    
+    1.  Login in to the Ambari UI from a supported web browser.
+
+    2. Navigate to the **HAWQ** service, **Configs > Advanced** tab and expand the **Custom hawq-site** drop down.
+
+    3. Set the `server_ticket_renew_interval` value to the desired ticket renewal interval in milliseconds.
+
+    4. **Save** this configuration change and then select the now orange **Restart > Restart All Affected** menu button to restart your HAWQ cluster.
+
+    5. Exit the Ambari UI.  
+    
+2. If you manage your cluster from the command line:
+    
+    1.  Use the `hawq config` command to update the `server_ticket_renew_interval` configuration parameter. For example:
+
+        ``` shell
+        gpadmin@master$ hawq config -c server_ticket_renew_interval -v 86400000
+        ```
+
+    2.  Restart your HAWQ cluster:
+
+        ``` shell
+        gpadmin@master$ hawq restart cluster
+        ```
