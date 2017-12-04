@@ -75,7 +75,7 @@ Fast shut down interrupts and rolls back any transactions currently in progress.
 Immediate shutdown aborts transactions in progress and kills all `postgres` processes without allowing the database server to complete transaction processing or clean up any temporary or in-process work files. Because of this, immediate shutdown is not recommended. In some instances, it can cause database corruption that requires manual recovery.</dd>
 
 <dt>-l, -\\\-logdir \<logfile\_directory\> </dt>
-<dd>Specifies the log directory for logs of the management tools. The default is `~/hawq/Adminlogs/`.</dd>
+<dd>Specifies the log directory for logs of the management tools. The default is `~/hawqAdminLogs/`.</dd>
 
 <dt>-v, -\\\-verbose  </dt>
 <dd>Displays detailed status, progress and error messages output by the utility.</dd>
