@@ -1,0 +1,142 @@
+---
+title: Introduction to PXF
+---
+
+## <a id="tut_intropxfdisc"></a>Discussion 
+
+Many deployments do not store data directly in HAWQ internal tables, but instead reference files from external data sources.  PXF provides access to this external data via built-in connectors called plug-ins.  These plug-ins facilitate mapping the data source to a HAWQ external table definition.  PXF includes HDFS, Hive, HBase, and JSON plug-ins.  For additional information about PXF, refer to [Working with PXF and External Data](../../pxf/HawqExtensionFrameworkPXF.html).
+
+In this exercise, you will load the sample Retail data set into HDFS. You will create HAWQ external table definitions using the PXF HDFS plug-in. After the external tables are created, you will perform queries on the HDFS data via HAWQ.
+
+## <a id="tut_intropxfprereq"></a>Prerequisites
+
+Ensure that you have a running HAWQ installation and have downloaded the tutorial work files, including the Retail example data set.  Also make sure you have set up your HAWQ environment by logging in as the `gpadmin` user and source'ing `/usr/local/hawq/greenplum_path.sh`.
+
+## <a id="tut_excreatepxftblsteps"></a>Steps
+
+Perform the following steps to load the Retail data set into HDFS and create HAWQ external table definitions to access the HDFS data. 
+
+1. In a terminal window, navigate to the tutorial work files sample data directory.
+
+    ``` shell
+    $ cd $HAWQTUTBASE/sample_data
+    ```
+
+2. Run the `load_data_to_HDFS.sh` script to load the sample data set files into HDFS.  The data will be loaded to a `/retail_demo` directory in HDFS: 
+
+	 ``` shell
+	 $ ./load_data_to_HDFS.sh
+	 ```
+	
+	 `load_to_HDFS.sh` loads the sample data `.tsv.gz` files directly into HDFS. Each file is loaded to it's respective `/retail_demo/tablename/tablename.tsv.gz` path.
+
+3. Run the PostgreSQL interpreter `psql`:
+
+    ``` shell
+    $ psql
+    ```
+    
+	 You will enter the `psql` interactive :
+	 
+	 ``` sql
+	 gpadmin=#
+	 ```
+
+4. Create the `retail_demo` schema if it has not already been created:
+
+	``` sql
+	gpadmin=# \dn
+	gpadmin=# create schema retail_demo;
+	```
+
+5. Create a HAWQ external table definition to represent the Retail customer data and then exit `psql`:
+
+	``` sql
+	gpadmin=# CREATE EXTERNAL TABLE retail_demo.customers_dim_pxf
+      (
+       customer_id TEXT,
+       first_name TEXT,
+       last_name TEXT,
+       gender TEXT
+      )
+      LOCATION ('pxf://hostname:51200/retail_demo/customers_dim/customers_dim.tsv.gz?profile=HdfsTextSimple')
+      FORMAT 'TEXT' (DELIMITER = E'\t');
+    
+    gpadmin=# \q
+	```
+	Substitute your sandbox VM IP address for the `hostname` in the `LOCATION` clause.
+	
+	?? DESCRIBE THE MANY COMPONENTS OF THIS COMMAND AND WHAT IT DOES HERE ??
+	
+
+6. Create HAWQ external table definitions for the remainder of the Retail data set using the provided sql scripts:
+    
+    ``` shell
+    $ cd ../hawq/pxf_tables
+    $ psql
+    ```
+    
+    ``` sql
+    gpadmin=# \i drop_pxf_tables.sql
+    gpadmin=# \i create_pxf_tables.sql
+    gpadmin=# \q
+    ```
+    	
+    We drop the tables before creating. If this is your first time performing this exercise, ignore the `psql` "table does not exist, skipping" messages.
+    
+6. Verify the external table definitions were created successfully:
+
+    ``` shell
+    $ ./verify_load_pxf_tables.sh 
+    ```
+   	 
+    The output of the script should match the following:
+
+    ```							    
+        Table Name                 |    Count 
+    -------------------------------+------------------------
+ customers\_dim\_pxf            |   401430  
+ categories\_dim\_pxf           |   56 
+ customer\_addresses\_dim\_pxf  |   1130639
+ email\_addresses\_dim\_pxf     |   401430
+ order\_lineitems\_pxf          |   1024158
+ orders\_pxf                    |   512071
+ payment\_methods\_pxf          |   5
+ products\_dim\_pxf             |   698911
+  -------------------------------+------------------------
+    ```
+
+8. Determine the top ten postal codes by order revenue by running the following query on the `retail_demo.orders_hawq_pxf` table:
+
+    ``` shell
+    $ psql
+    ```
+    
+    ``` sql
+    gpadmin=# select billing_address_postal_code,
+      sum(total_paid_amount::float8) as total,
+      sum(total_tax_amount::float8) as tax
+        from retail_demo.orders_pxf
+   group by billing_address_postal_code
+   order by total desc limit 10;
+    ```
+
+    The output should match the following:
+ 
+    ``` shell
+ billing_address_postal_code |   total   |    tax    
+-----------------------------+-----------+-----------
+ 48001                       | 111868.32 | 6712.0992
+ 15329                       | 107958.24 | 6477.4944
+ 42714                       | 103244.58 | 6194.6748
+ 41030                       |  101365.5 |   6081.93
+ 50223                       | 100511.64 | 6030.6984
+ 03106                       |  83566.41 |         0
+ 57104                       |  77383.63 | 3095.3452
+ 23002                       |  73673.66 |  3683.683
+ 25703                       |  68282.12 | 4096.9272
+ 26178                       |   66836.4 |  4010.184
+(10 rows)
+    ```
+    
+    ?? ADD SOME SUMMARY/WRAPUP INFO HERE ??
